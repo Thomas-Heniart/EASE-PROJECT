@@ -56,6 +56,7 @@ import AccountUpdateModal from "../catalog/Updates/AccountUpdateModal";
 import NewAccountUpdateModal from "../catalog/Updates/NewAccountUpdateModal";
 import PasswordUpdateModal from "../catalog/Updates/PasswordUpdateModal";
 import NewAccountUpdateLocationModal from "../catalog/Updates/NewAccountUpdateLocationModal";
+import ManageMagicLinkModal from "../teamModals/ManageMagicLinkModal";
 
 @connect(store => ({
   addUserModal: store.teamModals.addUserModal,
@@ -90,6 +91,7 @@ import NewAccountUpdateLocationModal from "../catalog/Updates/NewAccountUpdateLo
   inviteTeamUsersModal: store.teamModals.inviteTeamUsersModal,
   simpleAppFillerChooserModal: store.teamModals.simpleAppFillerChooserModal,
   fillSimpleCardCredentialsModal: store.teamModals.fillSimpleCardCredentialsModal,
+  manageMagicLinkModal: store.teamModals.manageMagicLinkModal,
   modals: store.modals
 }))
 class ModalsContainer extends Component{
@@ -213,6 +215,8 @@ class ModalsContainer extends Component{
           <NewAccountUpdateLocationModal/>}
           {this.props.modals.passwordUpdate.active &&
           <PasswordUpdateModal/>}
+          {this.props.manageMagicLinkModal.active && 
+          <ManageMagicLinkModal/>}
         </div>
     )
   }

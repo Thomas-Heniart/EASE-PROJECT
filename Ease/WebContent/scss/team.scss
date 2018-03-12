@@ -128,6 +128,18 @@ button.only-text-button {
         }
       }
     }
+    &.magic_link {
+      height: 36px;
+      margin: 10px 0 0;
+      padding: 8px !important;
+      background-color: #45c997;
+      color: white;
+      text-align: center;
+      border: none;
+    }
+    &.popup_magic_link {
+      padding: 10px 20px !important;
+    }
   }
 }
 
@@ -609,6 +621,34 @@ button.team_app_requests {
   }
 }
 
+.credentials_single_card {
+  display: inline-block;
+  margin-right: 10px;
+  .test_connection {
+    position: absolute;
+    margin-top: 0;
+    color: #414141;
+    font-size: 14px;
+    margin-left: 70px;
+    cursor: pointer;
+    i {
+      color: #45c997;
+    }
+    &.disabled {
+      text-decoration: none;
+      cursor: auto;
+      color: #E8ECF1;
+    }
+    &.underline_hover {
+      &:hover {
+        text-decoration: underline;
+        i {
+          text-decoration: none;
+        }
+      }
+    }
+  }
+}
 .ui.input.team-app-input {
   input[readonly] {
     background-color: transparent;
@@ -805,6 +845,13 @@ i.icon.pin_button {
           & > .icon {
             background-color: $themeOrangeColor;
           }
+          &.link_expired {
+            border-color: #eb555c;
+            color: #eb555c;
+            & > .icon {
+              background-color: #eb555c;
+            }
+          }
           u {
             margin-left: 5px;
             cursor: pointer;
@@ -936,6 +983,30 @@ i.icon.pin_button {
         @include flex(1);
         overflow: hidden;
         text-overflow: ellipsis;
+      }
+    }
+    .test_connection {
+      position: absolute;
+      margin-top: 0;
+      color: #414141;
+      font-size: 14px;
+      margin-left: 70px;
+      cursor: pointer;
+      i {
+        color: #45c997;
+      }
+      &.disabled {
+        text-decoration: none;
+        cursor: auto;
+        color: #E8ECF1;
+      }
+      &.underline_hover {
+        &:hover {
+          text-decoration: underline;
+          i {
+            text-decoration: none;
+          }
+        }
       }
     }
   }

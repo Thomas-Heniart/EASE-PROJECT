@@ -156,7 +156,7 @@ class OnBoardingImportation extends React.Component {
           if (this.props.onBoarding.passwordManager === null && (query.team === undefined || query.team.length === 0))
             this.props.history.replace('/main/catalog/importations');
           else if (this.props.teams[query.team].onboarding_step === 4 || (this.props.teams[query.team].onboarding_step === 3 && this.props.onBoarding.passwordManager !== null)) {
-            if (this.props.onBoarding.passwordManager === 1)
+            if (this.props.onBoarding.passwordManager === 1 || this.props.teams[query.team].onboarding_step === 4)
               this.setState({passwordManager: 1, view: 3}, this.choosePasswordManager(1));
             else if (this.props.onBoarding.passwordManager === -1)
               this.setState({passwordManager: this.props.onBoarding.passwordManager}, this.choosePasswordManager(-1));
@@ -404,20 +404,23 @@ class OnBoardingImportation extends React.Component {
     else if (this.state.view === 3 && this.state.paste !== '') {
       const calls = json(this.state.fields, this.state.separator, this.state.paste, this.props.dispatch);
       if (calls === null)
-        this.setState({error: 'Darn, that didn’t work! Make sure the text pasted contains logins and passwords properly separated.', loading: false});
+        this.setState({
+          error: 'Darn, that didn’t work! Make sure the text pasted contains logins and passwords properly separated.',
+          loading: false
+        });
       else {
         Promise.all(calls.map(reflect)).then(response => {
-          this.props.dispatch(changeStep({
-            team_id: this.props.onBoarding.team_id,
-            step: 4
-          })).then(res => {
-            const json = response.filter(item => {
-              if (item.error === false)
-                return item;
-            }).map(item => {
-              return item.data;
-            });
-            if (json.length) {
+          const json = response.filter(item => {
+            if (item.error === false)
+              return item;
+          }).map(item => {
+            return item.data;
+          });
+          if (json.length) {
+            this.props.dispatch(changeStep({
+              team_id: this.props.onBoarding.team_id,
+              step: 4
+            })).then(res => {
               const accounts = json.map(item => {
                 return {
                   id: item.id,
@@ -438,9 +441,15 @@ class OnBoardingImportation extends React.Component {
                 loading: false
               });
               easeTracker.trackEvent("EaseOnboardingPasteCSV");
-            }
-          });
-          easeTracker.trackEvent("Importation");
+            });
+            easeTracker.trackEvent("Importation");
+          }
+          else {
+            this.setState({
+              error: 'Darn, that didn’t work! Make sure the text pasted contains logins and passwords properly separated.',
+              loading: false
+            });
+          }
         }).catch(err => {
         });
       }

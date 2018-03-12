@@ -7,6 +7,7 @@ import {showLockedTeamAppModal, showTeamAnyEnterpriseAppSettingsModal} from "../
 import {Input, Label, Icon, Segment, Popup} from 'semantic-ui-react';
 import {teamUserDepartureDatePassed, needPasswordUpdate, copyTextToClipboard, transformWebsiteInfoIntoListAndSetValues} from "../../utils/utils";
 import {validateApp, clickOnAppMetric} from '../../actions/dashboardActions';
+import extension from "../../utils/extension_api";
 import api from "../../utils/api";
 import {connect} from "react-redux";
 
@@ -26,6 +27,14 @@ class TeamAnyEnterpriseApp extends Component {
     };
     this.password = '';
   }
+  connect = () => {
+    const {app} = this.props;
+
+    if (app.new)
+      this.props.dispatch(validateApp({app_id: app.id}));
+    window.open(app.website.login_url);
+    extension.fillActiveTab({app_id: app.id});
+  };
   handleOpenClose = () => {
     if (!this.props.active && !this.props.team_apps[this.props.app.team_card_id].empty) {
       if (this.state.isOpen === false) {
@@ -73,7 +82,7 @@ class TeamAnyEnterpriseApp extends Component {
     const meReceiver = team_app.receivers.find(item => (item.team_user_id === me.id));
     const password_update = !meReceiver.empty && !!team_app.password_reminder_interval && needPasswordUpdate(meReceiver.last_update_date, team_app.password_reminder_interval);
     const credentials = transformWebsiteInfoIntoListAndSetValues(team_app.website.information, meReceiver.account_information);
-    const inputs = credentials.map((item,idx) => {
+/*    const inputs = credentials.map((item,idx) => {
       if (this.state.copiedPassword !== item.priority && this.state.copiedOther !== item.priority) {
         if (item.name === 'password')
           return (
@@ -113,9 +122,9 @@ class TeamAnyEnterpriseApp extends Component {
           size='mini'
           content={'Copied!'}/>
       )
-    });
+    });*/
     return (
-      <Popup
+/*      <Popup
         size="tiny"
         className='dashboard_popup_soft_and_any'
         position="top center"
@@ -124,7 +133,7 @@ class TeamAnyEnterpriseApp extends Component {
         onClose={this.handleOpenClose}
         onOpen={!teamUserDepartureDatePassed(me.departure_date) ? this.handleOpenClose : null}
         hideOnScroll
-        trigger={
+        trigger={*/
           <div className='app'>
             <div className="logo_area">
               {this.state.loading &&
@@ -142,7 +151,7 @@ class TeamAnyEnterpriseApp extends Component {
               {!me.disabled && meReceiver.empty && !teamUserDepartureDatePassed(me.departure_date) &&
               <EmptyTeamAppIndicator onClick={this.clickOnSettings}/>}
               <div className="logo_handler">
-                <img className="logo" src={team_app.logo}/>
+                <img className="logo" src={team_app.logo} onClick={this.connect}/>
                 <button className="settings_button" onClick={this.clickOnSettings}>
                   Settings
                 </button>
@@ -150,7 +159,7 @@ class TeamAnyEnterpriseApp extends Component {
             </div>
             <span className="app_name overflow-ellipsis">{app.name}</span>
           </div>
-        }
+        /*}
         content={
           <div>
             {inputs}
@@ -165,7 +174,7 @@ class TeamAnyEnterpriseApp extends Component {
                   Go to <Icon name='external'/>
                 </Label>}/>
           </div>
-        }/>
+        }/>*/
     )
   }
 }

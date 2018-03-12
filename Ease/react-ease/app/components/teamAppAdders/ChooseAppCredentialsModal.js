@@ -1,17 +1,18 @@
 import React from 'react';
-import SimpleModalTemplate from "../common/SimpleModalTemplate";
-import { Form, Button, Message, Label, Input, Icon, Segment, Checkbox, Container } from 'semantic-ui-react';
-import {teamCreateSingleApp} from "../../actions/appsActions";
-import {testCredentials} from "../../actions/catalogActions";
-import {showChooseAppCredentialsModal} from "../../actions/modalActions";
-import {transformWebsiteInfoIntoList, credentialIconType, transformCredentialsListIntoObject} from "../../utils/utils";
 import {connect} from "react-redux";
 import {reduxActionBinder} from "../../actions/index";
+import MagicLinkAdderModal from "./MagicLinkAdderModal";
+import {testCredentials} from "../../actions/catalogActions";
+import {teamCreateSingleApp} from "../../actions/appsActions";
+import SimpleModalTemplate from "../common/SimpleModalTemplate";
+import {showChooseAppCredentialsModal} from "../../actions/modalActions";
+import { Form, Button, Message, Label, Input, Icon, Segment, Checkbox, Container } from 'semantic-ui-react';
+import {transformWebsiteInfoIntoList, credentialIconType, transformCredentialsListIntoObject} from "../../utils/utils";
 
 const CredentialInput = ({item, onChange}) => {
   return (
     <Form.Field>
-        <label style={{fontSize: '16px', fontWeight: '300', color: '#424242'}}>{item.placeholder}</label>
+        {/*<label style={{fontSize: '16px', fontWeight: '300', color: '#424242'}}>{item.placeholder}</label>*/}
         <Input size="large"
                autoFocus={item.autoFocus}
                class="modalInput team-app-input"
@@ -28,7 +29,7 @@ const CredentialInput = ({item, onChange}) => {
   )
 };
 
-class AddCardForm extends React.Component {
+class ChooseHow extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -50,6 +51,8 @@ class AddCardForm extends React.Component {
   };
   render() {
     const {
+      check,
+      change,
       website,
       credentials,
       testCredentials,
@@ -70,17 +73,38 @@ class AddCardForm extends React.Component {
           <span className="app_name">{appName}</span>
         </div>
         <Form  onSubmit={confirm} error={this.state.errorMessage.length > 0}>
+          <Checkbox radio
+                    style={{fontSize:'16px',marginBottom:'10px'}}
+                    label={<label><strong>Enter</strong> login & password <strong>myself</strong></label>}
+                    name='checkboxRadioGroup'
+                    value={1}
+                    checked={check === 1}
+                    onChange={change} />
           {credentialsInputs}
           <Message error content={this.state.errorMessage}/>
           <span id='test_credentials' onClick={testCredentials}>Test connection <Icon color='green' name='magic'/></span>
+          <Checkbox radio
+                    style={{fontSize:'16px',marginBottom:'10px'}}
+                    label={<label><strong>Ask</strong> login & password from <strong>a team member</strong></label>}
+                    name='checkboxRadioGroup'
+                    value={2}
+                    checked={check === 2}
+                    onChange={change} />
+          <Checkbox radio
+                    style={{fontSize:'16px'}}
+                    label={<label><strong>Ask</strong> login & password from <strong>outside my team</strong></label>}
+                    name='checkboxRadioGroup'
+                    value={3}
+                    checked={check === 3}
+                    onChange={change} />
           <Button
             type="submit"
             loading={loading}
-            disabled={loading || !this.checkValueInput()}
+            disabled={loading || (check === 1 && !this.checkValueInput())}
             onClick={confirm}
             positive
             className="modal-button uppercase"
-            content={'DONE'}/>
+            content={'NEXT'}/>
         </Form>
       </Container>
     )
@@ -103,7 +127,7 @@ class ChoosePersonWhoHasCredentials extends React.Component {
   render() {
     const {
       me,
-      users,
+      back,
       receivers,
       userSelected,
       website,
@@ -121,16 +145,15 @@ class ChoosePersonWhoHasCredentials extends React.Component {
           <span className="app_name">{appName}</span>
         </div>
         <div>
-          <p>Who will enter app credentials?</p>
+          <p style={{cursor:'pointer'}} onClick={back} className="back_modal">
+            <Icon name="arrow left"/>Back
+          </p>
+        </div>
+        <div>
+          <p>Ask login and password from a team member</p>
         </div>
         <Form onSubmit={confirm}>
-          <Segment className='pushable'>
-            <Checkbox radio
-                      label={`${me.username} (${this.role(me.role)})`}
-                      name='checkboxRadioGroup'
-                      value={me.id}
-                      checked={userSelected === me.id}
-                      onChange={change}/>
+          <Segment style={{borderColor:'#45c997'}} className='pushable'>
             {receivers.map(user => (
               user.id !== me.id &&
               <Checkbox radio
@@ -142,13 +165,14 @@ class ChoosePersonWhoHasCredentials extends React.Component {
                         onChange={change}/> )
             )}
           </Segment>
+          <p style={{fontSize:'14px',color:'#949eb7'}}>The team member selected will be notified on his/her dashboard and you’ll be notified once it is done.</p>
         <Button
             type="submit"
             loading={loading}
             disabled={loading}
             positive
             className="modal-button uppercase"
-            content={'CONFIRM'}/>
+            content={`ASK`}/>
         </Form>
       </Container>
     )
@@ -156,9 +180,9 @@ class ChoosePersonWhoHasCredentials extends React.Component {
 }
 
 @connect(store => ({
-  card: store.teamCard,
   teams: store.teams,
   modal: store.modals,
+  card: store.teamCard,
   settingsCard: store.modals.chooseAppCredentials,
   receivers: store.modals.chooseAppCredentials.receivers
 }), reduxActionBinder)
@@ -166,12 +190,14 @@ class ChooseAppCredentialsModal extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      loading: false,
-      credentials: transformWebsiteInfoIntoList(this.props.card.app.information),
       view: 1,
-      userSelected: this.props.teams[this.props.card.team_id].my_team_user_id,
+      check: 1,
       me: null,
-      users: null
+      users: null,
+      loading: false,
+      website: this.props.card.app,
+      userSelected: this.props.teams[this.props.card.team_id].my_team_user_id,
+      credentials: transformWebsiteInfoIntoList(this.props.card.app.information)
     }
   }
   componentWillMount() {
@@ -196,11 +222,15 @@ class ChooseAppCredentialsModal extends React.Component {
     this.setState({credentials: credentials});
   };
   handleChange = (e, { value }) => this.setState({ userSelected: value });
+  handleChangeCheck = (e, {value}) => this.setState({check: value});
   testCredentials = () => {
     this.props.dispatch(testCredentials({
       account_information: transformCredentialsListIntoObject(this.state.credentials),
       website_id: this.props.card.app.id
     }));
+  };
+  back = () => {
+    this.setState({view: 1});
   };
   close = () => {
     this.props.dispatch(showChooseAppCredentialsModal({active: false}));
@@ -208,46 +238,18 @@ class ChooseAppCredentialsModal extends React.Component {
   confirm = (e) => {
     e.preventDefault();
     this.setState({loading: true});
-    if (this.state.view === 1) {
-      if (this.state.userSelected === this.state.me.id)
-        this.setState({view: 2, loading: false});
-      else {
-        const receivers = this.props.receivers
-          .map(item => ({
-            [item.id]: {allowed_to_see_password: item.can_see_information}
-          }));
-        const newReceivers = receivers.reduce(function (result, item) {
-          result = Object.assign(result, item);
-          return result;
-        }, {});
-        this.props.dispatch(teamCreateSingleApp({
-          team_id: this.props.card.team_id,
-          channel_id: this.props.card.channel_id,
-          website_id: this.props.card.app.id,
-          name: this.props.settingsCard.card_name,
-          description: this.props.settingsCard.description,
-          password_reminder_interval: this.props.settingsCard.password_reminder_interval,
-          team_user_filler_id: this.state.userSelected,
-          account_information: {},
-          receivers: newReceivers
-        })).then(response => {
-          this.setState({loading: false});
-          this.close();
-          this.props.resetTeamCard();
-        });
-      }
-    }
+    const receivers = this.props.receivers.map(item => ({
+      [item.id]: {allowed_to_see_password: item.can_see_information}
+    }));
+    const newReceivers = receivers.reduce(function (result, item) {
+      result = Object.assign(result, item);
+      return result;
+    }, {});
+    if (this.state.view === 1 && this.state.check === 2)
+      this.setState({view: 2, loading: false});
+    else if (this.state.view === 3)
+      this.setState({loading: false}, this.close());
     else {
-      // const meReceiver = this.state.selected_users.indexOf(this.props.myId) !== -1;
-      const receivers = this.props.receivers
-          // .filter(item => (this.state.selected_users.indexOf(item.id) !== -1))
-          .map(item => ({
-              [item.id]: {allowed_to_see_password: item.can_see_information}
-          }));
-      const newReceivers = receivers.reduce(function (result, item) {
-          result = Object.assign(result, item);
-          return result;
-      }, {});
       this.props.dispatch(teamCreateSingleApp({
         team_id: this.props.card.team_id,
         channel_id: this.props.card.channel_id,
@@ -255,11 +257,15 @@ class ChooseAppCredentialsModal extends React.Component {
         name: this.props.settingsCard.card_name,
         description: this.props.settingsCard.description,
         password_reminder_interval: this.props.settingsCard.password_reminder_interval,
-        account_information: transformCredentialsListIntoObject(this.state.credentials),
-        receivers: newReceivers
+        account_information: this.state.check === 1 ? transformCredentialsListIntoObject(this.state.credentials) : {},
+        team_user_filler_id: this.state.view === 2 ? this.state.userSelected : null,
+        receivers: newReceivers,
+        generate_magic_link: this.state.check === 3
       })).then(response => {
-        this.setState({loading: false});
-        this.close();
+        if (this.state.check === 3)
+          this.setState({view: 3, loading: false, link: response.magic_link});
+        else
+          this.setState({loading: false}, this.close());
         this.props.resetTeamCard();
       });
     }
@@ -268,25 +274,36 @@ class ChooseAppCredentialsModal extends React.Component {
     return (
       <SimpleModalTemplate
         onClose={this.close}
-        headerContent={'App Credentials'}>
+        headerContent={'Login & password'}>
         {this.state.view === 1 &&
-        <ChoosePersonWhoHasCredentials website={this.props.card.app}
-                                       appName={this.props.settingsCard.card_name}
+        <ChooseHow confirm={this.confirm}
+                   check={this.state.check}
+                   loading={this.state.loading}
+                   website={this.props.card.app}
+                   change={this.handleChangeCheck}
+                   credentials={this.state.credentials}
+                   testCredentials={this.testCredentials}
+                   appName={this.props.settingsCard.card_name}
+                   handleCredentialInput={this.handleCredentialInput} />}
+        {this.state.view === 2 &&
+        <ChoosePersonWhoHasCredentials back={this.back}
                                        me={this.state.me}
+                                       confirm={this.confirm}
                                        users={this.state.users}
+                                       change={this.handleChange}
+                                       loading={this.state.loading}
+                                       website={this.props.card.app}
                                        receivers={this.props.receivers}
                                        userSelected={this.state.userSelected}
-                                       loading={this.state.loading}
-                                       change={this.handleChange}
-                                       confirm={this.confirm} />}
-        {this.state.view === 2 &&
-        <AddCardForm credentials={this.state.credentials}
-                     loading={this.state.loading}
-                     handleCredentialInput={this.handleCredentialInput}
-                     website={this.props.card.app}
-                     appName={this.props.settingsCard.card_name}
-                     testCredentials={this.testCredentials}
-                     confirm={this.confirm} />}
+                                       appName={this.props.settingsCard.card_name} />}
+        {this.state.view === 3 &&
+        <MagicLinkAdderModal me={this.state.me}
+                             link={this.state.link}
+                             confirm={this.confirm}
+                             change={this.handleChange}
+                             loading={this.state.loading}
+                             website={this.state.website}
+                             appName={this.props.settingsCard.card_name} />}
       </SimpleModalTemplate>
     )
   }

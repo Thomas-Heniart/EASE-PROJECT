@@ -1,22 +1,22 @@
-var React = require('react');
-var ReactDOM = require('react-dom');
-import {HashRouter, Layout, Route, IndexRoute, HashHistory} from 'react-router-dom';
+import React from "react";
+import ReactDOM from "react-dom";
+import {HashRouter, Layout, Route, IndexRoute, HashHistory} from "react-router-dom";
 import {Provider} from "react-redux";
-import {StripeProvider} from 'react-stripe-elements';
-import {CookiesProvider, withCookies, Cookies} from 'react-cookie';
+import {StripeProvider} from "react-stripe-elements";
+import {CookiesProvider, withCookies, Cookies} from "react-cookie";
 import store from "./store";
-import OnBoardingJoinTeam from './components/onBoarding/OnBoardingJoinTeam';
+import OnBoardingJoinTeam from "./components/onBoarding/OnBoardingJoinTeam";
 
-var TeamView = require('./components/TeamView.js');
-var TeamCreationView = require('./components/teams/TeamCreationView');
-var MainView = require('./components/common/MainView');
-var TeamJoinView = require('./components/teams/TeamJoinView');
-var Login = require('./components/common/Login');
-var Base = require('./components/common/Base.js');
+import TeamView from "./components/TeamView";
+import TeamCreationView from "./components/teams/TeamCreationView.js";
+import MainView from "./components/common/MainView";
+import TeamJoinView from "./components/teams/TeamJoinView";
+import Base from "./components/common/Base.js";
+import Login from "./components/common/login/index";
 import Root from "./components/common/Root";
 import RenewPassword from "./components/common/RenewPassword";
-import Registration from './components/common/Registration';
-import HomeTemporaryHeader from './components/common/HomeTemporaryHeader';
+import Registration from "./components/common/Registration";
+import HomeTemporaryHeader from "./components/common/HomeTemporaryHeader";
 import {requireAuthentication} from "./components/common/requireAuthentication";
 import NewTeamCreationView from "./components/onBoarding/NewTeamCreationView";
 
@@ -33,7 +33,6 @@ class App extends React.Component {
           <Route path="/teamJoin/:code/:access_code" component={OnBoardingJoinTeam}/>
           <Route path="/teams/:teamId/:itemId?" component={requireAuthentication(TeamView)}/>
           <Route path="/login" component={Login}/>
-          <Route path="/registration" component={Registration}/>
           <Route path="/recover/:email/:code" component={RenewPassword}/>
         </Base>
       </HashRouter>

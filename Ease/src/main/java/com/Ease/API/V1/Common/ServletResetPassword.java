@@ -124,7 +124,7 @@ public class ServletResetPassword extends HttpServlet {
             user.getProfileSet().stream().flatMap(Profile::getApps).forEach(app -> {
                 if (app.getTeamCardReceiver() != null) {
 
-                } else if (app.isClassicApp()) {
+                } else if (app.isClassicApp() || app.isAnyApp()) {
                     app.setAccount(null);
                     sm.saveOrUpdate(app);
                 } else if (app.isLogWithApp()) {

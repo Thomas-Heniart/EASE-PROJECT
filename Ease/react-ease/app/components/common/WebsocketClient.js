@@ -109,7 +109,7 @@ class WebsocketClient extends React.Component {
   render() {
     const webServerUrl = `wss://${window.location.host}/webSocketServer`;
 
-    return <Websocket url={webServerUrl} onMessage={this.onMessage}/>
+    return <Websocket url={webServerUrl} onMessage={this.onMessage}/>;
   }
 }
 

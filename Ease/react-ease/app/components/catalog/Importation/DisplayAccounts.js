@@ -1,8 +1,9 @@
 import React from 'react';
-import {Segment, Button, Icon, Dropdown, Message, Input, Grid, Loader} from 'semantic-ui-react';
+import {Segment, Button, Icon, Dropdown, Message, Input, Grid, Loader, Popup} from 'semantic-ui-react';
 import Joyride from "react-joyride";
 import {setTipSeen} from "../../../actions/commonActions";
 import {logoLetter} from "../../../utils/utils";
+import {testCredentials} from "../../../actions/catalogActions";
 
 class DisplayAccounts extends React.Component {
   constructor(props) {
@@ -45,6 +46,12 @@ class DisplayAccounts extends React.Component {
     else
       seePassword[id] = 'password';
     this.setState({seePassword: seePassword});
+  };
+  testConnection = (item) => {
+    this.props.dispatch(testCredentials({
+      account_information: {login: item.login, password: item.password},
+      website_id: item.website_id
+    }));
   };
   render() {
     const {
@@ -131,9 +138,10 @@ class DisplayAccounts extends React.Component {
                   <p style={{margin: 'auto'}}>{logoLetter(item.name)}</p>
                 </div>}
                 {Object.keys(fields).map(field => (
+                  <div key={field}>
                   <Input idapp={item.id}
                          key={fields[field]}
-                          size='mini'
+                         size='mini'
                          name={fields[field]}
                          error={this.props.fieldProblem.id === item.id && this.props.fieldProblem.name === fields[field]}
                          value={item[fields[field]]}
@@ -142,6 +150,18 @@ class DisplayAccounts extends React.Component {
                          icon={fields[field] === 'password' &&
                          <Icon name='eye' link onClick={e => this.seePassword(item.id)}/>}
                          type={fields[field] === 'password' ? this.state.seePassword[item.id] : 'text'}/>
+                    {(fields[field] === 'password') &&
+                    <Popup
+                      inverted
+                      trigger={
+                        <p
+                          className={item.website_id !== -1 ? 'underline_hover test_connection' : 'underline_hover test_connection disabled'}
+                          onClick={item.website_id !== -1 ? e => this.testConnection(item) : null}>
+                          <Icon name='magic'/>Test this password
+                        </p>}
+                      content={item.website_id !== -1 ? 'We will open a new tab to test if the password works or not.'
+                        : 'Testing this password is not available for this website'}/>}
+                  </div>
                 ))}
                 <Icon name='arrow circle right' size='large' onClick={e => toPending(item.id)}/>
               </React.Fragment>}
@@ -177,7 +197,7 @@ class DisplayAccounts extends React.Component {
           </Grid.Column>
           <Grid.Column width={6}>
             <Segment className='segment_pending'>
-              <div class="display_flex align_items_center" style={{justifyContent: 'space-between'}}>
+              <div className="display_flex align_items_center" style={{justifyContent: 'space-between'}}>
                 <p className='import'>Import selection to:</p>
                 <Dropdown open={this.state.dropdownOpened}
                           floating item name='location'
