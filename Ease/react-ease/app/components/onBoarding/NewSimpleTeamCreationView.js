@@ -332,7 +332,7 @@ class NewSimpleTeamCreationView extends React.Component {
     this.setState({pasteEmails: emails});
   };
   checkPassword = () => {
-    return (this.state.companyName !== '' && this.state.companySize !== '' && !this.state.phoneError);
+    return (this.state.companyName !== '' && this.state.companySize !== '' && this.state.companySize !== '0' && !this.state.phoneError);
   };
   checkNoDuplicateEmails = () => {
     return this.state.emails.filter((item, idx) => {

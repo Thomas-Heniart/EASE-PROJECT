@@ -1,9 +1,11 @@
 package com.Ease.API.V1.Admin;
 
 import com.Ease.Hibernate.HibernateQuery;
+import com.Ease.Mail.MailjetContactWrapper;
 import com.Ease.NewDashboard.Profile;
 import com.Ease.Team.Team;
 import com.Ease.Team.TeamCard.TeamCard;
+import com.Ease.Team.TeamUser;
 import com.Ease.Utils.Servlets.PostServletManager;
 import com.Ease.websocketV1.WebSocketMessageAction;
 import com.Ease.websocketV1.WebSocketMessageFactory;
@@ -43,6 +45,10 @@ public class ServletDeleteTeam extends HttpServlet {
                 }
             }
             HibernateQuery hibernateQuery = sm.getHibernateQuery();
+            for (TeamUser teamUser : team.getTeamUsers().values()) {
+                if (teamUser.isRegistered())
+                    new MailjetContactWrapper().updateUserContactLists(teamUser.getUser());
+            }
             for (TeamCard teamCard : team.getTeamCardSet()) {
                 hibernateQuery.queryString("DELETE FROM Update u WHERE u.teamCard.db_id = :card_id");
                 hibernateQuery.setParameter("card_id", teamCard.getDb_id());

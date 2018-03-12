@@ -7,7 +7,26 @@ pageEncoding="UTF-8"%>
 	<meta http-equiv="Content-Type" contentType="text/html; charset=UTF-8"/>
 	<meta name="viewport" content="initial-scale=1, maximum-scale=1"/>
 	<link rel="chrome-webstore-item" href="https://chrome.google.com/webstore/detail/hnacegpfmpknpdjmhdmpkmedplfcmdmp">
-
+	<!-- Description shown in Google -->
+	<!-- Facebook metadata -->
+	<meta name="description"
+		  content="Mettez facilement en place une politique de sécurité au niveau de l’utilisation, le partage et le stockage des mots de passe de l’entreprise."/>
+	<meta property="og:url" content="https://ease.space/"/>
+	<meta property="og:type" content="website"/>
+	<meta property="og:title" content="Ease.space - Prenez soin des mots de passe de votre entreprise"/>
+	<meta property="og:image" content="https://ease.space/resources/metadescription.png"/>
+	<meta property="og:logo" content="https://ease.space/resources/icons/APPEASE.png"/>
+	<meta property="og:description"
+		  content="Mettez facilement en place une politique de sécurité au niveau de l’utilisation, le partage et le stockage des mots de passe de l’entreprise."/>
+	<meta property="og:image" content="https://ease.space/resources/images/metadescription.png"/>
+	<!-- Twitter metadata -->
+	<meta name="twitter:card" content="summary_large_image"/>
+	<meta name="twitter:site" content="@ease_space"/>
+	<meta name="twitter:creator" content="@ease_space"/>
+	<meta name="twitter:title" content="Ease.space - Prenez soin des mots de passe de votre entreprise"/>
+	<meta name="twitter:description"
+		  content="Mettez facilement en place une politique de sécurité au niveau de l’utilisation, le partage et le stockage des mots de passe de l’entreprise."/>
+	<meta name="twitter:image" content="https://ease.space/resources/images/metadescription.png"/>
 	<link rel="icon" type="image/png" href="resources/icons/APPEASE.png" />
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
 	<script src="https://code.jquery.com/ui/1.12.0/jquery-ui.js"></script>

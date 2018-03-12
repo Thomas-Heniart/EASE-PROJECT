@@ -31,7 +31,7 @@ public class StatsScheduledTask extends TimerTask {
                 last_week.add(Calendar.WEEK_OF_YEAR, 1);
             }
             MailJetBuilder mailJetBuilder = new MailJetBuilder();
-            mailJetBuilder.setFrom("contact@ease.space", "Agathepower");
+            mailJetBuilder.setFrom("contact@ease.space", "Agathe The Power");
             mailJetBuilder.addTo("thomas@ease.space");
             mailJetBuilder.setTemplateId(330444);
             mailJetBuilder.addTo("benjamin@ease.space");

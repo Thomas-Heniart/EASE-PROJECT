@@ -255,6 +255,25 @@ $(document).ready(function () {
             target.removeClass("loading");
           });
           break;
+        case "statistics":
+          let body = $("#stats_body");
+          ajaxHandler.get("/api/v1/admin/statistics", {}, () => {
+          }, (data) => {
+            data.forEach((elem) => {
+              $("<tr>" +
+                "<td>" + elem.week + "</td>" +
+                "<td>" + elem.new_companies + "</td>" +
+                "<td>" + elem.new_users + "</td>" +
+                "<td>" + elem.new_apps + "</td>" +
+                "<td>" + elem.new_team_apps + "</td>" +
+                "<td>" + elem.passwords_killed + "</td>" +
+                "</tr>").appendTo(body);
+            });
+            target.removeClass("loading");
+            $("#stats_table").tablesort();
+            $("#stats_table th.number_data").data('sortBy', (th, td, tablesort) => parseInt(td.text()));
+          });
+          break;
         default:
           target.removeClass("loading");
           break;
