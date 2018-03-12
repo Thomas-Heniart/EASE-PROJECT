@@ -115,7 +115,7 @@ public class TeamSingleSoftwareCard extends TeamSoftwareCard {
     @Override
     public JSONObject getJson() {
         JSONObject res = super.getJson();
-        res.put("empty", this.getAccount() == null);
+        res.put("empty", this.getAccount() == null || !this.getAccount().satisfySoftware((this.getSoftware())));
         res.put("account_information", new JSONObject());
         res.put("team_user_filler_id", this.getTeamUser_filler_test() == null ? -1 : this.getTeamUser_filler_test().getDb_id());
         if (this.getAccount() == null)
