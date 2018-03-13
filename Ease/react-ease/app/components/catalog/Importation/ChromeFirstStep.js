@@ -17,8 +17,9 @@ class ChromeFirstStep extends React.Component {
         <Segment id='chromeSteps'>
           <p className='title'><img src="/resources/other/Chrome.png"/> Import your passwords from Chrome</p>
           <div className='inline'>
-            <p>Enter below the information of your Chrome account</p>
-            <img src="/resources/images/agathe_chrome.png"/>
+            <p>Your passwords will be imported from <br />
+              <a href="passwords.google.com"> passwords.google.com</a>.
+              If they aren't synchronized there check here to do it in few clicks</p>
           </div>
           <Form.Field>
             <label>Login</label>
