@@ -7,6 +7,7 @@ import {teamCreateAnySingleCard} from "../../actions/appsActions";
 import {showChooseAnyAppCredentialsModal} from "../../actions/modalActions";
 import { Form, Button, Message, Label, Input, Icon, Segment, Checkbox, Container } from 'semantic-ui-react';
 import {handleSemanticInput, transformWebsiteInfoIntoList, credentialIconType, transformCredentialsListIntoObject} from "../../utils/utils";
+import {showUpgradeTeamPlanModal} from "../../actions/teamModalActions";
 
 const CredentialInput = ({item, onChange, removeField}) => {
   return (
@@ -85,6 +86,8 @@ class ChooseHow extends React.Component {
       confirm,
       appName,
       loading,
+      teamPro,
+      upgrade,
       addFields,
       logoLetter,
       credentials,
@@ -136,11 +139,15 @@ class ChooseHow extends React.Component {
                     onChange={change} />
           <Checkbox radio
                     style={{fontSize:'16px'}}
-                    label={<label><strong>Ask</strong> login & password from <strong>outside my team</strong></label>}
+                    label={teamPro ? <label><strong>Ask</strong> login & password from <strong>outside my team</strong></label>
+                    : <label style={{display:'inline-flex'}}>
+                        <span><strong>Ask</strong> login & password from <strong>outside my team</strong></span>
+                        <img src="/resources/images/upgrade.png" style={{height:'23px'}}/>
+                      </label>}
                     name='checkboxRadioGroup'
                     value={3}
                     checked={check === 3}
-                    onChange={change} />
+                    onChange={teamPro ? change : upgrade} />
           <Button
             type="submit"
             loading={loading}
@@ -243,6 +250,7 @@ class ChooseAnyAppCredentialsModal extends React.Component {
       users: null,
       priority: 2,
       loading: false,
+      teamPro: this.props.teams[this.props.card.team_id].plan_id > 0,
       userSelected: this.props.teams[this.props.card.team_id].my_team_user_id,
       credentials: transformWebsiteInfoIntoList(this.props.card.app.information)
     }
@@ -281,6 +289,14 @@ class ChooseAnyAppCredentialsModal extends React.Component {
     this.setState({credentials: credentials});
   };
   handleChange = (e, { value }) => this.setState({ userSelected: value });
+  upgrade = () => {
+    this.close();
+    this.props.dispatch(showUpgradeTeamPlanModal({
+      active: true,
+      feature_id: 8,
+      team_id: this.props.card.team_id
+    }));
+  };
   addFields = () => {
     let inputs = this.state.credentials.slice();
     const newInput = {name:"other",placeholder:"Click to rename",priority:this.state.priority,type:"text",value:""};
@@ -355,8 +371,10 @@ class ChooseAnyAppCredentialsModal extends React.Component {
         headerContent={'App Credentials'}>
         {this.state.view === 1 &&
         <ChooseHow confirm={this.confirm}
+                   upgrade={this.upgrade}
                    check={this.state.check}
                    addFields={this.addFields}
+                   teamPro={this.state.teamPro}
                    loading={this.state.loading}
                    website={this.props.card.app}
                    handleInput={this.handleInput}

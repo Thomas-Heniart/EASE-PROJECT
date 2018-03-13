@@ -9,7 +9,6 @@ export function getTeamCardFromMagicLink({card_id, uuid}) {
       card_id: card_id,
       uuid: uuid
     }).then(response => {
-      console.log('[RESPONSE][MAGICLINK][GET]: ', response);
       return response;
     }).catch(error => {
       throw error;
