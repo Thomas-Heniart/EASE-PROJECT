@@ -28,6 +28,7 @@ public class SlackScheduledTask extends TimerTask {
             this.notificationForTeamsActivityOfLastWeek(hibernateQuery);
             this.notificationTeamsAfterOneWeekAndLessThanEightApps(hibernateQuery);
             this.notificationsTeamsInvitationsNotSentAfterOneWeek(hibernateQuery);
+            this.notificationUsersLostPasswordsThreeDaysAgo(hibernateQuery);
             hibernateQuery.commit();
         } catch (Exception e) {
             e.printStackTrace();
@@ -206,6 +207,14 @@ public class SlackScheduledTask extends TimerTask {
         return hibernateQuery.list();
     }
 
+    private List<User> getUsersWhoLostPasswordsThreeDaysAgo(HibernateQuery hibernateQuery) throws Exception {
+        Calendar calendar = Calendar.getInstance();
+        calendar.add(Calendar.DAY_OF_YEAR, 3);
+        hibernateQuery.queryString("SELECT u FROM User u WHERE u.db_id IN (SELECT p.user_id FROM PasswordLost p WHERE DATE(p.dateOfRequest) = (:date))");
+        hibernateQuery.setDate("date", calendar);
+        return hibernateQuery.list();
+    }
+
     private void notificationForTeamsConnectedToday(HibernateQuery hibernateQuery) throws Exception {
         List<Team> teams = this.getTeamsConnectedToday(hibernateQuery);
         if (teams.isEmpty())
@@ -296,6 +305,16 @@ public class SlackScheduledTask extends TimerTask {
         if (users.isEmpty())
             return;
         StringBuilder stringBuilder = new StringBuilder("*✅ALERT, some users are leaving us !*\nThese people don't use Ease since last 5 days\n");
+        users.forEach(user -> printUser(stringBuilder, user));
+        stringBuilder.append("\n=======\n=======\n=======");
+        SlackAPIWrapper.getInstance().postMessage("C9P9UL1MM", stringBuilder.toString());
+    }
+
+    private void notificationUsersLostPasswordsThreeDaysAgo(HibernateQuery hibernateQuery) throws Exception {
+        List<User> users = this.getUsersWhoLostPasswordsThreeDaysAgo(hibernateQuery);
+        if (users.isEmpty())
+            return;
+        StringBuilder stringBuilder = new StringBuilder("*✅Passwords lost 3 days ago*\nThese people lost their passwords 3 days ago and never came back:\n");
         users.forEach(user -> printUser(stringBuilder, user));
         stringBuilder.append("\n=======\n=======\n=======");
         SlackAPIWrapper.getInstance().postMessage("C9P9UL1MM", stringBuilder.toString());
