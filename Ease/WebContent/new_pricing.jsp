@@ -186,6 +186,10 @@
                             <i class="fa fa-check tic"></i>
                             <span><fmt:message key="pricing.feature.11"/></span>
                         </div>
+                        <div class="feature">
+                            <i class="fa fa-check tic"></i>
+                            <span><fmt:message key="pricing.feature.19"/></span>
+                        </div>
                     </div>
                 </div>
                 <div class="team_plan_wrapper">
@@ -241,6 +245,10 @@
                             <i class="fa fa-check tic"></i>
                             <span><fmt:message key="pricing.feature.11"/></span>
                         </div>
+                        <div class="feature">
+                            <i class="fa fa-check tic"></i>
+                            <span><fmt:message key="pricing.feature.19"/></span>
+                        </div>
                     </div>
                     <div class="features display-flex flex_direction_column full_flex">
                         <div class="feature">
@@ -254,10 +262,6 @@
                         <div class="feature">
                             <i class="fa fa-check tic"></i>
                             <span><fmt:message key="pricing.feature.14"/></span>
-                        </div>
-                        <div class="feature">
-                            <i class="fa fa-check tic"></i>
-                            <span><fmt:message key="pricing.feature.15"/></span>
                         </div>
                         <div class="feature">
                             <i class="fa fa-check tic"></i>

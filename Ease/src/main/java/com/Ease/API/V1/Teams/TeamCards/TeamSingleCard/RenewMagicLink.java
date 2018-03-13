@@ -31,6 +31,8 @@ public class RenewMagicLink extends HttpServlet {
             TeamCard teamCard = team.getTeamCard(teamCard_id);
             sm.needToBeTeamUserOfTeam(team);
             TeamUser teamUser_connected = sm.getTeamUser(team);
+            if (!team.isValidFreemium())
+                throw new HttpServletException(HttpStatus.BadRequest, "Not allowed to do this");
             if (!teamUser_connected.isTeamAdmin() && !teamUser_connected.equals(teamCard.getTeamUser_sender()))
                 throw new HttpServletException(HttpStatus.BadRequest, "You cannot edit this card");
             if (!teamCard.isTeamSingleCard())
