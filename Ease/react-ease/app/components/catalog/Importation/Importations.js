@@ -85,6 +85,7 @@ class Importations extends React.Component {
       separator: ',',
       paste: '',
       error: '',
+      specialError: false,
       location: '',
       loading: false,
       loadingDelete: false,
@@ -360,7 +361,7 @@ class Importations extends React.Component {
       });
     }
     else if (event.detail.msg === [] || event.detail.msg.length === 0)
-      this.setState({view: 2, error: 'No password found'});
+      this.setState({view: 2, specialError: true});
     else
       this.setState({view: 2, error: event.detail.msg});
   };
@@ -1026,6 +1027,10 @@ class Importations extends React.Component {
             importErrorAccounts={this.importErrorAccounts}
             deleteErrorAccount={this.deleteErrorAccount}
             fields={this.state.fields}/>}
+        <Message visible={this.state.specialError} negative style={{width: "430px", left: "50%", transform: "translateX(-50%)"}}>
+          <p style={{color: "#eb555c"}}>No password found! Make sure your Chrome account is <strong>synchronized <a style={{TextDecoration:"underline", color: "#eb555c"}} href="#">Click Here </a></strong>
+            to find how do it in few clicks.</p>
+        </Message>
       </div>
     )
   }
