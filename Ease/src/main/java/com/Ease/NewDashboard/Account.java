@@ -7,7 +7,7 @@ import com.Ease.Catalog.WebsiteInformation;
 import com.Ease.Hibernate.HibernateQuery;
 import com.Ease.Utils.Crypto.AES;
 import com.Ease.Utils.Crypto.RSA;
-import com.Ease.Utils.DateComparator;
+import com.Ease.Utils.DateUtils;
 import com.Ease.Utils.HttpServletException;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.json.JSONObject;
@@ -252,7 +252,7 @@ public class Account {
     }
 
     public boolean mustUpdatePassword() {
-        return this.getReminder_interval() != 0 && new Date().getTime() >= (this.getLast_update().getTime() + this.getReminder_interval() * DateComparator.millisecondsInMonth);
+        return this.getReminder_interval() != 0 && new Date().getTime() >= (this.getLast_update().getTime() + this.getReminder_interval() * DateUtils.millisecondsInMonth);
     }
 
     public boolean satisfyWebsite(Website website) {

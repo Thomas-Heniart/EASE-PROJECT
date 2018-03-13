@@ -1,4 +1,4 @@
-#fill_credentials {
+.fill_credentials {
   background-image: radial-gradient(circle at 0 0, #616698, #555c95 15%, #373b60);
   color: white;
   #ease_header {
@@ -8,17 +8,35 @@
     &.title {
       width: 430px;
       font-size: 23px;
+      position: relative;
+      left: 50%;
+      transform: translateX(-50%);
+      margin: 20px 0;
     }
     &.content_title {
       margin-left: 20px;
       font-size: 22px;
       font-weight: bold;
     }
+    &.bottom_sentence {
+      text-align: center
+    }
+    a {
+      text-decoration: underline;
+      color: white;
+    }
   }
   .content {
     display: inline-flex;
     .ease_popup {
-      padding: 30px;
+      position: relative;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+    .explication {
+      position: relative;
+      left: 50%;
+      transform: translateX(-50%);
     }
     .cadre {
       width: 325px;

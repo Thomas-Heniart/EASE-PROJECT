@@ -8,7 +8,7 @@ import javax.persistence.*;
 @Table(name = "metricClickOnApp")
 public class ClickOnApp {
 
-    public static ClickOnApp getMetricForApp(Integer app_id, int year, int week_of_year, HibernateQuery hibernateQuery) {
+    public static ClickOnApp getMetricForApp(Integer app_id, Integer user_id, int year, int week_of_year, HibernateQuery hibernateQuery) {
         hibernateQuery.queryString("SELECT c FROM ClickOnApp c WHERE c.app_id = :app_id AND c.week_of_year = :week AND c.year = :year");
         hibernateQuery.setParameter("year", year);
         hibernateQuery.setParameter("week", week_of_year);
@@ -22,11 +22,13 @@ public class ClickOnApp {
             if (team_id != null)
                 metric.setTeam_id(team_id);
         }
+        if (metric.getUser_id() == null)
+            metric.setUser_id(user_id);
         return metric;
     }
 
-    public static void incrementClickOnApp(Integer app_id, int year, int week_of_year, int day_number, HibernateQuery hibernateQuery) {
-        ClickOnApp metric = getMetricForApp(app_id, year, week_of_year, hibernateQuery);
+    public static void incrementClickOnApp(Integer app_id, Integer user_id, int year, int week_of_year, int day_number, HibernateQuery hibernateQuery) {
+        ClickOnApp metric = getMetricForApp(app_id, user_id, year, week_of_year, hibernateQuery);
         metric.incrementDay(day_number);
         hibernateQuery.saveOrUpdateObject(metric);
     }
@@ -38,6 +40,9 @@ public class ClickOnApp {
 
     @Column(name = "app_id")
     private Integer app_id;
+
+    @Column(name = "user_id")
+    private Integer user_id;
 
     @Column(name = "year")
     private Integer year;
@@ -96,6 +101,14 @@ public class ClickOnApp {
 
     public void setApp_id(Integer app_id) {
         this.app_id = app_id;
+    }
+
+    public Integer getUser_id() {
+        return user_id;
+    }
+
+    public void setUser_id(Integer user_id) {
+        this.user_id = user_id;
     }
 
     public Integer getYear() {

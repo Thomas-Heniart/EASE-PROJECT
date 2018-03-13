@@ -11,31 +11,32 @@
     <!-- Description shown in Google -->
     <!-- Facebook metadata -->
     <meta name="description"
-          content="Ease est la homepage qui vous débarrasse des mots de passe. En 1 clic, soyez connecté à vos sites web automatiquement."/>
+          content="Mettez facilement en place une politique de sécurité au niveau de l’utilisation, le partage et le stockage des mots de passe de l’entreprise."/>
     <meta property="og:url" content="https://ease.space/"/>
     <meta property="og:type" content="website"/>
-    <meta property="og:title" content="Ease.space"/>
+    <meta property="og:title" content="Ease.space - Prenez soin des mots de passe de votre entreprise"/>
+    <meta property="og:image" content="https://ease.space/resources/metadescription.png"/>
     <meta property="og:logo" content="https://ease.space/resources/icons/APPEASE.png"/>
     <meta property="og:description"
-          content="Ease est la homepage qui vous débarrasse des mots de passe. En 1 clic, soyez connecté à vos sites web automatiquement."/>
-    <meta property="og:image" content="https://ease.space/resources/images/fbmeta-fr.png"/>
+          content="Mettez facilement en place une politique de sécurité au niveau de l’utilisation, le partage et le stockage des mots de passe de l’entreprise."/>
+    <meta property="og:image" content="https://ease.space/resources/images/metadescription.png"/>
     <!-- Twitter metadata -->
     <meta name="twitter:card" content="summary_large_image"/>
-    <meta name="twitter:site" content="@Ease_app"/>
-    <meta name="twitter:creator" content="@Ease_app"/>
-    <meta name="twitter:title" content="Ease.space"/>
+    <meta name="twitter:site" content="@ease_space"/>
+    <meta name="twitter:creator" content="@ease_space"/>
+    <meta name="twitter:title" content="Ease.space - Prenez soin des mots de passe de votre entreprise"/>
     <meta name="twitter:description"
-          content="Ease est la homepage qui vous débarrasse des mots de passe. En 1 clic, soyez connecté à vos sites web automatiquement."/>
-    <meta name="twitter:image" content="https://ease.space/resources/images/fbmeta-en.png"/>
+          content="Mettez facilement en place une politique de sécurité au niveau de l’utilisation, le partage et le stockage des mots de passe de l’entreprise."/>
+    <meta name="twitter:image" content="https://ease.space/resources/images/metadescription.png"/>
     <link rel="icon" type="image/png" href="resources/icons/APPEASE.png"/>
-<!--    <link rel="stylesheet" href="/cssMinified.v00048/bootstrap.css"/>-->
+<!--    <link rel="stylesheet" href="/cssMinified.v00049/bootstrap.css"/>-->
     <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Raleway:500,700" />
-    <link rel="stylesheet" type="text/css" href="/cssMinified.v00048/lib/fonts/museo-font.css"/>
+    <link rel="stylesheet" type="text/css" href="/cssMinified.v00049/lib/fonts/museo-font.css"/>
     <link rel="stylesheet" href="/semantic/dist/semantic.min.css"/>
-    <link rel="stylesheet" href="/cssMinified.v00048/default_style.css"/>
-    <link rel="stylesheet" href="/cssMinified.v00048/lib/fonts/font-awesome-4.2.0/css/font-awesome.min.css"/>
-    <link rel="stylesheet" href="/cssMinified.v00048/lib/fonts/untitled-font-4/styles.css"/>
-    <link rel="stylesheet" href="/cssMinified.v00048/team.css"/>
+    <link rel="stylesheet" href="/cssMinified.v00049/default_style.css"/>
+    <link rel="stylesheet" href="/cssMinified.v00049/lib/fonts/font-awesome-4.2.0/css/font-awesome.min.css"/>
+    <link rel="stylesheet" href="/cssMinified.v00049/lib/fonts/untitled-font-4/styles.css"/>
+    <link rel="stylesheet" href="/cssMinified.v00049/team.css"/>
     <link rel="stylesheet" href="/css/lib/loading.min.css"/>
     <script src="https://js.stripe.com/v3/"></script>
     <script src="/jsMinified.v00023/jsencrypt.js"></script>
@@ -70,7 +71,7 @@
 <BODY class="notranslate">
 <div id="app">
 </div>
-<script src="teams_bundle.js?v=78"></script>
+<script src="teams_bundle.js?v=79"></script>
 <script type="text/javascript">
 /*  !function(a,b){var c=window;c.SessionStack=a,c[a]=c[a]||function(){
     c[a].q=c[a].q||[],c[a].q.push(arguments)},c[a].t=b;var d=document.createElement("script");

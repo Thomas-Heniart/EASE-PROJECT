@@ -170,4 +170,8 @@ public class PostServletManager extends ServletManager {
     public String getBody() {
         return params.toString();
     }
+
+    public JSONObject getParams() {
+        return this.params;
+    }
 }

@@ -15,11 +15,29 @@ pageEncoding="UTF-8"%>
 	
 	<meta http-equiv="Content-Type" contentType="text/html; charset=UTF-8" />
 	<meta name="viewport" content="initial-scale=1, maximum-scale=1" />
-	<meta property="og:image"
-	content="https://ease.space/resources/other/fb_letsgo_icon.jpg" />
+	<!-- Description shown in Google -->
+	<!-- Facebook metadata -->
+	<meta name="description"
+		  content="Mettez facilement en place une politique de sécurité au niveau de l’utilisation, le partage et le stockage des mots de passe de l’entreprise."/>
+	<meta property="og:url" content="https://ease.space/"/>
+	<meta property="og:type" content="website"/>
+	<meta property="og:title" content="Ease.space - Prenez soin des mots de passe de votre entreprise"/>
+	<meta property="og:image" content="https://ease.space/resources/metadescription.png"/>
+	<meta property="og:logo" content="https://ease.space/resources/icons/APPEASE.png"/>
+	<meta property="og:description"
+		  content="Mettez facilement en place une politique de sécurité au niveau de l’utilisation, le partage et le stockage des mots de passe de l’entreprise."/>
+	<meta property="og:image" content="https://ease.space/resources/images/metadescription.png"/>
+	<!-- Twitter metadata -->
+	<meta name="twitter:card" content="summary_large_image"/>
+	<meta name="twitter:site" content="@ease_space"/>
+	<meta name="twitter:creator" content="@ease_space"/>
+	<meta name="twitter:title" content="Ease.space - Prenez soin des mots de passe de votre entreprise"/>
+	<meta name="twitter:description"
+		  content="Mettez facilement en place une politique de sécurité au niveau de l’utilisation, le partage et le stockage des mots de passe de l’entreprise."/>
+	<meta name="twitter:image" content="https://ease.space/resources/images/metadescription.png"/>
 	<link rel="icon" type="image/png" href="resources/icons/APPEASE.png" />
 	<link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Raleway:500,700" />
-    <link rel="stylesheet" type="text/css" href="/cssMinified.v00048/lib/fonts/museo-font.css"/>
+    <link rel="stylesheet" type="text/css" href="/cssMinified.v00049/lib/fonts/museo-font.css"/>
 
 
 
@@ -33,11 +51,11 @@ pageEncoding="UTF-8"%>
     <script src="/jsMinified.v00023/languageChooser.js"></script>
 
 	<link rel="stylesheet" href="semantic/dist/semantic.min.css">
-    <link rel="stylesheet" href="/cssMinified.v00048/default_style.css"/>
-    <link rel="stylesheet" href="/cssMinified.v00048/bootstrap.css"/>
-    <link rel="stylesheet" href="/cssMinified.v00048/landingPage.css"/>
-    <link rel="stylesheet" href="/cssMinified.v00048/teamBody.css"/>
-    <link rel="stylesheet" href="/cssMinified.v00048/lib/fonts/font-awesome-4.2.0/css/font-awesome.min.css"/>
+    <link rel="stylesheet" href="/cssMinified.v00049/default_style.css"/>
+    <link rel="stylesheet" href="/cssMinified.v00049/bootstrap.css"/>
+    <link rel="stylesheet" href="/cssMinified.v00049/landingPage.css"/>
+    <link rel="stylesheet" href="/cssMinified.v00049/teamBody.css"/>
+    <link rel="stylesheet" href="/cssMinified.v00049/lib/fonts/font-awesome-4.2.0/css/font-awesome.min.css"/>
     <script type="text/javascript">$crisp = [];
     CRISP_WEBSITE_ID = "6e9fe14b-66f7-487c-8ac9-5912461be78a";
     (function () {

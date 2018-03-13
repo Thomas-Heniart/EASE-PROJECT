@@ -49,8 +49,6 @@ class Base extends React.Component {
           });*/
           this.setState({fetching: false});
         });
-        if (!response.user.new_feature_seen)
-          this.props.dispatch(showNewFeatureModal({active: true}))
       }else
         this.setState({fetching: false});
     });
@@ -68,7 +66,7 @@ class Base extends React.Component {
       return (<LoadingScreen/>);
     else
       return (
-          <div id="app-root">
+          <div id="app-root" className={this.props.location.pathname === `/fill` ? 'fill_credentials' : null}>
             <WebsocketClient/>
             {this.props.children}
             <ModalsContainer/>

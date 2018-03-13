@@ -79,3 +79,36 @@ CREATE TABLE `logs` (
 
 UPDATE status
 SET new_feature_seen = 0;
+
+SELECT
+  first_name,
+  last_name,
+  teamUsers.email,
+  phone_number,
+  'benjamin@ease.space'
+FROM teamUsers
+  JOIN users ON teamUsers.user_id = users.id
+  JOIN USER_PERSONAL_INFORMATION ON users.personal_information_id = USER_PERSONAL_INFORMATION.id
+  JOIN teamUserRoles ON teamUsers.teamUserRole_id = teamUserRoles.id
+  JOIN teams ON teamUsers.team_id = teams.id
+WHERE teams.active = 1 AND teamUsers.email NOT LIKE '%@ease.space'
+INTO OUTFILE '/tmp/contacts_sample_import.csv'
+FIELDS TERMINATED BY ','
+  ENCLOSED BY '"'
+LINES TERMINATED BY '\n';
+
+SELECT
+  SUBSTRING_INDEX(teamUsers.email, '@', -1) AS domain,
+  name,
+  phone_number
+FROM teamUsers
+  JOIN users ON teamUsers.user_id = users.id
+  JOIN USER_PERSONAL_INFORMATION ON users.personal_information_id = USER_PERSONAL_INFORMATION.id
+  JOIN teamUserRoles ON teamUsers.teamUserRole_id = teamUserRoles.id
+  JOIN teams ON teamUsers.team_id = teams.id
+WHERE role = b'00000011' AND teams.active = 1 AND teamUsers.email NOT LIKE '%@ease.space'
+INTO OUTFILE '/tmp/companies.csv'
+FIELDS TERMINATED BY ','
+  ENCLOSED BY '"'
+LINES TERMINATED BY '\n';
+

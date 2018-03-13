@@ -30,6 +30,7 @@
 @import 'LanguageChooser';
 @import 'mixins';
 @import 'react-joyride';
+@import 'magicLink';
 
 /*  hover  */
 .hvr-grow {
@@ -1974,17 +1975,17 @@ p {
   margin-bottom: 5%!important;
 }
 .knowUserOtherLink {
-  margin-bottom: 5%;
+  margin-bottom: 10px;
   div {
-    margin-bottom: 10%;
+    margin-bottom: 10px;
   }
   a {
     color: #949EB7;
     font-weight: 300;
     font-size: 17px;
   }
-  a p:hover {
-    text-decoration: underline;
+  a p div:hover {
+    text-decoration: underline!important;
   }
 }
 .mrgBottom5 {

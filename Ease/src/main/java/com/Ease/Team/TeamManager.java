@@ -8,7 +8,7 @@ import com.Ease.NewDashboard.App;
 import com.Ease.Team.TeamCard.TeamCard;
 import com.Ease.Team.TeamCardReceiver.TeamCardReceiver;
 import com.Ease.User.NotificationFactory;
-import com.Ease.Utils.DateComparator;
+import com.Ease.Utils.DateUtils;
 import com.Ease.Utils.HttpServletException;
 import com.Ease.Utils.HttpStatus;
 import com.Ease.websocketV1.WebSocketManager;
@@ -79,11 +79,11 @@ public class TeamManager {
             for (TeamUser teamUser : team.getTeamUsers().values()) {
                 if (teamUser.isRegistered() || !teamUser.getTeamUserStatus().isInvitation_sent())
                     continue;
-                if (DateComparator.wasDaysAgo(teamUser.getCreation_date(), 3))
+                if (DateUtils.wasDaysAgo(teamUser.getCreation_date(), 3))
                     three_days_teamUsers.add(teamUser);
-                else if (DateComparator.wasDaysAgo(teamUser.getCreation_date(), 8))
+                else if (DateUtils.wasDaysAgo(teamUser.getCreation_date(), 8))
                     eight_days_teamUsers.add(teamUser);
-                else if (DateComparator.wasDaysAgo(teamUser.getCreation_date(), 12))
+                else if (DateUtils.wasDaysAgo(teamUser.getCreation_date(), 12))
                     twelve_days_teamUsers.add(teamUser);
             }
         }
@@ -184,7 +184,7 @@ public class TeamManager {
                             account.setPassword_must_be_updated(true);
                             hibernateQuery.saveOrUpdateObject(account);
                             NotificationFactory.getInstance().createPasswordNotUpToDateNotification(teamCardReceiver, this.getUserIdMap(servletContext), hibernateQuery);
-                        } else if (teamCardReceiver.getTeamUser().isVerified() && account.mustUpdatePassword() && !account.isAdmin_notified() && DateComparator.isOutdated(account.getLast_update(), account.getReminder_interval(), 7)) {
+                        } else if (teamCardReceiver.getTeamUser().isVerified() && account.mustUpdatePassword() && !account.isAdmin_notified() && DateUtils.isOutdated(account.getLast_update(), account.getReminder_interval(), 7)) {
                             account.setAdmin_notified(true);
                             hibernateQuery.saveOrUpdateObject(account);
                             Channel channel = teamCard.getChannel();
@@ -251,7 +251,7 @@ public class TeamManager {
             for (TeamUser teamUser : team.getTeamUsers().values()) {
                 if (teamUser.getDepartureDate() == null)
                     continue;
-                if (DateComparator.isInDays(teamUser.getDepartureDate(), 3)) {
+                if (DateUtils.isInDays(teamUser.getDepartureDate(), 3)) {
                     calendar.setTime(teamUser.getDepartureDate());
                     String suffixe = "th";
                     switch (calendar.get(Calendar.DAY_OF_MONTH)) {

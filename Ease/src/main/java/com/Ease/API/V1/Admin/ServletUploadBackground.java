@@ -21,19 +21,11 @@ public class ServletUploadBackground extends HttpServlet {
         try {
             sm.needToBeEaseAdmin();
             JSONObject backgrounds = sm.getJsonParam("backgrounds", false, false);
-            if (backgrounds.length() == 1) {
-                for (Object key : backgrounds.keySet()) {
-                    String index = (String) key;
-                    String base64_string = backgrounds.getString(index);
-                    FileOutputStream file = new FileOutputStream(Variables.BACKGROUND_PATH + "background.jpeg");
-                    file.write(Base64.decodeBase64(base64_string));
-                    file.close();
-                }
-            }
             for (Object key : backgrounds.keySet()) {
                 String index = (String) key;
+                System.out.println(index);
                 Integer value_index = Integer.valueOf(index);
-                if (value_index < 0 || value_index > 6)
+                if (value_index < 1 || value_index > 7)
                     continue;
                 String base64_string = backgrounds.getString(index);
                 FileOutputStream file = new FileOutputStream(Variables.BACKGROUND_PATH + "background_" + index + ".jpeg");

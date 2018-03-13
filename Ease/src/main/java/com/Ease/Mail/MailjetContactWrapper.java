@@ -56,12 +56,18 @@ public class MailjetContactWrapper {
             lists.put(new JSONObject()
                     .put("ListId", "33213")
                     .put("Action", must_add_owner_list ? "addnoforce" : "remove"));
+            lists.put(new JSONObject()
+                    .put("ListId", "36735")
+                    .put("Action", "addnoforce"));
         } else {
             lists.put(new JSONObject()
                     .put("ListId", "33211")
                     .put("Action", "remove"));
             lists.put(new JSONObject()
                     .put("ListId", "33213")
+                    .put("Action", "remove"));
+            lists.put(new JSONObject()
+                    .put("ListId", "36735")
                     .put("Action", "remove"));
             lists.put(new JSONObject()
                     .put("ListId", "33212")

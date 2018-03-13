@@ -14,12 +14,32 @@
     <% } %>
     <meta http-equiv="Content-Type" contentType="text/html; charset=UTF-8"/>
     <meta name="viewport" content="initial-scale=1, maximum-scale=1"/>
+    <!-- Description shown in Google -->
+    <!-- Facebook metadata -->
+    <meta name="description"
+          content="Mettez facilement en place une politique de sécurité au niveau de l’utilisation, le partage et le stockage des mots de passe de l’entreprise."/>
+    <meta property="og:url" content="https://ease.space/"/>
+    <meta property="og:type" content="website"/>
+    <meta property="og:title" content="Ease.space - Prenez soin des mots de passe de votre entreprise"/>
+    <meta property="og:image" content="https://ease.space/resources/metadescription.png"/>
+    <meta property="og:logo" content="https://ease.space/resources/icons/APPEASE.png"/>
+    <meta property="og:description"
+          content="Mettez facilement en place une politique de sécurité au niveau de l’utilisation, le partage et le stockage des mots de passe de l’entreprise."/>
+    <meta property="og:image" content="https://ease.space/resources/images/metadescription.png"/>
+    <!-- Twitter metadata -->
+    <meta name="twitter:card" content="summary_large_image"/>
+    <meta name="twitter:site" content="@ease_space"/>
+    <meta name="twitter:creator" content="@ease_space"/>
+    <meta name="twitter:title" content="Ease.space - Prenez soin des mots de passe de votre entreprise"/>
+    <meta name="twitter:description"
+          content="Mettez facilement en place une politique de sécurité au niveau de l’utilisation, le partage et le stockage des mots de passe de l’entreprise."/>
+    <meta name="twitter:image" content="https://ease.space/resources/images/metadescription.png"/>
     <title>Ease.space admin</title>
     <link rel="icon" type="image/png" href="resources/icons/APPEASE.png"/>
     <link rel="manifest" href="manifest.json">
     <script src="jsMinified.v00023/jquery-3.1.0.js"></script>
     <script src="js/ajaxHandler.js"></script>
-    <script src="js/backOffice/admin.js?3"></script>
+    <script src="js/backOffice/admin.js?5"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/semantic-ui/2.2.10/semantic.min.css">
     <script src="https://cdn.jsdelivr.net/semantic-ui/2.2.10/semantic.min.js"></script>
     <script src="https://semantic-ui.com/javascript/library/tablesort.js"></script>
@@ -61,6 +81,7 @@
             <a class="item" data-target="#background-upload-segment">Background upload</a>
             <a class="item" data-target="#onboarding-rooms-segment">Onboarding rooms</a>
             <a class="item" data-target="#teams-deleted-segment">Teams deleted</a>
+            <a class="item" data-target="#statistics">Statistics</a>
         </div>
     </div>
     <div class="twelve wide stretched column tabs">
@@ -87,6 +108,9 @@
         </div>
         <div id="onboarding-rooms-segment" class="ui segment loading backOffice_part" style="display: none">
             <%@include file="templates/backofficeAdmin/OnboardingRooms.jsp" %>
+        </div>
+        <div id="statistics" class="ui segment loading backOffice_part" style="display: none">
+            <%@include file="templates/backofficeAdmin/Statistics.jsp" %>
         </div>
     </div>
 </div>

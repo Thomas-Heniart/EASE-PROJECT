@@ -1,6 +1,8 @@
 package com.Ease.API.V1.Metrics;
 
+import com.Ease.Hibernate.HibernateQuery;
 import com.Ease.Metrics.ClickOnApp;
+import com.Ease.User.User;
 import com.Ease.Utils.Servlets.PostServletManager;
 
 import javax.servlet.RequestDispatcher;
@@ -19,8 +21,11 @@ public class ClickOnAppMetric extends HttpServlet {
         try {
             sm.needToBeConnected();
             Integer app_id = sm.getIntParam("app_id", true, false);
+            HibernateQuery hibernateQuery = sm.getHibernateQuery();
+            User user = sm.getUser();
+            user.getApp(app_id, hibernateQuery);
             Calendar calendar = Calendar.getInstance();
-            ClickOnApp.incrementClickOnApp(app_id, calendar.get(Calendar.YEAR), calendar.get(Calendar.WEEK_OF_YEAR), calendar.get(Calendar.DAY_OF_WEEK), sm.getHibernateQuery());
+            ClickOnApp.incrementClickOnApp(app_id, user.getDb_id(), calendar.get(Calendar.YEAR), calendar.get(Calendar.WEEK_OF_YEAR), calendar.get(Calendar.DAY_OF_WEEK), hibernateQuery);
             sm.setSuccess("Done");
         } catch (Exception e) {
             sm.setError(e);

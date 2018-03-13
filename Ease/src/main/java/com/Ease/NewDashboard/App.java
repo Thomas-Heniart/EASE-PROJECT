@@ -202,12 +202,17 @@ abstract public class App {
         return this.getClickMetric(hibernateQuery).hasBeenClickedForDays(number_of_days);
     }
 
-    public ClickOnApp getClickMetric(HibernateQuery hibernateQuery) {
+    private ClickOnApp getClickMetric(HibernateQuery hibernateQuery) {
         Calendar calendar = Calendar.getInstance();
-        return ClickOnApp.getMetricForApp(this.getDb_id(), calendar.get(Calendar.YEAR), calendar.get(Calendar.WEEK_OF_YEAR), hibernateQuery);
+        Integer user_id = null;
+        if (this.getProfile() != null && this.getProfile().getUser() != null)
+            user_id = this.getProfile().getUser().getDb_id();
+        return ClickOnApp.getMetricForApp(this.getDb_id(), user_id, calendar.get(Calendar.YEAR), calendar.get(Calendar.WEEK_OF_YEAR), hibernateQuery);
     }
 
     public boolean isEmpty() {
         return false;
     }
+
+
 }
