@@ -124,7 +124,7 @@ public class TeamSingleCard extends TeamWebsiteCard {
     }
 
     public void generateMagicLink() {
-        this.magicLink = Variables.URL_PATH + "fill?card_id=" + this.getDb_id() + "&uuid=" + UUID.randomUUID().toString();
+        this.magicLink = Variables.URL_PATH + "#/fill?card_id=" + this.getDb_id() + "&uuid=" + UUID.randomUUID().toString();
         Calendar now = Calendar.getInstance();
         now.add(Calendar.DAY_OF_YEAR, 1);
         this.magicLinkExpirationDate = now.getTime();
