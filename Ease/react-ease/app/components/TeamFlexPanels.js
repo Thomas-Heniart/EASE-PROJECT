@@ -37,40 +37,6 @@ import {withRouter} from "react-router-dom";
 import {connect} from "react-redux";
 import {DepartureDatePassedIndicator} from "./dashboard/utils";
 
-function ChannelJoinRequestList(props){
-  const {room, team} = props;
-  const requests = room.join_requests;
-
-  return (
-      <List>
-        {requests.map(item => {
-          const user = team.team_users[item];
-          return (
-              <List.Item key={item}>
-                <Label basic size="mini">
-                  <Icon name="user"/>
-                  {user.username} would like to access this group.&nbsp;
-                  <a onClick={e => {props.dispatch(channelActions.addTeamUserToChannel({
-                    team_id: team.id,
-                    channel_id: room.id,
-                    team_user_id: item
-                  }))}}>
-                    accept</a>
-                  &nbsp;or&nbsp;
-                  <a onClick={e => {props.dispatch(channelActions.deleteJoinChannelRequest({
-                    team_id: team.id,
-                    room_id: room.id,
-                    team_user_id: item
-                  }))}}>
-                    refuse</a> ?
-                </Label>
-              </List.Item>
-          )
-        })}
-      </List>
-  )
-}
-
 @connect()
 class AddMemberToRoomDiv extends React.Component {
   constructor(props){
@@ -434,11 +400,6 @@ class TeamChannelFlexTab extends React.Component{
                                 }))
                               }}/>}
                         </Label>)})}
-                  {isAdmin(me.role) &&
-                  <ChannelJoinRequestList
-                      room={channel}
-                      team={team}
-                      dispatch={this.props.dispatch}/>}
                   <div>
                     {isAdmin(me.role) && !channel.default &&
                     <AddMemberToRoomDiv
