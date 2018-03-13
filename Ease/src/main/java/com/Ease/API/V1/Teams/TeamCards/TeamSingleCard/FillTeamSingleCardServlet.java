@@ -129,7 +129,7 @@ public class FillTeamSingleCardServlet extends HttpServlet {
         if (teamCard == null) {
             hibernateQuery.queryString("SELECT t FROM TeamSingleSoftwareCard t WHERE t.db_id = :id AND t.magicLink LIKE :magicLink");
             hibernateQuery.setParameter("id", card_id);
-            hibernateQuery.setParameter("magicLink", Variables.URL_PATH + "fill?card_id=" + card_id + "&uuid=" + uuid);
+            hibernateQuery.setParameter("magicLink", "%?card_id=" + card_id + "&uuid=" + uuid);
             teamCard = (TeamCard) hibernateQuery.getSingleResult();
         }
         if (teamCard == null)
