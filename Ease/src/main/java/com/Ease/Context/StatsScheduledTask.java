@@ -7,10 +7,7 @@ import com.Ease.Metrics.WeeklyStats;
 import com.Ease.Utils.HttpServletException;
 import org.json.JSONArray;
 
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
-import java.util.TimerTask;
+import java.util.*;
 
 public class StatsScheduledTask extends TimerTask {
     @Override
@@ -75,10 +72,19 @@ public class StatsScheduledTask extends TimerTask {
         hibernateQuery.setParameter("year", last_week.get(Calendar.YEAR));
         List<ClickOnApp> clickOnApps = hibernateQuery.list();
         int passwords_killed = 0;
-        for (ClickOnApp clickOnApp : clickOnApps)
+        Set<Integer> userIds = new HashSet<>();
+        for (ClickOnApp clickOnApp : clickOnApps) {
             passwords_killed += clickOnApp.getTotalClicks();
+            userIds.add(clickOnApp.getUser_id());
+        }
+        Integer teamCount = 0;
+        if (!userIds.isEmpty()) {
+            hibernateQuery.queryString("SELECT DISTINCT tu.team FROM TeamUser tu WHERE tu.user IS NOT NULL AND tu.user.db_id IN (:userIds)");
+            hibernateQuery.setParameter("userIds", userIds);
+            teamCount = hibernateQuery.list().size();
+        }
         WeeklyStats weeklyStats = WeeklyStats.retrieveWeeklyStats(last_week.get(Calendar.YEAR), last_week.get(Calendar.WEEK_OF_YEAR), hibernateQuery);
-        weeklyStats.updateValues(new_companies, new_users, new_apps, new_team_apps, passwords_killed);
+        weeklyStats.updateValues(new_companies, new_users, new_apps, new_team_apps, passwords_killed, userIds.size(), teamCount);
         hibernateQuery.saveOrUpdateObject(weeklyStats);
         return weeklyStats;
     }
