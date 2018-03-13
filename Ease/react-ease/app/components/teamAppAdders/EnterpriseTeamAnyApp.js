@@ -504,7 +504,9 @@ class EnterpriseTeamAnyApp extends Component {
                      type="text"
                      required/>}
             {app.requests.length > 0 && isAdmin(me.role) &&
-            <SharingRequestButton onClick={e => {this.props.dispatch(modalActions.showTeamManageAppRequestModal({active: true, team_card_id: app.id}))}}/>}
+            <SharingRequestButton
+              requestNumber={app.requests.length}
+              onClick={e => {this.props.dispatch(modalActions.showTeamManageAppRequestModal({active: true, team_card_id: app.id}))}}/>}
           </Header>
           {!this.state.edit &&
           <TeamEnterpriseAppButtonSet app={app}

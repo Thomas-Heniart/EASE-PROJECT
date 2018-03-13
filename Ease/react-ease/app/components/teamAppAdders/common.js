@@ -350,7 +350,6 @@ export const ExtendFillSwitch = ({value, onClick}) => {
 };
 
 export const SharingRequestButton = ({onClick, requestNumber}) => {
-  console.log(requestNumber);
   return (
       <Popup size="mini"
              position="top center"
@@ -359,7 +358,7 @@ export const SharingRequestButton = ({onClick, requestNumber}) => {
              trigger={
                <Button size='mini' className="button-card-request" onClick={onClick}>{requestNumber} {requestNumber > 1 ? 'requests' : 'request'} pending</Button>
              }
-             content='User(s) would like to acces this App'/>
+             content='User(s) would like to access this App'/>
   )
 };
 
