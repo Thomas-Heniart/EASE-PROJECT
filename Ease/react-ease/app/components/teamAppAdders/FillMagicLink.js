@@ -43,7 +43,7 @@ const CredentialInput = ({item, onChange, removeField}) => {
              labelPosition="left"
              placeholder={item.placeholder}
              value={item.value}
-             type={item.type}/>
+             type={item.type ? item.type : item.information_type}/>
     </Form.Field>
   )
 };
@@ -66,7 +66,7 @@ const OtherInput = ({item, onChange, onChangePlaceholder, onFocus, removeField})
              labelPosition="left"
              placeholder='New field'
              value={item.value}
-             type={item.type}/>
+             type={item.type ? item.type : item.information_type}/>
     </Form.Field>
   )
 };
@@ -76,14 +76,14 @@ class FillMagicLink extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      error: false,
       team_card: {},
-      username: '',
-      email: '',
-      teamName: '',
       credentials: [],
-      loaded: false,
+      email: '',
+      username: '',
+      teamName: '',
       query: null,
+      error: false,
+      loaded: false,
       loading: false
     }
   }
@@ -195,16 +195,21 @@ class FillMagicLink extends Component {
             <img src="/resources/images/ease_logo_white.svg" alt="logo"/>
           </a>
           <div className="full_flex"/>
+          <div>
+            <span>PRODUCT</span>
+            <span>SECURITY</span>
+            <span>CONNECTION</span>
+          </div>
         </header>
         {(this.state.error && this.state.loaded) &&
         <div>This link was valid only for 24hours and is now <strong>expired</strong>.
           Please contact the person who sent it to you.</div>}
         {(!this.state.error && this.state.loaded) &&
         <React.Fragment>
-          <p>Send login and password to {this.state.username} ({this.state.email}), from {this.state.teamName}</p>
-          <div>
+          <p className='title'>Send login and password to <strong>{this.state.username} ({this.state.email})</strong>, from <strong>{this.state.teamName}</strong></p>
+          <div className='content'>
             <div className="ease_popup ease_team_popup">
-              <Form onSubmit={this.confirm}>
+              <Form className="container" onSubmit={this.confirm}>
                 <div className="display-flex align_items_center" style={{marginBottom: '30px'}}>
                   <div className="squared_image_handler">
                     <img src={this.state.team_card.website.logo} alt="Website logo"/>
@@ -223,20 +228,19 @@ class FillMagicLink extends Component {
                   disabled={this.state.loading}
                   positive
                   className="modal-button uppercase"
-                  content={'CONFIRM'}/>
+                  content={'SEND'}/>
               </Form>
             </div>
-            <div>
-              <p>Privacy and security tips 🤝</p>
-              <div><p>Transfer the login and password only if you know the person.</p></div>
-              <div><p>The transfer is <strong>encrypted end-to-end</strong> using internationally recognized encryption
-                methods</p></div>
-              <div><p>The URL of this page will always start with https://ease.space.</p></div>
+            <div className='explication'>
+              <p className='content_title'>Privacy and security tips 🤝</p>
+              <div className='cadre'><p>Transfer the login and password only if you know the person.</p></div>
+              <div className='cadre'><p>The transfer is <strong>encrypted end-to-end</strong> using internationally recognized encryption methods</p></div>
+              <div className='cadre'><p>The URL of this page will always start with https://ease.space.</p></div>
             </div>
           </div>
         </React.Fragment>}
         <Loader active={!this.state.loaded}/>
-        <p>At Ease.space we help companies secure, use and share their passwords.
+        <p className='bottom_sentence'>At Ease.space we help companies secure, use and share their passwords.
           <a href='https://ease.space/contact' target='_blank'>Contact us</a> if you have any question.</p>
       </React.Fragment>
     )
