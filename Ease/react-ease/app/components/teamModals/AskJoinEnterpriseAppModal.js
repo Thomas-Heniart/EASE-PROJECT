@@ -30,7 +30,8 @@ class AskJoinEnterpriseAppModal extends Component {
       errorMessage: '',
       team_card: this.props.team_card,
       my_id: this.props.teams[this.props.team_card.team_id].my_team_user_id,
-      credentials: transformWebsiteInfoIntoList(this.props.team_card.website.information)
+      credentials: transformWebsiteInfoIntoList(this.props.team_card.website ? this.props.team_card.website.information
+        : this.props.team_card.software.connection_information)
     }
   };
   handleCredentialInput = (e, {name, value}) => {
@@ -66,7 +67,7 @@ class AskJoinEnterpriseAppModal extends Component {
           <Form class="container" onSubmit={this.confirm} error={!!this.state.errorMessage.length}>
             <Form.Field class="display-flex align_items_center" style={{marginBottom: '35px'}}>
               <div class="squared_image_handler">
-                <img src={app.website.logo} alt="Website logo"/>
+                <img src={app.website ? app.website.logo : app.software.logo} alt="Website logo"/>
               </div>
               <span style={{fontSize: "1.3rem"}}>{app.name}</span>
             </Form.Field>
