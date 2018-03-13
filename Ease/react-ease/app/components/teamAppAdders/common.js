@@ -81,13 +81,13 @@ export class EmptyCredentialsSimpleAppIndicator extends Component {
             labelPosition='left'>
           <Icon name="user"/>
           {(team_card.team_user_filler_id === -1 && team_card.magic_link === '') &&
-          <u onClick={this.chooseMember}>
-            Choose a user to fill connection info.
-          </u>}
-          {(team_card.team_user_filler_id === -1 && team_card.magic_link_expiration_date > new Date().getTime()) &&
+          <u onClick={this.chooseMember}>Choose a user to fill connection info.</u>}
+          {(team_card.team_user_filler_id === -1 && team_card.magic_link_expiration_date > new Date().getTime() && isAdmin(me.role)) &&
           <span>Waiting for login and password. <u onClick={() => this.props.dispatch(showManageMagicLinkModal({active: true, team_card: team_card}))}>Manage request link</u></span>}
-          {(team_card.team_user_filler_id === -1 && team_card.magic_link_expiration_date < new Date().getTime()) &&
+          {(team_card.team_user_filler_id === -1 && team_card.magic_link_expiration_date < new Date().getTime() && isAdmin(me.role)) &&
           <span>Link has expired. <u onClick={this.renewLink}>Get a new link</u></span>}
+          {(team_card.team_user_filler_id === -1 && !isAdmin(me.role)) &&
+          <span>Waiting for login and password.</span>}
           {(team_card.team_user_filler_id !== -1 && team_card.team_user_filler_id === me.id) &&
               <span>Waiting for <strong>{me.username}</strong> to<u onClick={this.fillCredentials}>fill info</u></span>}
           {(team_card.team_user_filler_id !== -1 && team_card.team_user_filler_id !== me.id) &&

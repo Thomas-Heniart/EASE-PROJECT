@@ -156,10 +156,6 @@ class ChooseHow extends React.Component {
 }
 
 class ChoosePersonWhoHasCredentials extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {}
-  }
   role = (role) => {
     if (role === 3)
       return ('Owner');

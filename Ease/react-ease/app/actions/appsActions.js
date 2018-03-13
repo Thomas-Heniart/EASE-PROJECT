@@ -185,7 +185,6 @@ export function teamEditEnterpriseCardReceiver({team_id, team_card_id, team_card
 }
 
 export function teamCreateSingleApp({team_id, channel_id, website_id, name, description, password_reminder_interval, team_user_filler_id, account_information, receivers, generate_magic_link}) {
-  console.log('[TS][CREATE][CLASSIC]: ', generate_magic_link);
   return (dispatch, getState) => {
     return post_api.teamApps.createSingleCard({
       team_id: team_id,
@@ -200,7 +199,6 @@ export function teamCreateSingleApp({team_id, channel_id, website_id, name, desc
       generate_magic_link: generate_magic_link,
       ws_id: getState().common.ws_id
     }).then(team_card => {
-      console.log('[TS][CREATE][CLASSIC][LINK]: ', team_card.magic_link);
       dispatch(teamCardCreatedAction({team_card: team_card}));
       const room = getState().teams[team_id].rooms[channel_id];
       dispatch(addNotification({
@@ -214,7 +212,6 @@ export function teamCreateSingleApp({team_id, channel_id, website_id, name, desc
 }
 
 export function teamCreateAnySingleCard({team_id, channel_id, name, description, password_reminder_interval, url, img_url, connection_information, team_user_filler_id, account_information, receivers, credentials_provided, generate_magic_link}) {
-  console.log('[TS][CREATE][ANY]: ', generate_magic_link);
   return (dispatch, getState) => {
     return post_api.teamApps.createTeamAnySingleCard({
       team_id: team_id,
@@ -245,7 +242,6 @@ export function teamCreateAnySingleCard({team_id, channel_id, name, description,
 }
 
 export function teamCreateSoftwareSingleCard({team_id, channel_id, name, description, password_reminder_interval, logo_url, team_user_filler_id, connection_information, account_information, receivers, generate_magic_link}) {
-  console.log('[TS][CREATE][SOFT]: ', generate_magic_link);
   return (dispatch, getState) => {
     return post_api.teamApps.createTeamSoftwareSingleCard({
       team_id: team_id,
