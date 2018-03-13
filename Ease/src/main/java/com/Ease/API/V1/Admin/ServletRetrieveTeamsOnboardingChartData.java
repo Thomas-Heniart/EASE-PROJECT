@@ -31,7 +31,7 @@ public class ServletRetrieveTeamsOnboardingChartData extends HttpServlet {
                     .put("Importation done")
                     .put("Apps added");
             HibernateQuery hibernateQuery = sm.getHibernateQuery();
-            hibernateQuery.queryString("SELECT o FROM OnboardingStatus o");
+            hibernateQuery.queryString("SELECT t.onboardingStatus FROM Team t WHERE t.active IS true");
             List<OnboardingStatus> onboardingStatuses = hibernateQuery.list();
             JSONArray datasetsData = new JSONArray();
             for (int i = 0; i < 6; i++)
