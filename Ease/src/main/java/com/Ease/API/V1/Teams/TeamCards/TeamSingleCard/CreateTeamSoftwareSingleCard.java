@@ -76,7 +76,7 @@ public class CreateTeamSoftwareSingleCard extends HttpServlet {
                     teamSingleSoftwareCard.setTeamUser_filler_test(teamUser_filler);
                 }
                 Boolean generateMagicLink = sm.getBooleanParam("generate_magic_link", true, true);
-                if (generateMagicLink == null)
+                if (generateMagicLink == null || !team.isValidFreemium())
                     generateMagicLink = false;
                 if (generateMagicLink) {
                     sm.saveOrUpdate(teamSingleSoftwareCard);
