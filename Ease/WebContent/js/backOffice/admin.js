@@ -5,8 +5,10 @@ var click_graph;
 let website_obj = {};
 let website_arr = [];
 let onboarding_rooms_obj = {};
+let onboarding_chart;
 
 $(document).ready(function () {
+  $('.tabular.menu .item').tab();
   ajaxHandler.get("/api/v1/admin/GetPublicWebsites", null, () => {
   }, (res) => {
     website_arr = res;
@@ -274,6 +276,13 @@ $(document).ready(function () {
             target.removeClass("loading");
             $("#stats_table").tablesort();
             $("#stats_table th.number_data").data('sortBy', (th, td, tablesort) => parseInt(td.text()));
+          });
+          let graph = $("#onboardingChart");
+          ajaxHandler.get("/api/v1/admin/RetrieveTeamsOnboardingChartData", {}, () => {
+          }, (data) => {
+            if (!!onboarding_chart)
+              onboarding_chart.destroy();
+            onboarding_chart = new Chart(graph, data);
           });
           break;
         default:
