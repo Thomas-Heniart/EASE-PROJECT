@@ -3,14 +3,17 @@ package com.Ease.Mail;
 import com.Ease.Context.Variables;
 import com.Ease.Team.Team;
 import com.Ease.Team.TeamUser;
+import com.Ease.Utils.Slack.SlackAPIWrapper;
+import com.github.seratch.jslack.api.methods.SlackApiException;
 
+import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 
-public class NewTeamMailThread extends Thread {
+public class NewTeamThread extends Thread {
     private Team team;
 
-    public NewTeamMailThread(Team team) {
+    public NewTeamThread(Team team) {
         super();
         this.team = team;
     }
@@ -42,5 +45,19 @@ public class NewTeamMailThread extends Thread {
         DateFormat dateFormat = new SimpleDateFormat("EEE, d MMM yyyy HH:mm");
         mailJetBuilder.addVariable("date", dateFormat.format(team.getSubscription_date()));
         mailJetBuilder.sendEmail();
+        StringBuilder slackMessage = new StringBuilder("*✅New company*\nNew company information: ")
+                .append(team.getName())
+                .append(", ")
+                .append(owner.getUser().getPersonalInformation().getFirst_name())
+                .append(" ")
+                .append(owner.getUser().getPersonalInformation().getLast_name())
+                .append(", ")
+                .append(owner.getUser().getPersonalInformation().getPhone_number())
+                .append("\n=======\n=======\n=======");
+        try {
+            SlackAPIWrapper.getInstance().postMessage("C9P9UL1MM", slackMessage.toString());
+        } catch (IOException | SlackApiException e) {
+            e.printStackTrace();
+        }
     }
 }

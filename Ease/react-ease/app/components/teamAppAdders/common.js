@@ -378,16 +378,16 @@ export const ExtendFillSwitch = ({value, onClick}) => {
   )
 };
 
-export const SharingRequestButton = ({onClick}) => {
+export const SharingRequestButton = ({onClick, requestNumber}) => {
   return (
       <Popup size="mini"
              position="top center"
              inverted
              flowing
              trigger={
-               <Icon name="user add" class="team_app_indicator" style={{color: '#e84855'}} link onClick={onClick}/>
+               <Button size='mini' className="button-card-request" onClick={onClick}>{requestNumber} {requestNumber > 1 ? 'requests' : 'request'} pending</Button>
              }
-             content='User(s) would like to acces this App'/>
+             content='User(s) would like to access this App'/>
   )
 };
 

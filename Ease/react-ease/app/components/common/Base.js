@@ -49,8 +49,6 @@ class Base extends React.Component {
           });*/
           this.setState({fetching: false});
         });
-        if (!response.user.new_feature_seen)
-          this.props.dispatch(showNewFeatureModal({active: true}))
       }else
         this.setState({fetching: false});
     });

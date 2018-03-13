@@ -11,6 +11,7 @@ import org.hibernate.query.Query;
 import javax.persistence.NoResultException;
 import javax.persistence.TemporalType;
 import java.io.Serializable;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -53,8 +54,12 @@ public class HibernateQuery {
         this.query.setParameter(i, value);
     }
 
-    public void setDate(String name, Date date) {
+    public void setTimestamp(String name, Date date) {
         this.query.setParameter(name, date, TemporalType.TIMESTAMP);
+    }
+
+    public void setDate(String name, Calendar calendar) {
+        this.query.setParameter(name, calendar, TemporalType.DATE);
     }
 
     public List list() {
