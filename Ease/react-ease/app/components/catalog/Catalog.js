@@ -41,6 +41,7 @@ class Catalog extends Component {
     }, 1);
   }
   resetQuery = () => {
+    console.log("reset query catalog.js");
     this.setState({query: ''});
     this.main_container.scrollTo(0,0);
   };
@@ -94,7 +95,7 @@ class Catalog extends Component {
                       <Route exact path={`${this.props.match.path}/website/addWebsite`}
                              render={(props) => <AddAnyApp cross focus={true}/>}/>
                       <Route path={`${this.props.match.path}/website`}
-                             render={(props) => <WebsitesContainer {...props} query={this.state.query}/>}/>
+                             render={(props) => <WebsitesContainer resetQuery={this.resetQuery} {...props} query={this.state.query}/>}/>
                     </Switch>}
                 </Grid.Column>
                 <Grid.Column width={3} />

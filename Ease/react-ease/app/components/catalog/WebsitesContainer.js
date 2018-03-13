@@ -55,7 +55,7 @@ class WebsitesContainer extends Component{
                    render={(props) => <CategoryAppsContainer {...props} websites={websites} updates={query.length > 0 ? [] : this.props.catalog.updates} openModal={this.openModal}/>}/>
           </Switch>}
           {websites.length === 0 && this.props.catalog.loaded &&
-            <AddAnyApp query={query} focus={true}/>}
+            <AddAnyApp resetQuery={this.props.resetQuery} query={query} focus={true}/>}
         </Container>
     )
   }

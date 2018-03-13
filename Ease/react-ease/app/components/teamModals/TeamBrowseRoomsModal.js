@@ -121,7 +121,7 @@ class TeamBrowseRoomsModal extends Component {
                     size="tiny"
                     onClick={e => {this.props.dispatch(teamModalsActions.showAddTeamChannelModal({active: true, team_id: team.id}));
                     this.props.history.replace(`/teams/${this.props.match.params.teamId}/${this.props.match.params.itemId}`) }}>
-                    Create Room !</Button>
+                    Create Room</Button>
                 </div>
               </div>
             </Header>
