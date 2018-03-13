@@ -44,6 +44,12 @@ public class WeeklyStats {
     @Column(name = "passwords_killed")
     private Integer passwords_killed;
 
+    @Column(name = "active_users")
+    private Integer active_users;
+
+    @Column(name = "active_teams")
+    private Integer active_teams;
+
     public WeeklyStats() {
     }
 
@@ -116,6 +122,22 @@ public class WeeklyStats {
         this.passwords_killed = passwords_killed;
     }
 
+    public Integer getActive_users() {
+        return active_users;
+    }
+
+    public void setActive_users(Integer active_users) {
+        this.active_users = active_users;
+    }
+
+    public Integer getActive_teams() {
+        return active_teams;
+    }
+
+    public void setActive_teams(Integer active_teams) {
+        this.active_teams = active_teams;
+    }
+
     public JSONObject getJson() {
         JSONObject res = new JSONObject();
         res.put("new_companies", new_companies);
@@ -123,15 +145,19 @@ public class WeeklyStats {
         res.put("new_apps", new_apps);
         res.put("new_team_apps", new_team_apps);
         res.put("passwords_killed", passwords_killed);
+        res.put("active_users", active_users);
+        res.put("active_teams", active_teams);
         res.put("week", week + " - " + year);
         return res;
     }
 
-    public void updateValues(Integer new_companies, Integer new_users, Integer new_apps, Integer new_team_apps, Integer passwords_killed) {
+    public void updateValues(Integer new_companies, Integer new_users, Integer new_apps, Integer new_team_apps, Integer passwords_killed, Integer active_users, Integer active_teams) {
         this.setNew_companies(new_companies);
         this.setNew_users(new_users);
         this.setNew_apps(new_apps);
         this.setNew_team_apps(new_team_apps);
         this.setPasswords_killed(passwords_killed);
+        this.setActive_users(active_users);
+        this.setActive_teams(active_teams);
     }
 }

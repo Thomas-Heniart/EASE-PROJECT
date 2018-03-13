@@ -5,17 +5,17 @@ import java.util.Date;
 /**
  * Created by thomas on 06/07/2017.
  */
-public class DateComparator {
-    private static DateComparator ourInstance = new DateComparator();
+public class DateUtils {
+    private static DateUtils ourInstance = new DateUtils();
 
-    public static DateComparator getInstance() {
+    public static DateUtils getInstance() {
         return ourInstance;
     }
 
     public final static long millisecondsInDay = 86400000;
     public final static Long millisecondsInMonth = new Long("2629746000");
 
-    private DateComparator() {
+    private DateUtils() {
 
     }
 

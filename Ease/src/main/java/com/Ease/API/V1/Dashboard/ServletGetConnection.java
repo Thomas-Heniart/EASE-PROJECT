@@ -56,7 +56,7 @@ public class ServletGetConnection extends HttpServlet {
                 throw new HttpServletException(HttpStatus.Forbidden);
             String public_key = (String) sm.getContextAttr("publicKey");
             Calendar calendar = Calendar.getInstance();
-            ClickOnApp.incrementClickOnApp(app_id, calendar.get(Calendar.YEAR), calendar.get(Calendar.WEEK_OF_YEAR), calendar.get(Calendar.DAY_OF_WEEK), sm.getHibernateQuery());
+            ClickOnApp.incrementClickOnApp(app_id, user.getDb_id(), calendar.get(Calendar.YEAR), calendar.get(Calendar.WEEK_OF_YEAR), calendar.get(Calendar.DAY_OF_WEEK), sm.getHibernateQuery());
             Metrics metrics = (Metrics) sm.getContextAttr("metrics");
             metrics.increaseConnection(sm.getDB());
             sm.setSuccess(app.getConnectionJson(public_key));

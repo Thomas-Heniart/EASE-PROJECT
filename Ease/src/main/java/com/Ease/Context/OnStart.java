@@ -96,6 +96,8 @@ public class OnStart implements ServletContextListener {
                 next_clock = delay_six_pm.getTimeInMillis() - new Date().getTime();
                 AccountsToFillScheduledTask accountsToFillScheduledTask = new AccountsToFillScheduledTask(teamIdMap);
                 time.schedule(accountsToFillScheduledTask, next_clock, 24 * 60 * 60 * 1000);
+                SlackScheduledTask slackScheduledTask = new SlackScheduledTask();
+                time.schedule(slackScheduledTask, 0 /* next_clock */, 24 * 60 * 60 * 1000);
 
                 Calendar delay_six_am = Calendar.getInstance();
                 hour = delay_six_am.get(Calendar.HOUR_OF_DAY);

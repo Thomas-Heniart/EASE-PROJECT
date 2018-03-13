@@ -267,6 +267,8 @@ $(document).ready(function () {
                 "<td>" + elem.new_apps + "</td>" +
                 "<td>" + elem.new_team_apps + "</td>" +
                 "<td>" + elem.passwords_killed + "</td>" +
+                "<td>" + elem.active_users + "</td>" +
+                "<td>" + elem.active_teams + "</td>" +
                 "</tr>").appendTo(body);
             });
             target.removeClass("loading");

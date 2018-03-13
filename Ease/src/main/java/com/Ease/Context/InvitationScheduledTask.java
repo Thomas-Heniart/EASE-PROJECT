@@ -22,7 +22,7 @@ public class InvitationScheduledTask extends TimerTask {
         HibernateQuery hibernateQuery = new HibernateQuery();
         try {
             hibernateQuery.queryString("SELECT t FROM TeamUser t JOIN t.teamUserStatus AS s WHERE t.admin_id IS NOT NULL AND t.arrival_date IS NOT NULL AND t.arrival_date < :date AND s.invitation_sent is false");
-            hibernateQuery.setDate("date", new Date());
+            hibernateQuery.setTimestamp("date", new Date());
             List<TeamUser> teamUsers = hibernateQuery.list();
             Map<TeamUser, Set<TeamUser>> adminAndTeamUsersMap = new HashMap<>();
             for (TeamUser teamUser : teamUsers) {

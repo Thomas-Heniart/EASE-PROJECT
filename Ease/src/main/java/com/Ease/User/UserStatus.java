@@ -62,6 +62,12 @@ public class UserStatus {
     @Column(name = "registered")
     private boolean registered = false;
 
+    @Column(name = "click_on_eight_apps_in_a_day")
+    private boolean click_on_eight_apps_in_a_day = false;
+
+    @Column(name = "click_on_thirty_apps_in_a_week")
+    private boolean click_on_thirty_apps_in_a_week = false;
+
     public UserStatus() {
 
     }
@@ -200,6 +206,22 @@ public class UserStatus {
 
     public void setRegistered(boolean registered) {
         this.registered = registered;
+    }
+
+    public boolean click_on_eight_apps_in_a_day() {
+        return click_on_eight_apps_in_a_day;
+    }
+
+    public void setClick_on_eight_apps_in_a_day(boolean click_on_eight_apps_in_a_day) {
+        this.click_on_eight_apps_in_a_day = click_on_eight_apps_in_a_day;
+    }
+
+    public boolean click_on_thirty_apps_in_a_week() {
+        return click_on_thirty_apps_in_a_week;
+    }
+
+    public void setClick_on_thirty_apps_in_a_week(boolean click_on_thirty_apps_in_a_week) {
+        this.click_on_thirty_apps_in_a_week = click_on_thirty_apps_in_a_week;
     }
 
     @Override

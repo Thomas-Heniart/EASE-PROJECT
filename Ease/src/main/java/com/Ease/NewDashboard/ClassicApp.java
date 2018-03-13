@@ -1,7 +1,7 @@
 package com.Ease.NewDashboard;
 
 import com.Ease.Catalog.Website;
-import com.Ease.Utils.DateComparator;
+import com.Ease.Utils.DateUtils;
 import com.Ease.Utils.HttpServletException;
 import com.Ease.Utils.HttpStatus;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
@@ -45,7 +45,7 @@ public class ClassicApp extends WebsiteApp {
     }
 
     public boolean isUpToDate() {
-        return this.getAccount() == null || !DateComparator.isOutdated(this.getAccount().getLast_update(), this.getAccount().getReminder_interval(), 0);
+        return this.getAccount() == null || !DateUtils.isOutdated(this.getAccount().getLast_update(), this.getAccount().getReminder_interval(), 0);
     }
 
     @Override

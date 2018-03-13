@@ -5,11 +5,14 @@ import com.Ease.Team.TeamUser;
 import com.Ease.User.User;
 import com.Ease.Utils.HttpServletException;
 import com.Ease.Utils.HttpStatus;
+import com.Ease.Utils.Slack.SlackAPIWrapper;
+import com.github.seratch.jslack.api.methods.SlackApiException;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 import javax.persistence.*;
+import java.io.IOException;
 import java.util.Comparator;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
@@ -118,6 +121,30 @@ public class Profile {
 
     public void addApp(App app) {
         this.getAppSet().add(app);
+        if (this.getUser() == null)
+            return;
+        int appsSize = this.getUser().getApps().size();
+        if (appsSize == 10 || appsSize == 20) {
+            StringBuilder stringBuilder = new StringBuilder("*✅User has ")
+                    .append(appsSize)
+                    .append(" apps*\nThis user has now more than 10 apps: ")
+                    .append(this.getUser().getEmail())
+                    .append(", ")
+                    .append(this.getUser().getPersonalInformation().getPhone_number() != null ? this.getUser().getPersonalInformation().getPhone_number() : "");
+            for (TeamUser teamUser : this.getUser().getTeamUsers())
+                stringBuilder
+                        .append(" (")
+                        .append(teamUser.getTeamUserRole().getRoleName())
+                        .append(", ")
+                        .append(teamUser.getTeam().getName())
+                        .append(")");
+            stringBuilder.append("\n=======\n=======\n=======");
+            try {
+                SlackAPIWrapper.getInstance().postMessage("C9P9UL1MM", stringBuilder.toString());
+            } catch (IOException | SlackApiException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     /**
