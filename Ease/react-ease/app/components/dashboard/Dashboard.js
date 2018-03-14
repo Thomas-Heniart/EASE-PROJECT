@@ -6,6 +6,7 @@ import Tutorial from "./Tutorial";
 import DashboardColumn from "./DashboardColumn";
 import {connect} from "react-redux";
 import withScrolling from 'react-dnd-scrollzone';
+import Footer from "./footer";
 const ScrollingComponent = withScrolling('div');
 
 @connect(store => ({
@@ -79,6 +80,7 @@ class Dashboard extends Component {
             })}
             {this.state.tutorial &&
             <Tutorial/>}
+            <Footer/>
           </ScrollingComponent>
         </div>
     )

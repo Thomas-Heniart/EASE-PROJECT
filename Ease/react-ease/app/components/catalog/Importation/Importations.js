@@ -17,7 +17,7 @@ import {teamCreateSingleApp, teamCreateAnySingleCard, teamCreateLinkCard} from "
 import {createProfile} from "../../../actions/dashboardActions";
 import {createTeamChannel, addTeamUserToChannel} from "../../../actions/channelActions";
 import {getLogo} from "../../../utils/api"
-import {Loader} from 'semantic-ui-react';
+import {Loader, Message} from 'semantic-ui-react';
 
 function json(fields, separator, csv, dispatch) {
   const array = csv.split('\n');
