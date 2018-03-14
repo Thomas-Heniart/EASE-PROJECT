@@ -1,4 +1,5 @@
 import {goToOnBoarding} from "../actions/onBoardingActions";
+import BannerTeams from "./teams/BannerTeams";
 
 var React = require('react');
 var classnames = require('classnames');
@@ -209,6 +210,11 @@ class TeamView extends React.Component {
                   dispatch={this.props.dispatch}/>
               <div className="team_client_body bordered_scrollbar">
                 <div id="col_main">
+                  {isAdmin(me.role) && item.join_requests &&
+                  <BannerTeams room={team.rooms[item.id]}
+                               team={team}
+                               me={me}
+                               dispatch={this.props.dispatch}/>}
                   {(this.props.card.type && this.props.card.channel_id === selectedItem.id) &&
                   <TeamAppAddingUi
                       addAppView={this.props.card.type}
