@@ -1,6 +1,7 @@
 .fill_credentials {
   background-image: radial-gradient(circle at 0 0, #616698, #555c95 15%, #373b60);
   color: white;
+  overflow-y: auto;
   #ease_header {
     margin-top: 10px;
     border-bottom: none;
@@ -21,6 +22,7 @@
     }
   }
   .expired {
+    margin-bottom: 400px;
     width: 400px;
     font-size: 28px;
     text-align: center;
@@ -45,7 +47,8 @@
       font-weight: bold;
     }
     &.bottom_sentence {
-      text-align: center
+      text-align: center;
+      margin-top: 70px;
     }
     a {
       text-decoration: underline;
