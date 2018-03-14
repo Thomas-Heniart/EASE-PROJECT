@@ -190,7 +190,7 @@ class FillMagicLink extends Component {
   confirm = () => {
     this.setState({loading: true});
     const connection_information = this.state.credentials.reduce((prev, curr) => {
-      return {...prev, [curr.name]: {type: curr.type, priority: curr.priority, placeholder: curr.placeholder}}
+      return {...prev, [curr.name]: {type: curr.type ? curr.type : curr.information_type, priority: curr.priority, placeholder: curr.placeholder}}
     }, {});
     this.props.dispatch(sendCredentialsToTeam({
       card_id: this.state.query.card_id,
