@@ -658,6 +658,9 @@ module.exports = {
       });
     },
     sendCredentialsToTeam: ({card_id, uuid, account_information, type, url, img_url, connection_information, ws_id}) => {
+      Object.keys(account_information).map(item => {
+        account_information[item] = cipher(account_information[item]);
+      });
       if (type === 'classic')
         return basic_post('/fill', {
           card_id: card_id,
