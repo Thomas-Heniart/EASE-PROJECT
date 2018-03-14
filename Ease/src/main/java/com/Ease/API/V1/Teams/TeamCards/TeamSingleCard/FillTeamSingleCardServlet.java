@@ -36,7 +36,7 @@ public class FillTeamSingleCardServlet extends HttpServlet {
             HibernateQuery hibernateQuery = sm.getHibernateQuery();
             TeamCard teamCard = this.getTeamCard(card_id, uuid, hibernateQuery);
             JSONObject account_information = sm.getJsonParam("account_information", false, false);
-            //sm.decipher(account_information);
+            sm.decipher(account_information);
             if (teamCard.isTeamWebsiteCard()) {
                 TeamSingleCard teamSingleCard = (TeamSingleCard) teamCard;
                 Website website = teamSingleCard.getWebsite();
