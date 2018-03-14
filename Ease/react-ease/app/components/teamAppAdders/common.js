@@ -1,19 +1,27 @@
 import { Header, Popup, Grid, Label,List, Search,SearchResult, Container, Divider, Icon, Transition, TextArea, Segment, Checkbox, Form, Input, Select, Dropdown, Button, Message } from 'semantic-ui-react';
 import classnames from "classnames";
 import api from "../../utils/api";
-import {showTeamEditEnterpriseAppModal, showFillSimpleCardCredentialsModal, showUpgradeTeamPlanModal, showSimpleAppFillerChooserModal} from "../../actions/teamModalActions";
+import {
+  showTeamEditEnterpriseAppModal, showFillSimpleCardCredentialsModal, showUpgradeTeamPlanModal,
+  showSimpleAppFillerChooserModal, showManageMagicLinkModal
+} from "../../actions/teamModalActions";
 import {passwordChangeOptions, passwordChangeValues, copyTextToClipboard} from "../../utils/utils";
 import React, {Component} from "react";
 import post_api from "../../utils/post_api";
 import {isAdmin} from "../../utils/helperFunctions";
 import {connect} from "react-redux";
+import {renewMagicLink} from "../../actions/magicLinkActions";
 
 export class EmptyCredentialsSimpleAppIndicator extends Component {
   constructor(props){
     super(props);
     this.state = {
-      reminderSent: false
+      reminderSent: false,
+      timestamp: null
     }
+  }
+  componentWillMount() {
+    this.getTime();
   }
   sendReminder = () => {
     const {team_card} = this.props;
@@ -32,6 +40,14 @@ export class EmptyCredentialsSimpleAppIndicator extends Component {
       }, 2000);
     });
   };
+  renewLink = () => {
+    this.props.dispatch(renewMagicLink({
+      team_id: this.props.team_card.team_id,
+      team_card_id: this.props.team_card.id
+    })).then(response => {
+      this.getTime();
+    });
+  };
   chooseMember = () => {
     this.props.dispatch(showSimpleAppFillerChooserModal({
       active: true,
@@ -44,21 +60,34 @@ export class EmptyCredentialsSimpleAppIndicator extends Component {
       team_card: this.props.team_card
     }));
   };
+  getTime = () => {
+    if (this.props.team_card.magic_link !== '' && this.props.team_card.magic_link_expiration_date > this.state.timestamp) {
+      setTimeout(() => {
+        this.getTime();
+      }, 1000);
+      this.setState({timestamp: new Date().getTime()});
+    }
+    else
+      this.setState({timestamp: null});
+  };
   render(){
     const {team_card, team_users, meReceiver, me} = this.props;
-
     return (
         <Button
             as='div'
             icon
-            class="empty_app_indicator"
+            className={team_card.magic_link !== '' && team_card.magic_link_expiration_date < new Date().getTime() ? "empty_app_indicator link_expired" : "empty_app_indicator"}
             size="mini"
             labelPosition='left'>
           <Icon name="user"/>
-          {team_card.team_user_filler_id === -1 &&
-          <u onClick={this.chooseMember}>
-            Choose a user to fill connection info.
-          </u>}
+          {(team_card.team_user_filler_id === -1 && team_card.magic_link === '') &&
+          <u onClick={this.chooseMember}>Choose a user to fill connection info.</u>}
+          {(team_card.team_user_filler_id === -1 && team_card.magic_link_expiration_date > new Date().getTime() && isAdmin(me.role)) &&
+          <span>Waiting for login and password. <u onClick={() => this.props.dispatch(showManageMagicLinkModal({active: true, team_card: team_card}))}>Manage request link</u></span>}
+          {(team_card.team_user_filler_id === -1 && team_card.magic_link_expiration_date < new Date().getTime() && isAdmin(me.role)) &&
+          <span>Link has expired. <u onClick={this.renewLink}>Get a new link</u></span>}
+          {(team_card.team_user_filler_id === -1 && !isAdmin(me.role)) &&
+          <span>Waiting for login and password.</span>}
           {(team_card.team_user_filler_id !== -1 && team_card.team_user_filler_id === me.id) &&
               <span>Waiting for <strong>{me.username}</strong> to<u onClick={this.fillCredentials}>fill info</u></span>}
           {(team_card.team_user_filler_id !== -1 && team_card.team_user_filler_id !== me.id) &&

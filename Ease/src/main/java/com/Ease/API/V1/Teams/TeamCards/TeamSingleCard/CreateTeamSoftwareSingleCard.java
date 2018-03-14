@@ -27,6 +27,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.HashMap;
 
 @WebServlet("/api/v1/teams/CreateTeamSoftwareSingleCard")
 public class CreateTeamSoftwareSingleCard extends HttpServlet {
@@ -64,6 +65,7 @@ public class CreateTeamSoftwareSingleCard extends HttpServlet {
             if (password_reminder_interval < 0 || !team.isValidFreemium())
                 password_reminder_interval = 0;
             TeamSingleSoftwareCard teamSingleSoftwareCard = new TeamSingleSoftwareCard(name, team, channel, description, software);
+            teamSingleSoftwareCard.setTeamUser_sender(teamUser_connected);
             Account account = null;
             String teamKey = sm.getTeamKey(team);
             TeamUser teamUser_filler = null;
@@ -72,6 +74,15 @@ public class CreateTeamSoftwareSingleCard extends HttpServlet {
                 if (teamUser_filler_id != null && teamUser_filler_id != -1) {
                     teamUser_filler = team.getTeamUserWithId(teamUser_filler_id);
                     teamSingleSoftwareCard.setTeamUser_filler_test(teamUser_filler);
+                }
+                Boolean generateMagicLink = sm.getBooleanParam("generate_magic_link", true, true);
+                if (generateMagicLink == null || !team.isValidFreemium())
+                    generateMagicLink = false;
+                if (generateMagicLink) {
+                    sm.saveOrUpdate(teamSingleSoftwareCard);
+                    teamSingleSoftwareCard.generateMagicLink();
+                    account = AccountFactory.getInstance().createAccountFromMap(new HashMap<>(), teamKey, password_reminder_interval, sm.getHibernateQuery());
+                    teamSingleSoftwareCard.setAccount(account);
                 }
             } else {
                 account_information = software.getAllCredentialsFromJson(account_information);
@@ -82,7 +93,6 @@ public class CreateTeamSoftwareSingleCard extends HttpServlet {
             JSONObject receivers = sm.getJsonParam("receivers", false, false);
             for (Object object : receivers.keySet()) {
                 String key = String.valueOf(object);
-                JSONObject value = receivers.getJSONObject(key);
                 Integer teamUser_id = Integer.valueOf(key);
                 Boolean allowed_to_see_password = true; //value.getBoolean("allowed_to_see_password");
                 TeamUser teamUser = team.getTeamUserWithId(teamUser_id);

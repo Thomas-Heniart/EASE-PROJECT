@@ -415,5 +415,13 @@ module.exports = {
         throw err.response.data;
       })
     }
+  },
+  magicLink: {
+    getTeamCardFromMagicLink: ({card_id, uuid}) => {
+      return basic_get('/fill', {
+        card_id: card_id,
+        uuid: uuid
+      });
+    },
   }
 };

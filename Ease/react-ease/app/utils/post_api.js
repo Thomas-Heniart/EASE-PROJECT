@@ -595,7 +595,7 @@ module.exports = {
     }
   },
   teamApps: {
-    createSingleCard: ({team_id, channel_id, website_id, name, description, password_reminder_interval, team_user_filler_id, account_information, receivers, ws_id}) => {
+    createSingleCard: ({team_id, channel_id, website_id, name, description, password_reminder_interval, team_user_filler_id, account_information, receivers, generate_magic_link, ws_id}) => {
       Object.keys(account_information).map(item => {
         account_information[item] = cipher(account_information[item]);
       });
@@ -609,6 +609,7 @@ module.exports = {
         account_information: account_information,
         description: description,
         receivers: receivers,
+        generate_magic_link: generate_magic_link,
         ws_id: ws_id
       }).then(response => {
         return response.data;
@@ -616,7 +617,7 @@ module.exports = {
         throw err.response.data;
       });
     },
-    createTeamAnySingleCard: ({team_id, channel_id, name, description, password_reminder_interval, url, img_url, connection_information, team_user_filler_id, account_information, receivers, credentials_provided, ws_id}) => {
+    createTeamAnySingleCard: ({team_id, channel_id, name, description, password_reminder_interval, url, img_url, connection_information, team_user_filler_id, account_information, receivers, credentials_provided, generate_magic_link, ws_id}) => {
       Object.keys(account_information).map(item => {
         account_information[item] = cipher(account_information[item]);
       });
@@ -633,10 +634,11 @@ module.exports = {
         team_user_filler_id: team_user_filler_id,
         receivers: receivers,
         credentials_provided: credentials_provided,
+        generate_magic_link: generate_magic_link,
         ws_id: ws_id
       });
     },
-    createTeamSoftwareSingleCard: ({team_id, channel_id, name, description, password_reminder_interval, logo_url, team_user_filler_id, connection_information, account_information, receivers, ws_id}) => {
+    createTeamSoftwareSingleCard: ({team_id, channel_id, name, description, password_reminder_interval, logo_url, team_user_filler_id, connection_information, account_information, receivers, generate_magic_link, ws_id}) => {
       Object.keys(account_information).map(item => {
         account_information[item] = cipher(account_information[item]);
       });
@@ -651,8 +653,39 @@ module.exports = {
         connection_information: connection_information,
         account_information: account_information,
         receivers: receivers,
+        generate_magic_link: generate_magic_link,
         ws_id: ws_id
       });
+    },
+    sendCredentialsToTeam: ({card_id, uuid, account_information, type, url, img_url, connection_information, ws_id}) => {
+      Object.keys(account_information).map(item => {
+        account_information[item] = cipher(account_information[item]);
+      });
+      if (type === 'classic')
+        return basic_post('/fill', {
+          card_id: card_id,
+          uuid: uuid,
+          account_information: account_information,
+          ws_id: ws_id
+        });
+      else if (type === 'any')
+        return basic_post('/fill', {
+          card_id: card_id,
+          uuid: uuid,
+          account_information: account_information,
+          url: url,
+          img_url: img_url,
+          connection_information: connection_information,
+          ws_id: ws_id
+        });
+      else
+        return basic_post('/fill', {
+          card_id: card_id,
+          uuid: uuid,
+          account_information: account_information,
+          connection_information: connection_information,
+          ws_id: ws_id
+        });
     },
     sendSingleCardFillerReminder: ({team_card_id}) => {
       return basic_post('/api/v1/teams/SendFillerReminder', {
@@ -1567,6 +1600,15 @@ module.exports = {
         return response.data;
       }).catch(err => {
         throw err;
+      });
+    }
+  },
+  magicLink: {
+    renewMagicLink: ({team_id, team_card_id, ws_id}) => {
+      return basic_post('/api/v1/renewMagicLink', {
+        team_id: team_id,
+        team_card_id: team_card_id,
+        ws_id: ws_id
       });
     }
   }

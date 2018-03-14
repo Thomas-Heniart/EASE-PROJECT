@@ -131,8 +131,8 @@ public class PostServletManager extends ServletManager {
     public Boolean getBooleanParam(String paramName, boolean saveInLogs, boolean canBeNull) throws HttpServletException {
         try {
             if (canBeNull) {
-                Boolean val = params.getBoolean(paramName);
-                return !val ? null : val;
+                Boolean val = params.optBoolean(paramName);
+                return !val ? null : true;
             } else
                 return params.getBoolean(paramName);
         } catch (Exception e) {
@@ -153,14 +153,15 @@ public class PostServletManager extends ServletManager {
             return;
         try {
             String ws_id = this.getStringParam("ws_id", false, true);
-            System.out.println("User WSM size: " + this.getUserWebSocketManager(this.getUser().getDb_id()).getWebSocketSessions().size());
             if (this.team != null) {
                 WebSocketManager webSocketManager = this.getTeamWebSocketManager(team.getDb_id());
                 System.out.println("Team id: " + team.getDb_id() + " Team WSM size: " + webSocketManager.getWebSocketSessions().size());
                 webSocketManager.sendObjects(this.webSocketMessages, ws_id);
             } else {
-                if (this.getUser() != null)
+                if (this.getUser() != null) {
+                    System.out.println("User WSM size: " + this.getUserWebSocketManager(this.getUser().getDb_id()).getWebSocketSessions().size());
                     this.getUserWebSocketManager(this.getUser().getDb_id()).sendObjects(this.webSocketMessages, ws_id);
+                }
             }
         } catch (HttpServletException e) {
             e.printStackTrace();

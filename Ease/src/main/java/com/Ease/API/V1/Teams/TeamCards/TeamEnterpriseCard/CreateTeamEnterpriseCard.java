@@ -53,6 +53,7 @@ public class CreateTeamEnterpriseCard extends HttpServlet {
             if (description != null && description.length() > 255)
                 throw new HttpServletException(HttpStatus.BadRequest, "Description size must be under 255 characters");
             TeamCard teamCard = new TeamEnterpriseCard(name, team, channel, description, website, password_reminder_interval);
+            teamCard.setTeamUser_sender(teamUser_connected);
             JSONObject receivers = sm.getJsonParam("receivers", false, false);
             sm.saveOrUpdate(teamCard);
             for (Object object : receivers.keySet()) {

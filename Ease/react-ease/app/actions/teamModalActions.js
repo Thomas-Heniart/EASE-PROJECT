@@ -294,3 +294,13 @@ export function showInviteTeamUsersModal({active, team_id}) {
     });
   };
 }
+
+export function showManageMagicLinkModal({active, team_card}) {
+  return {
+    type: 'SHOW_MANAGE_MAGIC_LINK_MODAL',
+    payload: {
+      active: active,
+      team_card: team_card
+    }
+  }
+}

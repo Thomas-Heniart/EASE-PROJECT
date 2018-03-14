@@ -31,11 +31,14 @@ public class AddTeamSingleCardReceiver extends HttpServlet {
         try {
             Integer team_id = sm.getIntParam("team_id", true, false);
             Team team = sm.getTeam(team_id);
-            sm.needToBeAdminOfTeam(team);
             Integer teamUser_id = sm.getIntParam("team_user_id", true, false);
             Boolean allowed_to_see_password = true; //sm.getBooleanParam("allowed_to_see_password", true, false);
             Integer team_card_id = sm.getIntParam("team_card_id", true, false);
             TeamCard teamCard = team.getTeamCard(team_card_id);
+            sm.needToBeTeamUserOfTeam(team);
+            TeamUser teamUser_connected = sm.getTeamUser(team);
+            if (!teamUser_connected.isTeamAdmin() && !teamUser_connected.equals(teamCard.getTeamUser_sender()))
+                throw new HttpServletException(HttpStatus.BadRequest, "You cannot edit this card");
             if (!teamCard.isTeamSingleCard())
                 throw new HttpServletException(HttpStatus.Forbidden, "This is not a team single card");
             TeamUser teamUser_receiver = team.getTeamUserWithId(teamUser_id);
@@ -62,7 +65,6 @@ public class AddTeamSingleCardReceiver extends HttpServlet {
                 profile.addApp(app);
             }
             sm.saveOrUpdate(teamCardReceiver);
-            TeamUser teamUser_connected = sm.getTeamUser(team);
             if (!teamUser_receiver.equals(teamUser_connected))
                 NotificationFactory.getInstance().createAppSentNotification(teamUser_receiver, teamUser_connected, teamCardReceiver, sm.getUserIdMap(), sm.getHibernateQuery());
             teamCard.addTeamCardReceiver(teamCardReceiver);

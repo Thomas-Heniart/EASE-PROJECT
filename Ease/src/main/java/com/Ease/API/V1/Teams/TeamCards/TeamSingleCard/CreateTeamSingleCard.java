@@ -57,6 +57,9 @@ public class CreateTeamSingleCard extends HttpServlet {
                 throw new HttpServletException(HttpStatus.BadRequest, "Description size must be under 255 characters");
             Integer teamUser_filler_id = sm.getIntParam("team_user_filler_id", true, true);
             TeamUser teamUser_filler = null;
+            Boolean generateMagicLink = sm.getBooleanParam("generate_magic_link", true, true);
+            if (generateMagicLink == null || !team.isValidFreemium())
+                generateMagicLink = false;
             Map<String, String> account_information = new HashMap<>();
             if (account_information_obj.length() != 0) {
                 sm.decipher(account_information_obj);
@@ -64,18 +67,24 @@ public class CreateTeamSingleCard extends HttpServlet {
             }
             if (teamUser_filler_id != null && !teamUser_filler_id.equals(-1))
                 teamUser_filler = team.getTeamUserWithId(teamUser_filler_id);
-            else if (account_information.isEmpty())
+            else if (account_information.isEmpty() && !generateMagicLink)
                 throw new HttpServletException(HttpStatus.BadRequest, "You must fill the or choose someone to fill it");
             String teamKey = (String) sm.getTeamProperties(team_id).get("teamKey");
             Account account = null;
             if (account_information != null && !account_information.isEmpty())
                 account = AccountFactory.getInstance().createAccountFromMap(account_information, teamKey, reminder_interval, sm.getHibernateQuery());
             TeamCard teamCard = new TeamSingleCard(name, team, channel, description, website, reminder_interval, account, teamUser_filler);
+            teamCard.setTeamUser_sender(teamUser_connected);
+            if (generateMagicLink && account == null) {
+                sm.saveOrUpdate(teamCard);
+                ((TeamSingleCard)teamCard).generateMagicLink();
+                account = AccountFactory.getInstance().createAccountFromMap(new HashMap<>(), teamKey, reminder_interval, sm.getHibernateQuery());
+                ((TeamSingleCard)teamCard).setAccount(account);
+            }
             JSONObject receivers = sm.getJsonParam("receivers", false, false);
             sm.saveOrUpdate(teamCard);
             for (Object object : receivers.keySet()) {
                 String key = String.valueOf(object);
-                JSONObject value = receivers.getJSONObject(key);
                 Integer teamUser_id = Integer.valueOf(key);
                 Boolean allowed_to_see_password = true; //value.getBoolean("allowed_to_see_password");
                 TeamUser teamUser = team.getTeamUserWithId(teamUser_id);

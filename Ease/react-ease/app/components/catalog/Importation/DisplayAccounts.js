@@ -138,7 +138,7 @@ class DisplayAccounts extends React.Component {
                   <p style={{margin: 'auto'}}>{logoLetter(item.name)}</p>
                 </div>}
                 {Object.keys(fields).map(field => (
-                  <div>
+                  <div key={field}>
                   <Input idapp={item.id}
                          key={fields[field]}
                          size='mini'
@@ -197,7 +197,7 @@ class DisplayAccounts extends React.Component {
           </Grid.Column>
           <Grid.Column width={6}>
             <Segment className='segment_pending'>
-              <div class="display_flex align_items_center" style={{justifyContent: 'space-between'}}>
+              <div className="display_flex align_items_center" style={{justifyContent: 'space-between'}}>
                 <p className='import'>Import selection to:</p>
                 <Dropdown open={this.state.dropdownOpened}
                           floating item name='location'

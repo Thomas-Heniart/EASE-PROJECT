@@ -33,8 +33,6 @@ public class ServletReactivateTeamUser extends HttpServlet {
             sm.needToBeTeamUserOfTeam(team);
             TeamUser teamUser_connected = sm.getTeamUser(team);
             TeamUser teamUser = team.getTeamUserWithId(teamUser_id);
-            System.out.println(teamUser.getAdmin_id());
-            System.out.println(teamUser_connected.getDb_id());
             if (!(teamUser_connected.isTeamAdmin() || teamUser_connected.isTeamOwner() || teamUser_connected.getDb_id().equals(teamUser.getAdmin_id())))
                 throw new HttpServletException(HttpStatus.BadRequest, "You don't have this right");
             if (!teamUser.isDisabled())
@@ -49,8 +47,8 @@ public class ServletReactivateTeamUser extends HttpServlet {
             } else {
                 teamUser.setTeamKey(AES.encrypt(teamKey, keyUser));
                 teamUser.setState(2);
+                teamUser.setDisabled(false);
             }
-            teamUser.setDisabled(false);
             Notification notification = NotificationFactory.getInstance().createNotification(teamUser.getUser(), teamUser_connected.getUsername() + " validated again your access to " + team.getName(), "/resources/notifications/flag.png", "#/teams" + team.getDb_id().toString());
             sm.saveOrUpdate(notification);
             WebSocketManager webSocketManager = sm.getUserWebSocketManager(teamUser.getUser().getDb_id());

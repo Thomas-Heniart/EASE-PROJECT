@@ -7,6 +7,7 @@ import com.Ease.Team.TeamCard.TeamCard;
 import com.Ease.Team.TeamCard.TeamLinkCard;
 import com.Ease.Team.TeamCardReceiver.TeamCardReceiver;
 import com.Ease.Team.TeamCardReceiver.TeamLinkCardReceiver;
+import com.Ease.Team.TeamUser;
 import com.Ease.Utils.HttpServletException;
 import com.Ease.Utils.HttpStatus;
 import com.Ease.Utils.Servlets.PostServletManager;
@@ -34,7 +35,10 @@ public class EditTeamLinkCard extends HttpServlet {
                 throw new HttpServletException(HttpStatus.BadRequest, "No such team link card");
             Team team = teamCard.getTeam();
             sm.initializeTeamWithContext(team);
-            sm.needToBeAdminOfTeam(team);
+            sm.needToBeTeamUserOfTeam(team);
+            TeamUser teamUser_connected = sm.getTeamUser(team);
+            if (!teamUser_connected.isTeamAdmin() && !teamUser_connected.equals(teamCard.getTeamUser_sender()))
+                throw new HttpServletException(HttpStatus.BadRequest, "You cannot edit this card");
             if (!teamCard.isTeamLinkCard())
                 throw new HttpServletException(HttpStatus.Forbidden, "You can only edit a team link card");
             TeamLinkCard teamLinkCard = (TeamLinkCard) teamCard;

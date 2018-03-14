@@ -1,6 +1,7 @@
 package com.Ease.Team.TeamCard;
 
 import com.Ease.Catalog.Software;
+import com.Ease.Context.Variables;
 import com.Ease.NewDashboard.Account;
 import com.Ease.Team.Channel;
 import com.Ease.Team.Team;
@@ -12,6 +13,9 @@ import org.hibernate.annotations.OnDeleteAction;
 import org.json.JSONObject;
 
 import javax.persistence.*;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.UUID;
 
 @Entity
 @Cacheable
@@ -29,6 +33,13 @@ public class TeamSingleSoftwareCard extends TeamSoftwareCard {
     @ManyToOne
     @JoinColumn(name = "teamUser_filler_id")
     private TeamUser teamUser_filler_test;
+
+    @Column(name = "magicLink")
+    private String magicLink;
+
+    @Column(name = "magicLinkExpirationDate")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date magicLinkExpirationDate;
 
     public TeamSingleSoftwareCard() {
 
@@ -75,6 +86,22 @@ public class TeamSingleSoftwareCard extends TeamSoftwareCard {
         this.teamUser_filler_test = teamUser_filler;
     }
 
+    public String getMagicLink() {
+        return magicLink;
+    }
+
+    public void setMagicLink(String magicLink) {
+        this.magicLink = magicLink;
+    }
+
+    public Date getMagicLinkExpirationDate() {
+        return magicLinkExpirationDate;
+    }
+
+    public void setMagicLinkExpirationDate(Date magicLinkExpirationDate) {
+        this.magicLinkExpirationDate = magicLinkExpirationDate;
+    }
+
     @Override
     public String getType() {
         return "teamSingleCard";
@@ -88,13 +115,15 @@ public class TeamSingleSoftwareCard extends TeamSoftwareCard {
     @Override
     public JSONObject getJson() {
         JSONObject res = super.getJson();
-        res.put("empty", this.getAccount() == null);
+        res.put("empty", this.getAccount() == null || !this.getAccount().satisfySoftware((this.getSoftware())));
         res.put("account_information", new JSONObject());
         res.put("team_user_filler_id", this.getTeamUser_filler_test() == null ? -1 : this.getTeamUser_filler_test().getDb_id());
         if (this.getAccount() == null)
             return res;
         res.put("last_update_date", this.getAccount().getLast_update().getTime());
         res.put("account_information", this.getAccount().getJsonWithoutPassword());
+        res.put("magic_link", this.getMagicLink() == null ? "" : this.getMagicLink());
+        res.put("magic_link_expiration_date", this.getMagicLinkExpirationDate() == null ? JSONObject.NULL : this.getMagicLinkExpirationDate().getTime());
         return res;
     }
 
@@ -105,4 +134,12 @@ public class TeamSingleSoftwareCard extends TeamSoftwareCard {
         this.getAccount().decipher(symmetric_key);
         super.decipher(symmetric_key);
     }
+
+    public void generateMagicLink() {
+        this.magicLink = Variables.URL_PATH + "#/fill?card_id=" + this.getDb_id() + "&uuid=" + UUID.randomUUID().toString();
+        Calendar now = Calendar.getInstance();
+        now.add(Calendar.DAY_OF_YEAR, 1);
+        this.magicLinkExpirationDate = now.getTime();
+    }
+
 }

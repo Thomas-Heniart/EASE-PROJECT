@@ -29,9 +29,12 @@ public class EditTeamCardFiller extends HttpServlet {
         try {
             Integer team_id = sm.getIntParam("team_id", true, false);
             Team team = sm.getTeam(team_id);
-            sm.needToBeAdminOfTeam(team);
             Integer team_card_id = sm.getIntParam("team_card_id", true, false);
             TeamCard teamCard = team.getTeamCard(team_card_id);
+            sm.needToBeTeamUserOfTeam(team);
+            TeamUser teamUser_connected = sm.getTeamUser(team);
+            if (!teamUser_connected.isTeamAdmin() && !teamUser_connected.equals(teamCard.getTeamUser_sender()))
+                throw new HttpServletException(HttpStatus.BadRequest, "You cannot edit this card");
             if (!teamCard.isTeamSingleCard())
                 throw new HttpServletException(HttpStatus.BadRequest, "No such team single card");
             Integer filler_id = sm.getIntParam("filler_id", true, false);
@@ -54,7 +57,6 @@ public class EditTeamCardFiller extends HttpServlet {
                 teamSingleCard.setTeamUser_filler(filler);
                 filler.addTeamSingleCardToFill(teamSingleCard);
             }
-            TeamUser teamUser_connected = sm.getTeamUser(team);
             NotificationFactory.getInstance().createMustFillAppNotification(filler, teamUser_connected, teamCardReceiver, sm.getUserIdMap(), sm.getHibernateQuery());
             sm.saveOrUpdate(teamCard);
             sm.addWebSocketMessage(WebSocketMessageFactory.createWebSocketMessage(WebSocketMessageType.TEAM_CARD, WebSocketMessageAction.CHANGED, teamCard.getWebSocketJson()));

@@ -8,6 +8,7 @@ import com.Ease.NewDashboard.*;
 import com.Ease.Team.Team;
 import com.Ease.Team.TeamCard.TeamEnterpriseCard;
 import com.Ease.Team.TeamCardReceiver.TeamCardReceiver;
+import com.Ease.Team.TeamUser;
 import com.Ease.Utils.HttpServletException;
 import com.Ease.Utils.HttpStatus;
 import com.Ease.Utils.Regex;
@@ -37,7 +38,10 @@ public class EditTeamAnyEnterpriseCard extends HttpServlet {
                 throw new HttpServletException(HttpStatus.BadRequest, "no such teamCard");
             Team team = teamEnterpriseCard.getTeam();
             sm.initializeTeamWithContext(team);
-            sm.needToBeAdminOfTeam(team);
+            sm.needToBeTeamUserOfTeam(team);
+            TeamUser teamUser_connected = sm.getTeamUser(team);
+            if (!teamUser_connected.isTeamAdmin() && !teamUser_connected.equals(teamEnterpriseCard.getTeamUser_sender()))
+                throw new HttpServletException(HttpStatus.BadRequest, "You cannot edit this card");
             String name = sm.getStringParam("name", true, false);
             if (name.equals("") || name.length() > 255)
                 throw new HttpServletException(HttpStatus.BadRequest, "Invalid parameter name");
@@ -65,7 +69,7 @@ public class EditTeamAnyEnterpriseCard extends HttpServlet {
                     String teamKey = sm.getTeamKey(team);
                     for (TeamCardReceiver teamCardReceiver : teamEnterpriseCard.getTeamCardReceiverMap().values()) {
                         AnyApp anyApp = (AnyApp) teamCardReceiver.getApp();
-                        Account account = AccountFactory.getInstance().createAccountFromAccount(anyApp.getAccount(), teamKey, sm.getHibernateQuery());
+                        Account account = AccountFactory.getInstance().createAccountFromAccount(anyApp.getAccount(), sm.getHibernateQuery());
                         App tmp_app = new ClassicApp(new AppInformation(anyApp.getAppInformation().getName()), website, account);
                         tmp_app.setProfile(anyApp.getProfile());
                         tmp_app.setPosition(anyApp.getPosition());
@@ -77,7 +81,7 @@ public class EditTeamAnyEnterpriseCard extends HttpServlet {
                 }
                 teamEnterpriseCard.setWebsite(website);
                 for (TeamCardReceiver teamCardReceiver : teamEnterpriseCard.getTeamCardReceiverMap().values())
-                    ((AnyApp)teamCardReceiver.getApp()).setWebsite(website);
+                    ((WebsiteApp)teamCardReceiver.getApp()).setWebsite(website);
             }
             sm.saveOrUpdate(teamEnterpriseCard);
             sm.addWebSocketMessage(WebSocketMessageFactory.createWebSocketMessage(WebSocketMessageType.TEAM_CARD, WebSocketMessageAction.CHANGED, teamEnterpriseCard.getWebSocketJson()));

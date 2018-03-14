@@ -151,7 +151,7 @@ class TeamAnySingleApp extends Component {
               {!me.disabled && team_app.empty && team_app.team_user_filler_id === me.id && !teamUserDepartureDatePassed(me.departure_date) &&
               <EmptyTeamAppIndicator onClick={this.clickOnSettings}/>}
               {!me.disabled && team_app.empty && team_app.team_user_filler_id !== me.id && !teamUserDepartureDatePassed(me.departure_date) &&
-              <DisabledAppIndicator filler_name={!!filler ? filler.username : 'Someone'} team_card_id={team_app.id}/>}
+              <DisabledAppIndicator filler_name={!!filler ? filler.username : 'Someone'} team_card_id={team_app.id} magic_link={!team_app.magic_link || team_app.magic_link === ''}/>}
               <div className="logo_handler">
                 <img className="logo" src={team_app.logo} onClick={this.connect}/>
                 <button className="settings_button" onClick={this.clickOnSettings}>

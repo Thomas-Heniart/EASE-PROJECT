@@ -39,7 +39,7 @@ public class EditTeamAnySingleCard extends HttpServlet {
             sm.initializeTeamWithContext(team);
             sm.needToBeTeamUserOfTeam(team);
             TeamUser teamUser = sm.getTeamUser(team);
-            if (!teamUser.isTeamAdmin() && (teamSingleCard.getTeamUser_filler() == null || !teamUser.equals(teamSingleCard.getTeamUser_filler())))
+            if (!teamUser.isTeamAdmin() && (teamSingleCard.getTeamUser_filler() == null || !teamUser.equals(teamSingleCard.getTeamUser_filler())) && !teamUser.equals(teamSingleCard.getTeamUser_sender()))
                 throw new HttpServletException(HttpStatus.Forbidden);
             String description = sm.getStringParam("description", true, true);
             if (description != null && description.length() > 255)
@@ -74,7 +74,7 @@ public class EditTeamAnySingleCard extends HttpServlet {
                 if (website.getWebsiteAttributes().isIntegrated()) {
                     for (TeamCardReceiver teamCardReceiver : teamSingleCard.getTeamCardReceiverMap().values()) {
                         AnyApp anyApp = (AnyApp) teamCardReceiver.getApp();
-                        Account account = AccountFactory.getInstance().createAccountFromAccount(anyApp.getAccount(), teamKey, sm.getHibernateQuery());
+                        Account account = AccountFactory.getInstance().createAccountFromAccount(anyApp.getAccount(), sm.getHibernateQuery());
                         App tmp_app = new ClassicApp(new AppInformation(anyApp.getAppInformation().getName()), website, account);
                         tmp_app.setProfile(anyApp.getProfile());
                         tmp_app.setPosition(anyApp.getPosition());
@@ -86,7 +86,7 @@ public class EditTeamAnySingleCard extends HttpServlet {
                 }
                 teamSingleCard.setWebsite(website);
                 for (TeamCardReceiver teamCardReceiver : teamSingleCard.getTeamCardReceiverMap().values())
-                    ((AnyApp)teamCardReceiver.getApp()).setWebsite(website);
+                    ((WebsiteApp)teamCardReceiver.getApp()).setWebsite(website);
             }
             account_information = teamSingleCard.getWebsite().getPresentCredentialsFromJson(account_information);
             if (account_information.length() != 0) {

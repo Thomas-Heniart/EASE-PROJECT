@@ -4,6 +4,7 @@ import com.Ease.Hibernate.HibernateQuery;
 import com.Ease.Team.Team;
 import com.Ease.Team.TeamCard.TeamCard;
 import com.Ease.Team.TeamCardReceiver.TeamSingleCardReceiver;
+import com.Ease.Team.TeamUser;
 import com.Ease.Utils.HttpServletException;
 import com.Ease.Utils.HttpStatus;
 import com.Ease.Utils.Servlets.PostServletManager;
@@ -32,7 +33,10 @@ public class EditTeamSingleCardReceiver extends HttpServlet {
             TeamCard teamCard = teamSingleCardReceiver.getTeamCard();
             Team team = teamCard.getTeam();
             sm.initializeTeamWithContext(team);
-            sm.needToBeAdminOfTeam(team);
+            sm.needToBeTeamUserOfTeam(team);
+            TeamUser teamUser_connected = sm.getTeamUser(team);
+            if (!teamUser_connected.isTeamAdmin() && !teamUser_connected.equals(teamCard.getTeamUser_sender()))
+                throw new HttpServletException(HttpStatus.BadRequest, "You cannot edit this card");
             Boolean allowed_to_see_password = true; //sm.getBooleanParam("allowed_to_see_password", true, false);
             teamSingleCardReceiver.setAllowed_to_see_password(allowed_to_see_password);
             sm.saveOrUpdate(teamSingleCardReceiver);

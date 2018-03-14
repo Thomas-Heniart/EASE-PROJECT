@@ -62,6 +62,7 @@ public class CreateTeamAnyEnterpriseCard extends HttpServlet {
             if (password_reminder_interval < 0 || !team.isValidFreemium())
                 password_reminder_interval = 0;
             TeamCard teamCard = new TeamEnterpriseCard(name, team, channel, description, website, password_reminder_interval);
+            teamCard.setTeamUser_sender(teamUser_connected);
             JSONObject receivers = sm.getJsonParam("receivers", false, false);
             sm.saveOrUpdate(teamCard);
             for (Object object : receivers.keySet()) {
