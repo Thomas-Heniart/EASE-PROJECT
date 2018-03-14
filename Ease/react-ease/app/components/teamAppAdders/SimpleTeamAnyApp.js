@@ -54,7 +54,6 @@ const TeamAppCredentialInput = ({item, onChange, disabled, readOnly}) => {
 const TeamSimpleAppButtonSet = ({app, me, dispatch, editMode, selfJoin, requestApp}) => {
   const meReceiver = app.receivers.find(receiver => (receiver.team_user_id === me.id));
   const asked = !!app.requests.find(request => (request.team_user_id === me.id));
-
   return (
     <div class="team_app_actions_holder">
       {!meReceiver &&
@@ -62,9 +61,9 @@ const TeamSimpleAppButtonSet = ({app, me, dispatch, editMode, selfJoin, requestA
                            onClick={isAdmin(me.role) ? selfJoin : asked ? null : requestApp}
                            icon="pointing up"
                            disabled={asked}/>}
-      {isAdmin(me.role) &&
+      {(isAdmin(me.role) || app.team_user_sender_id === me.id) &&
       <TeamAppActionButton text='Edit App' icon='pencil' onClick={editMode}/>}
-      {isAdmin(me.role) &&
+      {(isAdmin(me.role) || app.team_user_sender_id === me.id) &&
       <TeamAppActionButton text='Delete App' icon='trash outline' onClick={e => {dispatch(modalActions.showTeamDeleteAppModal({active: true, app_id: app.id}))}}/>}
     </div>
   )
