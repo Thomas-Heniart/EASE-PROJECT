@@ -254,6 +254,9 @@ public class Team {
                     .append(count)
                     .append(" cards on its team space (with tags) : ")
                     .append(this.getName())
+                    .append(" (")
+                    .append(this.getTeamUserOwner().getEmail())
+                    .append(")")
                     .append("\n=======\n=======\n=======");
             try {
                 SlackAPIWrapper.getInstance().postMessage("C9P9UL1MM", stringBuilder.toString());

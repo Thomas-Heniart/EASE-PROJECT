@@ -5,8 +5,10 @@ var click_graph;
 let website_obj = {};
 let website_arr = [];
 let onboarding_rooms_obj = {};
+let onboarding_chart;
 
 $(document).ready(function () {
+  $('.tabular.menu .item').tab();
   ajaxHandler.get("/api/v1/admin/GetPublicWebsites", null, () => {
   }, (res) => {
     website_arr = res;
@@ -274,6 +276,39 @@ $(document).ready(function () {
             target.removeClass("loading");
             $("#stats_table").tablesort();
             $("#stats_table th.number_data").data('sortBy', (th, td, tablesort) => parseInt(td.text()));
+          });
+          let graph = $("#onboardingChart");
+          ajaxHandler.get("/api/v1/admin/RetrieveTeamsOnboardingChartData", {}, () => {
+          }, (data) => {
+            if (!!onboarding_chart)
+              onboarding_chart.destroy();
+            data.option = {
+              scales: {
+                yAxes: [{
+                  ticks: {
+                    beginAtZero:true
+                  }
+                }]
+              }
+            };
+            data.data.datasets[0].backgroundColor = [
+              'rgba(255, 99, 132, 0.2)',
+              'rgba(54, 162, 235, 0.2)',
+              'rgba(255, 206, 86, 0.2)',
+              'rgba(75, 192, 192, 0.2)',
+              'rgba(153, 102, 255, 0.2)',
+              'rgba(255, 159, 64, 0.2)'
+            ];
+            data.data.datasets[0].borderColor = [
+              'rgba(255,99,132,1)',
+              'rgba(54, 162, 235, 1)',
+              'rgba(255, 206, 86, 1)',
+              'rgba(75, 192, 192, 1)',
+              'rgba(153, 102, 255, 1)',
+              'rgba(255, 159, 64, 1)'
+            ];
+            data.data.datasets[0].borderWidth = 1;
+            onboarding_chart = new Chart(graph, data);
           });
           break;
         default:
