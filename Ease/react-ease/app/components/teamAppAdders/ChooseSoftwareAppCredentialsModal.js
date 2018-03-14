@@ -58,7 +58,7 @@ const OtherInput = ({item, onChange, onChangePlaceholder, onFocus, removeField})
 @connect(store => ({
   teams: store.teams,
   card: store.teamCard,
-  receivers: store.modals.chooseAppCredentials.receivers
+  receivers: store.modals.chooseSoftwareAppCredentials.receivers
 }))
 class ChooseHow extends React.Component {
   constructor(props) {
