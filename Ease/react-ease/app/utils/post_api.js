@@ -658,16 +658,6 @@ module.exports = {
       });
     },
     sendCredentialsToTeam: ({card_id, uuid, account_information, type, url, img_url, connection_information, ws_id}) => {
-      console.log('ooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo');
-      console.log('[OUT][SENDCRED]: ');
-      console.log('-[TYPE]= ', type);
-      console.log('-[CARDID]= ', card_id);
-      console.log('-[UUID]= ', uuid);
-      console.log('-[ACC_INFO]= ', account_information);
-      console.log('-[URL]= ', url);
-      console.log('-[IMG]= ', img_url);
-      console.log('-[CONNECTION_INFO]= ', connection_information);
-      console.log('ooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo');
       if (type === 'classic')
         return basic_post('/fill', {
           card_id: card_id,
