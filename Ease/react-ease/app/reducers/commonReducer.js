@@ -81,6 +81,13 @@ export default function reducer(state=initialState, action) {
         }
       })
     }
+    case 'NEW_FEATURE_SEEN': {
+      return update(state, {
+        user: {
+          new_feature_seen: {$set: true}
+        }
+      })
+    }
     case 'SET_TIP_SEEN': {
       const {name} = action.payload;
       return update(state, {
