@@ -30,6 +30,11 @@ const CredentialInput = ({item, onChange}) => {
   )
 };
 
+@connect(store => ({
+  teams: store.teams,
+  card: store.teamCard,
+  receivers: store.modals.chooseAppCredentials.receivers
+}))
 class ChooseHow extends React.Component {
   constructor(props) {
     super(props);
@@ -86,13 +91,14 @@ class ChooseHow extends React.Component {
           {credentialsInputs}
           <Message error content={this.state.errorMessage}/>
           <span id='test_credentials' onClick={testCredentials}>Test connection <Icon color='green' name='magic'/></span>
+          {this.props.receivers.filter(user => (user.id !== this.props.teams[this.props.card.team_id].my_team_user_id)).length > 0 &&
           <Checkbox radio
                     style={{fontSize:'16px',marginBottom:'10px'}}
                     label={<label><strong>Ask</strong> login & password from <strong>a team member</strong></label>}
                     name='checkboxRadioGroup'
                     value={2}
                     checked={check === 2}
-                    onChange={change} />
+                    onChange={change} />}
           <Checkbox radio
                     style={{fontSize:'16px'}}
                     label={teamPro ? <label><strong>Ask</strong> login & password from <strong>outside my team</strong></label>
