@@ -76,6 +76,8 @@ public class EditTeamAnyEnterpriseCard extends HttpServlet {
                     }
                 }
                 teamEnterpriseCard.setWebsite(website);
+                for (TeamCardReceiver teamCardReceiver : teamEnterpriseCard.getTeamCardReceiverMap().values())
+                    ((AnyApp)teamCardReceiver.getApp()).setWebsite(website);
             }
             sm.saveOrUpdate(teamEnterpriseCard);
             sm.addWebSocketMessage(WebSocketMessageFactory.createWebSocketMessage(WebSocketMessageType.TEAM_CARD, WebSocketMessageAction.CHANGED, teamEnterpriseCard.getWebSocketJson()));

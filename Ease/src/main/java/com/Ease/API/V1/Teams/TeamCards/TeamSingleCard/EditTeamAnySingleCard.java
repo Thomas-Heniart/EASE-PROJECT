@@ -85,6 +85,8 @@ public class EditTeamAnySingleCard extends HttpServlet {
                     }
                 }
                 teamSingleCard.setWebsite(website);
+                for (TeamCardReceiver teamCardReceiver : teamSingleCard.getTeamCardReceiverMap().values())
+                    ((AnyApp)teamCardReceiver.getApp()).setWebsite(website);
             }
             account_information = teamSingleCard.getWebsite().getPresentCredentialsFromJson(account_information);
             if (account_information.length() != 0) {
