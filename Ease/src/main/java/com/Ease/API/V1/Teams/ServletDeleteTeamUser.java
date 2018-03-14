@@ -79,9 +79,13 @@ public class ServletDeleteTeamUser extends HttpServlet {
             hibernateQuery.queryString("DELETE FROM Update u WHERE u.teamUser.db_id = :teamUserId");
             hibernateQuery.setParameter("teamUserId", team_user_id);
             hibernateQuery.executeUpdate();
-            hibernateQuery.queryString("UPDATE TeamCard t SET t.teamUser_sender = NULL WHERE t.teamUser_sender.db_id = :id");
+            team.getTeamCardSet().stream().filter(teamCard -> teamUser_connected.equals(teamCard.getTeamUser_sender())).forEach(teamCard -> {
+                teamCard.setTeamUser_sender(null);
+                sm.saveOrUpdate(teamCard);
+            });
+            /* hibernateQuery.queryString("UPDATE TeamCard t SET t.teamUser_sender = NULL WHERE t.teamUser_sender.db_id = :id");
             hibernateQuery.setParameter("id", team_user_id);
-            hibernateQuery.executeUpdate();
+            hibernateQuery.executeUpdate(); */
             for (TeamCardReceiver teamCardReceiver : teamUser_to_delete.getTeamCardReceivers()) {
                 App app = teamCardReceiver.getApp();
                 hibernateQuery.queryString("DELETE FROM Update u WHERE u.app.db_id = :app_id");

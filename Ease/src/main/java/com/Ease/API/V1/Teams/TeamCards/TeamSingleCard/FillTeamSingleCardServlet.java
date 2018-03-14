@@ -90,6 +90,7 @@ public class FillTeamSingleCardServlet extends HttpServlet {
                 teamSingleSoftwareCard.setMagicLinkExpirationDate(null);
             }
             sm.saveOrUpdate(teamCard);
+            sm.setTeam(teamCard.getTeam());
             sm.addWebSocketMessage(WebSocketMessageFactory.createWebSocketMessage(WebSocketMessageType.TEAM_CARD, WebSocketMessageAction.CHANGED, teamCard.getWebSocketJson()));
             sm.setSuccess("Successfully fill the app");
         } catch (Exception e) {
