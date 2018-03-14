@@ -275,7 +275,8 @@ class FillMagicLink extends Component {
                 <Button
                   positive
                   loading={this.state.loading}
-                  disabled={this.state.loading || !this.checkValueInput()}
+                  disabled={this.state.loading || !this.checkValueInput()
+                  || (this.state.team_card.sub_type === 'any' && !isUrl(this.state.url))}
                   className="modal-button uppercase"
                   content={'SEND'}/>
               </Form>
