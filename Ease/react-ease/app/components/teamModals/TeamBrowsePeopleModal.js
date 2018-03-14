@@ -2,9 +2,9 @@ import React, {Component} from 'react';
 import WhiteModalTemplate from "../common/WhiteModalTemplate";
 import {showTeamBrowsePeopleModal} from '../../actions/teamModalActions';
 import ReactCSSTransitionGroup from "react-addons-css-transition-group";
-import { NavLink} from 'react-router-dom';
+import {NavLink} from 'react-router-dom';
 import {teamUserRoles} from "../../utils/utils";
-import { Header, Label,List, Search,SearchResult, Container, Divider, Icon, Transition, TextArea, Segment, Checkbox, Form, Input, Select, Dropdown, Button, Message } from 'semantic-ui-react';
+import { Header, List, Container, Divider, Icon, Input } from 'semantic-ui-react';
 import {connect} from "react-redux";
 
 class UserListItem extends Component {
