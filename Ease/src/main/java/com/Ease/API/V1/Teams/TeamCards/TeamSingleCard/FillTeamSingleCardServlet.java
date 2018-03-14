@@ -38,9 +38,6 @@ public class FillTeamSingleCardServlet extends HttpServlet {
             JSONObject account_information = sm.getJsonParam("account_information", false, false);
             if (teamCard.isTeamWebsiteCard()) {
                 TeamSingleCard teamSingleCard = (TeamSingleCard) teamCard;
-                teamSingleCard.getAccount().edit(account_information, teamSingleCard.getPassword_reminder_interval(), sm.getHibernateQuery());
-                for (TeamCardReceiver teamCardReceiver : teamSingleCard.getTeamCardReceiverMap().values())
-                    teamCardReceiver.getApp().getAccount().edit(account_information, sm.getHibernateQuery());
                 Website website = teamSingleCard.getWebsite();
                 if (!website.getWebsiteAttributes().isIntegrated()) {
                     String url = sm.getStringParam("url", true, false);
@@ -67,7 +64,12 @@ public class FillTeamSingleCardServlet extends HttpServlet {
                             }
                         }
                         teamSingleCard.setWebsite(website);
+                        for (TeamCardReceiver teamCardReceiver : teamSingleCard.getTeamCardReceiverMap().values())
+                            ((WebsiteApp)teamCardReceiver.getApp()).setWebsite(website);
                     }
+                    teamSingleCard.getAccount().edit(account_information, teamSingleCard.getPassword_reminder_interval(), sm.getHibernateQuery());
+                    for (TeamCardReceiver teamCardReceiver : teamSingleCard.getTeamCardReceiverMap().values())
+                        teamCardReceiver.getApp().getAccount().edit(account_information, sm.getHibernateQuery());
                 }
                 teamSingleCard.setMagicLink(null);
                 teamSingleCard.setMagicLinkExpirationDate(null);
