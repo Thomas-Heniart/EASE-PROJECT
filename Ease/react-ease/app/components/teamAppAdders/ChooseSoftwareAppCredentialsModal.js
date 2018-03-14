@@ -364,7 +364,7 @@ class ChooseSoftwareAppCredentialsModal extends React.Component {
   render() {
     return (
       <SimpleModalTemplate
-        onClose={this.close}
+        onClose={this.state.view !== 3 ? this.close : null}
         headerContent={'App Credentials'}>
         {this.state.view === 1 &&
         <ChooseHow confirm={this.confirm}

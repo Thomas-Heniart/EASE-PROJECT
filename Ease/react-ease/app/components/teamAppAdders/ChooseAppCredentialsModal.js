@@ -289,7 +289,7 @@ class ChooseAppCredentialsModal extends React.Component {
   render() {
     return (
       <SimpleModalTemplate
-        onClose={this.close}
+        onClose={this.state.view !== 3 ? this.close : null}
         headerContent={'Login & password'}>
         {this.state.view === 1 &&
         <ChooseHow confirm={this.confirm}
