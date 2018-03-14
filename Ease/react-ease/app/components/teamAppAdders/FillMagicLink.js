@@ -3,7 +3,12 @@ import {connect} from "react-redux";
 import queryString from "query-string";
 import {getTeamCardFromMagicLink, sendCredentialsToTeam} from "../../actions/magicLinkActions";
 import {Input, Icon, Button, Label, Form, Loader} from 'semantic-ui-react';
-import {credentialIconType, transformCredentialsListIntoObject, transformWebsiteInfoIntoList} from "../../utils/utils";
+import {
+  credentialIconType, isUrl, transformCredentialsListIntoObject,
+  transformWebsiteInfoIntoList
+} from "../../utils/utils";
+import {getClearbitLogo} from "../../utils/api";
+import {testCredentials} from "../../actions/catalogActions";
 
 const ClassicCredentialInput = ({item, onChange}) => {
   return (
@@ -11,6 +16,7 @@ const ClassicCredentialInput = ({item, onChange}) => {
       <label style={{fontSize: '16px', fontWeight: '300', color: '#424242'}}>{item.placeholder}</label>
       <Input size="large"
              autoFocus={item.autoFocus}
+             id={item.priority}
              class="modalInput team-app-input"
              required
              autoComplete='on'
@@ -76,18 +82,21 @@ class FillMagicLink extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      url: '',
       team_card: {},
       credentials: [],
       email: '',
       username: '',
       teamName: '',
       query: null,
+      img_url: '',
+      sent: false,
       error: false,
       loaded: false,
-      loading: false
+      loading: false,
+      priority: 2
     }
   }
-
   componentWillMount() {
     const query = queryString.parse(this.props.location.search);
     this.props.dispatch(getTeamCardFromMagicLink({
@@ -98,6 +107,7 @@ class FillMagicLink extends Component {
         loaded: true,
         query: query,
         team_card: response,
+        url: response.sub_type === 'any' ? response.website.login_url : '',
         email: response.extra_information.email,
         username: response.extra_information.username,
         teamName: response.extra_information.team_name,
@@ -108,7 +118,6 @@ class FillMagicLink extends Component {
         this.setState({loaded: true, error: true});
     });
   }
-
   handleCredentialInput = (e, {id, value}) => {
     let credentials = this.state.credentials.map(item => {
       if (id === item.priority)
@@ -127,7 +136,31 @@ class FillMagicLink extends Component {
     });
     this.setState({credentials: credentials});
   };
-  testCredentials = () => {
+  getLogo = () => {
+    getClearbitLogo(this.state.url).then(response => {
+      this.setState({img_url: response});
+    }).catch(err => {
+      this.setState({img_url: ''});
+    });
+  };
+  changeUrl = (e, {value}) => {
+    this.setState({url: value}, this.getLogo);
+  };
+  checkValueInput = () => {
+    let i = 0;
+    let j = 0;
+    if (this.state.credentials.length === 0)
+      return false;
+    this.state.credentials.filter(item => {
+      i++;
+      if (item.value.length > 0) {
+        j++;
+        return item;
+      }
+    });
+    return j === i;
+  };
+  testConnection = () => {
     this.props.dispatch(testCredentials({
       account_information: transformCredentialsListIntoObject(this.state.credentials),
       website_id: this.state.team_card.website.id
@@ -155,6 +188,7 @@ class FillMagicLink extends Component {
     this.setState({credentials: inputs});
   };
   confirm = () => {
+    this.setState({loading: true});
     const connection_information = this.state.credentials.reduce((prev, curr) => {
       return {...prev, [curr.name]: {type: curr.type, priority: curr.priority, placeholder: curr.placeholder}}
     }, {});
@@ -163,12 +197,13 @@ class FillMagicLink extends Component {
       uuid: this.state.query.uuid,
       account_information: transformCredentialsListIntoObject(this.state.credentials),
       type: this.state.team_card.sub_type,
-      url: this.state.team_card.sub_type === 'any' ? this.state.team_card.url : null,
-      img_url: this.state.team_card.sub_type !== 'classic' ? this.state.team_card.logo : null,
+      url: this.state.team_card.sub_type === 'any' ? this.state.url : null,
+      img_url: this.state.img_url !== '' ? this.state.img_url : this.state.team_card.logo,
       connection_information: connection_information
-    }));
+    })).then(res => {
+      this.setState({sent: true, loading: false});
+    });
   };
-
   render() {
     let credentialsInputs = null;
     if (!this.state.error && this.state.loaded) {
@@ -195,16 +230,16 @@ class FillMagicLink extends Component {
             <img src="/resources/images/ease_logo_white.svg" alt="logo"/>
           </a>
           <div className="full_flex"/>
-          <div>
-            <span>PRODUCT</span>
-            <span>SECURITY</span>
-            <span>CONNECTION</span>
+          <div className='nav'>
+            <a href="https://ease.space/product" target='_blank'>PRODUCT</a>
+            <a href="https://ease.space/security" target='_blank'>SECURITY</a>
+            <a href="/?skipLanding=true" className="connection" target='_blank'>CONNECTION</a>
           </div>
         </header>
-        {(this.state.error && this.state.loaded) &&
-        <div>This link was valid only for 24hours and is now <strong>expired</strong>.
+        {(this.state.error && this.state.loaded && !this.state.sent) &&
+        <div className='expired'>This link was valid only for 24hours and is now <strong>expired</strong>.
           Please contact the person who sent it to you.</div>}
-        {(!this.state.error && this.state.loaded) &&
+        {(!this.state.error && this.state.loaded && !this.state.sent) &&
         <React.Fragment>
           <p className='title'>Send login and password to <strong>{this.state.username} ({this.state.email})</strong>, from <strong>{this.state.teamName}</strong></p>
           <div className='content'>
@@ -212,21 +247,36 @@ class FillMagicLink extends Component {
               <Form className="container" onSubmit={this.confirm}>
                 <div className="display-flex align_items_center" style={{marginBottom: '30px'}}>
                   <div className="squared_image_handler">
-                    <img src={this.state.team_card.website.logo} alt="Website logo"/>
+                    <img src={this.state.img_url !== '' ? this.state.img_url : this.state.team_card.website.logo} alt="Website logo"/>
                   </div>
                   <span className="app_name">{this.state.team_card.name}</span>
                 </div>
+                {this.state.team_card.sub_type === 'any' &&
+                <Form.Field>
+                  <label style={{fontSize: '16px', fontWeight: '300', color: '#424242'}}>URL</label>
+                  <Input className="modalInput team-app-input"
+                         placeholder="Website URL"
+                         size="large"
+                         name="url"
+                         type='url'
+                         value={this.state.url}
+                         autoComplete="off"
+                         onChange={this.changeUrl}
+                         label={<Label><Icon name="home"/></Label>}
+                         labelPosition="left"
+                         required/>
+                </Form.Field>}
                 {credentialsInputs}
                 {this.state.team_card.sub_type !== 'classic' &&
                 <p><span onClick={this.addFields} className='add_field'><Icon name='plus circle'/>Add a field</span>
                 </p>}
                 {this.state.team_card.sub_type === 'classic' &&
-                <span id='test_credentials' onClick={this.testCredentials}>Test connection <Icon color='green' name='magic'/></span>}
+                <span id='test_credentials' onClick={this.testConnection}>Test connection <Icon color='green' name='magic'/></span>}
                 <Button
-                  type="submit"
-                  loading={this.state.loading}
-                  disabled={this.state.loading}
                   positive
+                  loading={this.state.loading}
+                  disabled={this.state.loading || !this.checkValueInput()
+                  || (this.state.team_card.sub_type === 'any' && !isUrl(this.state.url))}
                   className="modal-button uppercase"
                   content={'SEND'}/>
               </Form>
@@ -239,6 +289,8 @@ class FillMagicLink extends Component {
             </div>
           </div>
         </React.Fragment>}
+        {this.state.sent &&
+        <div className='expired'>Thank you. We’ve just notified {this.state.username} about your sending. See you soon!</div>}
         <Loader active={!this.state.loaded}/>
         <p className='bottom_sentence'>At Ease.space we help companies secure, use and share their passwords.
           <a href='https://ease.space/contact' target='_blank'>Contact us</a> if you have any question.</p>

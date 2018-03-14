@@ -28,7 +28,6 @@ export function sendCredentialsToTeam({card_id, uuid, account_information, type,
       connection_information: connection_information,
       ws_id: getState().common.ws_id
     }).then(response => {
-      console.log('[RESPONSE][MAGICLINK][POST][SENDCREDENTIALS]: ', response);
       return response;
     }).catch(error => {
       throw error;

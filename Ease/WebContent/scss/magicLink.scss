@@ -2,7 +2,33 @@
   background-image: radial-gradient(circle at 0 0, #616698, #555c95 15%, #373b60);
   color: white;
   #ease_header {
+    margin-top: 10px;
     border-bottom: none;
+    .nav {
+      a {
+        color: white;
+        margin: 0 15px;
+        &.connection {
+          border-radius: 5px;
+          border: solid 1px #45c997;
+          padding: 18px;
+          color: #45c997;
+        }
+        &:hover {
+          font-weight: bold;
+        }
+      }
+    }
+  }
+  .expired {
+    width: 400px;
+    font-size: 28px;
+    text-align: center;
+    position: relative;
+    left: 50%;
+    transform: translateX(-50%);
+    line-height: 1;
+    margin-top: 30px;
   }
   p {
     &.title {
@@ -32,6 +58,8 @@
       position: relative;
       left: 50%;
       transform: translateX(-50%);
+      color: #414141;
+      height: fit-content;
     }
     .explication {
       position: relative;
