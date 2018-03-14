@@ -237,7 +237,14 @@ public class SlackScheduledTask extends TimerTask {
              stringBuilder = new StringBuilder("*✅Active companies this week (")
                     .append(activeTeams.size())
                     .append(")*\nCompanies connected this week:\n");
-            printTeams(stringBuilder, activeTeams);
+            for (Team team : activeTeams) {
+                TeamUser owner = team.getTeamUserOwner();
+                stringBuilder
+                        .append(team.getName())
+                        .append(" (")
+                        .append(owner.getEmail())
+                        .append(")\n");
+            }
             stringBuilder.append("\n=======\n=======\n=======");
             SlackAPIWrapper.getInstance().postMessage("C9P9UL1MM", stringBuilder.toString());
         }
@@ -247,10 +254,19 @@ public class SlackScheduledTask extends TimerTask {
         } else
             hibernateQuery.queryString("SELECT t FROM Team t WHERE t.active IS true");
         List<Team> teams = hibernateQuery.list();
+        if (teams.isEmpty())
+            return;
         stringBuilder = new StringBuilder("*✅Companies not using (")
                 .append(teams.size())
                 .append(")*\nThese companies did not use Ease.space last week:\n");
-        printTeams(stringBuilder, teams);
+        for (Team team : teams) {
+            TeamUser owner = team.getTeamUserOwner();
+            stringBuilder
+                    .append(team.getName())
+                    .append(" (")
+                    .append(owner.getEmail())
+                    .append(")\n");
+        }
         stringBuilder.append("\n=======\n=======\n=======");
         SlackAPIWrapper.getInstance().postMessage("C9P9UL1MM", stringBuilder.toString());
     }
@@ -281,6 +297,7 @@ public class SlackScheduledTask extends TimerTask {
 
     private void notificationClickOnEightAppsInADay(HibernateQuery hibernateQuery) throws Exception {
         Set<User> users = this.getUsersWhoClickOnEightAppsInADay(hibernateQuery);
+        users = users.stream().filter(user -> user.getUserStatus().click_on_eight_apps_in_a_day()).collect(Collectors.toSet());
         if (users.isEmpty())
             return;
         StringBuilder stringBuilder = new StringBuilder("*✅New users")
@@ -301,6 +318,7 @@ public class SlackScheduledTask extends TimerTask {
             return;
         calendar.add(Calendar.WEEK_OF_YEAR, -1);
         Set<User> users = this.getUsersWhoClickOnThirtyAppsThisWeek(hibernateQuery);
+        users = users.stream().filter(user -> user.getUserStatus().click_on_thirty_apps_in_a_week()).collect(Collectors.toSet());
         if (users.isEmpty())
             return;
         StringBuilder stringBuilder = new StringBuilder("*✅New weekly users (")
