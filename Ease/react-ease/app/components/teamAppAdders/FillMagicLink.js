@@ -202,6 +202,8 @@ class FillMagicLink extends Component {
       connection_information: connection_information
     })).then(res => {
       this.setState({sent: true, loading: false});
+    }).catch(err => {
+      this.setState({loading: false, error: true});
     });
   };
   render() {
