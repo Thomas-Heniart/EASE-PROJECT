@@ -8,6 +8,7 @@ import com.Ease.Team.TeamCard.TeamSingleCard;
 import com.Ease.Team.TeamCard.TeamSingleSoftwareCard;
 import com.Ease.Team.TeamCardReceiver.TeamCardReceiver;
 import com.Ease.Team.TeamUser;
+import com.Ease.User.NotificationFactory;
 import com.Ease.Utils.HttpServletException;
 import com.Ease.Utils.HttpStatus;
 import com.Ease.Utils.Regex;
@@ -92,6 +93,7 @@ public class FillTeamSingleCardServlet extends HttpServlet {
             }
             sm.saveOrUpdate(teamCard);
             sm.setTeam(teamCard.getTeam());
+            NotificationFactory.getInstance().createAppFilledNotification(null, teamCard, sm.getUserIdMap(), sm.getHibernateQuery());
             sm.addWebSocketMessage(WebSocketMessageFactory.createWebSocketMessage(WebSocketMessageType.TEAM_CARD, WebSocketMessageAction.CHANGED, teamCard.getWebSocketJson()));
             sm.setSuccess("Successfully fill the app");
         } catch (Exception e) {
