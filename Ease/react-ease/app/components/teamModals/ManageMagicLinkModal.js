@@ -48,8 +48,10 @@ class ManageMagicLinkModal extends React.Component {
       }, 1000);
       this.setState({time: new Date(), timestamp: new Date().getTime()});
     }
-    else
+    else {
       this.setState({time: null, timestamp: null});
+      this.close();
+    }
   };
   close = () => {
     this.props.dispatch(showManageMagicLinkModal({active: false}));
