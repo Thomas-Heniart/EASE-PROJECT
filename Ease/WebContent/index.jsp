@@ -29,14 +29,14 @@
           content="Mettez facilement en place une politique de sécurité au niveau de l’utilisation, le partage et le stockage des mots de passe de l’entreprise."/>
     <meta name="twitter:image" content="https://ease.space/resources/images/metadescription.png"/>
     <link rel="icon" type="image/png" href="resources/icons/APPEASE.png"/>
-<!--    <link rel="stylesheet" href="/cssMinified.v00050/bootstrap.css"/>-->
+<!--    <link rel="stylesheet" href="/cssMinified.v00051/bootstrap.css"/>-->
     <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Raleway:500,700" />
-    <link rel="stylesheet" type="text/css" href="/cssMinified.v00050/lib/fonts/museo-font.css"/>
+    <link rel="stylesheet" type="text/css" href="/cssMinified.v00051/lib/fonts/museo-font.css"/>
     <link rel="stylesheet" href="/semantic/dist/semantic.min.css"/>
-    <link rel="stylesheet" href="/cssMinified.v00050/default_style.css"/>
-    <link rel="stylesheet" href="/cssMinified.v00050/lib/fonts/font-awesome-4.2.0/css/font-awesome.min.css"/>
-    <link rel="stylesheet" href="/cssMinified.v00050/lib/fonts/untitled-font-4/styles.css"/>
-    <link rel="stylesheet" href="/cssMinified.v00050/team.css"/>
+    <link rel="stylesheet" href="/cssMinified.v00051/default_style.css"/>
+    <link rel="stylesheet" href="/cssMinified.v00051/lib/fonts/font-awesome-4.2.0/css/font-awesome.min.css"/>
+    <link rel="stylesheet" href="/cssMinified.v00051/lib/fonts/untitled-font-4/styles.css"/>
+    <link rel="stylesheet" href="/cssMinified.v00051/team.css"/>
     <link rel="stylesheet" href="/css/lib/loading.min.css"/>
     <script src="https://js.stripe.com/v3/"></script>
     <script src="/jsMinified.v00023/jsencrypt.js"></script>
@@ -71,7 +71,7 @@
 <BODY class="notranslate">
 <div id="app">
 </div>
-<script src="teams_bundle.js?v=83"></script>
+<script src="teams_bundle.js?v=85"></script>
 <script type="text/javascript">
 /*  !function(a,b){var c=window;c.SessionStack=a,c[a]=c[a]||function(){
     c[a].q=c[a].q||[],c[a].q.push(arguments)},c[a].t=b;var d=document.createElement("script");
