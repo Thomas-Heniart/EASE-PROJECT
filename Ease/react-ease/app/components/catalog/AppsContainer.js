@@ -20,7 +20,7 @@ const AppsContainer  = ({match, websites, updates, title, openModal}) => {
             </Grid.Column>
           )}
         </Grid>
-        <AddAnyApp query={""} focus={false}/>
+        <AddAnyApp desactivateCross query={""} focus={false}/>
       </Container>
   )
 };

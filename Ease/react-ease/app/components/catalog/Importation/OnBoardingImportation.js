@@ -17,7 +17,7 @@ import {teamCreateSingleApp, teamCreateAnySingleCard, teamCreateLinkCard} from "
 import {createProfile} from "../../../actions/dashboardActions";
 import {createTeamChannel, addTeamUserToChannel} from "../../../actions/channelActions";
 import {getLogo} from "../../../utils/api"
-import {Loader} from 'semantic-ui-react';
+import {Loader, Message} from 'semantic-ui-react';
 import {changeStep, goToOnBoarding, resetOnBoardingImportation} from "../../../actions/onBoardingActions";
 
 function json(fields, separator, csv, dispatch) {
@@ -87,6 +87,8 @@ class OnBoardingImportation extends React.Component {
       separator: ',',
       paste: '',
       error: '',
+      specialError: false,
+      errorAccounts: [],
       location: '',
       loading: false,
       loadingDelete: false,
@@ -94,7 +96,6 @@ class OnBoardingImportation extends React.Component {
       fields: {},
       importedAccounts: [],
       accountsPending: [],
-      errorAccounts: [],
       profiles: {},
       selectedProfile: -1,
       teamsInState: {},
@@ -390,7 +391,7 @@ class OnBoardingImportation extends React.Component {
       });
     }
     else if (event.detail.msg === [])
-      this.setState({view: 2, error: 'No password found'});
+      this.setState({view: 2, specialError: true});
     else
       this.setState({view: 2, error: event.detail.msg});
   };
@@ -1015,7 +1016,12 @@ class OnBoardingImportation extends React.Component {
           handleErrorAppInfo={this.handleErrorAppInfo}
           importErrorAccounts={this.importErrorAccounts}
           deleteErrorAccount={this.deleteErrorAccount}
-          fields={this.state.fields}/>}
+          fields={this.state.fields}/>
+        }
+         <Message visible={this.state.specialError} negative style={{width: "430px", left: "50%", transform: "translateX(-50%)"}}>
+           <p style={{color: "#eb555c"}}>No password found! Make sure your Chrome account is <strong>synchronized <a style={{TextDecoration:"underline", color: "#eb555c"}} href="#">Click Here </a></strong>
+             to find how do it in few clicks.</p>
+         </Message>
       </div>
     )
   }

@@ -7,7 +7,7 @@ import Preferences from './Preferences';
 import PersonalInfo from './PersonalInfo';
 import Password from './Password';
 import Deactivation from './Deactivation';
-import DoubleFactor from './DoubleFactor';
+import ReactGA from 'react-ga';
 
 @connect(store => ({
     common: store.common
@@ -20,7 +20,8 @@ class Settings extends React.Component {
     }
   }
   componentWillMount() {
-    document.title = "Personal Settings"
+    document.title = "Personal Settings";
+    ReactGA.pageview("main/settings");
   }
   resetQuery = () => {
     this.setState({query: ''});

@@ -46,6 +46,10 @@ function TeamHeader(props){
                 <div className="channel_header_info_item" id="channel_purpose">
                   <span className="value">{props.item.purpose}</span>
                 </div>}
+                {!props.item.purpose &&
+                <div className="channel_header_info_item">
+                  <span className="value">Here is {props.item.username}'s accesses list</span>
+                </div>}
               </div>
             </div>
           </div>

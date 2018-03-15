@@ -61,6 +61,9 @@ class AddAnyApp extends React.Component {
           <NavLink to={`/main/catalog/website`}>
             <Icon name="close" link class="closeButton"/>
           </NavLink>}
+          {!this.props.cross && !this.props.desactivateCross &&
+            <Icon onClick={e => this.props.resetQuery()} name="close" link class="closeButton"/>
+          }
           <div className="display_flex">
             <div className="logo">
               {this.state.img_url ?
