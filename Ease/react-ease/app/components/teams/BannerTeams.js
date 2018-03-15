@@ -17,7 +17,7 @@ function ChannelJoinRequestList(props){
             <Segment style={{backgroundColor: "#ff9a00"}}>
               <List.Item>
                   <Icon name="user"/>
-                  {user.username} would like to access this group.&nbsp;
+                  {user.username} would like to access this Room.&nbsp;
                   <a style={{fontWeight: "bold"}} onClick={e => {props.dispatch(channelActions.addTeamUserToChannel({
                     team_id: room.team_id,
                     channel_id: room.id,
