@@ -4,6 +4,7 @@ import com.Ease.Hibernate.HibernateQuery;
 import com.Ease.Team.Team;
 import com.Ease.Team.TeamCard.JoinTeamCardRequest;
 import com.Ease.Team.TeamCard.TeamCard;
+import com.Ease.Team.TeamUser;
 import com.Ease.Utils.HttpServletException;
 import com.Ease.Utils.HttpStatus;
 import com.Ease.Utils.Servlets.PostServletManager;
@@ -32,7 +33,10 @@ public class DeleteJoinTeamCard extends HttpServlet {
                 throw new HttpServletException(HttpStatus.BadRequest, "No such request");
             TeamCard teamCard = joinTeamCardRequest.getTeamCard();
             Team team = teamCard.getTeam();
-            sm.needToBeAdminOfTeam(team);
+            sm.needToBeTeamUserOfTeam(team);
+            TeamUser teamUser_connected = sm.getTeamUser(team);
+            if (!teamUser_connected.isTeamAdmin() && !teamUser_connected.equals(teamCard.getTeamUser_sender()))
+                throw new HttpServletException(HttpStatus.BadRequest, "You cannot edit this card");
             String teamKey = (String) sm.getTeamProperties(team.getDb_id()).get("teamKey");
             teamCard.decipher(teamKey);
             teamCard.removeJoinTeamCardRequest(joinTeamCardRequest);

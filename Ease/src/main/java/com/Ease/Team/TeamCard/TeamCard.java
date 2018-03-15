@@ -56,6 +56,10 @@ public abstract class TeamCard {
     @MapKey(name = "db_id")
     private Map<Integer, JoinTeamCardRequest> joinTeamCardRequestMap = new ConcurrentHashMap<>();
 
+    @ManyToOne
+    @JoinColumn(name = "team_user_sender_id")
+    private TeamUser teamUser_sender;
+
     public TeamCard() {
 
     }
@@ -132,6 +136,14 @@ public abstract class TeamCard {
         this.joinTeamCardRequestMap = joinTeamCardRequestMap;
     }
 
+    public TeamUser getTeamUser_sender() {
+        return teamUser_sender;
+    }
+
+    public void setTeamUser_sender(TeamUser teamUser_sender) {
+        this.teamUser_sender = teamUser_sender;
+    }
+
     public abstract String getLogo();
 
     public JSONObject getJson() {
@@ -145,6 +157,7 @@ public abstract class TeamCard {
         res.put("team_id", this.getTeam().getDb_id());
         res.put("channel_id", this.getChannel().getDb_id());
         res.put("description", this.getDescription());
+        res.put("team_user_sender_id", this.getTeamUser_sender() == null ? JSONObject.NULL : this.getTeamUser_sender().getDb_id());
         JSONArray receivers = new JSONArray();
         this.getTeamCardReceiverMap().values().stream().sorted(Comparator.comparingInt(TeamCardReceiver::getDb_id)).forEach(c -> receivers.put(c.getCardJson()));
         res.put("receivers", receivers);

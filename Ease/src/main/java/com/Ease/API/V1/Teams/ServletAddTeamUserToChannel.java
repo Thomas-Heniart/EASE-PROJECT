@@ -33,6 +33,7 @@ public class ServletAddTeamUserToChannel extends HttpServlet {
             Channel channel = team.getChannelWithId(channel_id);
             Integer teamUser_id = sm.getIntParam("team_user_id", true, false);
             TeamUser teamUser = team.getTeamUserWithId(teamUser_id);
+            channel.removePendingTeamUser(teamUser);
             channel.addTeamUser(teamUser);
             sm.saveOrUpdate(channel);
             TeamUser teamUser_connected = sm.getTeamUser(team);

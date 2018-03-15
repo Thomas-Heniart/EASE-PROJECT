@@ -1,7 +1,7 @@
 import React, {Component} from "react";
 import classnames from "classnames";
 import queryString from "query-string";
-import {showSimpleAppSettingsModal} from "../../actions/modalActions";
+import {showNewFeatureModal, showSimpleAppSettingsModal} from "../../actions/modalActions";
 import Tutorial from "./Tutorial";
 import DashboardColumn from "./DashboardColumn";
 import {connect} from "react-redux";
@@ -12,6 +12,7 @@ import ReactGA from 'react-ga';
 
 @connect(store => ({
   dashboard: store.dashboard,
+  user: store.common.user,
   background_picture: store.common.user.background_picture,
   tutorial_done: store.common.user.status.tuto_done
 }))
@@ -47,6 +48,8 @@ class Dashboard extends Component {
         }
       }
     }
+    if (!this.props.user.new_feature_seen)
+      this.props.dispatch(showNewFeatureModal({active: true}));
   }
   componentDidMount(){
     const query = queryString.parse(this.props.location.search);

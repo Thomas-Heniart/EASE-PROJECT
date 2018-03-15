@@ -6,7 +6,8 @@ export const proFeaturesDesc = {
   4:'to have more than 15 users',
   5:"to set up user's departure in advance",
   6:"to setup arrival date of users (employee onboarding)",
-  7:"to setup password modification policies"
+  7:"to setup password modification policies",
+  8:"to securely receive passwords from third parties"
 };
 
 export const proFeatures = [
@@ -15,7 +16,8 @@ export const proFeatures = [
     'Automatic employee onboarding',
     'Automatic employee offboarding',
     'Unlimited team Admins and 1 Owner',
-    'Priority customer support'
+    'Priority customer support',
+    'Secured reception of third parties\' passwords'
 ];
 
 export const planNames = {

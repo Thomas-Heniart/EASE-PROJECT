@@ -457,7 +457,7 @@ class OnBoardingImportation extends React.Component {
     }
     else
       this.setState({view: this.state.view + 1, error: '', loading: false});
-};
+  };
   deleteAccount = (id) => {
     if (!this.state.loadingDelete) {
       this.setState({loadingDelete: true});

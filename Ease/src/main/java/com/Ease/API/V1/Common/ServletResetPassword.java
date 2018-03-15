@@ -105,9 +105,10 @@ public class ServletResetPassword extends HttpServlet {
                         if (admin == null)
                             admin = team.getTeamUsers().values().stream().filter(teamUser1 -> !teamUser1.isDisabled() && !teamUser1.equals(teamUser) && teamUser1.isRegistered()).sorted((t1, t2) -> t2.getUser().getUserStatus().getLast_connection().compareTo(t1.getUser().getUserStatus().getLast_connection())).findFirst().get();
                         teamUser.setAdmin_id(admin.getDb_id());
-                        sm.saveOrUpdate(teamUser);
                     } else
                         admin = team.getTeamUserWithId(teamUser.getAdmin_id());
+                    teamUser.setTeamKey(null);
+                    sm.saveOrUpdate(teamUser);
                     mailJetBuilder = new MailJetBuilder();
                     mailJetBuilder.setFrom("contact@ease.space", "Ease.space");
                     mailJetBuilder.addTo(admin.getEmail());

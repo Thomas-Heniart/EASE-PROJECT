@@ -1,6 +1,7 @@
 package com.Ease.Team.TeamCard;
 
 import com.Ease.Catalog.Website;
+import com.Ease.Context.Variables;
 import com.Ease.NewDashboard.Account;
 import com.Ease.Team.Channel;
 import com.Ease.Team.Team;
@@ -12,6 +13,9 @@ import org.hibernate.annotations.OnDeleteAction;
 import org.json.JSONObject;
 
 import javax.persistence.*;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.UUID;
 
 @Entity
 @Cacheable
@@ -29,6 +33,13 @@ public class TeamSingleCard extends TeamWebsiteCard {
     @ManyToOne
     @JoinColumn(name = "teamUser_filler_id")
     private TeamUser teamUser_filler;
+
+    @Column(name = "magicLink")
+    private String magicLink;
+
+    @Column(name = "magicLinkExpirationDate")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date magicLinkExpirationDate;
 
     public TeamSingleCard() {
 
@@ -57,6 +68,22 @@ public class TeamSingleCard extends TeamWebsiteCard {
         this.teamUser_filler = teamUser_filler;
     }
 
+    public String getMagicLink() {
+        return magicLink;
+    }
+
+    public void setMagicLink(String magicLink) {
+        this.magicLink = magicLink;
+    }
+
+    public Date getMagicLinkExpirationDate() {
+        return magicLinkExpirationDate;
+    }
+
+    public void setMagicLinkExpirationDate(Date magicLinkExpirationDate) {
+        this.magicLinkExpirationDate = magicLinkExpirationDate;
+    }
+
     public void decipherAccount(String symmetric_key) throws HttpServletException {
         if (this.getAccount().getDeciphered_private_key() != null)
             return;
@@ -73,6 +100,8 @@ public class TeamSingleCard extends TeamWebsiteCard {
             return res;
         res.put("last_update_date", this.getAccount().getLast_update().getTime());
         res.put("account_information", this.getAccount().getJsonWithoutPassword());
+        res.put("magic_link", this.getMagicLink() == null ? "" : this.getMagicLink());
+        res.put("magic_link_expiration_date", this.getMagicLinkExpirationDate() == null ? JSONObject.NULL : this.getMagicLinkExpirationDate().getTime());
         return res;
     }
 
@@ -92,5 +121,12 @@ public class TeamSingleCard extends TeamWebsiteCard {
             return;
         this.getAccount().decipher(symmetric_key);
         super.decipher(symmetric_key);
+    }
+
+    public void generateMagicLink() {
+        this.magicLink = Variables.URL_PATH + "#/fill?card_id=" + this.getDb_id() + "&uuid=" + UUID.randomUUID().toString();
+        Calendar now = Calendar.getInstance();
+        now.add(Calendar.DAY_OF_YEAR, 1);
+        this.magicLinkExpirationDate = now.getTime();
     }
 }

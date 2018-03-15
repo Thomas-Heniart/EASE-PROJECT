@@ -106,10 +106,11 @@ public class ServletUpdate extends HttpServlet {
             for (Update update : updates)
                 update.decipher(privateKey);
             updates = updates.stream().filter(update -> update.accountMatch(account_information)).collect(Collectors.toList());
-            updates = updates.stream().filter(update -> !update.passwordMatch(account_information)).collect(Collectors.toList());
             for (Update update : updates) {
-                update.edit(account_information, user.getUserKeys().getPublicKey());
-                res.put(update.getJson());
+                //if (!update.passwordMatch(account_information)) {
+                    update.edit(account_information, user.getUserKeys().getPublicKey());
+                    //res.put(update.getJson());
+                //}
             }
             populateResponse(res, user, account_information, website, url, hibernateQuery, sm, updates);
             sm.setSuccess(res);
@@ -166,6 +167,7 @@ public class ServletUpdate extends HttpServlet {
                 hibernateQuery.saveOrUpdateObject(tmp);
                 res.put(tmp.getJson());
                 NotificationFactory.getInstance().createNewUpdateNotification(tmp, sm.getUserWebSocketManager(user.getDb_id()), hibernateQuery);
+                return;
             } else if (website.getSso() != null) {
                 iterator = websiteApps.iterator();
                 while (iterator.hasNext()) {
@@ -216,7 +218,9 @@ public class ServletUpdate extends HttpServlet {
                     res.put(tmp.getJson());
                 }
             }
-            if (res.length() == 0 && create_update && !url.startsWith("https://accounts.google.com")) {
+            if (create_update)
+                create_update = updates.stream().filter(update -> update.passwordMatch(account_information)).count() == 0;
+            if (create_update && !url.startsWith("https://accounts.google.com")) {
                 Update tmp = UpdateFactory.getInstance().createUpdate(user, account_information, website);
                 hibernateQuery.saveOrUpdateObject(tmp);
                 NotificationFactory.getInstance().createNewUpdateNotification(tmp, sm.getUserWebSocketManager(user.getDb_id()), hibernateQuery);

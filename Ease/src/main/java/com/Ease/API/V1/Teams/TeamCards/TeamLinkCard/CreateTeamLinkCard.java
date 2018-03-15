@@ -54,6 +54,7 @@ public class CreateTeamLinkCard extends HttpServlet {
                 throw new HttpServletException(HttpStatus.BadRequest, "Description size must be under 255 characters");
             JSONArray receivers = sm.getArrayParam("receivers", false, false);
             TeamCard teamCard = new TeamLinkCard(name, team, channel, description, url, img_url);
+            teamCard.setTeamUser_sender(teamUser_connected);
             sm.saveOrUpdate(teamCard);
             for (int i = 0; i < receivers.length(); i++) {
                 Integer teamUser_id = receivers.getInt(i);

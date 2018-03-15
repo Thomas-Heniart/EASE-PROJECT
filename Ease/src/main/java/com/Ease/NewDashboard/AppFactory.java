@@ -30,7 +30,7 @@ public class AppFactory {
     }
 
     public App createClassicApp(String name, Website website, String symmetric_key, Account account_to_copy, HibernateQuery hibernateQuery) throws HttpServletException {
-        Account account = AccountFactory.getInstance().createAccountFromAccount(account_to_copy, symmetric_key, hibernateQuery);
+        Account account = AccountFactory.getInstance().createAccountFromAccount(account_to_copy, hibernateQuery);
         App app = this.createClassicApp(name, website);
         app.setAccount(account);
         return app;
@@ -98,7 +98,7 @@ public class AppFactory {
     }
 
     public App createSoftwareApp(String name, Software software, String symmetric_key, Account account_to_copy, HibernateQuery hibernateQuery) throws HttpServletException {
-        Account account = AccountFactory.getInstance().createAccountFromAccount(account_to_copy, symmetric_key, hibernateQuery);
+        Account account = AccountFactory.getInstance().createAccountFromAccount(account_to_copy, hibernateQuery);
         return new SoftwareApp(new AppInformation(name), software, account);
     }
 }

@@ -145,6 +145,10 @@ const initialState = {
   fillSimpleCardCredentialsModal: {
     active: false,
     team_card: null
+  },
+  manageMagicLinkModal: {
+    active: false,
+    team_card: null
   }
 };
 export default function reducer(state=initialState, action){
@@ -345,6 +349,12 @@ export default function reducer(state=initialState, action){
       return {
           ...state,
         fillSimpleCardCredentialsModal: action.payload
+      }
+    }
+    case 'SHOW_MANAGE_MAGIC_LINK_MODAL': {
+      return {
+        ...state,
+        manageMagicLinkModal: action.payload
       }
     }
   }

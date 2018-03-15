@@ -40,7 +40,7 @@ public class EditTeamSingleCard extends HttpServlet {
             Team team = teamSingleCard.getTeam();
             sm.needToBeTeamUserOfTeam(team);
             TeamUser teamUser = sm.getTeamUser(team);
-            if (!teamUser.isTeamAdmin() && (teamSingleCard.getTeamUser_filler() == null || !teamUser.equals(teamSingleCard.getTeamUser_filler())))
+            if (!teamUser.isTeamAdmin() && (teamSingleCard.getTeamUser_filler() == null || !teamUser.equals(teamSingleCard.getTeamUser_filler())) && !teamUser.equals(teamCard.getTeamUser_sender()))
                 throw new HttpServletException(HttpStatus.Forbidden);
             String description = sm.getStringParam("description", true, true);
             if (description == null)

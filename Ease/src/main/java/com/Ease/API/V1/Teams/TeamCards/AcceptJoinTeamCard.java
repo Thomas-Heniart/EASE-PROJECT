@@ -9,6 +9,8 @@ import com.Ease.Team.TeamCard.TeamCard;
 import com.Ease.Team.TeamCardReceiver.TeamCardReceiver;
 import com.Ease.Team.TeamUser;
 import com.Ease.User.NotificationFactory;
+import com.Ease.Utils.HttpServletException;
+import com.Ease.Utils.HttpStatus;
 import com.Ease.Utils.Servlets.PostServletManager;
 import com.Ease.websocketV1.WebSocketMessageAction;
 import com.Ease.websocketV1.WebSocketMessageFactory;
@@ -29,9 +31,12 @@ public class AcceptJoinTeamCard extends HttpServlet {
         try {
             Integer team_id = sm.getIntParam("team_id", true, false);
             Team team = sm.getTeam(team_id);
-            sm.needToBeAdminOfTeam(team);
             Integer teamCard_id = sm.getIntParam("team_card_id", true, false);
             TeamCard teamCard = team.getTeamCard(teamCard_id);
+            sm.needToBeTeamUserOfTeam(team);
+            TeamUser teamUser_connected = sm.getTeamUser(team);
+            if (!teamUser_connected.isTeamAdmin() && !teamUser_connected.equals(teamCard.getTeamUser_sender()))
+                throw new HttpServletException(HttpStatus.BadRequest, "You cannot edit this card");
             String teamKey = (String) sm.getTeamProperties(team_id).get("teamKey");
             teamCard.decipher(teamKey);
             Integer request_id = sm.getIntParam("request_id", true, false);

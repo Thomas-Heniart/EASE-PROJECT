@@ -15,7 +15,6 @@ import {sendTeamUserInvitation} from "../actions/userActions";
 import {withRouter, NavLink} from "react-router-dom";
 import TeamUserInviteIndicators from "./teams/TeamUserInviteIndicators";
 import {isAdmin} from "../utils/helperFunctions";
-import BannerTeams from "./teams/BannerTeams";
 
 @connect(store => ({
   team_apps: store.team_apps,
@@ -95,11 +94,6 @@ class TeamAppsContainer extends React.Component{
           <div class="apps_scroller_div" id="team_apps_container">
             {!!item.username && isAdmin(me.role) && item.state === 0 &&
                 <TeamUserInviteIndicators team_user={item}/>}
-            {isAdmin(me.role) && item.join_requests &&
-                <BannerTeams room={team.rooms[item.id]}
-                             team={team}
-                             me={me}
-                             dispatch={this.props.dispatch}/>}
             {!this.state.loading ?
                 team_cards.map(item => {
                   if (item.type === 'teamSingleCard') {

@@ -13,11 +13,11 @@ function ChannelJoinRequestList(props){
       {requests.map(item => {
         const user = team.team_users[item];
         return (
-          <div className="user_invitation_indicator" style={{color: "white"}}>
+          <div key={item} className="user_invitation_indicator" style={{color: "white"}}>
             <Segment style={{backgroundColor: "#ff9a00"}}>
-              <List.Item key={item}>
+              <List.Item>
                   <Icon name="user"/>
-                  {user.username} would like to access this group.&nbsp;
+                  {user.username} would like to access this Room.&nbsp;
                   <a style={{fontWeight: "bold"}} onClick={e => {props.dispatch(channelActions.addTeamUserToChannel({
                     team_id: room.team_id,
                     channel_id: room.id,
@@ -39,7 +39,6 @@ function ChannelJoinRequestList(props){
     </List>
   )
 }
-
 
 @connect(store => ({
   teams: store.teams

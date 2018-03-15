@@ -75,9 +75,9 @@ const TeamSimpleAppButtonSet = ({app, me, dispatch, editMode, selfJoin, requestA
                              onClick={isAdmin(me.role) ? selfJoin : asked ? null : requestApp}
                              icon="pointing up"
                              disabled={asked}/>}
-        {isAdmin(me.role) &&
+        {(isAdmin(me.role) || app.team_user_sender_id === me.id) &&
         <TeamAppActionButton text='Edit App' icon='pencil' onClick={editMode}/>}
-        {isAdmin(me.role) &&
+        {(isAdmin(me.role) || app.team_user_sender_id === me.id) &&
         <TeamAppActionButton text='Delete App' icon='trash outline' onClick={e => {dispatch(modalActions.showTeamDeleteAppModal({active: true, app_id: app.id}))}}/>}
       </div>
   )

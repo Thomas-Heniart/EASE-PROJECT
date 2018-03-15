@@ -84,11 +84,12 @@ export class DisabledAppIndicator extends Component {
                content={
                  <div>
                    {`${filler_name} will setup this app soon.`}
+                   {this.props.magic_link &&
                    <div class="text-center">
                      <button onClick={this.send} class="button-unstyle inline-text-button fw-normal">
                        {this.state.buttonText}
                      </button>
-                   </div>
+                   </div>}
                  </div>
                }/>
     )
