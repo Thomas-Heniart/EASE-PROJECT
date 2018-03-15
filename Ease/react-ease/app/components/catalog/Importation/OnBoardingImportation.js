@@ -441,9 +441,7 @@ class OnBoardingImportation extends React.Component {
                 fields: {field1: 'url', field2: 'name', field3: 'login', field4: 'password'},
                 loading: false
               });
-              easeTracker.trackEvent("EaseOnboardingPasteCSV");
             });
-            easeTracker.trackEvent("Importation");
           }
           else {
             this.setState({
@@ -645,7 +643,6 @@ class OnBoardingImportation extends React.Component {
             window.location.href = "/";
           });
         }
-        easeTracker.trackEvent("EaseOnboardingImportationDone")
       }).catch(err => {
         this.setState({error: err, loadingSending: false});
       });

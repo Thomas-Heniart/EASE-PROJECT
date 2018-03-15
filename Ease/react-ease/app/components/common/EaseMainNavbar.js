@@ -77,9 +77,6 @@ class NotificationList extends React.Component {
     }
     this.lastScrollTop = e.target.scrollTop;
   };
-  onOpen = () => {
-    easeTracker.trackEvent("OpenNotifications")
-  };
   executeNotification = (notification) => {
     if (!!notification.url.length) {
       window.location.href = notification.url;

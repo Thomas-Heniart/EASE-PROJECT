@@ -36,7 +36,6 @@ deleteProfilePopup = function(rootEl){
 				self.submitButton.removeClass('loading');
 			},
 			function(msg){
-				easeTracker.trackEvent('DeleteProfile');
 				self.currentProfile.remove();
 				self.close();
 			},

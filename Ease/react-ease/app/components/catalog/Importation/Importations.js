@@ -355,7 +355,6 @@ class Importations extends React.Component {
         }
         else
           this.setState({view: 2, error: 'Darn, that didn’t work! Chrome is being delicate... Please try one more time or contact our customer support.'});
-        easeTracker.trackEvent("Importation");
       }).catch(err => {
         this.setState({view: 2, error: 'Darn, that didn’t work! Chrome is being delicate... Please try one more time or contact our customer support.'});
       });
@@ -407,7 +406,6 @@ class Importations extends React.Component {
               loading: false
             });
           }
-          easeTracker.trackEvent("Importation")
         }).catch(err => {
         });
       }

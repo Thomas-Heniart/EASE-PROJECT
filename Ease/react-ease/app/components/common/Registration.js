@@ -29,7 +29,6 @@ class Step1 extends React.Component {
     this.setState({errorMessage: '', loading: true, usernameError: false});
     post_api.common.askRegistration(this.props.email).then(response => {
       this.setState({loading: false});
-        easeTracker.trackEvent("RegistrationEnterEmail");
       this.props.onStepValidated();
     }).catch(err => {
       this.setState({errorMessage: err, loading: false});
@@ -94,7 +93,6 @@ class Step2 extends React.Component{
       sendingEmail: false,
       sendEmailButtonText: 'Resend email'
     };
-      easeTracker.trackEvent("RegistrationEnterDigits");
     this.onSubmit = this.onSubmit.bind(this);
     this.resendDigits = this.resendDigits.bind(this);
   }
@@ -170,7 +168,6 @@ class Step3 extends React.Component{
       return;
     }
     this.setState({errorMessage: '', passwordError: false});
-      easeTracker.trackEvent("RegistrationEnterPassword");
     this.props.onStepValidated();
   };
   render() {
@@ -222,9 +219,6 @@ class StepCGU extends React.Component{
     this.setState({loading: true});
     post_api.common.registration(this.props.email, this.props.username, this.props.password, this.props.digits, null, this.props.newsletter).then(response => {
       this.setState({loading: false});
-        easeTracker.trackEvent("RegistrationAcceptCGU");
-        easeTracker.trackEvent("RegistrationDone");
-        easeTracker.setUserId(response.email);
       this.props.onStepValidated();
     }).catch(err => {
       this.setState({loading: false});

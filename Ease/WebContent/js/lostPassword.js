@@ -26,7 +26,6 @@ $(document).ready(function(){
 				function(retMsg){
 					button.removeClass('loading');
 					button.addClass('success');
-					easeTracker.trackEvent("LoginpageLostPasswordSent");
 					setTimeout(function(){
 						window.location = "/";
 					}, 3000);

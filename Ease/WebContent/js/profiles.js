@@ -206,7 +206,6 @@ var Profile = function(rootEl){
 					positionDest : item.index()
 				}, function() {
 				}, function(retMsg) {
-					easeTracker.trackEvent("MoveApp");
 				}, function(retMsg) {
 				}, 'text');
 			}
@@ -229,7 +228,6 @@ var Profile = function(rootEl){
 			}, function() {	
 
 			}, function(retMsg) {
-				easeTracker.trackEvent('DeleteProfile');
 				self.remove();
 			}, function(retMsg) {
 			}, 'text');
@@ -244,7 +242,6 @@ var Profile = function(rootEl){
 				profileId : self.id
 			}, function() {
 			}, function(retMsg) {
-				easeTracker.trackEvent('EditProfileName', {"newProfileName" : name});
 				self.setName(name);
 				self.qRoot.find('#modifyNameForm input').val('');
 			}, function(retMsg) {
@@ -272,7 +269,6 @@ var Profile = function(rootEl){
 			profileId : self.id
 		}, function() {
 		}, function(retMsg) {
-			easeTracker.trackEvent('EditProfileColor', {"newProfileColor": color});
 			self.setColor(color);
 		}, function(retMsg) {
 		}, 'text');
