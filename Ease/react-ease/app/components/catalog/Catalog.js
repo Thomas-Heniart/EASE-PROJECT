@@ -12,6 +12,7 @@ import {reduxActionBinder} from "../../actions/index";
 import {connect} from "react-redux";
 import { NavLink, Switch, Route } from 'react-router-dom';
 import {getUpdates} from "../../actions/catalogActions";
+import ReactGA from 'react-ga';
 
 @connect(store => ({
   catalog: store.catalog
@@ -28,6 +29,7 @@ class Catalog extends Component {
   handleInput = handleSemanticInput.bind(this);
   componentWillMount() {
     document.title = "Apps Catalogue";
+    ReactGA.pageview("main/catalog");
     this.props.dispatch(getUpdates()).then(() => {
       this.setState({updatesFetched: true});
     });

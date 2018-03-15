@@ -19,10 +19,22 @@ import Registration from "./components/common/Registration";
 import HomeTemporaryHeader from "./components/common/HomeTemporaryHeader";
 import {requireAuthentication} from "./components/common/requireAuthentication";
 import NewTeamCreationView from "./components/onBoarding/NewTeamCreationView";
+import ReactGA from 'react-ga';
+
 
 const stripe_api_key = window.location.hostname === 'ease.space' ? 'pk_live_lPfbuzvll7siv1CM3ncJ22Bu' : 'pk_test_95DsYIUHWlEgZa5YWglIJHXd';
 
 class App extends React.Component {
+
+  componentWillMount() {
+    console.log("-------------------------------------------------------");
+    console.log("initialisation");
+    ReactGA.initialize('UA-75916041-7', {
+      debug: true,
+      titleCase: false
+    });
+  }
+
   render() {
     return (
       <HashRouter>

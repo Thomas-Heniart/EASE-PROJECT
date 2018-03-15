@@ -1,4 +1,5 @@
 import {goToOnBoarding} from "../actions/onBoardingActions";
+import ReactGA from "react-ga";
 
 var React = require('react');
 var classnames = require('classnames');
@@ -54,7 +55,8 @@ class TeamView extends React.Component {
     this.setState({addAppView: view});
   };
   componentWillMount() {
-    document.title = "Team Space"
+    document.title = "Team Space";
+    ReactGA.pageview("teams");
   }
   componentDidUpdate(){
     if (!this.state.loadingInfo && !this.isValidTeamItemId(this.props.match.params.itemId)) {

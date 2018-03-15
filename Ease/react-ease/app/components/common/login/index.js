@@ -7,6 +7,7 @@ import UnknownUserForm from "./UnknownUserForm";
 import PasswordLost from "./passwordLost";
 import KnownUserForm from "./KnownUserForm";
 import extension from "../../../utils/extension_api";
+import ReactGA from 'react-ga';
 
 function Loader(props){
   return (
@@ -30,7 +31,7 @@ class Login extends React.Component {
       redirect : ''
     };
     if (this.props.authenticated)
-      this.props.history.replace('/main/dashboard');
+      this.props.history.replace('main/dashboard');
     this.state.knownUser = !!this.state.knownFname && !!this.state.knownEmail;
   }
   componentDidMount(){
@@ -41,6 +42,7 @@ class Login extends React.Component {
   }
   componentWillMount(){
     document.title = "Ease.space";
+    ReactGA.pageview("/login");
   }
   finishLoggingIn = () => {
     extension.easeLogin();
