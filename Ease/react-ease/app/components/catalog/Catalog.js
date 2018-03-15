@@ -12,6 +12,7 @@ import {reduxActionBinder} from "../../actions/index";
 import {connect} from "react-redux";
 import { NavLink, Switch, Route } from 'react-router-dom';
 import {getUpdates} from "../../actions/catalogActions";
+import ReactGA from 'react-ga';
 
 @connect(store => ({
   catalog: store.catalog
@@ -28,6 +29,7 @@ class Catalog extends Component {
   handleInput = handleSemanticInput.bind(this);
   componentWillMount() {
     document.title = "Apps Catalogue";
+    ReactGA.pageview("main/catalog");
     this.props.dispatch(getUpdates()).then(() => {
       this.setState({updatesFetched: true});
     });
@@ -41,6 +43,7 @@ class Catalog extends Component {
     }, 1);
   }
   resetQuery = () => {
+    console.log("reset query catalog.js");
     this.setState({query: ''});
     this.main_container.scrollTo(0,0);
   };
@@ -94,7 +97,7 @@ class Catalog extends Component {
                       <Route exact path={`${this.props.match.path}/website/addWebsite`}
                              render={(props) => <AddAnyApp cross focus={true}/>}/>
                       <Route path={`${this.props.match.path}/website`}
-                             render={(props) => <WebsitesContainer {...props} query={this.state.query}/>}/>
+                             render={(props) => <WebsitesContainer resetQuery={this.resetQuery} {...props} query={this.state.query}/>}/>
                     </Switch>}
                 </Grid.Column>
                 <Grid.Column width={3} />

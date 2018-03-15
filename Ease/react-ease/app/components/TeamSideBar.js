@@ -129,23 +129,15 @@ function UserList(props){
                       </div>
                     </NavLink>
                 );
-              if (user.state === 0 && idx < maxInvitations)
+              if (user.state === 0)
                 return (
                     <NavLink to={`/teams/${team.id}/@${user.id}`} className="section-list-item channel" key={user.id}>
-                      <div className="primary_action channel_name">
+                      <div style={{color: (isAdmin(me.role) && team.plan_id === 0 && !user.invitation_sent) ? 'red' : null}} className="primary_action channel_name">
                         <i className="fa fa-user-o prefix"/>
                         <span className="overflow-ellipsis userNotAccepted">{user.username}</span>
                       </div>
                     </NavLink>
                 );
-              return (
-                  <NavLink to={`/teams/${team.id}/@${user.id}`} className="section-list-item channel" key={user.id}>
-                    <div style={{color: (isAdmin(me.role) && team.plan_id === 0 && invitedMembers >= maxInvitations) ? 'red' : null}} className="primary_action channel_name">
-                      <i className="fa fa-user-o prefix"/>
-                      <span className="overflow-ellipsis userNotAccepted">{user.username}</span>
-                    </div>
-                  </NavLink>
-              )
           })}
         </div>
       </div>

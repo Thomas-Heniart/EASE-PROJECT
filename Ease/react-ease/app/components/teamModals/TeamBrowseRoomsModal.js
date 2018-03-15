@@ -6,7 +6,8 @@ import {showTeamBrowseChannelsModal} from '../../actions/teamModalActions';
 import {isUserInChannel, isAdmin} from "../../utils/helperFunctions";
 import {askJoinChannel, addTeamUserToChannel} from "../../actions/channelActions";
 import ReactCSSTransitionGroup from "react-addons-css-transition-group";
-import { Header, Label,List, Search,SearchResult, Container, Divider, Icon, Transition, TextArea, Segment, Checkbox, Form, Input, Select, Dropdown, Button, Message } from 'semantic-ui-react';
+import * as teamModalsActions from "../../actions/teamModalActions";
+import { Header, List, Container, Divider, Icon, Input, Button, } from 'semantic-ui-react';
 import {connect} from "react-redux";
 
 class RoomListItem extends Component {
@@ -109,7 +110,20 @@ class TeamBrowseRoomsModal extends Component {
         <WhiteModalTemplate onClose={e => {this.props.history.replace(`/teams/${this.props.match.params.teamId}/${this.props.match.params.itemId}`)}}>
           <Container class="full_height display_flex flex_direction_column">
             <Header as='h1' class="min_flex_shrink">
-              Browse all rooms
+              <div className="HeaderAllRoomModal">
+                <div>
+                  Browse all rooms
+                </div>
+                <div>
+                  <Button
+                    color="green"
+                    class="createRoomButton"
+                    size="tiny"
+                    onClick={e => {this.props.dispatch(teamModalsActions.showAddTeamChannelModal({active: true, team_id: team.id}));
+                    this.props.history.replace(`/teams/${this.props.match.params.teamId}/${this.props.match.params.itemId}`) }}>
+                    Create Room</Button>
+                </div>
+              </div>
             </Header>
             <Divider hidden/>
             <Input fluid
