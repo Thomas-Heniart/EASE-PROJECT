@@ -56,6 +56,7 @@ public abstract class ServletManager {
     protected Date timestamp;
 
     protected HibernateQuery hibernateQuery;
+    protected HibernateQuery trackingHibernateQuery;
 
     public static boolean debug = true;
 
@@ -314,11 +315,15 @@ public abstract class ServletManager {
     }
 
     public HibernateQuery getHibernateQuery() {
-        if (this.hibernateQuery == null)
-            this.hibernateQuery = new HibernateQuery();
-        if (!this.hibernateQuery.isOpen())
+        if (this.hibernateQuery == null || !this.hibernateQuery.isOpen())
             this.hibernateQuery = new HibernateQuery();
         return this.hibernateQuery;
+    }
+
+    public HibernateQuery getTrackingHibernateQuery() {
+        if (this.trackingHibernateQuery == null || !this.trackingHibernateQuery.isOpen())
+            this.trackingHibernateQuery = new HibernateQuery("tracking");
+        return this.trackingHibernateQuery;
     }
 
     public void saveOrUpdate(Object hibernateObject) {
@@ -379,6 +384,8 @@ public abstract class ServletManager {
                     this.db.rollbackTransaction();
                 if (this.hibernateQuery != null)
                     this.hibernateQuery.rollback();
+                if (this.trackingHibernateQuery != null)
+                    this.trackingHibernateQuery.rollback();
             } catch (HttpServletException e) {
                 System.err.println("Rollback transaction failed.");
             }
@@ -404,6 +411,8 @@ public abstract class ServletManager {
                                 this.db.rollbackTransaction();
                             if (this.hibernateQuery != null)
                                 this.hibernateQuery.rollback();
+                            if (this.trackingHibernateQuery != null)
+                                this.trackingHibernateQuery.rollback();
                         } catch (HttpServletException e) {
                             System.out.println("Rollback failed");
                         }
@@ -411,6 +420,16 @@ public abstract class ServletManager {
                         if (this.hibernateQuery != null)
                             try {
                                 this.hibernateQuery.commit();
+                            } catch (HttpServletException e) {
+                                response.setStatus(e.getHttpStatus().getValue());
+                                response.getWriter().print(e.getMsg());
+                                if (this.db != null)
+                                    this.db.close();
+                                return;
+                            }
+                        if (this.trackingHibernateQuery != null)
+                            try {
+                                this.trackingHibernateQuery.commit();
                             } catch (HttpServletException e) {
                                 response.setStatus(e.getHttpStatus().getValue());
                                 response.getWriter().print(e.getMsg());

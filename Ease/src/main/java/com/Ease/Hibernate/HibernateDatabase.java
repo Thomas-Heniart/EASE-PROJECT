@@ -11,6 +11,7 @@ import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
  */
 public class HibernateDatabase {
     private static final SessionFactory sessionFactory;
+    private static final SessionFactory sessionFactory1;
 
     static {
         try {
@@ -19,6 +20,10 @@ public class HibernateDatabase {
             Metadata metaData =
                     new MetadataSources(standardRegistry).getMetadataBuilder().build();
             sessionFactory = metaData.getSessionFactoryBuilder().build();
+
+            StandardServiceRegistry standardServiceRegistry = new StandardServiceRegistryBuilder().configure("hibernate-tracking.cfg.xml").build();
+            Metadata metadata = new MetadataSources(standardServiceRegistry).getMetadataBuilder().build();
+            sessionFactory1 = metadata.getSessionFactoryBuilder().build();
         } catch (Throwable th) {
             System.err.println("Initial SessionFactory creation failed" + th);
             throw new ExceptionInInitializerError(th);
@@ -29,7 +34,12 @@ public class HibernateDatabase {
         return sessionFactory;
     }
 
+    public synchronized static SessionFactory getTrackingSessionFactory() {
+        return sessionFactory1;
+    }
+
     public static void close() {
+        sessionFactory1.close();
         sessionFactory.close();
     }
 }
