@@ -1019,16 +1019,19 @@ class Importations extends React.Component {
             accountsPending={this.state.accountsPending}
             selectedProfile={this.state.selectedProfile}/>}
         {(this.state.view === 5 && this.state.errorAccounts && this.state.loading === false) &&
-          <ErrorAccounts
-            errorAccounts={this.state.errorAccounts}
-            handleErrorAppInfo={this.handleErrorAppInfo}
-            importErrorAccounts={this.importErrorAccounts}
-            deleteErrorAccount={this.deleteErrorAccount}
-            fields={this.state.fields}/>}
-        <Message visible={this.state.specialError} negative style={{width: "430px", left: "50%", transform: "translateX(-50%)"}}>
-          <p style={{color: "#eb555c"}}>No password found! Make sure your Chrome account is <strong>synchronized <a style={{TextDecoration:"underline", color: "#eb555c"}} href="#">Click Here </a></strong>
-            to find how do it in few clicks.</p>
-        </Message>
+          <div>
+            <ErrorAccounts
+              errorAccounts={this.state.errorAccounts}
+              handleErrorAppInfo={this.handleErrorAppInfo}
+              importErrorAccounts={this.importErrorAccounts}
+              deleteErrorAccount={this.deleteErrorAccount}
+              fields={this.state.fields}/>
+            <Message visible={this.state.specialError} negative style={{width: "430px", left: "50%", transform: "translateX(-50%)"}}>
+              <p style={{color: "#eb555c"}}>No password found! Make sure your Chrome account is <strong>synchronized <a style={{TextDecoration:"underline", color: "#eb555c"}} href="#">Click Here </a></strong>
+                to find how do it in few clicks.</p>
+            </Message>
+          </div>
+          }
       </div>
     )
   }

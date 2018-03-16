@@ -297,7 +297,6 @@
 <script type="text/javascript">
   window.addEventListener('load',function(){
     $('.signUpButton').click(function(){
-      easeTracker.trackEvent($(this).attr("trackEvent"));
       easeSignUpPopup.open();
     });
   });
