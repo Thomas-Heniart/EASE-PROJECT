@@ -19,12 +19,11 @@ class PasswordLost extends React.Component{
   }
   onSubmit = (e) => {
     e.preventDefault();
-    this.setState({disable: true});
-    this.setState({errorMessage: ''});
+    this.setState({disable: true, errorMessage: ''});
     post_api.common.passwordLost({
       email: this.state.email
     }).then(response => {
-      this.setState({errorMessage: response.msg});
+      this.setState({errorMessage: response.msg, disable: false});
     }).catch(err => {
       this.setState({errorMessage: err});
       this.setState({disable: false});
@@ -61,7 +60,7 @@ class PasswordLost extends React.Component{
               <p className="LoginErrorMessage">{this.state.errorMessage}</p>
             </div>
             <div>
-              <Button disabled={this.state.disable === true} loading={this.state.disable === true} color="green" type="submit">Reset my password</Button>
+              <Button disabled={this.state.disable} loading={this.state.disable} color="green" type="submit">Reset my password</Button>
             </div>
           </form>
         </div>

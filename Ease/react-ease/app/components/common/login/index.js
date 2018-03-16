@@ -31,7 +31,7 @@ class Login extends React.Component {
       redirect : ''
     };
     if (this.props.authenticated)
-      this.props.history.replace('main/dashboard');
+      this.props.history.replace('main/dashboard/');
     this.state.knownUser = !!this.state.knownFname && !!this.state.knownEmail;
   }
   componentDidMount(){
@@ -50,7 +50,7 @@ class Login extends React.Component {
       this.props.history.replace(this.state.redirect);
     }
     else
-      this.props.history.replace('/main/dashboard');
+      this.props.history.replace('/main/dashboard/log');
   };
   render(){
     if (this.props.authenticated)
