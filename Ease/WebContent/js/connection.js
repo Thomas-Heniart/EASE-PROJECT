@@ -29,7 +29,6 @@ $(document).ready(function(){
 
 	$(".pwdLostButton").click(function(){
 		var lastPopup = $(this).closest('.landingPopup');
-		easeTracker.trackEvent("PasswordLostVisit");
 		$(".landingPopup.show").removeClass('show');
 		$("#passwordLost").addClass('show');
 
@@ -60,7 +59,6 @@ $(document).ready(function(){
 				self.closest('.landingPopup').addClass('show');
 			},
 			function(data){
-				easeTracker.trackEvent("LoginpageLostPasswordSent");
 				errorDiv.find('p').text(data);
 				errorDiv.addClass('show');
 			},
@@ -92,8 +90,6 @@ $(document).ready(function(){
 			function(){
 			},
 			function(data){
-				easeTracker.setUserId(email);
-				easeTracker.trackEvent("Connect");
 				window.location.reload();
 			},
 			function(data){

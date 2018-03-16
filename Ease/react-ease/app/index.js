@@ -25,7 +25,7 @@ class App extends React.Component {
 
   componentWillMount() {
     ReactGA.initialize('UA-75916041-7', {
-      debug: true,
+      debug: false,
       titleCase: false
     });
   }

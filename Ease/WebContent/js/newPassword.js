@@ -25,7 +25,6 @@ $(document).ready(function(){
 				function(retMsg){
 					button.removeClass('loading');
 					button.addClass('success');
-					easeTracker.trackEvent("LoginpageNewPasswordSetup");
 					setTimeout(function(){
 						window.location = "/";
 					}, 3000);

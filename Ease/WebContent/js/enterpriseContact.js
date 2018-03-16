@@ -18,7 +18,6 @@ $('#enterpriseContactForm').submit(function(e){
 			var teamSize = $("#enterpriseContactForm input[name='teamSize']").val();
 			if (teamSize == null || teamSize === "")
 				teamSize = "0";
-			easeTracker.trackEvent("PricingContactSubmit", {"teamSize": teamSize});
 		},
 		function(data){
 			errorHandler.css('color', '#ec555b');

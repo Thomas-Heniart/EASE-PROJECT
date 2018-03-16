@@ -21,7 +21,6 @@ $(document).ready( function() {
 			},
 			function(){$('#loading').removeClass("la-animate");},
 	        function(retMsg) {
-					easeTracker.trackEvent("DeleteProfile");
                   	window.location = ("/");
 			},
 			function(retMsg){

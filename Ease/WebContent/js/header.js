@@ -24,7 +24,6 @@ $(document).ready(function() {
 			$(".userSettings").removeClass("show");
 	});
 	$('#ModifyUserButton').click(function() {
-		easeTracker.trackEvent("ClickSettingsFromDashboard");
 		goToSettings();
 	});
 	if($("body").hasClass("picBckgrnd")){
@@ -43,10 +42,6 @@ $(document).ready(function() {
 			'changeUserBackground',
 			{},
 			function(){},
-			function(retMsg){
-				easeTracker.trackEvent("DailyPhotoSwitch");
-				easeTracker.setDailyPhoto(self.is("checked"));
-			},
 			function(retMsg){
 				showAlertPopup(retMsg, true);
 			},

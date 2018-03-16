@@ -103,14 +103,6 @@
             postHandler.post(
                 'changeUserBackground',
                 {},
-                function () {
-                },
-                function (retMsg) {
-                    easeTracker.trackEvent("DailyPhotoSwitch");
-                    easeTracker.setDailyPhoto(self.is("checked"));
-                },
-                function (retMsg) {
-                },
                 "text"
             );
         });

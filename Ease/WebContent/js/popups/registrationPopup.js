@@ -60,7 +60,6 @@ var signUpPopup = function (elem) {
     });
     this.qRoot.find('#1 form').submit(function (e) {
         e.preventDefault();
-        easeTracker.trackEvent("HomepageSignUp1");
         self.email = $(this).find("input[name='email']").val();
         self.name = $(this).find("input[name='name']").val();
         var loading = $(this).find('.loading');
@@ -150,9 +149,6 @@ var signUpPopup = function (elem) {
                 alertMessage.text("Successfully registered");
                 alertMessage.css('color', '#24d666');
                 alertMessage.addClass('show');
-                easeTracker.setUserId(self.email);
-                easeTracker.trackEvent("HomepageSignUp2");
-                easeTracker.trackEvent("Connect");
                 setTimeout(function () {
                     window.location = "/";
                 }, 750);

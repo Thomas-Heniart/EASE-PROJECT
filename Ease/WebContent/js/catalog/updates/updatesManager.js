@@ -93,8 +93,6 @@ var UpdateManager = function (rootEl) {
 	this.addUpdate = function(update){
 		var appName = update.websiteName;
 		var updateType = update.type;
-		easeTracker.trackEvent("UpdateNew", {"UpdateType": updateType, "appName": appName});
-		easeTracker.increaseUpdateCount();
 		self.updates.push(update);
 		self.updatesHandler.append(update.qRoot);
 	};
@@ -211,8 +209,6 @@ var updatePassword = function(updateId, appId, login, pwdLength, imageSrc, websi
 				},
 				function(msg){
 					catalog.oUpdate.removeUpdate(self);
-					easeTracker.trackEvent("UpdateAccepted");
-					easeTracker.increaseUpdateAcceptedCount();
 				},
 				function(msg){
 					self.showErrorMessage(msg);
@@ -234,8 +230,6 @@ var updatePassword = function(updateId, appId, login, pwdLength, imageSrc, websi
 				self.stopLogoAnimation();
 			},
 			function(msg){
-				easeTracker.trackEvent("UpdateRejected");
-				easeTracker.increaseUpdateRejectedCount();
 				catalog.oUpdate.removeUpdate(self);
 			},
 			function(msg){
@@ -346,8 +340,6 @@ var newClassicApp = function(updateId, login, pwdLength, imageSrc, websiteName, 
 					profiles[profiles.length - 1].addApp(app);
 					app.scaleAnimate();
 					catalog.oUpdate.removeUpdate(self);
-					easeTracker.trackEvent("UpdateAccepted");
-					easeTracker.increaseUpdateAcceptedCount();
 				},
 				function(msg){
 					self.showErrorMessage(msg);
@@ -369,8 +361,6 @@ var newClassicApp = function(updateId, login, pwdLength, imageSrc, websiteName, 
 				self.stopLogoAnimation();
 			},
 			function(msg){
-				easeTracker.trackEvent("UpdateRejected");
-				easeTracker.increaseUpdateRejectedCount();
 				catalog.oUpdate.removeUpdate(self);
 			},
 			function(msg){
@@ -484,8 +474,6 @@ var newLogWithApp = function(updateId, websiteName, logWithId, logWithLogin, log
 				profiles[profiles.length - 1].addApp(app);
 				app.scaleAnimate();
 				catalog.oUpdate.removeUpdate(self);
-				easeTracker.trackEvent("UpdateAccepted");
-				easeTracker.increaseUpdateAcceptedCount();
 			},
 			function(msg){
 				self.showErrorMessage(msg);
@@ -504,8 +492,6 @@ var newLogWithApp = function(updateId, websiteName, logWithId, logWithLogin, log
 				self.stopLogoAnimation();
 			},
 			function(msg){
-				easeTracker.trackEvent("UpdateRejected");
-				easeTracker.increaseUpdateRejectedCount();
 				catalog.oUpdate.removeUpdate(self);
 			},
 			function(msg){

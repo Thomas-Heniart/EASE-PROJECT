@@ -35,10 +35,6 @@ $(document).ready(function(){
 							email : email, 
 							password : password
 						},
-						function(){
-							easeTracker.trackEvent("Connect");
-							window.location = "/";
-						},
 						function(retMsg){},
 						function(retMsg){},
     			        'text'

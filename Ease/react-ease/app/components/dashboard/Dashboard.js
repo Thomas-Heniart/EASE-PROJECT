@@ -71,7 +71,7 @@ class Dashboard extends Component {
   }
   componentWillMount() {
     document.title = "Ease.space";
-    ReactGA.pageview("main/settings");
+    ReactGA.pageview("main/dashboard");
   }
   render(){
     const {columns} = this.props.dashboard;
