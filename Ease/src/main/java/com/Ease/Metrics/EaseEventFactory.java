@@ -23,6 +23,7 @@ public class EaseEventFactory {
         easeEvent.setName("PasswordUsed");
         easeEvent.setData(data.toString());
         easeEvent.setUser_id(user_id);
+        easeEvent.setTeam_id(teamCard.getTeam().getDb_id());
         return easeEvent;
     }
 
@@ -31,11 +32,12 @@ public class EaseEventFactory {
         data.put("from", from);
         data.put("id", app.getDb_id());
         data.put("type", app.getType());
+        EaseEvent easeEvent = new EaseEvent();
         if (app.getTeamCardReceiver() != null) {
             data.put("type", app.getTeamCardReceiver().getType());
             data.put("type", app.getTeamCardReceiver().getTeamCard().getType());
+            easeEvent.setTeam_id(app.getTeamCardReceiver().getTeamCard().getTeam().getDb_id());
         }
-        EaseEvent easeEvent = new EaseEvent();
         easeEvent.setName("PasswordUsed");
         easeEvent.setData(data.toString());
         easeEvent.setUser_id(user_id);
