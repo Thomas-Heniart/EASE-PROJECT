@@ -14,12 +14,12 @@ module.exports = {
   track: {
     appClick: (({app}) => {
       return basic_post('/api/v1/trackEvent', {
-        name:'AppClick',
+        name:'PasswordUsed',
         data: {
           id: app.id,
           type: app.type,
           sub_type: app.sub_type,
-          from: 'dashboard'
+          from: 'DashboardClick'
         }
       })
     }),
