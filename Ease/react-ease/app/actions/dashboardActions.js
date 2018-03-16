@@ -4,6 +4,7 @@ import extension from "../utils/extension_api";
 import {fetchTeamApp} from "./teamActions";
 import {showExtensionDownloadModal} from "./modalActions";
 import {deleteUpdate} from "./catalogActions";
+import * as event_api from "../utils/event_api";
 
 export function fetchDashboard(){
   return (dispatch, getState) => {
@@ -689,10 +690,31 @@ export function editAppName({app_id, name}) {
   }
 }
 
-export function clickOnAppMetric({app_id}) {
+export function clickOnAppMetric({app}) {
   return (dispatch, getState) => {
-    return post_api.dashboard.clickOnAppMetric({
-      app_id: app_id
+    return event_api.track.appClick({
+      app: app
+    }).catch(err => {
+      throw err;
+    });
+  }
+}
+
+export function appAdded({app, from}) {
+  return (dispatch, getState) => {
+    return event_api.track.appAdded({
+      app: app,
+      from: from
+    }).catch(err => {
+      throw err;
+    });
+  }
+}
+
+export function updateAccepted({type}) {
+  return (dispatch, getState) => {
+    return event_api.track.updateAccepted({
+      type: type
     }).catch(err => {
       throw err;
     });

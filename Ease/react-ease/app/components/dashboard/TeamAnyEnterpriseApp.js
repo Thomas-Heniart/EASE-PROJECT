@@ -32,6 +32,7 @@ class TeamAnyEnterpriseApp extends Component {
 
     if (app.new)
       this.props.dispatch(validateApp({app_id: app.id}));
+    this.props.dispatch(clickOnAppMetric({app: app}));
     window.open(app.website.login_url);
     extension.fillActiveTab({app_id: app.id});
   };
@@ -40,7 +41,7 @@ class TeamAnyEnterpriseApp extends Component {
       if (this.state.isOpen === false) {
         if (this.props.app.new)
           this.props.dispatch(validateApp({app_id: this.props.app.id}));
-        this.props.dispatch(clickOnAppMetric({app_id: this.props.app.id}));
+        this.props.dispatch(clickOnAppMetric({app: this.props.app}));
         easeTracker.trackEvent("ClickOnAppPro");
         api.dashboard.getAppPassword({
           app_id: this.props.app.id

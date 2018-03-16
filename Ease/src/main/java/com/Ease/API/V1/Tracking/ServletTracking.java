@@ -17,11 +17,13 @@ public class ServletTracking extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         PostServletManager sm = new PostServletManager(this.getClass().getName(), request, response, true);
         try {
+            sm.needToBeConnected();
             String name = sm.getStringParam("name", true, false);
             JSONObject data = sm.getJsonParam("data", true, false);
             EaseEvent easeEvent = new EaseEvent();
             easeEvent.setName(name);
             easeEvent.setData(data.toString());
+            easeEvent.setUser_id(sm.getUser().getDb_id());
             sm.getTrackingHibernateQuery().saveOrUpdateObject(easeEvent);
             sm.setSuccess("Success");
         } catch (Exception e) {

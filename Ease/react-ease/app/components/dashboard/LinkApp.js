@@ -11,7 +11,7 @@ class LinkApp extends Component {
     const {app} = this.props;
     if (app.new)
       this.props.dispatch(validateApp({app_id: app.id}));
-    this.props.dispatch(clickOnAppMetric({app_id: this.props.app.id}));
+    this.props.dispatch(clickOnAppMetric({app: this.props.app}));
     easeTracker.trackEvent("ClickOnAppPerso");
     window.open(app.url, '_blank');
   };
