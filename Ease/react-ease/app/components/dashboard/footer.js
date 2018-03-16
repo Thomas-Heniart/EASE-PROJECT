@@ -38,7 +38,6 @@ class Footer extends Component {
 
   componentWillMount() {
     this.hideFooterTimer();
-    console.log(document.URL);
     if (document.URL !== 'https://ease.space/#/main/dashboard/log') {
       this.setState({view: 2})
     }
