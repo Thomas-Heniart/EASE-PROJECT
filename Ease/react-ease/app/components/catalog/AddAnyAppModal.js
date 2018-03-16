@@ -4,7 +4,7 @@ import { Container, Form, Message, Label, Button, Input, Icon, Checkbox } from '
 import SimpleModalTemplate from "../common/SimpleModalTemplate";
 import ChooseAppLocationModal from './ChooseAppLocationModal';
 import { withRouter } from 'react-router-dom';
-import {createProfile} from "../../actions/dashboardActions";
+import {appAdded, createProfile} from "../../actions/dashboardActions";
 import ChooseTypeAppModal from './ChooseTypeAppModal';
 import {catalogAddAnyApp} from "../../actions/catalogActions";
 import {reduxActionBinder} from "../../actions/index";
@@ -151,6 +151,10 @@ class SecondStep extends React.Component {
           connection_information: connection_information,
           credentials_provided: this.state.check
         })).then(response => {
+          this.props.dispatch(appAdded({
+            app: response,
+            from: "Catalog"
+          }));
           this.setState({loading: false});
           this.props.modal.resolve(response);
           this.props.showCatalogAddAnyAppModal({active: false});
@@ -167,6 +171,10 @@ class SecondStep extends React.Component {
         connection_information: connection_information,
         credentials_provided: this.state.check
       })).then(response => {
+        this.props.dispatch(appAdded({
+          app: response,
+          from: "Catalog"
+        }));
         this.setState({loading: false});
         this.props.modal.resolve(response);
         this.props.showCatalogAddAnyAppModal({active: false});

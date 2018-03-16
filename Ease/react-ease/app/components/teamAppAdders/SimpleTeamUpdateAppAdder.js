@@ -3,13 +3,14 @@ import {logoLetter, transformWebsiteInfoIntoListAndSetValues} from "../../utils/
 import {fetchWebsiteInfo, getDashboardApp, getClearbitLogo, getClearbitLogoAutoComplete} from "../../utils/api";
 import {credentialIconType, handleSemanticInput, transformWebsiteInfoIntoList, transformCredentialsListIntoObject} from "../../utils/utils";
 import {newSelectUserFromListById} from "../../utils/helperFunctions";
-import {requestWebsite} from "../../actions/teamModalActions";
+import {cardAdded, requestWebsite} from "../../actions/teamModalActions";
 import {connect} from "react-redux";
 import { setUserDropdownText, PasswordChangeDropdown, renderSimpleAppAddUserLabel} from "./common";
 import { Header, Label, Container, Icon, Transition, Segment, Input, Dropdown, Button } from 'semantic-ui-react';
 import {reduxActionBinder} from "../../actions/index";
 import {teamCreateAnySingleCard, teamCreateSingleApp} from "../../actions/appsActions";
 import {deleteUpdate} from "../../actions/catalogActions";
+import {updateAccepted} from "../../actions/dashboardActions";
 
 const TeamAppCredentialInput = ({item, onChange, disabled, readOnly}) => {
   return <Input size="mini"
@@ -30,7 +31,8 @@ const TeamAppCredentialInput = ({item, onChange, disabled, readOnly}) => {
 @connect(store => ({
   teams: store.teams,
   card: store.teamCard,
-  modal: store.modals
+  modal: store.modals,
+  updates: store.catalog.updates
 }), reduxActionBinder)
 class SimpleTeamUpdateAppAdder extends Component {
   constructor(props) {
@@ -195,6 +197,9 @@ class SimpleTeamUpdateAppAdder extends Component {
         account_information: transformCredentialsListIntoObject(this.state.credentials),
         receivers: newReceivers
       })).then(response => {
+        this.props.dispatch(cardAdded({
+          card: response
+        }));
         this.finish();
       });
     } else {
@@ -219,6 +224,9 @@ class SimpleTeamUpdateAppAdder extends Component {
     }
   };
   finish = () => {
+    this.props.dispatch(updateAccepted({
+      type: this.props.updates.find((update) => update.id === this.props.card.app.update_id).type
+    }));
     this.props.dispatch(deleteUpdate({id: this.props.card.app.update_id})).then(() => {
       this.setState({loading: false});
       this.close();

@@ -7,6 +7,7 @@ import {connect} from "react-redux";
 import { Label, Container, Icon, Segment, Input, Button, Dropdown } from 'semantic-ui-react';
 import {reduxActionBinder} from "../../actions/index";
 import { setUserDropdownText, renderLinkAppAddUserLabel} from "./common";
+import {cardAdded} from "../../actions/teamModalActions";
 
 @connect(store => ({
   teams: store.teams,
@@ -84,6 +85,9 @@ class LinkTeamAppAdder extends React.Component {
       receivers: this.state.selected_users,
       img_url: this.state.img_url ? this.state.img_url : this.state.logoSrc
     })).then(response => {
+      this.props.dispatch(cardAdded({
+        card: response
+      }));
       this.setState({loading: false});
       this.close();
     });
