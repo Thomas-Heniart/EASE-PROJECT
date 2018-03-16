@@ -105,7 +105,6 @@ var Form = {
             var newName = self.oInputs[0].getVal();
             $("#userSettingsButton span").html(newName);
             var namesCount = newName.split(" ").length;
-            easeTracker.trackEvent("SettingsEditUserName", {"UserNamesCount": namesCount});
             window.location.reload();
         };
         this.errorCallback = function (retMsg) {
@@ -116,7 +115,6 @@ var Form = {
         constructorForm.apply(this, arguments);
         var self = this;
         this.successCallback = function (retMsg) {
-            easeTracker.trackEvent("SettingsEditUserPassword");
             $("p.response", self.qRoot).removeClass("error");
             $("p.response", self.qRoot).addClass("success");
             $("p.response", self.qRoot).text(retMsg);
@@ -227,8 +225,6 @@ var Form = {
             }
             var type = (self.postName == "AddClassicApp") ? "ClassicApp" : "LogWithApp";
             var isNew = $(".catlogApp[name='" + siteName + "']").attr("newApp") != null;
-            easeTracker.trackEvent("AddApp", {"appType": type, "appName": siteName, "AppNewYN": isNew});
-            easeTracker.increaseAppCounter();
             self.reset();
             self.appsContainer = null;
             self.helper = null;
@@ -377,7 +373,6 @@ var Form = {
                         self.app.find('.emptyAppIndicator').remove();
                         self.app.removeClass('emptyApp');
                         self.qRoot.find('.AccountApp.selected').removeClass("selected");
-                        easeTracker.trackEvent("EditAppDone");
                         self.removeAddedFields();
                     }, function () {
                     },
@@ -455,8 +450,6 @@ var Form = {
             var x = parseInt($(".catalogApp[idx='" + webId + "'] span.apps-integrated i.count").html());
             $(".catalogApp[idx='" + webId + "'] span.apps-integrated i.count").html(x - 1);
             var appName = $(self.oParent.app).attr("name");
-            easeTracker.trackEvent("DeleteApp", {"appName": appName});
-            easeTracker.decreaseAppCounter();
             if (x == 1)
                 $(".catalogApp[idx='" + webId + "'] span.apps-integrated").removeClass("showCounter");
             $(self.oParent.app).find('.linkImage').addClass('deletingApp');
@@ -510,8 +503,6 @@ var Form = {
             self.addEmail(self.oInputs[0].getVal());
             $(".newEmail").addClass("show");
             $(".newEmailInput").removeClass("show");
-            easeTracker.trackEvent("EmailAdded");
-            easeTracker.increaseEmailCount();
             self.reset();
         }
     },
@@ -547,7 +538,6 @@ var Form = {
             }, 2000);
         };
         this.successCallback = function (retMsg) {
-            easeTracker.trackEvent("EmailVerificationSent");
         }
     },
     DeleteAccountForm: function (rootEl) {
@@ -559,7 +549,6 @@ var Form = {
             $(".wait", self.oParent.qRoot).addClass("show");
         };
         this.successCallback = function (retMsg) {
-            easeTracker.trackEvent("SettingsEaseAccountDeleted");
             setTimeout(function () {
                 window.location = "index.jsp";
             }, 1000);

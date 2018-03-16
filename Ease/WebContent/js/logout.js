@@ -14,8 +14,6 @@ $(document).ready(function(){
 			{},
 			function(){},
 			function(retMsg){
-				easeTracker.trackEvent('EaseLogout');
-				easeTracker.logout();
 				window.location = "/";
 			},
 			function(retMsg){
@@ -32,8 +30,6 @@ $(document).ready(function(){
 			{},
 			function(){},
 			function(retMsg){
-				easeTracker.trackEvent('AllAppsLogout');
-				easeTracker.logout();
 				window.location = "/";
 			},
 			function(retMsg){
@@ -52,8 +48,7 @@ function logoutFromAllApps(){
       {},
       function(){},
       function(retMsg){
-        easeTracker.trackEvent('AllAppsLogout');
-        easeTracker.logout();
+
         window.location = "/";
       },
       function(retMsg){

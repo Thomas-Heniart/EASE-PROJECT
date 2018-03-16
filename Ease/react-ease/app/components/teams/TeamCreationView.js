@@ -34,10 +34,6 @@ class Step1 extends React.Component{
     post_api.common.askRegistration(this.props.email).then(response => {
       this.setState({processing: false});
       this.props.onStepValidated();
-        easeTracker.trackEvent("TeamCreationEnterEmail", {
-            "plan_id": this.props.plan_id
-        });
-        easeTracker.trackEvent("RegistrationEnterEmail");
     }).catch(err => {
       this.setState({errorMessage: err,processing: false});
     });
@@ -90,10 +86,6 @@ class Step2 extends React.Component{
     post_api.common.checkRegistrationDigits(this.props.email, this.props.digits).then(response => {
       this.setState({loading: false});
       this.props.onStepValidated();
-        easeTracker.trackEvent("TeamCreationEnterDigits", {
-            "plan_id": this.props.plan_id
-        });
-        easeTracker.trackEvent("RegistrationEnterDigits");
     }).catch(err => {
       this.setState({loading: false, errorMessage: err});
     })
@@ -162,10 +154,6 @@ class Step3 extends React.Component{
       return;
     }
     this.setState({errorMessage: '', passwordError: false});
-      easeTracker.trackEvent("TeamCreationEnterPassword", {
-          "plan_id": this.props.plan_id
-      });
-      easeTracker.trackEvent("RegistrationEnterPassword");
     this.props.onStepValidated();
   }
   render() {
@@ -222,9 +210,6 @@ class Step4 extends React.Component{
       this.setState({usernameError: true});
       return;
     }
-      easeTracker.trackEvent("TeamCreationEnterUsername", {
-          "plan_id": this.props.plan_id
-      });
     this.props.onStepValidated();
   }
   render() {
@@ -275,11 +260,7 @@ class StepCGU extends React.Component{
     this.setState({loading: true});
     post_api.common.registration(this.props.email, this.props.username, this.props.password, this.props.digits, null, this.props.newsletter).then(response => {
       this.setState({loading: false});
-        easeTracker.trackEvent("TeamCreationAcceptCGU", {
-            "plan_id": this.props.plan_id
-        });
-        easeTracker.trackEvent("RegistrationAcceptCGU");
-        this.props.dispatch(processConnection({
+       this.props.dispatch(processConnection({
           email:this.props.email,
           password:this.props.password
         })).then(response => {
@@ -329,11 +310,6 @@ class Step5 extends React.Component {
     onSubmit(e) {
         e.preventDefault();
         this.props.incStep();
-        easeTracker.trackEvent("TeamCreationEnterJob", {
-            "job": this.roles[this.props.jobRole],
-            "detail": this.props.jobDetails,
-            "plan_id": this.props.plan_id
-        });
     }
 
     render() {
@@ -395,10 +371,6 @@ class Step6 extends React.Component{
       const teamId = response.id;
       this.props.handleInput(null, {name:"teamId", value:teamId});
       this.setState({loading: false});
-        easeTracker.trackEvent("TeamCreationFinished", {
-            "plan_id": this.props.plan_id
-        });
-        easeTracker.trackEvent("RegistrationDone");
       this.props.onStepValidated();
     }).catch(err => {
       this.setState({errorMessage: err, loading: false});

@@ -441,9 +441,7 @@ class OnBoardingImportation extends React.Component {
                 fields: {field1: 'url', field2: 'name', field3: 'login', field4: 'password'},
                 loading: false
               });
-              easeTracker.trackEvent("EaseOnboardingPasteCSV");
             });
-            easeTracker.trackEvent("Importation");
           }
           else {
             this.setState({
@@ -645,7 +643,6 @@ class OnBoardingImportation extends React.Component {
             window.location.href = "/";
           });
         }
-        easeTracker.trackEvent("EaseOnboardingImportationDone")
       }).catch(err => {
         this.setState({error: err, loadingSending: false});
       });
@@ -1011,17 +1008,19 @@ class OnBoardingImportation extends React.Component {
           accountsPending={this.state.accountsPending}
           selectedProfile={this.state.selectedProfile}/>}
         {(this.state.view === 5 && this.state.errorAccounts && this.state.loading === false) &&
-        <ErrorAccounts
-          errorAccounts={this.state.errorAccounts}
-          handleErrorAppInfo={this.handleErrorAppInfo}
-          importErrorAccounts={this.importErrorAccounts}
-          deleteErrorAccount={this.deleteErrorAccount}
-          fields={this.state.fields}/>
+          <div>
+            <ErrorAccounts
+              errorAccounts={this.state.errorAccounts}
+              handleErrorAppInfo={this.handleErrorAppInfo}
+              importErrorAccounts={this.importErrorAccounts}
+              deleteErrorAccount={this.deleteErrorAccount}
+              fields={this.state.fields}/>
+            <Message visible={this.state.specialError} negative style={{width: "430px", left: "50%", transform: "translateX(-50%)"}}>
+              <p style={{color: "#eb555c"}}>No password found! Make sure your Chrome account is <strong>synchronized <a style={{TextDecoration:"underline", color: "#eb555c"}} href="#">Click Here </a></strong>
+                to find how do it in few clicks.</p>
+            </Message>
+          </div>
         }
-         <Message visible={this.state.specialError} negative style={{width: "430px", left: "50%", transform: "translateX(-50%)"}}>
-           <p style={{color: "#eb555c"}}>No password found! Make sure your Chrome account is <strong>synchronized <a style={{TextDecoration:"underline", color: "#eb555c"}} href="#">Click Here </a></strong>
-             to find how do it in few clicks.</p>
-         </Message>
       </div>
     )
   }

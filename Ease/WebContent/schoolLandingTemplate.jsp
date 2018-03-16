@@ -14,8 +14,7 @@
 <head>
     <title> Ease.space | Le meilleur moyen de se connecter à ses sites préférés.</title>
     <!-- Description shown in Google -->
-    <meta name="description"
-          content="Ease est la homepage qui vous débarrasse des mots de passe. En 1 clic, soyez connecté à vos sites web automatiquement."/>
+    <meta name="description" content="Ease est la homepage qui vous débarrasse des mots de passe. En 1 clic, soyez connecté à vos sites web automatiquement."/>
     <!-- Facebook metadata -->
     <meta property="og:url" content="https://ease.space/"/>
     <meta property="og:type" content="website"/>
@@ -28,18 +27,14 @@
     <meta name="twitter:site" content="@Ease_app"/>
     <meta name="twitter:creator" content="@Ease_app"/>
     <meta name="twitter:title" content="Ease.space | Le meilleur moyen de se connecter à ses sites préférés."/>
-    <meta name="twitter:description"
-          content="Ease est la homepage qui vous débarrasse des mots de passe. En 1 clic, soyez connecté à vos sites web automatiquement."/>
+    <meta name="twitter:description" content="Ease est la homepage qui vous débarrasse des mots de passe. En 1 clic, soyez connecté à vos sites web automatiquement."/>
     <meta name="twitter:image" content="https://ease.space/resources/images/fbmeta-en.png"/>
     <meta http-equiv="Content-Type" contentType="text/html; charset=UTF-8"/>
     <meta name="viewport" content="initial-scale=1, maximum-scale=1"/>
-    <meta property="og:image"
-          content="https://ease.space/resources/other/fb_letsgo_icon.jpg"/>
+    <meta property="og:image" content="https://ease.space/resources/other/fb_letsgo_icon.jpg"/>
+
     <link rel="icon" type="image/png" href="resources/icons/APPEASE.png"/>
-
-
     <link rel="manifest" href="manifest.json">
-
     <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Raleway:500,700"/>
     <link rel="stylesheet" type="text/css" href="/cssMinified.v00051/lib/fonts/museo-font.css"/>
     <link rel="stylesheet" href="/cssMinified.v00051/default_style.css"/>
@@ -253,89 +248,8 @@
 </script>
 <script type="text/javascript">
     window.addEventListener('load', function () {
-        (function (e, t) {
-            var n = e.amplitude || {_q: [], _iq: {}};
-            var r = t.createElement("script");
-            r.type = "text/javascript";
-            r.async = true;
-            r.src = "/jsMinified.v00023/amplitude-analytics.js";
-            r.onload = function () {
-                e.amplitude.runQueuedFunctions()
-            };
-            var i = t.getElementsByTagName("script")[0];
-            i.parentNode.insertBefore(r, i);
-
-            function s(e, t) {
-                e.prototype[t] = function () {
-                    this._q.push([t].concat(Array.prototype.slice.call(arguments, 0)));
-                    return this
-                }
-            }
-
-            var o = function () {
-                this._q = [];
-                return this
-            };
-            var a = ["add", "append", "clearAll", "prepend", "set", "setOnce", "unset"];
-            for (var u = 0; u < a.length; u++) {
-                s(o, a[u])
-            }
-            n.Identify = o;
-            var c = function () {
-                this._q = [];
-                return this;
-            };
-            var p = ["setProductId", "setQuantity", "setPrice", "setRevenueType", "setEventProperties"];
-            for (var l = 0; l < p.length; l++) {
-                s(c, p[l])
-            }
-            n.Revenue = c;
-            var d = ["init", "logEvent", "logRevenue", "setUserId", "setUserProperties", "setOptOut", "setVersionName", "setDomain", "setDeviceId", "setGlobalUserProperties", "identify", "clearUserProperties", "setGroup", "logRevenueV2", "regenerateDeviceId"];
-
-            function v(e) {
-                function t(t) {
-                    e[t] = function () {
-                        e._q.push([t].concat(Array.prototype.slice.call(arguments, 0)));
-                    }
-                }
-
-                for (var n = 0; n < d.length; n++) {
-                    t(d[n])
-                }
-            }
-
-            v(n);
-            n.getInstance = function (e) {
-                e = (!e || e.length === 0 ? "$default_instance" : e).toLowerCase();
-                if (!n._iq.hasOwnProperty(e)) {
-                    n._iq[e] = {_q: []};
-                    v(n._iq[e])
-                }
-                return n._iq[e]
-            };
-            e.amplitude = n;
-        })(window, document);
-
-        if (location.hostname === "ease.space")
-            amplitude.getInstance().init("73264447f97c4623fb38d92b9e7eaeea");
-        else
-            amplitude.getInstance().init("5f012a5e604acb0283ed11ed8da5414f");
-        easeTracker.trackEvent("HomepageVisit", {"SchoolName": schoolToTrack});
-    });
-    var schoolToTrack = '${param.schoolName}';
-</script>
-<script type="text/javascript">
-    window.addEventListener('load', function () {
         $('.signUpButton').click(function () {
-            easeTracker.trackEvent($(this).attr("trackEvent"), {"SchoolName": schoolToTrack});
             easeSignUpPopup.open();
-        });
-        /* if ($('#2').find("input[name='email']").val().length) {
-            $("#1 input[name='email']").val($('#2').find("input[name='email']").val());
-            $("#1 input[name='name']").val($('#2').find("input[name='fname']").val());
-        } */
-        $("#connexionButton").click(function () {
-            easeTracker.trackEvent("HomepageLogin", {"SchoolName": schoolToTrack});
         });
     });
 </script>

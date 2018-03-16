@@ -92,8 +92,6 @@ function sendEvent(obj) {
                     if (json.detail[0] && json.detail[0].url) {
                         json.detail = json.detail[0];
                         message = "NewLinkToOpen";
-
-                        easeTracker.trackEvent("ClickOnApp", {"type": "LinkApp", "appName": json.detail.app_name});
                     } else {
                         json.detail.forEach(function (detail) {
                             if (typeof detail.user !== "undefined") {
@@ -104,19 +102,12 @@ function sendEvent(obj) {
                             }
                         });
                         var jsonDetail = json.detail[json.detail.length - 1];
-                        easeTracker.trackEvent("ClickOnApp", {
-                            "type": jsonDetail.type,
-                            "appName": jsonDetail.app_name,
-                            "websiteName": jsonDetail.website_name
-                        });
                     }
                     var now = "" + new Date;
-                    easeTracker.setOnce("TutoDateFirstClickOnApp", now);
                     json.detail.highlight = !ctrlDown;
                     event = new CustomEvent(message, json);
                     document.dispatchEvent(event);
                 }, function (retMsg) {
-                    //easeTracker.trackEvent("App fail clicks");
                     return;
                 }, 'text');
             }
@@ -127,8 +118,6 @@ function sendEvent(obj) {
 $(document).ready(function () {
     $('#homePageSwitch').change(function () {
         var homepageState = $(this).is(":checked");
-        easeTracker.setHomepage(homepageState);
-        easeTracker.trackEvent("HomepageSwitch");
         var stateString = homepageState.toString();
         postHandler.post("HomepageSwitch", {
             homepageState: stateString
