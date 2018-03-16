@@ -161,6 +161,10 @@ class NewTeamCreationView extends React.Component {
         team_id: this.state.team_id,
         step: 5
       })).then(res => {
+        ga('send', {
+          eventCategory: 'form',
+          eventAction: 'createTeam',
+        });
         window.location.href = "/";
       });
     }
@@ -477,6 +481,10 @@ class NewTeamCreationView extends React.Component {
           team_id: this.state.team_id,
           step: 5
         })).then(res => {
+          ga('send', {
+            eventCategory: 'form',
+            eventAction: 'createTeam',
+          });
           window.location.href = "/";
         });
     }
@@ -541,6 +549,10 @@ class NewTeamCreationView extends React.Component {
                 team_id: this.state.team_id,
                 step: 5
               })).then(res => {
+                ga('send', {
+                  eventCategory: 'form',
+                  eventAction: 'createTeam',
+                });
                 window.location.href = "/";
               });
           });
@@ -589,6 +601,10 @@ class NewTeamCreationView extends React.Component {
               team_id: this.state.team_id,
               step: 5
             })).then(res => {
+              ga('send', {
+                eventCategory: 'form',
+                eventAction: 'createTeam',
+              });
               window.location.href = "/";
             });
           });

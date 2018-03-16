@@ -1,5 +1,6 @@
 import React from 'react';
 import {connect} from "react-redux";
+import ReactGA from 'react-ga';
 import queryString from "query-string";
 import ChromeFirstStep from "./ChromeFirstStep";
 import ChromeSecondStep from "./ChromeSecondStep";
@@ -471,6 +472,12 @@ class OnBoardingImportation extends React.Component {
               team_id: this.props.onBoarding.team_id,
               step: 5
             })).then(res => {
+              const ga = ReactGA.ga();
+              ga('send', {
+                eventCategory: 'form',
+                eventAction: 'createTeam',
+              });
+
               window.location.href = "/";
             });
         });
@@ -490,6 +497,11 @@ class OnBoardingImportation extends React.Component {
               team_id: this.props.onBoarding.team_id,
               step: 5
             })).then(res => {
+              const ga = ReactGA.ga();
+              ga('send', {
+                eventCategory: 'form',
+                eventAction: 'createTeam',
+              });
               window.location.href = "/";
             });
         });
@@ -640,6 +652,11 @@ class OnBoardingImportation extends React.Component {
             team_id: this.props.onBoarding.team_id,
             step: 5
           })).then(res => {
+            const ga = ReactGA.ga();
+            ga('send', {
+              eventCategory: 'form',
+              eventAction: 'createTeam',
+            });
             window.location.href = "/";
           });
         }
@@ -735,6 +752,11 @@ class OnBoardingImportation extends React.Component {
             team_id: this.props.onBoarding.team_id,
             step: 5
           })).then(res => {
+            const ga = ReactGA.ga();
+            ga('send', {
+              eventCategory: 'form',
+              eventAction: 'createTeam',
+            });
             window.location.href = "/";
           });
         }
@@ -839,6 +861,11 @@ class OnBoardingImportation extends React.Component {
         team_id: this.props.onBoarding.team_id,
         step: 5
       })).then(res => {
+        const ga = ReactGA.ga();
+        ga('send', {
+          eventCategory: 'form',
+          eventAction: 'createTeam',
+        });
         this.props.dispatch(resetOnBoardingImportation());
         window.location.href = "/";
       });
@@ -942,8 +969,14 @@ class OnBoardingImportation extends React.Component {
         team_id: this.props.onBoarding.team_id,
         step: 5
       })).then(res => {
+        const ga = ReactGA.ga();
+        ga('send', {
+          eventCategory: 'form',
+          eventAction: 'createTeam',
+        });
         this.props.dispatch(resetOnBoardingImportation());
         window.location.href = "/";
+
       });
     }
   };
