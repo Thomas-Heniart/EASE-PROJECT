@@ -17,6 +17,7 @@ import {teamCreateEnterpriseCard, teamCreateSingleApp} from "../../actions/appsA
 import {testCredentials} from "../../actions/catalogActions";
 import {createTeamUser} from "../../actions/userActions";
 import * as api from '../../utils/api';
+import ReactGA from 'react-ga';
 
 class InformationCompany extends React.Component {
   render() {
@@ -303,6 +304,10 @@ class NewSimpleTeamCreationView extends React.Component {
         team_id: this.state.team_id,
         step: 5
       })).then(res => {
+        ReactGA.event({
+          category: 'form',
+          action: 'createTeam'
+        });
         window.location.href = "/";
       });
     }
@@ -463,6 +468,10 @@ class NewSimpleTeamCreationView extends React.Component {
           team_id: this.state.team_id,
           step: 5
         })).then(res => {
+          ReactGA.event({
+            category: 'form',
+            action: 'createTeam'
+          });
           window.location.href = "/";
         });
     }
@@ -527,6 +536,10 @@ class NewSimpleTeamCreationView extends React.Component {
                 team_id: this.state.team_id,
                 step: 5
               })).then(res => {
+                ReactGA.event({
+                  category: 'form',
+                  action: 'createTeam'
+                });
                 window.location.href = "/";
               });
           });
@@ -575,6 +588,10 @@ class NewSimpleTeamCreationView extends React.Component {
               team_id: this.state.team_id,
               step: 5
             })).then(res => {
+              ReactGA.event({
+                category: 'form',
+                action: 'createTeam'
+              });
               window.location.href = "/";
             });
           });
