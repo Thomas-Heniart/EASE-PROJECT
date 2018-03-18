@@ -174,7 +174,7 @@ public class TeamManager {
                     }
                 } else if (teamCard.isTeamEnterpriseCard()) {
                     for (TeamCardReceiver teamCardReceiver : teamCard.getTeamCardReceiverMap().values()) {
-                        if (teamCardReceiver.getTeamUser().getUser() == null || !teamCardReceiver.getTeamUser().getUser().getUserStatus().isRegistered())
+                        if (teamCardReceiver.getTeamUser().isRegistered())
                             continue;
                         App app = teamCardReceiver.getApp();
                         if (app == null || app.getAccount() == null)

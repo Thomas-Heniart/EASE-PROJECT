@@ -7,12 +7,12 @@ import com.Ease.Catalog.WebsiteInformation;
 import com.Ease.Hibernate.HibernateQuery;
 import com.Ease.Utils.Crypto.AES;
 import com.Ease.Utils.Crypto.RSA;
-import com.Ease.Utils.DateUtils;
 import com.Ease.Utils.HttpServletException;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.json.JSONObject;
 
 import javax.persistence.*;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
@@ -252,7 +252,10 @@ public class Account {
     }
 
     public boolean mustUpdatePassword() {
-        return this.getReminder_interval() != 0 && new Date().getTime() >= (this.getLast_update().getTime() + this.getReminder_interval() * DateUtils.millisecondsInMonth);
+        Calendar next_update = Calendar.getInstance();
+        next_update.setTime(this.getLast_update());
+        next_update.add(Calendar.MONTH, this.getReminder_interval());
+        return this.getReminder_interval() != 0 && new Date().getTime() >= next_update.getTimeInMillis();
     }
 
     public boolean satisfyWebsite(Website website) {
