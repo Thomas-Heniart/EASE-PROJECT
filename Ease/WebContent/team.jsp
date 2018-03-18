@@ -27,14 +27,14 @@
     <meta name="twitter:image" content="https://ease.space/resources/images/fbmeta-en.png"/>
 
     <link rel="icon" type="image/png" href="resources/icons/APPEASE.png"/>
-    <link rel="stylesheet" href="/cssMinified.v00051/bootstrap.css"/>
+    <link rel="stylesheet" href="/cssMinified.v00052/bootstrap.css"/>
     <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Raleway:500,700" />
-    <link rel="stylesheet" type="text/css" href="/cssMinified.v00051/lib/fonts/museo-font.css"/>
+    <link rel="stylesheet" type="text/css" href="/cssMinified.v00052/lib/fonts/museo-font.css"/>
     <link rel="stylesheet" href="/semantic/dist/semantic.min.css"/>
-    <link rel="stylesheet" href="/cssMinified.v00051/default_style.css"/>
-    <link rel="stylesheet" href="/cssMinified.v00051/lib/fonts/font-awesome-4.2.0/css/font-awesome.min.css"/>
-    <link rel="stylesheet" href="/cssMinified.v00051/lib/fonts/untitled-font-4/styles.css"/>
-    <link rel="stylesheet" href="/cssMinified.v00051/team.css"/>
+    <link rel="stylesheet" href="/cssMinified.v00052/default_style.css"/>
+    <link rel="stylesheet" href="/cssMinified.v00052/lib/fonts/font-awesome-4.2.0/css/font-awesome.min.css"/>
+    <link rel="stylesheet" href="/cssMinified.v00052/lib/fonts/untitled-font-4/styles.css"/>
+    <link rel="stylesheet" href="/cssMinified.v00052/team.css"/>
     <script src="https://js.stripe.com/v3/"></script>
     <script src="/jsMinified.v00023/jsencrypt.js"></script>
     <script src="/jsMinified.v00023/moment.js"></script>
