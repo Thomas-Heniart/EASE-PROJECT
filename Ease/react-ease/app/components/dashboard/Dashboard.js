@@ -85,7 +85,6 @@ class Dashboard extends Component {
             })}
             {this.state.tutorial &&
             <Tutorial/>}
-            <Footer/>
           </ScrollingComponent>
         </div>
     )

@@ -31,12 +31,12 @@
 
     <link rel="icon" type="image/png" href="resources/icons/APPEASE.png"/>
     <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Raleway:500,700" />
-    <link rel="stylesheet" type="text/css" href="/cssMinified.v00053/lib/fonts/museo-font.css"/>
+    <link rel="stylesheet" type="text/css" href="/cssMinified.v00054/lib/fonts/museo-font.css"/>
     <link rel="stylesheet" href="/semantic/dist/semantic.min.css"/>
-    <link rel="stylesheet" href="/cssMinified.v00053/default_style.css"/>
-    <link rel="stylesheet" href="/cssMinified.v00053/lib/fonts/font-awesome-4.2.0/css/font-awesome.min.css"/>
-    <link rel="stylesheet" href="/cssMinified.v00053/lib/fonts/untitled-font-4/styles.css"/>
-    <link rel="stylesheet" href="/cssMinified.v00053/team.css"/>
+    <link rel="stylesheet" href="/cssMinified.v00054/default_style.css"/>
+    <link rel="stylesheet" href="/cssMinified.v00054/lib/fonts/font-awesome-4.2.0/css/font-awesome.min.css"/>
+    <link rel="stylesheet" href="/cssMinified.v00054/lib/fonts/untitled-font-4/styles.css"/>
+    <link rel="stylesheet" href="/cssMinified.v00054/team.css"/>
     <link rel="stylesheet" href="/css/lib/loading.min.css"/>
 
     <script src="https://js.stripe.com/v3/"></script>
@@ -48,7 +48,7 @@
 <BODY class="notranslate">
 <div id="app">
 </div>
-<script src="teams_bundle.js?v=85"></script>
+<script src="teams_bundle.js?v=86"></script>
 <script type="text/javascript">
   window.addEventListener('load', function () {
     $crisp = [];

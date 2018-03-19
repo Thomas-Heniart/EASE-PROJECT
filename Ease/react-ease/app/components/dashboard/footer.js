@@ -37,8 +37,8 @@ class Footer extends Component {
   };
 
   componentWillMount() {
-    this.hideFooterTimer();
     if (document.URL !== 'https://ease.space/#/main/dashboard/log') {
+      this.hideFooterTimer();
       this.setState({view: 2})
     }
   }
