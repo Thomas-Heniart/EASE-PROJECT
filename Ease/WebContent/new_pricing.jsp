@@ -33,9 +33,10 @@
     <meta name="twitter:image" content="https://ease.space/resources/images/metadescription.png"/>
     <meta http-equiv="Content-Type" contentType="text/html; charset=UTF-8" />
     <meta name="viewport" content="initial-scale=1, maximum-scale=1" />
-
     <link rel="icon" type="image/png" href="resources/icons/APPEASE.png" />
+
     <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Raleway:500,700" />
+
     <link rel="stylesheet" href="semantic/dist/semantic.min.css">
     <link rel="stylesheet" type="text/css" href="/cssMinified.v00053/lib/fonts/museo-font.css"/>
     <link rel="stylesheet" href="/cssMinified.v00053/default_style.css"/>
@@ -115,7 +116,7 @@
                         <span class="price_divider" ><fmt:message key="pricing.sub-tip"/></span>
                         <div class="text-center">
                             <button class="button-unstyle big-button button">
-                                <a href="/#/teamCreation?plan_id=1" class="link-unstyle" style="font-size: 18px;">
+                                <a class="link-unstyle" style="font-size: 18px;">
                                     <fmt:message key="pricing.pro.button-text"/>
                                 </a>
                             </button>
@@ -261,6 +262,23 @@
     </div>
 </section>
 <%@ include file="templates/landingPage/landingFooter.jsp" %>
+<div class="main ui container">
+    <div id="modal_pricing" class="ui modal ease_popup ease_team_popup" style="z-index:10000">
+        <i class="close icon"></i>
+        <div class="header"><fmt:message key="pricing.modal.title"/></div>
+        <div class="ui container">
+            <label><fmt:message key="pricing.modal.label"/></label>
+            <div class="ui input mini fluid">
+                <input type="text" placeholder="elon@spacex.com">
+            </div>
+            <div class="ui checkbox">
+                <input type="checkbox" name="newsletter">
+                <label><fmt:message key="pricing.modal.checkbox"/></label>
+            </div>
+            <div class="ui button modal-button"><fmt:message key="pricing.modal.button"/></div>
+        </div>
+    </div>
+</div>
 <script src="/jsMinified.v00023/jquery1.12.4.js"></script>
 <script src="/jsMinified.v00023/jquery.complexify.js"></script>
 <script src="/jsMinified.v00023/bootstrap.js" async></script>
@@ -269,8 +287,41 @@
 <script src="/jsMinified.v00023/languageChooser.js" async></script>
 <script src="/jsMinified.v00023/tracker.js" async></script>
 <script src="semantic/dist/semantic.min.js"></script>
-<script>
+<script type="text/javascript">
+  var Environment = {
+    //mobile or desktop compatible event name, to be used with '.on' function
+    TOUCH_DOWN_EVENT_NAME: 'mousedown touchstart',
+    TOUCH_UP_EVENT_NAME: 'mouseup touchend',
+    TOUCH_MOVE_EVENT_NAME: 'mousemove touchmove',
+    TOUCH_DOUBLE_TAB_EVENT_NAME: 'dblclick dbltap',
+
+    isAndroid: function() {
+      return navigator.userAgent.match(/Android/i);
+    },
+    isBlackBerry: function() {
+      return navigator.userAgent.match(/BlackBerry/i);
+    },
+    isIOS: function() {
+      return navigator.userAgent.match(/iPhone|iPad|iPod/i);
+    },
+    isOpera: function() {
+      return navigator.userAgent.match(/Opera Mini/i);
+    },
+    isWindows: function() {
+      return navigator.userAgent.match(/IEMobile/i);
+    },
+    isMobile: function() {
+      return (Environment.isAndroid() || Environment.isBlackBerry() || Environment.isIOS() || Environment.isOpera() || Environment.isWindows());
+    }
+  };
   $(document).ready(function() {
+    $('#pro_team_plan .link-unstyle').click(function() {
+//      if (Environment.isMobile()) {
+        $('#modal_pricing').modal('show');
+//      }
+//      else
+//        window.location = "/#/teamCreation?plan_id=1";
+    });
     $('#starter-title-1').popup({
       on        : 'hover',
       position  : 'bottom center',

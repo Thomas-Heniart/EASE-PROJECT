@@ -247,9 +247,20 @@ input[type=number]::-webkit-inner-spin-button {
 }
 
 #app {
-  @include display-flex();
-  width: 100%;
-  min-height:100%;
+  display: none;
+}
+#onMobile {
+  display: block;
+}
+@media screen and (min-width: 768px) {
+  #app {
+    @include display-flex();
+    width: 100%;
+    min-height: 100%;
+  }
+  #onMobile {
+    display: none;
+  }
 }
 .shake-ease {
   @include do-shake('shake-ease', 2px, 1px, 3, 1700ms, .05, $opacity: false);
