@@ -1,6 +1,7 @@
 <div class="ui top attached tabular menu">
     <div class="item active" data-tab="recap">Recap</div>
     <div class="item" data-tab="onboarding">Onboarding</div>
+    <div class="item" data-tab="users_cohort">Users cohort</div>
 </div>
 <div class="ui bottom attached tab active segment" data-tab="recap">
     <table class="ui compact small selectable sortable celled table" id="stats_table">
@@ -21,4 +22,15 @@
 </div>
 <div class="ui bottom attached tab segment" data-tab="onboarding">
     <canvas id="onboardingChart" width="400" height="400"></canvas>
+</div>
+<div class="ui bottom attached tab segment" data-tab="users_cohort">
+    <div id="main_users_cohort"></div>
+    <form id="users_cohort_date_range">
+        <label for="users_cohort_date_start">From: </label>
+        <input type="date" id="users_cohort_date_start" />
+        <label for="users_cohort_date_end">To: </label>
+        <input type="date" id="users_cohort_date_end" />
+        <button type="submit">Generate</button>
+    </form>
+    <script src="js/backOffice/statistics.js" async></script>
 </div>

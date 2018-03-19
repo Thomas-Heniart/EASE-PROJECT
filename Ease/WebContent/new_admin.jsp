@@ -45,6 +45,8 @@
     <script src="https://semantic-ui.com/javascript/library/tablesort.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.1/Chart.bundle.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.1/Chart.min.js"></script>
+    <link rel="stylesheet" href="js/backOffice/cornelius.css"/>
+    <script type="application/javascript" src="js/backOffice/cornelius.js"></script>
     <link rel="stylesheet" type="text/css"
           href="css/lib/fonts/font-awesome-4.2.0/css/font-awesome.min.css"/>
     <style>

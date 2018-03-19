@@ -286,7 +286,7 @@ $(document).ready(function () {
               scales: {
                 yAxes: [{
                   ticks: {
-                    beginAtZero:true
+                    beginAtZero: true
                   }
                 }]
               }
@@ -309,6 +309,17 @@ $(document).ready(function () {
             ];
             data.data.datasets[0].borderWidth = 1;
             onboarding_chart = new Chart(graph, data);
+          });
+          ajaxHandler.get("/api/v1/admin/GetUsersCohortData", {}, () => {
+          }, (data) => {
+            let initialDate = new Date(2018, 2, 11);
+            Cornelius.draw({
+              initialDate: initialDate,
+              container: document.getElementById('main_users_cohort'),
+              cohort: data,
+              title: "Users cohort",
+              timeInterval: 'weekly'
+            })
           });
           break;
         default:

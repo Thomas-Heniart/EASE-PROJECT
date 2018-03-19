@@ -4,6 +4,7 @@ import com.Ease.Hibernate.HibernateQuery;
 import com.Ease.Utils.HttpServletException;
 import com.Ease.Utils.HttpStatus;
 import com.Ease.Utils.Servlets.GetServletManager;
+import org.json.JSONArray;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -13,6 +14,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Calendar;
+import java.util.List;
 
 @WebServlet("/api/v1/admin/GetUsersCohortData")
 public class ServletGetUsersCohortData extends HttpServlet {
@@ -24,7 +26,7 @@ public class ServletGetUsersCohortData extends HttpServlet {
             Calendar end_calendar = Calendar.getInstance();
             Long start_week_ms = sm.getLongParam("start_week_ms", true, true);
             if (start_week_ms == null)
-                start_calendar.add(Calendar.WEEK_OF_YEAR, -5);
+                start_calendar.add(Calendar.WEEK_OF_YEAR, -4);
             else
                 start_calendar.setTimeInMillis(start_week_ms);
             start_calendar.set(Calendar.DAY_OF_WEEK, Calendar.SUNDAY);
@@ -34,13 +36,62 @@ public class ServletGetUsersCohortData extends HttpServlet {
                     throw new HttpServletException(HttpStatus.BadRequest, "End cannot be before start");
                 end_calendar.setTimeInMillis(end_week_ms);
             }
+            HibernateQuery trackingHibernateQuery = sm.getTrackingHibernateQuery();
+            HibernateQuery hibernateQuery = sm.getHibernateQuery();
             end_calendar.set(Calendar.DAY_OF_WEEK, Calendar.SATURDAY);
-            HibernateQuery hibernateQuery = sm.getTrackingHibernateQuery();
-            hibernateQuery.queryString("SELECT e.w FROM EaseEvent e WHERE e.creation_date BETWEEN :start_week AND :end_week");
+            JSONArray cohort = new JSONArray();
+            while (start_calendar.get(Calendar.YEAR) < end_calendar.get(Calendar.YEAR))
+                trackFullWeek(start_calendar, end_calendar, trackingHibernateQuery, hibernateQuery, cohort);
+            while (start_calendar.get(Calendar.WEEK_OF_YEAR) <= end_calendar.get(Calendar.WEEK_OF_YEAR))
+                trackFullWeek(start_calendar, end_calendar, trackingHibernateQuery, hibernateQuery, cohort);
+            sm.setSuccess(cohort);
         } catch (Exception e) {
             sm.setError(e);
         }
         sm.sendResponse();
+    }
+
+    private void trackFullWeek(Calendar start_calendar, Calendar end_calendar, HibernateQuery trackingHibernateQuery, HibernateQuery hibernateQuery, JSONArray cohort) {
+        JSONArray this_week = new JSONArray();
+        hibernateQuery.queryString("SELECT u.db_id FROM User u WHERE u.registration_date <= :start_week AND u.userStatus.registered IS true");
+        hibernateQuery.setDate("start_week", start_calendar);
+        List<Integer> userIds = hibernateQuery.list();
+        this_week.put(userIds.size());
+        int weeksAdded = 0;
+        if (!userIds.isEmpty()) {
+            while (start_calendar.get(Calendar.YEAR) < end_calendar.get(Calendar.YEAR)) {
+                trackWeek(start_calendar, trackingHibernateQuery, this_week, userIds);
+                weeksAdded++;
+            }
+            while (start_calendar.get(Calendar.WEEK_OF_YEAR) < end_calendar.get(Calendar.WEEK_OF_YEAR)) {
+                trackWeek(start_calendar, trackingHibernateQuery, this_week, userIds);
+                weeksAdded++;
+            }
+        } else {
+            while (start_calendar.get(Calendar.YEAR) < end_calendar.get(Calendar.YEAR)) {
+                this_week.put(0);
+                weeksAdded++;
+                start_calendar.add(Calendar.WEEK_OF_YEAR, 1);
+            }
+            while (start_calendar.get(Calendar.WEEK_OF_YEAR) < end_calendar.get(Calendar.WEEK_OF_YEAR)) {
+                this_week.put(0);
+                weeksAdded++;
+                start_calendar.add(Calendar.WEEK_OF_YEAR, 1);
+            }
+
+        }
+        start_calendar.add(Calendar.WEEK_OF_YEAR, -weeksAdded);
+        cohort.put(this_week);
+        start_calendar.add(Calendar.WEEK_OF_YEAR, 1);
+    }
+
+    private void trackWeek(Calendar start_calendar, HibernateQuery trackingHibernateQuery, JSONArray this_week, List<Integer> userIds) {
+        trackingHibernateQuery.querySQLString("SELECT DISTINCT t.uID FROM (SELECT user_id AS uId, COUNT(name) AS n FROM EASE_EVENT WHERE user_id IN (:userIds) AND name LIKE 'PasswordUsed' AND creation_date BETWEEN :start_week AND :end_week GROUP BY user_id) AS t WHERE t.n > 3");
+        trackingHibernateQuery.setParameter("start_week", start_calendar.getTime());
+        start_calendar.add(Calendar.WEEK_OF_YEAR, 1);
+        trackingHibernateQuery.setParameter("end_week", start_calendar.getTime());
+        trackingHibernateQuery.setParameter("userIds", userIds);
+        this_week.put(trackingHibernateQuery.list().size());
     }
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {

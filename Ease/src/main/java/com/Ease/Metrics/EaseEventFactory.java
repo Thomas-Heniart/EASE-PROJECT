@@ -43,4 +43,16 @@ public class EaseEventFactory {
         easeEvent.setUser_id(user_id);
         return easeEvent;
     }
+
+    public EaseEvent createPasswordUsedEvent(Integer user_id, String from, Integer app_id) {
+        JSONObject data = new JSONObject();
+        data.put("from", from);
+        data.put("id", app_id);
+        data.put("type", "classicApp");
+        EaseEvent easeEvent = new EaseEvent();
+        easeEvent.setName("PasswordUsed");
+        easeEvent.setData(data.toString());
+        easeEvent.setUser_id(user_id);
+        return easeEvent;
+    }
 }

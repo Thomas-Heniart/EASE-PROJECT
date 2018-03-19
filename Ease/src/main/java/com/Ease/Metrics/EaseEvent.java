@@ -122,4 +122,11 @@ public class EaseEvent {
         res.put("data", this.getData() == null ? new JSONObject() : new JSONObject(this.getData()));
         return res;
     }
+
+    public void setCreation_date(Calendar calendar) {
+        this.setCreation_date(calendar.getTime());
+        this.setYear(calendar.get(Calendar.YEAR));
+        this.setWeek_of_year(calendar.get(Calendar.WEEK_OF_YEAR));
+        this.setDay_of_year(calendar.get(Calendar.DAY_OF_YEAR));
+    }
 }
