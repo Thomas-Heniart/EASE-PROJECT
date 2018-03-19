@@ -130,9 +130,11 @@ a.active, a:active, a:focus, a:hover {
     background-color: #fed136;
 }
 .navbar-custom .nav li a {
-    //font-weight: bold;
     letter-spacing: 1px;
-    //text-shadow: 0px 0px 1px black;
+    display: flex;
+    height: 100%;
+    align-items: center;
+    line-height: 11px;
 }
 .navbar-custom .nav li a:hover {
     font-weight: bold;
