@@ -38,13 +38,13 @@
     <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Raleway:500,700" />
 
     <link rel="stylesheet" href="semantic/dist/semantic.min.css">
-    <link rel="stylesheet" type="text/css" href="/cssMinified.v00053/lib/fonts/museo-font.css"/>
-    <link rel="stylesheet" href="/cssMinified.v00053/default_style.css"/>
-    <link rel="stylesheet" href="/cssMinified.v00053/bootstrap.css"/>
-    <link rel="stylesheet" href="/cssMinified.v00053/landingPage.css"/>
-    <link rel="stylesheet" href="/cssMinified.v00053/lib/fonts/font-awesome-4.2.0/css/font-awesome.min.css"/>
-    <link rel="stylesheet" href="/cssMinified.v00053/team.css"/>
-    <link rel="stylesheet" href="/cssMinified.v00053/pricingPage.css"/>
+    <link rel="stylesheet" type="text/css" href="/cssMinified.v00054/lib/fonts/museo-font.css"/>
+    <link rel="stylesheet" href="/cssMinified.v00054/default_style.css"/>
+    <link rel="stylesheet" href="/cssMinified.v00054/bootstrap.css"/>
+    <link rel="stylesheet" href="/cssMinified.v00054/landingPage.css"/>
+    <link rel="stylesheet" href="/cssMinified.v00054/lib/fonts/font-awesome-4.2.0/css/font-awesome.min.css"/>
+    <link rel="stylesheet" href="/cssMinified.v00054/team.css"/>
+    <link rel="stylesheet" href="/cssMinified.v00054/pricingPage.css"/>
 
 
     <!-- Global site tag (gtag.js) - Google Analytics -->
@@ -116,7 +116,7 @@
                         <span class="price_divider" ><fmt:message key="pricing.sub-tip"/></span>
                         <div class="text-center">
                             <button class="button-unstyle big-button button">
-                                <a class="link-unstyle" style="font-size: 18px;">
+                                <a id="pro_plan_link" class="link-unstyle" style="font-size: 18px;">
                                     <fmt:message key="pricing.pro.button-text"/>
                                 </a>
                             </button>
@@ -315,7 +315,7 @@
     }
   };
   $(document).ready(function() {
-    $('#pro_team_plan .link-unstyle').click(function() {
+    $('#pro_plan_link').click(function() {
 //      if (Environment.isMobile()) {
         $('#modal_pricing').modal('show');
 //      }
