@@ -41,12 +41,12 @@
     <link rel="manifest" href="manifest.json">
     <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Raleway:500,700"/>
     <link rel="stylesheet" href="semantic/dist/semantic.min.css">
-    <link rel="stylesheet" type="text/css" href="/cssMinified.v00052/lib/fonts/museo-font.css"/>
-    <link rel="stylesheet" href="/cssMinified.v00052/default_style.css"/>
-    <link rel="stylesheet" href="/cssMinified.v00052/bootstrap.css"/>
-    <link rel="stylesheet" href="/cssMinified.v00052/landingPage.css"/>
+    <link rel="stylesheet" type="text/css" href="/cssMinified.v00053/lib/fonts/museo-font.css"/>
+    <link rel="stylesheet" href="/cssMinified.v00053/default_style.css"/>
+    <link rel="stylesheet" href="/cssMinified.v00053/bootstrap.css"/>
+    <link rel="stylesheet" href="/cssMinified.v00053/landingPage.css"/>
     <link rel="stylesheet" type="text/css"
-          href="/cssMinified.v00052/lib/fonts/font-awesome-4.2.0/css/font-awesome.min.css"/>
+          href="/cssMinified.v00053/lib/fonts/font-awesome-4.2.0/css/font-awesome.min.css"/>
     <style>
         .digit {
             border-radius: 4px;
