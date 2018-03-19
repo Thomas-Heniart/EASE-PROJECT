@@ -17,6 +17,7 @@ import {teamCreateEnterpriseCard, teamCreateSingleApp} from "../../actions/appsA
 import {testCredentials} from "../../actions/catalogActions";
 import {createTeamUser} from "../../actions/userActions";
 import * as api from '../../utils/api';
+import ReactGA from 'react-ga';
 
 class InformationCompany extends React.Component {
   render() {
@@ -303,7 +304,10 @@ class NewSimpleTeamCreationView extends React.Component {
         team_id: this.state.team_id,
         step: 5
       })).then(res => {
-        easeTracker.trackEvent("EaseOnboardingEnterAccounts");
+        ReactGA.event({
+          category: 'form',
+          action: 'createTeam'
+        });
         window.location.href = "/";
       });
     }
@@ -393,7 +397,6 @@ class NewSimpleTeamCreationView extends React.Component {
       this.setState({loading: true});
       // Choose PM or mano
       if (this.state.passwordManagerSelected < 10) {
-        easeTracker.trackEvent("EaseOnboardingImportation");
         this.props.dispatch(onBoardingImportation({
           team_id: this.state.team_id,
           passwordManager: this.state.passwordManagerSelected
@@ -402,7 +405,6 @@ class NewSimpleTeamCreationView extends React.Component {
       }
       //send to reducer PM etc...
       else {
-        easeTracker.trackEvent("EaseOnboardingNoImportation");
         this.setState({viewAccounts: 2, loading: false});
       }
     }
@@ -466,7 +468,10 @@ class NewSimpleTeamCreationView extends React.Component {
           team_id: this.state.team_id,
           step: 5
         })).then(res => {
-          easeTracker.trackEvent("EaseOnboardingEnterAccounts");
+          ReactGA.event({
+            category: 'form',
+            action: 'createTeam'
+          });
           window.location.href = "/";
         });
     }
@@ -524,7 +529,6 @@ class NewSimpleTeamCreationView extends React.Component {
             if (Object.keys(this.state.singleApps).filter(item => {
                 return this.state.singleApps[item].length > 0
               }).length > 0) {
-              easeTracker.trackEvent("EaseOnboardingChooseTools");
               this.setState({viewAccounts: 4, loading: false});
             }
             else
@@ -532,7 +536,10 @@ class NewSimpleTeamCreationView extends React.Component {
                 team_id: this.state.team_id,
                 step: 5
               })).then(res => {
-                easeTracker.trackEvent("EaseOnboardingEnterAccounts");
+                ReactGA.event({
+                  category: 'form',
+                  action: 'createTeam'
+                });
                 window.location.href = "/";
               });
           });
@@ -581,7 +588,10 @@ class NewSimpleTeamCreationView extends React.Component {
               team_id: this.state.team_id,
               step: 5
             })).then(res => {
-              easeTracker.trackEvent("EaseOnboardingEnterAccounts");
+              ReactGA.event({
+                category: 'form',
+                action: 'createTeam'
+              });
               window.location.href = "/";
             });
           });
@@ -603,9 +613,6 @@ class NewSimpleTeamCreationView extends React.Component {
         plan_id: this.state.plan_id,
         company_size: this.state.companySize,
       })).then(response => {
-        easeTracker.trackEvent("EaseOnboardingInformationFilled", {
-          "plan_id": this.props.plan_id
-        });
         this.props.dispatch(fetchOnBoardingRooms()).then(r => {
           const tmp = r.map(item => {
             if (item.name === 'openspace') {

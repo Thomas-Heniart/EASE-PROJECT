@@ -6,7 +6,9 @@ import Tutorial from "./Tutorial";
 import DashboardColumn from "./DashboardColumn";
 import {connect} from "react-redux";
 import withScrolling from 'react-dnd-scrollzone';
+import Footer from "./footer";
 const ScrollingComponent = withScrolling('div');
+import ReactGA from 'react-ga';
 
 @connect(store => ({
   dashboard: store.dashboard,
@@ -69,6 +71,7 @@ class Dashboard extends Component {
   }
   componentWillMount() {
     document.title = "Ease.space";
+    ReactGA.pageview("main/dashboard");
   }
   render(){
     const {columns} = this.props.dashboard;
@@ -82,6 +85,7 @@ class Dashboard extends Component {
             })}
             {this.state.tutorial &&
             <Tutorial/>}
+            <Footer/>
           </ScrollingComponent>
         </div>
     )

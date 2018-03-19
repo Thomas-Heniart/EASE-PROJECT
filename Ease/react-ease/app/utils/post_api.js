@@ -374,7 +374,6 @@ module.exports = {
         purpose: purpose,
         timestamp: new Date().getTime()
       }).then(response => {
-        easeTracker.trackEvent("AddRoom");
         return response.data;
       }).catch(err => {
         throw err.response.data;
@@ -429,11 +428,6 @@ module.exports = {
         arrival_date: arrival_date,
         role: role
       }).then(response => {
-        easeTracker.trackEvent("AddMember");
-        if (!!arrival_date)
-          easeTracker.trackEvent("ArrivalDate");
-        if (!!departure_date)
-          easeTracker.trackEvent("DepartureDate");
         return response.data;
       }).catch(err => {
         throw err.response.data;
@@ -506,7 +500,6 @@ module.exports = {
         team_user_id: user_id,
         departure_date: departure_date
       }).then(response => {
-        easeTracker.trackEvent("DepartureDate");
         return response.data;
       }).catch(err => {
         throw err.response.data;

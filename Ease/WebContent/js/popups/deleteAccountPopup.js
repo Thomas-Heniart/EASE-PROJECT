@@ -36,7 +36,6 @@ deleteAccountPopup = function (rootEl) {
         }, function () {
             self.submitButton.removeClass('loading');
         }, function (data) {
-            easeTracker.trackEvent('DeleteAccount');
             location.reload();
         }, function (msg) {
             self.errorRowHandler.find('p').text(msg);
@@ -51,7 +50,6 @@ deleteAccountPopup = function (rootEl) {
                 self.submitButton.removeClass('loading');
             },
             function (msg) {
-                easeTracker.trackEvent('DeleteAccount');
                 location.reload();
             },
             function (msg) {

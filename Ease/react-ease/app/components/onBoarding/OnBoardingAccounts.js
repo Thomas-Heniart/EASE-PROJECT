@@ -8,6 +8,7 @@ class ChoosePasswordManager extends React.Component {
     return (
       <React.Fragment>
         <Header as='h1'>Add your accounts from:</Header>
+        <p>You’ll be able to select which passwords you want to keep on Ease.space</p>
         <div style={{display:'inline-flex',flexWrap:'wrap',overflowY:'auto'}}>
           <div
             onClick={e => selectPasswordManager(1)}

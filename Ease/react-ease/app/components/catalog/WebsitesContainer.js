@@ -50,12 +50,12 @@ class WebsitesContainer extends Component{
           <Switch>
             <Route exact
                    path={`${this.props.match.path}`}
-                   render={(props) => <AppsContainer {...props} title={'Recently added'} websites={websites} updates={query.length > 0 ? [] : this.props.catalog.updates} openModal={this.openModal}/>}/>
+                   render={(props) => <AppsContainer {...props} title={'Recently Added'} websites={websites} updates={query.length > 0 ? [] : this.props.catalog.updates} openModal={this.openModal}/>}/>
             <Route path={`${this.props.match.path}/:categoryId`}
                    render={(props) => <CategoryAppsContainer {...props} websites={websites} updates={query.length > 0 ? [] : this.props.catalog.updates} openModal={this.openModal}/>}/>
           </Switch>}
           {websites.length === 0 && this.props.catalog.loaded &&
-            <AddAnyApp query={query} focus={true}/>}
+            <AddAnyApp resetQuery={this.props.resetQuery} query={query} focus={true}/>}
         </Container>
     )
   }

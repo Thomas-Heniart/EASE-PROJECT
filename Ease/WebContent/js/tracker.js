@@ -78,4 +78,4 @@ var tracker = function(){
 	}
 }
 
-var easeTracker= new tracker();
+var easeTracker = new tracker();

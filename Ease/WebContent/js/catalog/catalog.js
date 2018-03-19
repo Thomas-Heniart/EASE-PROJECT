@@ -57,7 +57,6 @@ function updateCatalogWith(searchVal, tags) {
 	}, function() {
 		
 	}, function(retMsg) {
-		easeTracker.trackEvent("CatalogSearch", {"SearchContent":searchVal, "SelectedTags": tagNames});
 		refreshCatalogContent(retMsg);
 	}, function(retMsg) {
 	}, 'text');
@@ -192,11 +191,6 @@ $(document).ready(function() {
 			$(event.target).toggleClass("tag-active");
 			$(event.target).toggleClass("hvr-grow");
 		}
-		updateCatalogFront($(event.target));
-		var tagName = $(event.target).text();
-		easeTracker.trackEvent("ClickOnTag", {"TagName": tagName});
-	});
-	
 	$("input[name='catalogSearch']").keydown(function(event) {
 		if (event.keyCode == 8) {
 			if ($(event.target).val() == "")
@@ -339,8 +333,6 @@ var Catalog = function(rootEl){
 	this.open = function(){
 		self.qRoot.addClass('show');
 		self.isOpen = true;
-		easeTracker.trackEvent('OpenCatalog');
-//		self.oUpdate.onCatalogOpen();
 		self.onResize();
 	};
 	this.close = function(){
@@ -371,7 +363,6 @@ var Catalog = function(rootEl){
 		var newLastLine = Math.floor(st / appHeight);
 		if (newLastLine > lastLineViewed) {
 			lastLineViewed = newLastLine;
-			easeTracker.trackEvent("CatalogScroll", {"CatalogLinesViewed":lastLineViewed});
 		}
 	});
 	this.onResize();
@@ -416,7 +407,6 @@ $(document).ready(function(){
 					$(form).find('.inputs').show();
 				});
 			}, function(retMsg) {
-				easeTracker.trackEvent("RequestWebsite", {"AskedWebsiteName": url});
 			}, function(retMsg) {
 			}, 'text');
 	});

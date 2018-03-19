@@ -1,10 +1,11 @@
 import React from 'react';
+import ReactGA from 'react-ga';
 import {Elements} from 'react-stripe-elements';
 import {injectStripe} from 'react-stripe-elements';
 import {teamAddCreditCard} from "../../actions/teamActions";
 import {connect} from "react-redux";
-import { Header, Container, Menu, Segment, Popup, Checkbox, Form, Input,Divider, Icon, List, Select, Dropdown, Button, Grid, Message, Label,Transition } from 'semantic-ui-react';
-import {CardElement, CardNumberElement, CardExpiryElement, CardCVCElement, PostalCodeElement} from 'react-stripe-elements';
+import {Form, Button, Message} from 'semantic-ui-react';
+import {CardElement} from 'react-stripe-elements';
 
 @connect()
 class CheckoutForm extends React.Component {
@@ -22,6 +23,10 @@ class CheckoutForm extends React.Component {
   handleSubmit = (ev) => {
     // We don't want to let default form submission happen here, which would refresh the page.
     ev.preventDefault();
+    ReactGA.event({
+      category: 'form',
+      action: 'AddBankCard'
+    });
     this.setState({errorMessage: '', loading: true});
     // Within the context of `Elements`, this call to createToken knows which Element to
     // tokenize, since there's only one in this group.

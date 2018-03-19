@@ -52,7 +52,6 @@ boolean knownUser = iden == 2 ? true : false;
 		}, 500);
 
 	});
-	easeTracker.trackEvent("LoginpageVisit");
 </script>
 <div id="loginBody">
 	<div class="ease-logo">

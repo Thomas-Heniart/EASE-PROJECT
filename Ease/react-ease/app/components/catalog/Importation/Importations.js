@@ -17,7 +17,7 @@ import {teamCreateSingleApp, teamCreateAnySingleCard, teamCreateLinkCard} from "
 import {createProfile} from "../../../actions/dashboardActions";
 import {createTeamChannel, addTeamUserToChannel} from "../../../actions/channelActions";
 import {getLogo} from "../../../utils/api"
-import {Loader} from 'semantic-ui-react';
+import {Loader, Message} from 'semantic-ui-react';
 
 function json(fields, separator, csv, dispatch) {
   const array = csv.split('\n');
@@ -85,6 +85,7 @@ class Importations extends React.Component {
       separator: ',',
       paste: '',
       error: '',
+      specialError: false,
       location: '',
       loading: false,
       loadingDelete: false,
@@ -354,15 +355,12 @@ class Importations extends React.Component {
         }
         else
           this.setState({view: 2, error: 'Darn, that didn’t work! Chrome is being delicate... Please try one more time or contact our customer support.'});
-        easeTracker.trackEvent("Importation");
       }).catch(err => {
         this.setState({view: 2, error: 'Darn, that didn’t work! Chrome is being delicate... Please try one more time or contact our customer support.'});
       });
     }
-    else if (event.detail.msg === [])
-      this.setState({view: 2, error: 'No password found'});
-    else if (event.detail.msg.length === 0)
-      this.setState({view: 2, error: 'No password found'});
+    else if (event.detail.msg === [] || event.detail.msg.length === 0)
+      this.setState({view: 2, specialError: true});
     else
       this.setState({view: 2, error: event.detail.msg});
   };
@@ -408,7 +406,6 @@ class Importations extends React.Component {
               loading: false
             });
           }
-          easeTracker.trackEvent("Importation")
         }).catch(err => {
         });
       }
@@ -1022,12 +1019,19 @@ class Importations extends React.Component {
             accountsPending={this.state.accountsPending}
             selectedProfile={this.state.selectedProfile}/>}
         {(this.state.view === 5 && this.state.errorAccounts && this.state.loading === false) &&
-          <ErrorAccounts
-            errorAccounts={this.state.errorAccounts}
-            handleErrorAppInfo={this.handleErrorAppInfo}
-            importErrorAccounts={this.importErrorAccounts}
-            deleteErrorAccount={this.deleteErrorAccount}
-            fields={this.state.fields}/>}
+          <div>
+            <ErrorAccounts
+              errorAccounts={this.state.errorAccounts}
+              handleErrorAppInfo={this.handleErrorAppInfo}
+              importErrorAccounts={this.importErrorAccounts}
+              deleteErrorAccount={this.deleteErrorAccount}
+              fields={this.state.fields}/>
+            <Message visible={this.state.specialError} negative style={{width: "430px", left: "50%", transform: "translateX(-50%)"}}>
+              <p style={{color: "#eb555c"}}>No password found! Make sure your Chrome account is <strong>synchronized <a style={{TextDecoration:"underline", color: "#eb555c"}} href="#">Click Here </a></strong>
+                to find how do it in few clicks.</p>
+            </Message>
+          </div>
+          }
       </div>
     )
   }
