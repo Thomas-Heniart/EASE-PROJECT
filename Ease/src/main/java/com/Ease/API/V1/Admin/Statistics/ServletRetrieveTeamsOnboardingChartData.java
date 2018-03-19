@@ -13,6 +13,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Calendar;
 import java.util.List;
 
 @WebServlet("/api/v1/admin/RetrieveTeamsOnboardingChartData")
@@ -29,7 +30,8 @@ public class ServletRetrieveTeamsOnboardingChartData extends HttpServlet {
                     .put("Invite people")
                     .put("Add people to rooms")
                     .put("Importation done")
-                    .put("Apps added");
+                    .put("Apps added")
+                    .put("Active teams");
             HibernateQuery hibernateQuery = sm.getHibernateQuery();
             hibernateQuery.queryString("SELECT t.onboardingStatus FROM Team t WHERE t.active IS true");
             List<OnboardingStatus> onboardingStatuses = hibernateQuery.list();
@@ -43,6 +45,13 @@ public class ServletRetrieveTeamsOnboardingChartData extends HttpServlet {
                     datasetsData.put(i, val + 1);
                 }
             }
+            hibernateQuery.queryString("SELECT w.active_teams FROM WeeklyStats w WHERE w.year = :year AND w.week = :week");
+            Calendar calendar = Calendar.getInstance();
+            calendar.add(Calendar.WEEK_OF_YEAR, -1);
+            System.out.println(calendar.get(Calendar.WEEK_OF_YEAR));
+            hibernateQuery.setParameter("year", calendar.get(Calendar.YEAR));
+            hibernateQuery.setParameter("week", calendar.get(Calendar.WEEK_OF_YEAR));
+            datasetsData.put(hibernateQuery.list().size());
             JSONObject data = new JSONObject();
             JSONArray datasets = new JSONArray();
             datasets.put(new JSONObject()
