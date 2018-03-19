@@ -1,6 +1,7 @@
 package com.Ease.NewDashboard;
 
 import com.Ease.Hibernate.HibernateQuery;
+import com.Ease.Team.Channel;
 import com.Ease.Team.TeamUser;
 import com.Ease.User.User;
 import com.Ease.Utils.HttpServletException;
@@ -46,8 +47,13 @@ public class Profile {
     @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     private Set<App> appSet = ConcurrentHashMap.newKeySet();
 
-    @OneToOne(mappedBy = "profile")
+    @ManyToOne
+    @JoinColumn(name = "teamUser_id")
     private TeamUser teamUser;
+
+    @ManyToOne
+    @JoinColumn(name = "channel_id")
+    private Channel channel;
 
     public final static Integer MIN_COLUMN_INDEX = 0;
     public final static Integer MAX_COLUMN_INDEX = 3;
@@ -117,6 +123,16 @@ public class Profile {
 
     public void setTeamUser(TeamUser teamUser) {
         this.teamUser = teamUser;
+        teamUser.addProfile(this);
+    }
+
+    public Channel getChannel() {
+        return channel;
+    }
+
+    public void setChannel(Channel channel) {
+        this.channel = channel;
+        channel.addProfile(this);
     }
 
     public void addApp(App app) {
@@ -158,6 +174,7 @@ public class Profile {
         res.put("app_ids", app_ids);
         res.put("name", this.getProfileInformation().getName());
         res.put("column_index", this.getColumn_index());
+        res.put("position_index", this.getPosition_index());
         res.put("team_id", this.getTeamUser() == null ? -1 : this.getTeamUser().getTeam().getDb_id());
         return res;
     }
@@ -195,7 +212,7 @@ public class Profile {
         if (this.getAppSet().isEmpty()) {
             TeamUser teamUser = this.getTeamUser();
             if (teamUser != null) {
-                teamUser.setProfile(null);
+                teamUser.removeProfile(this);
                 hibernateQuery.saveOrUpdateObject(teamUser);
             }
             JSONObject ws_obj1 = new JSONObject();

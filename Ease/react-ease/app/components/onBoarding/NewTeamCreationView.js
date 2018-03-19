@@ -431,9 +431,11 @@ class NewTeamCreationView extends React.Component {
         this.state.value[this.state.rooms[this.state.currentRoom].id].map(user_id => {
           users[user_id] = {account_information: null};
         });
+        let team_users_and_channels = {};
+        team_users_and_channels[this.props.teams[this.state.team_id].my_team_user_id] = [this.state.rooms[this.state.currentRoom].id];
         this.props.dispatch(createTeamProfile({
           team_id: this.state.team_id,
-          team_user_ids: [this.props.teams[this.state.team_id].my_team_user_id]
+          team_users_and_channels: team_users_and_channels
         })).then(res => {
           this.state.appsSelected.map(app_id => {
             calls.push(this.props.dispatch(teamCreateEnterpriseCard({
@@ -502,9 +504,11 @@ class NewTeamCreationView extends React.Component {
       this.state.value[this.state.rooms[this.state.currentRoom].id].map(user_id => {
         users[user_id] = {account_information: null};
       });
+      let team_users_and_channels = {};
+      team_users_and_channels[this.props.teams[this.state.team_id].my_team_user_id] = [this.state.rooms[this.state.currentRoom].id];
       this.props.dispatch(createTeamProfile({
         team_id: this.state.team_id,
-        team_user_ids: [this.props.teams[this.state.team_id].my_team_user_id]
+        team_users_and_channels: team_users_and_channels
       })).then(res => {
         enterpriseApp.map(app_id => {
           calls.push(this.props.dispatch(teamCreateEnterpriseCard({
@@ -568,9 +572,11 @@ class NewTeamCreationView extends React.Component {
             && (this.state.credentialsSingleApps[id].filler_id === null))
         }).length === 0) {
         let calls = [];
+        let team_users_and_channels = {};
+        team_users_and_channels[this.props.teams[this.state.team_id].my_team_user_id] = Object.keys(this.state.singleApps);
         this.props.dispatch(createTeamProfile({
           team_id: this.state.team_id,
-          team_user_ids: [this.props.teams[this.state.team_id].my_team_user_id]
+          team_users_and_channels: team_users_and_channels
         })).then(res => {
           Object.keys(this.state.singleApps).map(room_id => {
             const receivers = {};

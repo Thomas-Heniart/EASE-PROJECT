@@ -45,7 +45,7 @@ public class AcceptJoinTeamCard extends HttpServlet {
             TeamCardReceiver teamCardReceiver = joinTeamCardRequest.accept((String) sm.getTeamProperties(team_id).get("teamKey"), hibernateQuery);
             TeamUser teamUser_receiver = teamCardReceiver.getTeamUser();
             if (teamUser_receiver.isVerified()) {
-                Profile profile = teamUser_receiver.getOrCreateProfile(hibernateQuery);
+                Profile profile = teamUser_receiver.getOrCreateProfile(teamCard.getChannel(), hibernateQuery);
                 App app = teamCardReceiver.getApp();
                 app.setProfile(profile);
                 app.setPosition(profile.getSize());

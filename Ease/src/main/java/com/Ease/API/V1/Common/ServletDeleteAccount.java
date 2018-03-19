@@ -17,6 +17,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.HashSet;
 
 @WebServlet("/api/v1/common/DeleteAccount")
 public class ServletDeleteAccount extends HttpServlet {
@@ -63,7 +64,7 @@ public class ServletDeleteAccount extends HttpServlet {
             user.getSsoGroupSet().clear();
             for (TeamUser teamUser : user.getTeamUsers()) {
                 teamUser.setUser(null);
-                teamUser.setProfile(null);
+                teamUser.setProfiles(new HashSet<>());
                 teamUser.setTeamKey(null);
                 teamUser.setState(0);
                 sm.saveOrUpdate(teamUser);
