@@ -138,21 +138,23 @@ export function createTeam({name, email, username, company_size, digits ,plan_id
   }
 }
 
-export function createTeamProfile({team_id, team_user_ids}) {
+export function createTeamProfile({team_id, team_users_and_channels}) {
   return (dispatch, getState) => {
     return post_api.onBoarding.createTeamProfile({
       team_id: team_id,
-      team_user_ids: team_user_ids
+      team_users_and_channels: team_users_and_channels
     }).then(response => {
-      if (response.profile !== null) {
-        dispatch({
-          type: 'DASHBOARD_PROFILE_CREATED',
-          payload: {
-            profile: response.profile
-          }
+      if (response.profiles !== null) {
+        response.profiles.forEach((profile) => {
+          dispatch({
+            type: 'DASHBOARD_PROFILE_CREATED',
+            payload: {
+              profile: profile
+            }
+          });
         });
       }
-      return response.profile;
+      return response.profiles;
     }).catch(err => {
       throw err;
     })

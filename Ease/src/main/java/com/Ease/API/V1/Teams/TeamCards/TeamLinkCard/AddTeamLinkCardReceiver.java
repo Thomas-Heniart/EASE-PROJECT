@@ -44,7 +44,7 @@ public class AddTeamLinkCardReceiver extends HttpServlet {
             TeamUser teamUser = team.getTeamUserWithId(teamUser_id);
             App app;
             if (teamUser.isVerified()) {
-                Profile profile = teamUser.getOrCreateProfile(hibernateQuery);
+                Profile profile = teamUser.getOrCreateProfile(teamLinkCard.getChannel(), hibernateQuery);
                 app = AppFactory.getInstance().createLinkApp(teamLinkCard.getName(), teamLinkCard.getUrl(), teamLinkCard.getImg_url(), profile);
                 sm.saveOrUpdate(app);
                 profile.addApp(app);
