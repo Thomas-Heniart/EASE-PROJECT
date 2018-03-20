@@ -18,9 +18,11 @@
     <facet type="hibernate" name="Hibernate">
       <configuration>
         <datasource-map>
+          <unit-entry name="hibernate-tracking.cfg.xml" value="16f439f9-90eb-4d7f-a13c-16acd7a4c212" />
           <unit-entry name="hibernate.cfg.xml" value="cee91c83-9ef8-4103-b9ba-e8f05bf934bb" />
         </datasource-map>
         <naming-strategy-map />
+        <deploymentDescriptor name="hibernate.cfg.xml" url="file://$MODULE_DIR$/src/resources/hibernate-tracking.cfg.xml" />
         <deploymentDescriptor name="hibernate.cfg.xml" url="file://$MODULE_DIR$/src/resources/hibernate.cfg.xml" />
       </configuration>
     </facet>

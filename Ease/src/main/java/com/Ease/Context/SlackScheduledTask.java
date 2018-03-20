@@ -277,7 +277,7 @@ public class SlackScheduledTask extends TimerTask {
             return;
         StringBuilder stringBuilder = new StringBuilder("*✅Teams not activated (")
                 .append(teams.size())
-                .append(")*\nThese teams has less than 8 apps since their registrations one week ago:\n");
+                .append(")*\nThese teams have less less than 8 apps since their registrations one week ago:\n");
         printTeams(stringBuilder, teams);
         stringBuilder.append("\n=======\n=======\n=======");
         SlackAPIWrapper.getInstance().postMessage("C9P9UL1MM", stringBuilder.toString());

@@ -39,12 +39,14 @@
     <link rel="manifest" href="manifest.json">
     <script src="jsMinified.v00023/jquery-3.1.0.js"></script>
     <script src="js/ajaxHandler.js"></script>
-    <script src="js/backOffice/admin.js?6"></script>
+    <script src="js/backOffice/admin.js?7"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/semantic-ui/2.2.10/semantic.min.css">
     <script src="https://cdn.jsdelivr.net/semantic-ui/2.2.10/semantic.min.js"></script>
     <script src="https://semantic-ui.com/javascript/library/tablesort.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.1/Chart.bundle.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.1/Chart.min.js"></script>
+    <link rel="stylesheet" href="js/backOffice/cornelius.css"/>
+    <script type="application/javascript" src="js/backOffice/cornelius.js"></script>
     <link rel="stylesheet" type="text/css"
           href="css/lib/fonts/font-awesome-4.2.0/css/font-awesome.min.css"/>
     <style>

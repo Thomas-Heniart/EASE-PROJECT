@@ -1,9 +1,8 @@
-package com.Ease.API.V1.Common;
+package com.Ease.API.V1.Tracking;
 
 import com.Ease.Metrics.EaseEvent;
-import com.Ease.Metrics.EaseEventFactory;
-import com.Ease.User.Options;
 import com.Ease.Utils.Servlets.PostServletManager;
+import org.json.JSONObject;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -13,19 +12,20 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-@WebServlet("/api/v1/common/SetBackgroundPicture")
-public class ServletSetBackgroundPicture extends HttpServlet {
+@WebServlet("/api/v1/trackEvent")
+public class ServletTracking extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         PostServletManager sm = new PostServletManager(this.getClass().getName(), request, response, true);
         try {
             sm.needToBeConnected();
-            Boolean active = sm.getBooleanParam("active", true, false);
-            Options options = sm.getUser().getOptions();
-            options.setBackground_picked(active);
-            sm.saveOrUpdate(options);
-            EaseEvent easeEvent = EaseEventFactory.getInstance().createBackgroundPictureEvent(sm.getUser().getDb_id(), "Dashboard", active);
+            String name = sm.getStringParam("name", true, false);
+            JSONObject data = sm.getJsonParam("data", true, false);
+            EaseEvent easeEvent = new EaseEvent();
+            easeEvent.setName(name);
+            easeEvent.setData(data.toString());
+            easeEvent.setUser_id(sm.getUser().getDb_id());
             sm.getTrackingHibernateQuery().saveOrUpdateObject(easeEvent);
-            sm.setSuccess("Background picture edited");
+            sm.setSuccess("Success");
         } catch (Exception e) {
             sm.setError(e);
         }

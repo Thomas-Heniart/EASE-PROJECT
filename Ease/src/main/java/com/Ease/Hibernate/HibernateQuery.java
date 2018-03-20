@@ -30,6 +30,19 @@ public class HibernateQuery {
         System.out.println("Hibernate transaction begin");
     }
 
+    public HibernateQuery(String type) {
+        switch (type) {
+            case "tracking":
+                this.session = HibernateDatabase.getTrackingSessionFactory().getCurrentSession();
+                break;
+            default:
+                this.session = HibernateDatabase.getSessionFactory().getCurrentSession();
+                break;
+        }
+        this.transaction = this.session.beginTransaction();
+        System.out.println("Hibernate transaction begin");
+    }
+
     public void queryString(String query) {
         this.query = this.session.createQuery(query);
     }

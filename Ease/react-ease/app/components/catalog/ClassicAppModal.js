@@ -12,7 +12,7 @@ import ChooseAppLocationModal from './ChooseAppLocationModal';
 import ChooseTypeAppModal from './ChooseTypeAppModal';
 import {connect} from "react-redux";
 import {testCredentials} from "../../actions/catalogActions";
-import {createProfile} from "../../actions/dashboardActions";
+import {appAdded, createProfile} from "../../actions/dashboardActions";
 
 const CredentialInput = ({item, onChange}) => {
   return (
@@ -55,6 +55,10 @@ class AddBookmarkForm extends Component {
           url: this.props.url,
           img_url: this.props.website.logo
         }).then(resp => {
+          this.props.dispatch(appAdded({
+            app: resp,
+            from: "Catalog"
+          }));
           this.setState({loading: false});
           this.props.showCatalogAddAppModal({active: false});
         }).catch(err => {
@@ -71,6 +75,10 @@ class AddBookmarkForm extends Component {
         url: this.props.url,
         img_url: this.props.website.logo
       }).then(resp => {
+        this.props.dispatch(appAdded({
+          app: resp,
+          from: "Catalog"
+        }));
         this.setState({loading: false});
         this.props.showCatalogAddAppModal({active: false});
       }).catch(err => {
@@ -131,6 +139,10 @@ class AddClassicAppForm extends Component {
           profile_id: newProfile,
           account_information: transformCredentialsListIntoObject(this.props.credentials)
         }).then(app => {
+          this.props.dispatch(appAdded({
+            app: app,
+            from: "Catalog"
+          }));
           this.setState({loading: false});
           this.props.showCatalogAddAppModal({active: false});
         }).catch(err => {
@@ -147,6 +159,10 @@ class AddClassicAppForm extends Component {
         profile_id: newProfile,
         account_information: transformCredentialsListIntoObject(this.props.credentials)
       }).then(app => {
+        this.props.dispatch(appAdded({
+          app: app,
+          from: "Catalog"
+        }));
         this.setState({loading: false});
         this.props.showCatalogAddAppModal({active: false});
       }).catch(err => {
@@ -265,6 +281,10 @@ class AddLogWithAppForm extends Component {
           profile_id: newProfile,
           logWith_app_id: this.state.selectedAppId
         }).then(app => {
+          this.props.dispatch(appAdded({
+            app: app,
+            from: "Catalog"
+          }));
           this.setState({loading: false});
           this.props.showCatalogAddAppModal({active: false});
         }).catch(err => {
@@ -281,6 +301,10 @@ class AddLogWithAppForm extends Component {
         profile_id: newProfile,
         logWith_app_id: this.state.selectedAppId
       }).then(app => {
+        this.props.dispatch(appAdded({
+          app: app,
+          from: "Catalog"
+        }));
         this.setState({loading: false});
         this.props.showCatalogAddAppModal({active: false});
       }).catch(err => {

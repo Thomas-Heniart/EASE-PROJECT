@@ -1,4 +1,4 @@
-package com.Ease.API.V1.Admin;
+package com.Ease.API.V1.Admin.Statistics;
 
 import com.Ease.Team.Team;
 import com.Ease.Team.TeamManager;

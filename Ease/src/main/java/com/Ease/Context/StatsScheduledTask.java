@@ -55,7 +55,7 @@ public class StatsScheduledTask extends TimerTask {
         hibernateQuery.setTimestamp("date_start", last_week_date);
         hibernateQuery.setTimestamp("date_end", this_week);
         int new_companies = hibernateQuery.list().size();
-        hibernateQuery.queryString("SELECT u FROM User u WHERE u.registration_date >= :date_start AND u.registration_date < :date_end");
+        hibernateQuery.queryString("SELECT u FROM User u WHERE u.registration_date >= :date_start AND u.registration_date < :date_end AND u.userStatus.registered IS true");
         hibernateQuery.setTimestamp("date_start", last_week_date);
         hibernateQuery.setTimestamp("date_end", this_week);
         int new_users = hibernateQuery.list().size();

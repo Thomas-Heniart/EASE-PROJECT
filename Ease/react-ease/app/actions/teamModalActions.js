@@ -1,3 +1,5 @@
+import * as event_api from "../utils/event_api";
+
 export function showAddTeamUserModal({active, team_id}){
   return {
     type:'SHOW_ADD_TEAM_USER_MODAL',
@@ -302,5 +304,15 @@ export function showManageMagicLinkModal({active, team_card}) {
       active: active,
       team_card: team_card
     }
+  }
+}
+
+export function cardAdded({card}) {
+  return (dispatch, getState) => {
+    return event_api.track.cardAdded({
+      card: card
+    }).catch(err => {
+      throw err;
+    });
   }
 }

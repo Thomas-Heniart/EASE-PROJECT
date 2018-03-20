@@ -14,7 +14,7 @@ import {
 import {importAccount, modifyImportedAccount, deleteImportedAccount} from "../../../actions/catalogActions";
 import {handleSemanticInput, isEmail, reflect} from "../../../utils/utils";
 import {teamCreateSingleApp, teamCreateAnySingleCard, teamCreateLinkCard} from "../../../actions/appsActions";
-import {createProfile} from "../../../actions/dashboardActions";
+import {appAdded, createProfile} from "../../../actions/dashboardActions";
 import {createTeamChannel, addTeamUserToChannel} from "../../../actions/channelActions";
 import {getLogo} from "../../../utils/api"
 import * as api from "../../../utils/api";
@@ -605,6 +605,7 @@ class Importations extends React.Component {
   importAccounts = () => {
     this.setState({loadingSending: true});
     let calls = [];
+    let trackingCalls = [];
     if (this.state.selectedProfile > 0) {
       this.state.accountsPending.map(app => {
         let thirdField = false;
@@ -616,6 +617,7 @@ class Importations extends React.Component {
               profile_id: this.state.selectedProfile,
               account_information: {login: app.login, password: app.password}
             })));
+          app.type = 'classicApp';
           // }
           // else
           //   thirdField = true;
@@ -634,6 +636,7 @@ class Importations extends React.Component {
               },
               credentials_provided: false
             })));
+            app.type = 'anyApp';
           }
           else {
             calls.push(this.props.dispatch(catalogAddBookmark({
@@ -642,12 +645,17 @@ class Importations extends React.Component {
               img_url: app.logo !== '' ? app.logo : '/resources/icons/link_app.png',
               profile_id: this.state.selectedProfile
             })));
+            app.type = 'linkApp';
           }
         }
         if (!thirdField)
           calls.push(this.props.dispatch(deleteImportedAccount({
             id: app.id
           })));
+        trackingCalls.push(this.props.dispatch(appAdded({
+          app: app,
+          from: "Importation"
+        })))
       });
       let teams = {};
       Object.keys(this.props.teams).map(item => {
@@ -709,6 +717,7 @@ class Importations extends React.Component {
               profile_id: response.id,
               account_information: {login: app.login, password: app.password}
             })));
+          app.type = 'classicApp';
           // }
           // else
           //   thirdField = true;
@@ -727,6 +736,7 @@ class Importations extends React.Component {
               },
               credentials_provided: false
             })));
+            app.type = 'anyApp';
           }
           else {
             calls.push(this.props.dispatch(catalogAddBookmark({
@@ -735,6 +745,7 @@ class Importations extends React.Component {
               img_url: app.logo !== '' ? app.logo : '/resources/icons/link_app.png',
               profile_id: response.id
             })));
+            app.type = 'linkApp';
           }
         }
         if (!thirdField)
@@ -759,6 +770,7 @@ class Importations extends React.Component {
         roomAdded[item] = false;
         return item;
       });
+      Promise.all(trackingCalls);
       return Promise.all(calls.map(reflect)).then(response => {
         this.setState({
           accountsPending: [],
@@ -781,6 +793,7 @@ class Importations extends React.Component {
     });
   };
   importAccountsRoom = async () => {
+    let trackingCalls = [];
     const receivers = this.props.teams[this.state.selectedTeam].rooms[this.state.selectedRoom].team_user_ids.map(item => {
       return {id: item, allowed_to_see_password: this.props.teams[this.state.selectedTeam].team_users[item].role > 1}
     }).reduce((prev, curr) => {
@@ -805,6 +818,8 @@ class Importations extends React.Component {
           description: '',
           receivers: receivers
         }));
+        app.type = 'teamSingleApp';
+        app.sub_type = 'classic';
       }
       else {
         if (app.login !== '' && app.password !== '') {
@@ -824,6 +839,8 @@ class Importations extends React.Component {
             credentials_provided: false,
             receivers: receiversAnyApp
           }));
+          app.type = 'teamSingleApp';
+          app.sub_type = 'any';
         }
         else {
           await this.props.dispatch(teamCreateLinkCard({
@@ -835,12 +852,18 @@ class Importations extends React.Component {
             img_url: app.logo,
             receivers: receiversLink
           }));
+          app.type = 'teamLinkApp';
         }
       }
       await this.props.dispatch(deleteImportedAccount({
         id: app.id
       }));
+      trackingCalls.push(this.props.dispatch(appAdded({
+        app: app,
+        from: "Importation"
+      })))
     }
+    Promise.all(trackingCalls);
     let newTeams = {};
     Object.keys(this.props.teams).map(item => {
       const team  = this.props.teams[item];
@@ -875,6 +898,7 @@ class Importations extends React.Component {
       this.setState({view: 1, separator: ',',})
   };
   importAccountsNewRoom = async () => {
+    let trackingCalls = [];
     const receivers = {[this.props.teams[this.state.selectedTeam].my_team_user_id]: {allowed_to_see_password: true}};
     const receiversLink = [this.props.teams[this.state.selectedTeam].my_team_user_id];
     const response = await this.props.dispatch(createTeamChannel({
@@ -900,6 +924,8 @@ class Importations extends React.Component {
           description: '',
           receivers: receivers
         }));
+        app.type = 'teamSingleApp';
+        app.sub_type = 'classic';
       }
       else {
         if (app.login !== '' && app.password !== '') {
@@ -919,6 +945,8 @@ class Importations extends React.Component {
             credentials_provided: false,
             receivers: receivers
           }));
+          app.type = 'teamSingleApp';
+          app.sub_type = 'any';
         }
         else {
           await this.props.dispatch(teamCreateLinkCard({
@@ -930,12 +958,18 @@ class Importations extends React.Component {
             img_url: app.logo,
             receivers: receiversLink
           }));
+          app.type = 'teamLinkApp';
         }
       }
       await this.props.dispatch(deleteImportedAccount({
         id: app.id
       }));
+      trackingCalls.push(this.props.dispatch(appAdded({
+        app: app,
+        from: "Importation"
+      })))
     }
+    Promise.all(trackingCalls);
     let newTeams = {};
     Object.keys(this.props.teams).map(item => {
       const team  = this.props.teams[item];

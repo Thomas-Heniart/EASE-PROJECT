@@ -3,7 +3,7 @@ import {connect} from "react-redux";
 import CredentialInputs from "./CredentialInputs";
 import {handleSemanticInput} from "../../../utils/utils";
 import SimpleModalTemplate from "../../common/SimpleModalTemplate";
-import {editAppCredentials} from "../../../actions/dashboardActions";
+import {editAppCredentials, updateAccepted} from "../../../actions/dashboardActions";
 import {Container, Icon, Form, Message, Button, Label} from 'semantic-ui-react';
 import {deleteUpdate, sendUpdateToAdmin, testCredentials} from "../../../actions/catalogActions";
 import {teamEditEnterpriseCardReceiver, teamEditSingleCardCredentials} from "../../../actions/appsActions";
@@ -114,6 +114,9 @@ class PasswordUpdateModal extends React.Component {
         this.finish();
       });
     }
+    this.props.dispatch(updateAccepted({
+      type: "PasswordUpdate"
+    }))
   };
   close = () => {
     this.props.modal.reject();

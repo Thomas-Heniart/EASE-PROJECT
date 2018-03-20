@@ -8,7 +8,7 @@ import SimpleModalTemplate from "../common/SimpleModalTemplate";
 import {showChooseAppCredentialsModal} from "../../actions/modalActions";
 import { Form, Button, Message, Label, Input, Icon, Segment, Checkbox, Container } from 'semantic-ui-react';
 import {transformWebsiteInfoIntoList, credentialIconType, transformCredentialsListIntoObject} from "../../utils/utils";
-import {showUpgradeTeamPlanModal} from "../../actions/teamModalActions";
+import {cardAdded, showUpgradeTeamPlanModal} from "../../actions/teamModalActions";
 
 const CredentialInput = ({item, onChange}) => {
   return (
@@ -284,6 +284,9 @@ class ChooseAppCredentialsModal extends React.Component {
         receivers: newReceivers,
         generate_magic_link: this.state.check === 3
       })).then(response => {
+        this.props.dispatch(cardAdded({
+          card: response
+        }));
         if (this.state.check === 3)
           this.setState({view: 3, loading: false, link: response.magic_link});
         else

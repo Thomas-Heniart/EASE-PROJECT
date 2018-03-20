@@ -1,6 +1,7 @@
 package com.Ease.API.V1.Teams.TeamCards.TeamSingleCard;
 
 import com.Ease.Hibernate.HibernateQuery;
+import com.Ease.Metrics.EaseEventFactory;
 import com.Ease.NewDashboard.Account;
 import com.Ease.NewDashboard.AccountInformation;
 import com.Ease.Team.Team;
@@ -49,6 +50,7 @@ public class GetTeamSingleCardPassword extends HttpServlet {
                 throw new HttpServletException(HttpStatus.Forbidden);
             JSONObject res = new JSONObject();
             res.put("password", sm.cipher(password.getDeciphered_information_value()));
+            sm.saveOrUpdate(EaseEventFactory.getInstance().createPasswordUsedEvent(sm.getUser().getDb_id(), "Copy", teamCard));
             sm.setSuccess(res);
         } catch (Exception e) {
             sm.setError(e);

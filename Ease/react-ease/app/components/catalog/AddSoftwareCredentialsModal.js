@@ -4,7 +4,7 @@ import { Container, Form, Message, Label, Button, Input, Icon } from 'semantic-u
 import SimpleModalTemplate from "../common/SimpleModalTemplate";
 import ChooseAppLocationModal from './ChooseAppLocationModal';
 import { withRouter } from 'react-router-dom';
-import {createProfile} from "../../actions/dashboardActions";
+import {appAdded, createProfile} from "../../actions/dashboardActions";
 import {catalogAddSoftwareApp} from "../../actions/catalogActions";
 import ChooseTypeAppModal from './ChooseTypeAppModal';
 import {reduxActionBinder} from "../../actions/index";
@@ -147,6 +147,10 @@ class SecondStep extends React.Component {
           account_information: transformCredentialsListIntoObject(this.state.inputs),
           connection_information: connection_information
         })).then(response => {
+          this.props.dispatch(appAdded({
+            app: response,
+            from: "Catalog"
+          }));
           this.setState({loading: false});
           this.props.modal.resolve(response);
           this.props.showCatalogAddSoftwareAppModal({active: false});
