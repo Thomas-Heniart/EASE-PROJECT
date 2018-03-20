@@ -122,8 +122,11 @@ public class Profile {
     }
 
     public void setTeamUser(TeamUser teamUser) {
+        if (this.teamUser != null)
+            this.teamUser.removeProfile(this);
         this.teamUser = teamUser;
-        teamUser.addProfile(this);
+        if (teamUser != null)
+            teamUser.addProfile(this);
     }
 
     public Channel getChannel() {
@@ -131,8 +134,11 @@ public class Profile {
     }
 
     public void setChannel(Channel channel) {
+        if (this.channel != null)
+            this.channel.removeProfile(this);
         this.channel = channel;
-        channel.addProfile(this);
+        if (channel != null)
+            channel.addProfile(this);
     }
 
     public void addApp(App app) {
@@ -211,10 +217,13 @@ public class Profile {
         ws_obj.put("app_id", app.getDb_id());
         if (this.getAppSet().isEmpty()) {
             TeamUser teamUser = this.getTeamUser();
-            if (teamUser != null) {
+            if (teamUser != null)
                 teamUser.removeProfile(this);
-                hibernateQuery.saveOrUpdateObject(teamUser);
-            }
+            this.setTeamUser(null);
+            Channel channel = this.getChannel();
+            if (channel != null)
+                channel.removeProfile(this);
+            this.setChannel(null);
             JSONObject ws_obj1 = new JSONObject();
             ws_obj1.put("profile_id", this.getDb_id());
             this.getUser().removeProfileAndUpdatePositions(this, hibernateQuery);

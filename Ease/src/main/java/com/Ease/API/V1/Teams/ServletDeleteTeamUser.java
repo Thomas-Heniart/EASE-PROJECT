@@ -79,7 +79,7 @@ public class ServletDeleteTeamUser extends HttpServlet {
             hibernateQuery.queryString("DELETE FROM Update u WHERE u.teamUser.db_id = :teamUserId");
             hibernateQuery.setParameter("teamUserId", team_user_id);
             hibernateQuery.executeUpdate();
-            team.getTeamCardSet().stream().filter(teamCard -> teamUser_connected.equals(teamCard.getTeamUser_sender())).forEach(teamCard -> {
+            team.getTeamCardSet().stream().filter(teamCard -> teamUser_to_delete.equals(teamCard.getTeamUser_sender())).forEach(teamCard -> {
                 teamCard.setTeamUser_sender(null);
                 sm.saveOrUpdate(teamCard);
             });
@@ -164,6 +164,11 @@ public class ServletDeleteTeamUser extends HttpServlet {
             team.getChannels().values().forEach(channel -> {
                 channel.removeTeamUser(teamUser_to_delete);
                 channel.removePendingTeamUser(teamUser_to_delete);
+            });
+            teamUser_to_delete.getProfiles().forEach(profile -> {
+                profile.setChannel(null);
+                profile.setTeamUser(null);
+                sm.saveOrUpdate(profile);
             });
             team.removeTeamUser(teamUser_to_delete);
             User user = teamUser_to_delete.getUser();

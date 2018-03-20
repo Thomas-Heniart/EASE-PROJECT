@@ -23,6 +23,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.Set;
 
 @WebServlet("/api/v1/admin/DeleteTeam")
 public class ServletDeleteTeam extends HttpServlet {
@@ -63,6 +64,14 @@ public class ServletDeleteTeam extends HttpServlet {
                 }
             });
             team.getTeamCardSet().clear();
+            team.getChannels().forEach((integer, channel) -> {
+                Set<Profile> profiles = channel.getProfiles();
+                profiles.forEach(profile -> {
+                    profile.setTeamUser(null);
+                    profile.setChannel(null);
+                    sm.saveOrUpdate(profile);
+                });
+            });
             team.setSubscription_id(null);
             team.setCard_entered(false);
             team.setActive(false);
