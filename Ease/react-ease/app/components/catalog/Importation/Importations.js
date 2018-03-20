@@ -17,6 +17,7 @@ import {teamCreateSingleApp, teamCreateAnySingleCard, teamCreateLinkCard} from "
 import {createProfile} from "../../../actions/dashboardActions";
 import {createTeamChannel, addTeamUserToChannel} from "../../../actions/channelActions";
 import {getLogo} from "../../../utils/api"
+import * as api from "../../../utils/api";
 import {Loader, Message} from 'semantic-ui-react';
 
 function json(fields, separator, csv, dispatch) {
@@ -211,6 +212,20 @@ class Importations extends React.Component {
     });
     this.setState({errorAccounts: errorAccounts});
   };
+  selectAccount = (account) => {
+    console.log('[ACCOUNT]: ', account);
+    api.dashboard.getAppPassword({
+      app_id: account.sso_app_ids[0]
+    }).then(response => {
+      this.setState({
+        chromeLogin: account.account_information.login,
+        chromePassword: response.password
+      });
+    });
+  };
+  resetChromeCredentials = () => {
+    this.setState({chromeLogin: '', chromePassword: ''});
+  };
   createRoom = (id) => {
     if (this.state.roomName[id].length === 0)
       return;
@@ -367,9 +382,9 @@ class Importations extends React.Component {
   changeView = () => {
     this.setState({loading: true});
     if (this.state.view === 1 && this.state.passwordManager === 1)
-      this.setState({view: 3, loading: false, error: ''});
+      this.setState({view: 3, loading: false, error: '', specialError: false});
     else if (this.state.view === 2 && this.state.passwordManager === 2) {
-      this.setState({view: 3, loading: false});
+      this.setState({view: 3, loading: false, error: '', specialError: false});
       document.dispatchEvent(new CustomEvent("ScrapChrome", {detail:{login:this.state.chromeLogin,password:this.state.chromePassword}}));
       document.addEventListener("ScrapChromeResult", (event) => this.eventListener(event));
     }
@@ -411,7 +426,7 @@ class Importations extends React.Component {
       }
     }
     else
-      this.setState({view: this.state.view + 1, error: '', loading: false});
+      this.setState({view: this.state.view + 1, error: '', specialError: false, loading: false});
   };
   deleteAccount = (id) => {
     if (!this.state.loadingDelete) {
@@ -428,6 +443,7 @@ class Importations extends React.Component {
               passwordManager: 0,
               view: 1,
               error: '',
+              specialError: false,
               location: '',
               selectedTeam: -1,
               selectedRoom: -1,
@@ -451,6 +467,7 @@ class Importations extends React.Component {
               passwordManager: 0,
               view: 1,
               error: '',
+              specialError: false,
               selectedTeam: -1,
               selectedRoom: -1,
               selectedProfile: -1,
@@ -462,9 +479,9 @@ class Importations extends React.Component {
   };
   back = () => {
     if (this.state.passwordManager === 1)
-      this.setState({view: 1, error: '', separator: ',',});
+      this.setState({view: 1, error: '', specialError: false, separator: ',',});
     else
-      this.setState({view: this.state.view - 1, error: ''});
+      this.setState({view: this.state.view - 1, error: '', specialError: false});
   };
   choosePasswordManager = (int) => {
     if (int === 4)
@@ -664,7 +681,7 @@ class Importations extends React.Component {
           teamsInState: teams
         });
         if (this.state.importedAccounts.length < 1)
-          this.setState({view: 1, separator: ',',});
+          this.setState({view: 1, separator: ',', specialError: false});
       }).catch(err => {
         this.setState({error: err, loadingSending: false});
       });
@@ -757,7 +774,7 @@ class Importations extends React.Component {
           teamsInState: newTeams
         });
         if (this.state.importedAccounts.length < 1)
-          this.setState({view: 1, separator: ',',});
+          this.setState({view: 1, separator: ',', specialError: false});
       }).catch(err => {
         this.setState({error: err, loadingSending: false});
       });
@@ -950,7 +967,7 @@ class Importations extends React.Component {
       teamsInState: newTeams
     });
     if (this.state.importedAccounts.length < 1)
-      this.setState({view: 1, separator: ',',})
+      this.setState({view: 1, separator: ',', specialError: false})
   };
   render() {
     return (
@@ -968,13 +985,22 @@ class Importations extends React.Component {
             next={this.changeView}
             passwordManager={this.state.passwordManager}/>}
         {(this.state.view === 2 && this.state.passwordManager === 2 && this.state.loading === false) &&
+        <React.Fragment>
           <ChromeFirstStep
+            resetChromeCredentials={this.resetChromeCredentials}
+            selectAccount={this.selectAccount}
             login={this.state.chromeLogin}
             password={this.state.chromePassword}
             onChange={this.handleInput}
-            error={this.state.error}
             back={this.back}
-            next={this.changeView}/>}
+            next={this.changeView}/>
+          <Message error hidden={this.state.error === ''} visible={this.state.error !== ''} size="mini" content={this.state.error} style={{width: "430px", left: "50%", transform: "translateX(-50%)"}}/>
+          <Message hidden={!this.state.specialError} visible={this.state.specialError} negative style={{width: "430px", left: "50%", transform: "translateX(-50%)"}}>
+            <p style={{color: "#eb555c"}}>☝️ No password found! Make sure your Chrome account is
+              <strong> synchronized. <a target='_blank' style={{textDecoration:"underline", color: "#eb555c"}} href="https://blog.ease.space/get-the-best-of-your-chrome-importation-on-ease-space-b2f955dbf8f4">Click Here</a> </strong>
+              to find how do it in few clicks.</p>
+          </Message>
+        </React.Fragment>}
         {(this.state.view === 3 && this.state.passwordManager !== 2 && this.state.loading === false) &&
           <PasteStep
             back={this.back}
@@ -1019,19 +1045,12 @@ class Importations extends React.Component {
             accountsPending={this.state.accountsPending}
             selectedProfile={this.state.selectedProfile}/>}
         {(this.state.view === 5 && this.state.errorAccounts && this.state.loading === false) &&
-          <div>
-            <ErrorAccounts
-              errorAccounts={this.state.errorAccounts}
-              handleErrorAppInfo={this.handleErrorAppInfo}
-              importErrorAccounts={this.importErrorAccounts}
-              deleteErrorAccount={this.deleteErrorAccount}
-              fields={this.state.fields}/>
-            <Message visible={this.state.specialError} negative style={{width: "430px", left: "50%", transform: "translateX(-50%)"}}>
-              <p style={{color: "#eb555c"}}>No password found! Make sure your Chrome account is <strong>synchronized <a style={{TextDecoration:"underline", color: "#eb555c"}} href="#">Click Here </a></strong>
-                to find how do it in few clicks.</p>
-            </Message>
-          </div>
-          }
+        <ErrorAccounts
+          errorAccounts={this.state.errorAccounts}
+          handleErrorAppInfo={this.handleErrorAppInfo}
+          importErrorAccounts={this.importErrorAccounts}
+          deleteErrorAccount={this.deleteErrorAccount}
+          fields={this.state.fields}/>}
       </div>
     )
   }
