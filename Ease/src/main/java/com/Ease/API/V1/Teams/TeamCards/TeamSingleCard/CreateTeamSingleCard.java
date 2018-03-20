@@ -98,7 +98,7 @@ public class CreateTeamSingleCard extends HttpServlet {
                 sm.saveOrUpdate(app);
                 TeamCardReceiver teamCardReceiver = new TeamSingleCardReceiver(app, teamCard, teamUser, allowed_to_see_password);
                 if (teamUser.isVerified()) {
-                    Profile profile = teamUser.getOrCreateProfile(sm.getHibernateQuery());
+                    Profile profile = teamUser.getOrCreateProfile(channel, sm.getHibernateQuery());
                     app.setProfile(profile);
                     app.setPosition(profile.getSize());
                     profile.addApp(app);

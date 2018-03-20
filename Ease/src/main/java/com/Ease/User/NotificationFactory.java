@@ -101,7 +101,7 @@ public class NotificationFactory {
         String content = teamUser_sender.getUsername() + " sent you " + teamCardReceiver.getApp().getAppInformation().getName();
         String url = "#/main/dashboard?app_id=" + teamCardReceiver.getApp().getDb_id();
         String logo = teamCardReceiver.getApp().getLogo();
-        if (user.getUserStatus().isRegistered()) {
+        if (user != null && user.getUserStatus().isRegistered()) {
             Notification notification = this.createNotification(user, content, logo, url);
             hibernateQuery.saveOrUpdateObject(notification);
             this.getUserWebSocketManager(userIdMap, user).sendObject(WebSocketMessageFactory.createNotificationMessage(notification));
@@ -117,7 +117,7 @@ public class NotificationFactory {
         String content = teamUser.getUsername() + " reminds you to enter " + teamCardReceiver.getTeamCard().getName() + "'s information";
         String url = "#/main/dashboard?app_id=" + teamCardReceiver.getApp().getDb_id();
         String logo = teamCardReceiver.getApp().getLogo();
-        if (user.getUserStatus().isRegistered()) {
+        if (user != null && user.getUserStatus().isRegistered()) {
             Notification notification = this.createNotification(user, content, logo, url);
             hibernateQuery.saveOrUpdateObject(notification);
             this.getUserWebSocketManager(userIdMap, user).sendObject(WebSocketMessageFactory.createNotificationMessage(notification));
@@ -159,7 +159,7 @@ public class NotificationFactory {
         User user = teamUser.getUser();
         String content = teamUser_connected.getUsername() + " added you in #" + channel.getName();
         String icon = "/resources/notifications/channel.png";
-        if (user.getUserStatus().isRegistered()) {
+        if (user != null && user.getUserStatus().isRegistered()) {
             Notification notification = this.createNotification(user, content, icon, channel);
             hibernateQuery.saveOrUpdateObject(notification);
             this.getUserWebSocketManager(userIdMap, user).sendObject(WebSocketMessageFactory.createNotificationMessage(notification));
@@ -173,7 +173,7 @@ public class NotificationFactory {
         User user = teamUser.getUser();
         String content = "#" + old_name + " has been renamed to #" + channel.getName();
         String icon = "/resources/notifications/room_renamed.png";
-        if (user.getUserStatus().isRegistered()) {
+        if (user != null && user.getUserStatus().isRegistered()) {
             Notification notification = this.createNotification(user, content, icon, channel);
             hibernateQuery.saveOrUpdateObject(notification);
             this.getUserWebSocketManager(userIdMap, user).sendObject(WebSocketMessageFactory.createNotificationMessage(notification));
@@ -202,7 +202,7 @@ public class NotificationFactory {
         String content = "Your password " + teamCardReceiver.getApp().getAppInformation().getName() + " needs to be updated as soon as possible";
         String url = "#/main/dashboard?app_id=" + teamCardReceiver.getApp().getDb_id();
         String icon = teamCardReceiver.getApp().getLogo();
-        if (user.getUserStatus().isRegistered()) {
+        if (user != null && user.getUserStatus().isRegistered()) {
             Notification notification = this.createNotification(user, content, icon, url);
             hibernateQuery.saveOrUpdateObject(notification);
             this.getUserWebSocketManager(userIdMap, user).sendObject(WebSocketMessageFactory.createNotificationMessage(notification));
@@ -238,7 +238,7 @@ public class NotificationFactory {
     public void createRemovedFromTeamCardNotification(TeamUser teamUser, TeamUser teamUser_admin, String app_name, String logo, Channel channel, Map<Integer, Map<String, Object>> userIdMap, HibernateQuery hibernateQuery) {
         User user = teamUser.getUser();
         String content = teamUser_admin.getUsername() + " removed your access to " + app_name + " (in #" + channel.getName() + ").";
-        if (user.getUserStatus().isRegistered()) {
+        if (user != null && user.getUserStatus().isRegistered()) {
             Notification notification = this.createNotification(user, content, logo, channel);
             hibernateQuery.saveOrUpdateObject(notification);
             this.getUserWebSocketManager(userIdMap, user).sendObject(WebSocketMessageFactory.createNotificationMessage(notification));
@@ -267,7 +267,7 @@ public class NotificationFactory {
         String content = teamUser1.getUsername() + " asks you to enter " + teamCardReceiver.getTeamCard().getName() + "'s information";
         String url = "#/main/dashboard?app_id=" + teamCardReceiver.getApp().getDb_id();
         String logo = teamCardReceiver.getTeamCard().getLogo();
-        if (user.getUserStatus().isRegistered()) {
+        if (user != null && user.getUserStatus().isRegistered()) {
             Notification notification = this.createNotification(user, content, logo, url);
             hibernateQuery.saveOrUpdateObject(notification);
             this.getUserWebSocketManager(userIdMap, user).sendObject(WebSocketMessageFactory.createNotificationMessage(notification));
@@ -293,7 +293,7 @@ public class NotificationFactory {
             TeamUser teamUser = teamCardReceiver.getTeamUser();
             if (!teamUser.equals(filler)) {
                 User user = teamUser.getUser();
-                if (user.getUserStatus().isRegistered()) {
+                if (user != null && user.getUserStatus().isRegistered()) {
                     Notification notification = this.createNotification(user, content, logo, url + teamCardReceiver.getApp().getDb_id());
                     hibernateQuery.saveOrUpdateObject(notification);
                     this.getUserWebSocketManager(userIdMap, user).sendObject(WebSocketMessageFactory.createNotificationMessage(notification));

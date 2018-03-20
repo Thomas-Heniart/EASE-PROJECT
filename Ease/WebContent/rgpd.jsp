@@ -34,12 +34,12 @@
     <link rel="icon" type="image/png" href="resources/icons/APPEASE.png" />
 
     <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Raleway:500,700" />
-    <link rel="stylesheet" type="text/css" href="/cssMinified.v00050/lib/fonts/museo-font.css"/>
-    <link rel="stylesheet" href="/cssMinified.v00050/default_style.css"/>
-    <link rel="stylesheet" href="/cssMinified.v00050/bootstrap.css"/>
-    <link rel="stylesheet" href="/cssMinified.v00050/lib/fonts/font-awesome-4.2.0/css/font-awesome.min.css"/>
-    <link rel="stylesheet" href="/cssMinified.v00050/landingPage.css"/>
-    <link rel="stylesheet" href="/cssMinified.v00050/productPage.css"/>
+    <link rel="stylesheet" type="text/css" href="/cssMinified.v00054/lib/fonts/museo-font.css"/>
+    <link rel="stylesheet" href="/cssMinified.v00054/default_style.css"/>
+    <link rel="stylesheet" href="/cssMinified.v00054/bootstrap.css"/>
+    <link rel="stylesheet" href="/cssMinified.v00054/lib/fonts/font-awesome-4.2.0/css/font-awesome.min.css"/>
+    <link rel="stylesheet" href="/cssMinified.v00054/landingPage.css"/>
+    <link rel="stylesheet" href="/cssMinified.v00054/productPage.css"/>
     <link rel="stylesheet" href="semantic/dist/semantic.min.css">
 
 
@@ -297,7 +297,6 @@
 <script type="text/javascript">
   window.addEventListener('load',function(){
     $('.signUpButton').click(function(){
-      easeTracker.trackEvent($(this).attr("trackEvent"));
       easeSignUpPopup.open();
     });
   });

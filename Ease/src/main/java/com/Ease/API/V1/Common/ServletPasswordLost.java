@@ -29,7 +29,7 @@ public class ServletPasswordLost extends HttpServlet {
             hibernateQuery.queryString("SELECT u FROM User u WHERE u.email = :email");
             hibernateQuery.setParameter("email", email);
             User user = (User) hibernateQuery.getSingleResult();
-            if (user == null)
+            if (user == null || !user.getUserStatus().isRegistered())
                 throw new HttpServletException(HttpStatus.BadRequest, "No user with this email.");
             String code = CodeGenerator.generateNewCode();
             hibernateQuery.queryString("SELECT p FROM PasswordLost p WHERE p.user_id = :id");

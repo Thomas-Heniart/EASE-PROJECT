@@ -469,6 +469,9 @@ button.only-text-button {
 
 .backPointer {
   cursor: pointer;
+  &.chrome_import:hover span {
+    text-decoration: underline;
+  }
 }
 
 .ease_popup {
@@ -3430,6 +3433,17 @@ button.big-blue-button {
       background-color: #717274;
     }
   }
+}
+
+.createRoomButton {
+ background-color: #1FC38E;
+  color: white;
+}
+.HeaderAllRoomModal {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  justify-content: space-between;
 }
 
 button.big-button {

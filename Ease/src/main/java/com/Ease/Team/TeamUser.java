@@ -1,6 +1,7 @@
 package com.Ease.Team;
 
 import com.Ease.Hibernate.HibernateQuery;
+import com.Ease.NewDashboard.App;
 import com.Ease.NewDashboard.Profile;
 import com.Ease.NewDashboard.ProfileInformation;
 import com.Ease.Team.TeamCard.JoinTeamCardRequest;
@@ -25,6 +26,7 @@ import javax.persistence.*;
 import java.util.Date;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ThreadLocalRandom;
 
 /**
  * Created by thomas on 10/04/2017.
@@ -110,10 +112,9 @@ public class TeamUser {
     @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     private Set<TeamCardReceiver> teamCardReceivers = ConcurrentHashMap.newKeySet();
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "teamUser", cascade = CascadeType.ALL)
     @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-    @JoinColumn(name = "profile_id")
-    private Profile profile;
+    private Set<Profile> profiles;
 
     @OneToMany(mappedBy = "teamUser_filler")
     @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
@@ -234,12 +235,12 @@ public class TeamUser {
         this.active = active;
     }
 
-    public Profile getProfile() {
-        return profile;
+    public Set<Profile> getProfiles() {
+        return profiles;
     }
 
-    public void setProfile(Profile profile) {
-        this.profile = profile;
+    public void setProfiles(Set<Profile> profiles) {
+        this.profiles = profiles;
     }
 
     public boolean isDisabled() {
@@ -354,6 +355,14 @@ public class TeamUser {
         this.getPending_channels().remove(channel);
     }
 
+    public void addProfile(Profile profile) {
+        this.getProfiles().add(profile);
+    }
+
+    public void removeProfile(Profile profile) {
+        this.getProfiles().remove(profile);
+    }
+
     public static TeamUser createOwner(String email, String username, Date arrivalDate, String teamKey, Team team) throws HttpServletException {
         TeamUserRole teamUserRole = new TeamUserRole(TeamUserRole.Role.OWNER.getValue());
         TeamUser owner = new TeamUser(email, username, arrivalDate, teamKey, team, teamUserRole);
@@ -428,13 +437,16 @@ public class TeamUser {
         NotificationFactory.getInstance().createTeamUserRegisteredNotification(this, this.getTeam().getTeamUserWithId(this.getAdmin_id()), userWebSocketManager, hibernateQuery);
         if (this.getTeamCardReceivers().isEmpty())
             return;
-        Profile profile = this.getOrCreateProfile(hibernateQuery);
-        this.getTeamCardReceivers().stream().map(TeamCardReceiver::getApp).forEach(app -> {
+        //Profile profile = this.getOrCreateProfile(hibernateQuery);
+        for (TeamCardReceiver teamCardReceiver : this.getTeamCardReceivers()) {
+            Channel channel = teamCardReceiver.getTeamCard().getChannel();
+            Profile profile = this.getOrCreateProfile(channel, hibernateQuery);
+            App app = teamCardReceiver.getApp();
             app.setProfile(profile);
             app.setPosition(profile.getSize());
             hibernateQuery.saveOrUpdateObject(app);
             profile.addApp(app);
-        });
+        }
     }
 
     public String getDecipheredTeamKey(String userKey) throws HttpServletException {
@@ -505,7 +517,7 @@ public class TeamUser {
      * @return Profile profile
      * @throws HttpServletException
      */
-    public Profile getOrCreateProfile(HibernateQuery hibernateQuery) throws HttpServletException {
+    /* public Profile getOrCreateProfile(HibernateQuery hibernateQuery) throws HttpServletException {
         if (this.getUser() == null || !this.getUser().getUserStatus().isRegistered())
             throw new HttpServletException(HttpStatus.InternError);
         Profile profile;
@@ -520,10 +532,41 @@ public class TeamUser {
             hibernateQuery.saveOrUpdateObject(this);
         }
         return this.getProfile();
+    } */
+
+    /**
+     * if you have a team profile, it returns it
+     * if you don't and you didn't already had one, create it
+     * if you don't have any profile, create it
+     * if you don't and you already had one, returns any profile of you team space
+     *
+     * @param channel
+     * @param hibernateQuery
+     * @return Profile profile
+     * @throws HttpServletException
+     */
+    public Profile getOrCreateProfile(Channel channel, HibernateQuery hibernateQuery) throws HttpServletException {
+        if (this.getUser() == null || !this.getUser().getUserStatus().isRegistered())
+            throw new HttpServletException(HttpStatus.InternError);
+        Profile profile = this.getProfiles().stream().filter(profile1 -> channel.equals(profile1.getChannel())).findFirst().orElse(null);
+        if (profile == null) {
+            int column = ThreadLocalRandom.current().nextInt(0, 4);
+            int column_size = Math.toIntExact(this.getUser().getProfileSet().stream().filter(profile1 -> profile1.getColumn_index().equals(column)).count());
+            profile = new Profile(this.getUser(), column, column_size, new ProfileInformation(channel.getName()));
+            hibernateQuery.saveOrUpdateObject(profile);
+            profile.setTeamUser(this);
+            profile.setChannel(channel);
+            hibernateQuery.saveOrUpdateObject(profile);
+            this.getUser().addProfile(profile);
+            this.getUser().moveProfile(profile.getDb_id(), column, 0, hibernateQuery);
+            this.getTeamUserStatus().setProfile_created(true);
+            hibernateQuery.saveOrUpdateObject(this);
+        }
+        return profile;
     }
 
-    public Profile createTeamProfile(HibernateQuery hibernateQuery) throws HttpServletException {
-        return this.getOrCreateProfile(hibernateQuery);
+    public Profile createTeamProfile(Channel channel, HibernateQuery hibernateQuery) throws HttpServletException {
+        return this.getOrCreateProfile(channel, hibernateQuery);
     }
 
     @Override

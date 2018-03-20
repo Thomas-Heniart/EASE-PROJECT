@@ -2,6 +2,7 @@ package com.Ease.API.V1.Dashboard;
 
 import com.Ease.Hibernate.HibernateQuery;
 import com.Ease.NewDashboard.Profile;
+import com.Ease.Team.Channel;
 import com.Ease.Team.TeamUser;
 import com.Ease.User.User;
 import com.Ease.Utils.HttpServletException;
@@ -32,9 +33,13 @@ public class ServletDeleteProfile extends HttpServlet {
                 throw new HttpServletException(HttpStatus.BadRequest, "You can only delete a profile without apps");
             TeamUser teamUser = profile.getTeamUser();
             if (teamUser != null) {
-                teamUser.setProfile(null);
-                profile.setTeamUser(null);
-                sm.saveOrUpdate(teamUser);
+                //profile.setTeamUser(null);
+                teamUser.removeProfile(profile);
+            }
+            Channel channel = profile.getChannel();
+            if (channel != null) {
+                //profile.setChannel(null);
+                channel.removeProfile(profile);
             }
             user.removeProfileAndUpdatePositions(profile, hibernateQuery);
             sm.setSuccess("Profile deleted");

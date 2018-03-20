@@ -27,9 +27,6 @@ class Step1 extends React.Component{
         this.props.incrementStep(1);
       else
         this.props.incrementStep(2);
-      easeTracker.trackEvent("TeamCreationEnterEmail", {
-        "plan_id": this.props.plan_id
-      });
     }).catch(err => {
       this.setState({processing: false, error: true, errorMessage: err});
     });
@@ -78,9 +75,6 @@ class Step2 extends React.Component{
     post_api.teams.checkTeamCreationDigits(this.props.email, this.props.digits).then(response => {
       this.setState({loading: false});
       this.props.onStepValidated();
-      easeTracker.trackEvent("TeamCreationEnterDigits", {
-        "plan_id": this.props.plan_id
-      });
     }).catch(err => {
       this.setState({loading: false, errorMesage: err});
     })
@@ -143,9 +137,6 @@ class Step4 extends React.Component{
       return;
     }
     this.props.onStepValidated();
-    easeTracker.trackEvent("TeamCreationEnterUsername", {
-      "plan_id": this.props.plan_id
-    });
   }
   render() {
     return (
@@ -201,11 +192,6 @@ class Step5 extends React.Component {
   onSubmit(e) {
     e.preventDefault();
     this.props.incStep();
-    easeTracker.trackEvent("TeamCreationEnterJob", {
-      "job": this.roles[this.props.jobRole],
-      "detail": this.props.jobDetails,
-      "plan_id": this.props.plan_id
-    });
   }
   render() {
     return (
@@ -268,9 +254,7 @@ class Step6 extends React.Component{
       this.props.handleInput(null, {name:"teamId", value:teamId});
       this.setState({loading: false});
       this.props.onStepValidated();
-      easeTracker.trackEvent("TeamCreationFinished", {
-        "plan_id": this.props.plan_id
-      });
+
     }).catch(err => {
       this.setState({errorMessage: err, loading: false});
     });

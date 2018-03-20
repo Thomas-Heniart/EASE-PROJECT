@@ -374,7 +374,6 @@ module.exports = {
         purpose: purpose,
         timestamp: new Date().getTime()
       }).then(response => {
-        easeTracker.trackEvent("AddRoom");
         return response.data;
       }).catch(err => {
         throw err.response.data;
@@ -429,11 +428,6 @@ module.exports = {
         arrival_date: arrival_date,
         role: role
       }).then(response => {
-        easeTracker.trackEvent("AddMember");
-        if (!!arrival_date)
-          easeTracker.trackEvent("ArrivalDate");
-        if (!!departure_date)
-          easeTracker.trackEvent("DepartureDate");
         return response.data;
       }).catch(err => {
         throw err.response.data;
@@ -506,7 +500,6 @@ module.exports = {
         team_user_id: user_id,
         departure_date: departure_date
       }).then(response => {
-        easeTracker.trackEvent("DepartureDate");
         return response.data;
       }).catch(err => {
         throw err.response.data;
@@ -1582,10 +1575,10 @@ module.exports = {
         throw err;
       })
     },
-    createTeamProfile: ({team_id, team_user_ids}) => {
+    createTeamProfile: ({team_id, team_users_and_channels}) => {
       return axios.post('/api/v1/teams/CreateTeamProfiles', {
         team_id: team_id,
-        team_user_ids: team_user_ids
+        team_users_and_channels: team_users_and_channels
       }).then(response => {
         return response.data;
       }).catch(err => {

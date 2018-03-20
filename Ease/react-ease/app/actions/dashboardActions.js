@@ -20,8 +20,6 @@ export function fetchDashboard(){
       const sso_groups = response[2];
       const team_app_calls = [];
 
-      easeTracker.setUserProperty("AppCount", Object.keys(apps).length);
-
       apps.map(app => {
         if (!!app.team_id)
           team_app_calls.push(dispatch(fetchTeamApp({
@@ -341,7 +339,6 @@ export function endAppDrag(){
       position: index,
       ws_id: getState().common.ws_id
     });
-    easeTracker.trackEvent("MoveApp");
   };
 }
 
@@ -434,7 +431,6 @@ export function createProfile({column_index, name}) {
       column_index: column_index,
       ws_id: getState().common.ws_id
     }).then(profile => {
-      easeTracker.trackEvent("NewGroup");
       dispatch({
         type: 'DASHBOARD_PROFILE_CREATED',
         payload: {
@@ -724,7 +720,6 @@ export function updateAccepted({type}) {
 export function validateTutorial() {
   return (dispatch, getState) => {
     return post_api.dashboard.validateTutorial().then(response => {
-      easeTracker.trackEvent("EaseOnboardingPersonalTuto");
       dispatch({
         type: 'DASHBOARD_TUTORIAL_DONE'
       });
@@ -762,11 +757,6 @@ export function AppConnection({app_id, keep_focus}){
       if (app.new)
         dispatch(validateApp({app_id: app_id}));
       document.dispatchEvent(new CustomEvent('NewConnection', json));
-      easeTracker.trackEvent("ClickOnApp", {
-        type: app.type,
-        appName: app.name,
-        websiteName: app.website.name
-      });
       return json;
     }).catch(err => {
       throw err;

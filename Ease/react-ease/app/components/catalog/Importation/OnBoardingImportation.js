@@ -1,5 +1,6 @@
 import React from 'react';
 import {connect} from "react-redux";
+import ReactGA from 'react-ga';
 import queryString from "query-string";
 import ChromeFirstStep from "./ChromeFirstStep";
 import ChromeSecondStep from "./ChromeSecondStep";
@@ -17,7 +18,8 @@ import {teamCreateSingleApp, teamCreateAnySingleCard, teamCreateLinkCard} from "
 import {appAdded, createProfile} from "../../../actions/dashboardActions";
 import {createTeamChannel, addTeamUserToChannel} from "../../../actions/channelActions";
 import {getLogo} from "../../../utils/api"
-import {Loader} from 'semantic-ui-react';
+import {Loader, Message} from 'semantic-ui-react';
+import * as api from "../../../utils/api";
 import {changeStep, goToOnBoarding, resetOnBoardingImportation} from "../../../actions/onBoardingActions";
 
 function json(fields, separator, csv, dispatch) {
@@ -87,6 +89,8 @@ class OnBoardingImportation extends React.Component {
       separator: ',',
       paste: '',
       error: '',
+      specialError: false,
+      errorAccounts: [],
       location: '',
       loading: false,
       loadingDelete: false,
@@ -94,7 +98,6 @@ class OnBoardingImportation extends React.Component {
       fields: {},
       importedAccounts: [],
       accountsPending: [],
-      errorAccounts: [],
       profiles: {},
       selectedProfile: -1,
       teamsInState: {},
@@ -236,6 +239,19 @@ class OnBoardingImportation extends React.Component {
     });
     this.setState({errorAccounts: errorAccounts});
   };
+  selectAccount = (account) => {
+    api.dashboard.getAppPassword({
+      app_id: account.sso_app_ids[0]
+    }).then(response => {
+      this.setState({
+        chromeLogin: account.account_information.login,
+        chromePassword: response.password
+      });
+    });
+  };
+  resetChromeCredentials = () => {
+    this.setState({chromeLogin: '', chromePassword: ''});
+  };
   createRoom = (id) => {
     if (this.state.roomName[id].length === 0)
       return;
@@ -257,7 +273,7 @@ class OnBoardingImportation extends React.Component {
           importedAccounts.push(item);
         else if (item.id === id && item.url.match(/^(https?:\/\/)?([\da-z.-]+)\.([a-z.]{2,6})(\/?)/) !== null && item.name !== '') {
           accountsPending.push(item);
-          this.setState({error: ''});
+          this.setState({error: '', specialError: false});
         }
         else if (item.id === id && item.url.match(/^(https?:\/\/)?([\da-z.-]+)\.([a-z.]{2,6})(\/?)/) !== null && item.name === '') {
           importedAccounts.push(item);
@@ -396,14 +412,14 @@ class OnBoardingImportation extends React.Component {
       Promise.all(trackingCalls)
     }
     else if (event.detail.msg === [])
-      this.setState({view: 2, error: 'No password found'});
+      this.setState({view: 2, specialError: true});
     else
       this.setState({view: 2, error: event.detail.msg});
   };
   changeView = () => {
     this.setState({loading: true});
     if (this.state.view === 2 && this.state.passwordManager === 2) {
-      this.setState({view: 3, loading: false});
+      this.setState({view: 3, loading: false, error: '', specialError: false});
       document.dispatchEvent(new CustomEvent("ScrapChrome", {detail:{login:this.state.chromeLogin,password:this.state.chromePassword}}));
       document.addEventListener("ScrapChromeResult", (event) => this.eventListener(event));
     }
@@ -446,9 +462,7 @@ class OnBoardingImportation extends React.Component {
                 fields: {field1: 'url', field2: 'name', field3: 'login', field4: 'password'},
                 loading: false
               });
-              easeTracker.trackEvent("EaseOnboardingPasteCSV");
             });
-            easeTracker.trackEvent("Importation");
           }
           else {
             this.setState({
@@ -461,7 +475,7 @@ class OnBoardingImportation extends React.Component {
       }
     }
     else
-      this.setState({view: this.state.view + 1, error: '', loading: false});
+      this.setState({view: this.state.view + 1, error: '', specialError: false, loading: false});
   };
   deleteAccount = (id) => {
     if (!this.state.loadingDelete) {
@@ -478,6 +492,11 @@ class OnBoardingImportation extends React.Component {
               team_id: this.props.onBoarding.team_id,
               step: 5
             })).then(res => {
+              ReactGA.event({
+                category: 'form',
+                action: 'createTeam'
+              });
+
               window.location.href = "/";
             });
         });
@@ -497,6 +516,10 @@ class OnBoardingImportation extends React.Component {
               team_id: this.props.onBoarding.team_id,
               step: 5
             })).then(res => {
+              ReactGA.event({
+                category: 'form',
+                action: 'createTeam'
+              });
               window.location.href = "/";
             });
         });
@@ -506,7 +529,7 @@ class OnBoardingImportation extends React.Component {
     if (this.state.passwordManager === 1)
       window.location.replace(`/#/teams/${this.props.onBoarding.team_id}`);
     else if (this.state.view === 3)
-      this.setState({view: 2, error: ''});
+      this.setState({view: 2, error: '', specialError: false});
     else
       window.location.replace(`/#/teams/${this.props.onBoarding.team_id}`);
   };
@@ -656,10 +679,13 @@ class OnBoardingImportation extends React.Component {
             team_id: this.props.onBoarding.team_id,
             step: 5
           })).then(res => {
+            ReactGA.event({
+              category: 'form',
+              action: 'createTeam'
+            });
             window.location.href = "/";
           });
         }
-        easeTracker.trackEvent("EaseOnboardingImportationDone")
       }).catch(err => {
         this.setState({error: err, loadingSending: false});
       });
@@ -761,6 +787,10 @@ class OnBoardingImportation extends React.Component {
             team_id: this.props.onBoarding.team_id,
             step: 5
           })).then(res => {
+            ReactGA.event({
+              category: 'form',
+              action: 'createTeam'
+            });
             window.location.href = "/";
           });
         }
@@ -876,6 +906,10 @@ class OnBoardingImportation extends React.Component {
         team_id: this.props.onBoarding.team_id,
         step: 5
       })).then(res => {
+        ReactGA.event({
+          category: 'form',
+          action: 'createTeam'
+        });
         this.props.dispatch(resetOnBoardingImportation());
         window.location.href = "/";
       });
@@ -990,8 +1024,13 @@ class OnBoardingImportation extends React.Component {
         team_id: this.props.onBoarding.team_id,
         step: 5
       })).then(res => {
+        ReactGA.event({
+          category: 'form',
+          action: 'createTeam'
+        });
         this.props.dispatch(resetOnBoardingImportation());
         window.location.href = "/";
+
       });
     }
   };
@@ -1005,13 +1044,22 @@ class OnBoardingImportation extends React.Component {
           next={this.changeView}
           passwordManager={this.state.passwordManager}/>}
         {(this.state.view === 2 && this.state.passwordManager === 2 && this.state.loading === false) &&
-        <ChromeFirstStep
-          login={this.state.chromeLogin}
-          password={this.state.chromePassword}
-          onChange={this.handleInput}
-          error={this.state.error}
-          back={this.back}
-          next={this.changeView}/>}
+        <React.Fragment>
+          <ChromeFirstStep
+            resetChromeCredentials={this.resetChromeCredentials}
+            selectAccount={this.selectAccount}
+            login={this.state.chromeLogin}
+            password={this.state.chromePassword}
+            onChange={this.handleInput}
+            back={this.back}
+            next={this.changeView}/>
+          <Message error hidden={this.state.error === ''} visible={this.state.error !== ''} size="mini" content={this.state.error} style={{width: "430px", left: "50%", transform: "translateX(-50%)"}}/>
+          <Message hidden={!this.state.specialError} visible={this.state.specialError} negative style={{width: "430px", left: "50%", transform: "translateX(-50%)"}}>
+            <p style={{color: "#eb555c"}}>☝️ No password found! Make sure your Chrome account is
+              <strong> synchronized. <a target='_blank' style={{textDecoration:"underline",color: "#eb555c"}} href="https://blog.ease.space/get-the-best-of-your-chrome-importation-on-ease-space-b2f955dbf8f4">Click Here</a> </strong>
+              to find how do it in few clicks.</p>
+          </Message>
+        </React.Fragment>}
         {(this.state.view === 3 && this.state.passwordManager !== 2 && this.state.loading === false) &&
         <PasteStep
           back={this.back}

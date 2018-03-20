@@ -52,7 +52,7 @@ public class ServletResetPassword extends HttpServlet {
             hibernateQuery.queryString("SELECT u FROM User u WHERE u.email = :email");
             hibernateQuery.setParameter("email", email);
             User user = (User) hibernateQuery.getSingleResult();
-            if (user == null)
+            if (user == null || !user.getUserStatus().isRegistered())
                 throw new HttpServletException(HttpStatus.Forbidden);
             hibernateQuery.queryString("SELECT p FROM PasswordLost p WHERE p.user_id = :id AND p.code = :code");
             hibernateQuery.setParameter("id", user.getDb_id());

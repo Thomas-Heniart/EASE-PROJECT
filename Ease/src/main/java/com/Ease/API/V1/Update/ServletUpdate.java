@@ -195,6 +195,7 @@ public class ServletUpdate extends HttpServlet {
                         if (teamSingleCard.getTeamUser_filler() != null && teamSingleCard.getTeamUser_filler().equals(sm.getTeamUser(teamCard.getTeam()))) {
                             Update tmp = UpdateFactory.getInstance().createUpdate(user, account_information, websiteApp);
                             hibernateQuery.saveOrUpdateObject(tmp);
+                            updates.add(tmp);
                             res.put(tmp.getJson());
                             NotificationFactory.getInstance().createNewUpdateNotification(tmp, sm.getUserWebSocketManager(user.getDb_id()), hibernateQuery);
                             continue;
@@ -202,6 +203,7 @@ public class ServletUpdate extends HttpServlet {
                     } else {
                         Update tmp = UpdateFactory.getInstance().createUpdate(user, account_information, websiteApp);
                         hibernateQuery.saveOrUpdateObject(tmp);
+                        updates.add(tmp);
                         res.put(tmp.getJson());
                         NotificationFactory.getInstance().createNewUpdateNotification(tmp, sm.getUserWebSocketManager(user.getDb_id()), hibernateQuery);
                         continue;
@@ -214,6 +216,7 @@ public class ServletUpdate extends HttpServlet {
                 if (websiteApp.getAccount() != null && websiteApp.getAccount().matchExceptPassword(account_information)) {
                     Update tmp = UpdateFactory.getInstance().createUpdate(user, account_information, websiteApp);
                     hibernateQuery.saveOrUpdateObject(tmp);
+                    updates.add(tmp);
                     NotificationFactory.getInstance().createNewUpdateNotification(tmp, sm.getUserWebSocketManager(user.getDb_id()), hibernateQuery);
                     res.put(tmp.getJson());
                 }

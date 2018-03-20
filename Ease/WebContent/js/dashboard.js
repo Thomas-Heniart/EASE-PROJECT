@@ -181,7 +181,6 @@ var Dashboard = function(rootEl){
 					function(){},
 					function(retMsg){
 						newProfile.setId(retMsg);
-						easeTracker.trackEvent('AddProfile', {"profieName":Name, "profileColor":Color});
 					},
 					function(retMsg){
 						newProfile.remove();
@@ -234,9 +233,6 @@ var Dashboard = function(rootEl){
 						profileId: item.attr('id')
 					},
 					function(){},
-					function(retMsg){
-						easeTracker.trackEvent("MoveProfile");
-					},
 					function(retMsg){},
 					'text'
 					);

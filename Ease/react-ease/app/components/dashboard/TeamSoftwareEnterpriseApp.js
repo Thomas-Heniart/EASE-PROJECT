@@ -32,7 +32,6 @@ class TeamSoftwareEnterpriseApp extends Component {
         if (this.props.app.new)
           this.props.dispatch(validateApp({app_id: this.props.app.id}));
         this.props.dispatch(clickOnAppMetric({app: this.props.app}));
-        easeTracker.trackEvent("ClickOnAppPro");
         api.dashboard.getAppPassword({
           app_id: this.props.app.id
         }).then(response => {

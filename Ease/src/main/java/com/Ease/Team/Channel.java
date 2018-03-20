@@ -1,5 +1,6 @@
 package com.Ease.Team;
 
+import com.Ease.NewDashboard.Profile;
 import com.Ease.Team.TeamCard.TeamCard;
 import com.Ease.Utils.HttpServletException;
 import com.Ease.Utils.HttpStatus;
@@ -51,6 +52,10 @@ public class Channel {
     @OneToMany(mappedBy = "channel", cascade = CascadeType.ALL, orphanRemoval = true)
     @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     private Set<TeamCard> teamCardSet = ConcurrentHashMap.newKeySet();
+
+    @OneToMany(mappedBy = "channel", cascade = CascadeType.ALL)
+    @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+    private Set<Profile> profiles = ConcurrentHashMap.newKeySet();
 
     public Channel(Team team, String name, String purpose, TeamUser room_manager) {
         this.team = team;
@@ -126,6 +131,14 @@ public class Channel {
         this.teamCardSet = teamCardSet;
     }
 
+    public Set<Profile> getProfiles() {
+        return profiles;
+    }
+
+    public void setProfiles(Set<Profile> profiles) {
+        this.profiles = profiles;
+    }
+
     public void addTeamUser(TeamUser teamUser) {
         this.getTeamUsers().add(teamUser);
         teamUser.addChannel(this);
@@ -144,6 +157,14 @@ public class Channel {
     public void removePendingTeamUser(TeamUser teamUser) {
         this.getPending_teamUsers().remove(teamUser);
         teamUser.removePending_channel(this);
+    }
+
+    public void addProfile(Profile profile) {
+        this.getProfiles().add(profile);
+    }
+
+    public void removeProfile(Profile profile) {
+        this.getProfiles().remove(profile);
     }
 
     public JSONObject getJson() {

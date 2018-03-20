@@ -37,7 +37,6 @@ $("div#simpleImportation div.appHandler").click(function () {
 });
 
 $("#simpleImportation .showMoreHelper").click(function () {
-    //easeTracker.trackEvent("");
     $(this).css('display', 'none');
     $("#simpleImportation .appHandler.hidden").removeClass('hidden');
 });
@@ -53,11 +52,6 @@ function goToNextStep() {
             //always
         }, function (retMsg) {
             //success
-            easeTracker.trackEvent("TutoManoDone");
-            easeTracker.setUserProperty("TutoManoSelected", addAppTutoCpt);
-            easeTracker.setUserProperty("TutoManoFilled", appsSelectedFilled);
-            easeTracker.setUserProperty("TutoManoSkipped", appsSelectedSkiped);
-            easeTracker.increaseAppCounter(addAppTutoCpt);
             location.reload();
         }, function (retMsg) {
             //error
@@ -78,7 +72,6 @@ $("div#addAppTutorial #skipButton").click(function () {
     }, function (retMsg) {
         //success
         var newWebsite = $(".catalogApp[idx='" + websiteId + "']").attr("newApp") != null;
-        easeTracker.trackEvent("AddApp", {"appType": "EmptyApp", "appName": appName, "AppNewYN": newWebsite});
         appsSelectedSkiped++;
     }, function (retMsg) {
         //error
@@ -103,7 +96,6 @@ $('div#addAppTutorial form').submit(function (e) {
     }, function (retMsg) {
         //succes
         var newWebsite = $(".catlogApp[idx='" + websiteId + "']").attr("newApp") != null;
-        easeTracker.trackEvent("AddApp", {"appType": "ClassicApp", "appName": appName, "AppNewYN": newWebsite});
         appsSelectedFilled++;
     }, function (retMsg) {
         //error
@@ -227,25 +219,6 @@ function sendTutoAddApp() {
             //always
         }, function (retMsg) {
             //succes
-            easeTracker.trackEvent("TutoScrappingDone");
-            if (chromeScrappingCount > 0 && chromeSelectedCount >= 0) {
-                easeTracker.trackEvent("TutoScrapChrome");
-                easeTracker.setUserProperty("TutoScrapChromeCount", chromeScrappingCount);
-                easeTracker.setUserProperty("TutoScrapChromeSelected", chromeSelectedCount);
-            }
-            if (facebookScrappingCount > 0 && facebookSelectedCount >= 0) {
-                easeTracker.trackEvent("TutoScrapFacebook");
-                easeTracker.setUserProperty("TutoScrapFacebookCount", facebookScrappingCount);
-                easeTracker.setUserProperty("TutoScrapFacebookSelected", facebookSelectedCount);
-            }
-            if (linkedInScrappingCount > 0 && linkedInSelectedCount >= 0) {
-                easeTracker.trackEvent("TutoScrapLinkedIn");
-                easeTracker.setUserProperty("TutoScrapLinkedInCount", linkedInScrappingCount);
-                easeTracker.setUserProperty("TutoLinkedInSelected", linkedInSelectedCount);
-            }
-            easeTracker.increaseAppCounter(chromeSelectedCount + facebookSelectedCount + linkedInSelectedCount);
-            easeTracker.setUserProperty("TutoTotalAppsScrapped", (chromeScrappingCount + facebookScrappingCount + linkedInScrappingCount));
-            easeTracker.setUserProperty("TutoTotalAppsSelected", (chromeSelectedCount + facebookSelectedCount + linkedInSelectedCount));
             location.reload();
         }, function (retMsg) {
             //error

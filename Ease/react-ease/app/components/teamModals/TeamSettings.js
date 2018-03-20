@@ -112,8 +112,6 @@ class PaymentMethod extends React.Component {
     this.setState({modifying: state});
   };
   cardTokenCallback = (token) => {
-    //do stuff with token;
-    //console.log(token);
     this.setModifying(false);
   };
   render(){

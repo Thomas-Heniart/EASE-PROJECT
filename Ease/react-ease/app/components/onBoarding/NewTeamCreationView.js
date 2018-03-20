@@ -18,6 +18,7 @@ import {teamCreateEnterpriseCard, teamCreateSingleApp} from "../../actions/appsA
 import {processConnection} from "../../actions/commonActions";
 import {testCredentials} from "../../actions/catalogActions";
 import {createTeamUser} from "../../actions/userActions";
+import ReactGA from 'react-ga';
 import * as api from '../../utils/api';
 
 @connect(store => ({
@@ -161,7 +162,10 @@ class NewTeamCreationView extends React.Component {
         team_id: this.state.team_id,
         step: 5
       })).then(res => {
-        easeTracker.trackEvent("EaseOnboardingEnterAccounts");
+        ReactGA.event({
+          category: 'form',
+          action: 'createTeam'
+        });
         window.location.href = "/";
       });
     }
@@ -342,7 +346,6 @@ class NewTeamCreationView extends React.Component {
             this.setState({viewInfo: 4, loading: false});
           });
         });
-        easeTracker.trackEvent("EaseOnboardingRegistration");
       });
     }
     else if (this.state.viewInfo === 4) {
@@ -357,10 +360,6 @@ class NewTeamCreationView extends React.Component {
         plan_id: this.state.plan_id,
         company_size: this.state.companySize,
       })).then(response => {
-        easeTracker.setUserId(this.state.email);
-        easeTracker.trackEvent("EaseOnboardingInformationFilled", {
-          "plan_id": this.props.plan_id
-        });
         this.props.dispatch(editFirstNameAndLastName({
           first_name: this.state.firstName,
           last_name: this.state.lastName
@@ -412,7 +411,6 @@ class NewTeamCreationView extends React.Component {
       this.setState({loading: true});
       // Choose PM or mano
       if (this.state.passwordManagerSelected < 10) {
-        easeTracker.trackEvent("EaseOnboardingImportation");
         this.props.dispatch(onBoardingImportation({
           team_id: this.state.team_id,
           passwordManager: this.state.passwordManagerSelected
@@ -421,7 +419,6 @@ class NewTeamCreationView extends React.Component {
       }
       //send to reducer PM etc...
       else {
-        easeTracker.trackEvent("EaseOnboardingNoImportation");
         this.setState({viewAccounts: 2, loading: false});
       }
     }
@@ -434,9 +431,11 @@ class NewTeamCreationView extends React.Component {
         this.state.value[this.state.rooms[this.state.currentRoom].id].map(user_id => {
           users[user_id] = {account_information: null};
         });
+        let team_users_and_channels = {};
+        team_users_and_channels[this.props.teams[this.state.team_id].my_team_user_id] = [this.state.rooms[this.state.currentRoom].id];
         this.props.dispatch(createTeamProfile({
           team_id: this.state.team_id,
-          team_user_ids: [this.props.teams[this.state.team_id].my_team_user_id]
+          team_users_and_channels: team_users_and_channels
         })).then(res => {
           this.state.appsSelected.map(app_id => {
             calls.push(this.props.dispatch(teamCreateEnterpriseCard({
@@ -485,7 +484,10 @@ class NewTeamCreationView extends React.Component {
           team_id: this.state.team_id,
           step: 5
         })).then(res => {
-          easeTracker.trackEvent("EaseOnboardingEnterAccounts");
+          ReactGA.event({
+            category: 'form',
+            action: 'createTeam'
+          });
           window.location.href = "/";
         });
     }
@@ -502,9 +504,11 @@ class NewTeamCreationView extends React.Component {
       this.state.value[this.state.rooms[this.state.currentRoom].id].map(user_id => {
         users[user_id] = {account_information: null};
       });
+      let team_users_and_channels = {};
+      team_users_and_channels[this.props.teams[this.state.team_id].my_team_user_id] = [this.state.rooms[this.state.currentRoom].id];
       this.props.dispatch(createTeamProfile({
         team_id: this.state.team_id,
-        team_user_ids: [this.props.teams[this.state.team_id].my_team_user_id]
+        team_users_and_channels: team_users_and_channels
       })).then(res => {
         enterpriseApp.map(app_id => {
           calls.push(this.props.dispatch(teamCreateEnterpriseCard({
@@ -543,7 +547,6 @@ class NewTeamCreationView extends React.Component {
             if (Object.keys(this.state.singleApps).filter(item => {
                 return this.state.singleApps[item].length > 0
               }).length > 0) {
-              easeTracker.trackEvent("EaseOnboardingChooseTools");
               this.setState({viewAccounts: 4, loading: false});
             }
             else
@@ -551,7 +554,10 @@ class NewTeamCreationView extends React.Component {
                 team_id: this.state.team_id,
                 step: 5
               })).then(res => {
-                easeTracker.trackEvent("EaseOnboardingEnterAccounts");
+                ReactGA.event({
+                  category: 'form',
+                  action: 'createTeam'
+                });
                 window.location.href = "/";
               });
           });
@@ -566,9 +572,11 @@ class NewTeamCreationView extends React.Component {
             && (this.state.credentialsSingleApps[id].filler_id === null))
         }).length === 0) {
         let calls = [];
+        let team_users_and_channels = {};
+        team_users_and_channels[this.props.teams[this.state.team_id].my_team_user_id] = Object.keys(this.state.singleApps);
         this.props.dispatch(createTeamProfile({
           team_id: this.state.team_id,
-          team_user_ids: [this.props.teams[this.state.team_id].my_team_user_id]
+          team_users_and_channels: team_users_and_channels
         })).then(res => {
           Object.keys(this.state.singleApps).map(room_id => {
             const receivers = {};
@@ -600,7 +608,10 @@ class NewTeamCreationView extends React.Component {
               team_id: this.state.team_id,
               step: 5
             })).then(res => {
-              easeTracker.trackEvent("EaseOnboardingEnterAccounts");
+              ReactGA.event({
+                category: 'form',
+                action: 'createTeam'
+              });
               window.location.href = "/";
             });
           });
@@ -698,7 +709,6 @@ class NewTeamCreationView extends React.Component {
             if (item.name !== 'openspace')
               value[item.id] = [this.props.teams[this.state.team_id].my_team_user_id];
           });
-          easeTracker.trackEvent("EaseOnboardingPeopleCreated");
           this.props.history.replace(`/teamCreation/groups?team=${this.state.team_id}`);
           this.setState({loading: false, activeItem: 4, view: 4, error: '', users: users, value: value});
         });
@@ -729,7 +739,6 @@ class NewTeamCreationView extends React.Component {
           team_id: this.state.team_id,
           step: 3
         })).then(res => {
-          easeTracker.trackEvent("EaseOnboardingPeopleAddedInRooms");
           this.state.value[this.state.roomsSelected[0]] = this.state.users.map(user => {
             return user.id
           });
