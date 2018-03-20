@@ -47,9 +47,9 @@ class ChromeFirstStep extends React.Component {
           <p className='title'><img src="/resources/other/Chrome.png"/> Import your passwords from Chrome</p>
           <div className='inline' style={mailList ? {margin:'10px 0 30px 0'} : {margin:'10px 0 10px 0'}}>
             <p style={{fontSize:'16px'}}>Your passwords will be imported from <br />
-              <a href="https://passwords.google.com"> passwords.google.com</a>.
+              <a target='_blank' href="https://passwords.google.com"> passwords.google.com</a>.
               If they aren't synchronized there&nbsp;
-              <a style={{color:'#949eb7', textDecoration: 'underline'}}
+              <a target='_blank' style={{color:'#949eb7', textDecoration: 'underline'}}
                  href="https://blog.ease.space/get-the-best-of-your-chrome-importation-on-ease-space-b2f955dbf8f4">check here</a>
               &nbsp;to do it in few clicks.</p>
           </div>
