@@ -382,9 +382,9 @@ class Importations extends React.Component {
   changeView = () => {
     this.setState({loading: true});
     if (this.state.view === 1 && this.state.passwordManager === 1)
-      this.setState({view: 3, loading: false, error: ''});
+      this.setState({view: 3, loading: false, error: '', specialError: false});
     else if (this.state.view === 2 && this.state.passwordManager === 2) {
-      this.setState({view: 3, loading: false});
+      this.setState({view: 3, loading: false, error: '', specialError: false});
       document.dispatchEvent(new CustomEvent("ScrapChrome", {detail:{login:this.state.chromeLogin,password:this.state.chromePassword}}));
       document.addEventListener("ScrapChromeResult", (event) => this.eventListener(event));
     }
@@ -426,7 +426,7 @@ class Importations extends React.Component {
       }
     }
     else
-      this.setState({view: this.state.view + 1, error: '', loading: false});
+      this.setState({view: this.state.view + 1, error: '', specialError: false, loading: false});
   };
   deleteAccount = (id) => {
     if (!this.state.loadingDelete) {
@@ -443,6 +443,7 @@ class Importations extends React.Component {
               passwordManager: 0,
               view: 1,
               error: '',
+              specialError: false,
               location: '',
               selectedTeam: -1,
               selectedRoom: -1,
@@ -466,6 +467,7 @@ class Importations extends React.Component {
               passwordManager: 0,
               view: 1,
               error: '',
+              specialError: false,
               selectedTeam: -1,
               selectedRoom: -1,
               selectedProfile: -1,
@@ -477,9 +479,9 @@ class Importations extends React.Component {
   };
   back = () => {
     if (this.state.passwordManager === 1)
-      this.setState({view: 1, error: '', separator: ',',});
+      this.setState({view: 1, error: '', specialError: false, separator: ',',});
     else
-      this.setState({view: this.state.view - 1, error: ''});
+      this.setState({view: this.state.view - 1, error: '', specialError: false});
   };
   choosePasswordManager = (int) => {
     if (int === 4)
@@ -679,7 +681,7 @@ class Importations extends React.Component {
           teamsInState: teams
         });
         if (this.state.importedAccounts.length < 1)
-          this.setState({view: 1, separator: ',',});
+          this.setState({view: 1, separator: ',', specialError: false});
       }).catch(err => {
         this.setState({error: err, loadingSending: false});
       });
@@ -772,7 +774,7 @@ class Importations extends React.Component {
           teamsInState: newTeams
         });
         if (this.state.importedAccounts.length < 1)
-          this.setState({view: 1, separator: ',',});
+          this.setState({view: 1, separator: ',', specialError: false});
       }).catch(err => {
         this.setState({error: err, loadingSending: false});
       });
@@ -965,7 +967,7 @@ class Importations extends React.Component {
       teamsInState: newTeams
     });
     if (this.state.importedAccounts.length < 1)
-      this.setState({view: 1, separator: ',',})
+      this.setState({view: 1, separator: ',', specialError: false})
   };
   render() {
     return (

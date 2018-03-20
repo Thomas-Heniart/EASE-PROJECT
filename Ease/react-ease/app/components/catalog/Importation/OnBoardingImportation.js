@@ -273,7 +273,7 @@ class OnBoardingImportation extends React.Component {
           importedAccounts.push(item);
         else if (item.id === id && item.url.match(/^(https?:\/\/)?([\da-z.-]+)\.([a-z.]{2,6})(\/?)/) !== null && item.name !== '') {
           accountsPending.push(item);
-          this.setState({error: ''});
+          this.setState({error: '', specialError: false});
         }
         else if (item.id === id && item.url.match(/^(https?:\/\/)?([\da-z.-]+)\.([a-z.]{2,6})(\/?)/) !== null && item.name === '') {
           importedAccounts.push(item);
@@ -413,7 +413,7 @@ class OnBoardingImportation extends React.Component {
   changeView = () => {
     this.setState({loading: true});
     if (this.state.view === 2 && this.state.passwordManager === 2) {
-      this.setState({view: 3, loading: false});
+      this.setState({view: 3, loading: false, error: '', specialError: false});
       document.dispatchEvent(new CustomEvent("ScrapChrome", {detail:{login:this.state.chromeLogin,password:this.state.chromePassword}}));
       document.addEventListener("ScrapChromeResult", (event) => this.eventListener(event));
     }
@@ -469,7 +469,7 @@ class OnBoardingImportation extends React.Component {
       }
     }
     else
-      this.setState({view: this.state.view + 1, error: '', loading: false});
+      this.setState({view: this.state.view + 1, error: '', specialError: false, loading: false});
   };
   deleteAccount = (id) => {
     if (!this.state.loadingDelete) {
@@ -523,7 +523,7 @@ class OnBoardingImportation extends React.Component {
     if (this.state.passwordManager === 1)
       window.location.replace(`/#/teams/${this.props.onBoarding.team_id}`);
     else if (this.state.view === 3)
-      this.setState({view: 2, error: ''});
+      this.setState({view: 2, error: '', specialError: false});
     else
       window.location.replace(`/#/teams/${this.props.onBoarding.team_id}`);
   };
