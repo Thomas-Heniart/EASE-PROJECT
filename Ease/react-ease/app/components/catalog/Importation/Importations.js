@@ -213,7 +213,6 @@ class Importations extends React.Component {
     this.setState({errorAccounts: errorAccounts});
   };
   selectAccount = (account) => {
-    console.log('[ACCOUNT]: ', account);
     api.dashboard.getAppPassword({
       app_id: account.sso_app_ids[0]
     }).then(response => {
