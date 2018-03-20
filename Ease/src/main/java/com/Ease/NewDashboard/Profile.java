@@ -127,7 +127,9 @@ public class Profile {
         if (appsSize == 10 || appsSize == 20) {
             StringBuilder stringBuilder = new StringBuilder("*✅User has ")
                     .append(appsSize)
-                    .append(" apps*\nThis user has now more than 10 apps: ")
+                    .append(" apps*\nThis user has now more than ")
+                    .append(appsSize)
+                    .append(" apps: ")
                     .append(this.getUser().getEmail())
                     .append(", ")
                     .append(this.getUser().getPersonalInformation().getPhone_number() != null ? this.getUser().getPersonalInformation().getPhone_number() : "");
