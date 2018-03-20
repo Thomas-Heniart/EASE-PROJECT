@@ -1,7 +1,7 @@
 import React from 'react';
 import {connect} from "react-redux";
 import {credentialIconType} from "../../../utils/utils";
-import { Segment, Button, Icon, Form, Message, Input, Label, List} from 'semantic-ui-react';
+import { Segment, Button, Icon, Form, Input, Label, List} from 'semantic-ui-react';
 
 @connect(store => ({
   ssoGroups: store.dashboard.sso_groups
