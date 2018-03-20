@@ -1009,7 +1009,7 @@ class OnBoardingImportation extends React.Component {
             next={this.changeView}/>
           <Message error hidden={this.state.error === ''} visible={this.state.error !== ''} size="mini" content={this.state.error} style={{width: "430px", left: "50%", transform: "translateX(-50%)"}}/>
           <Message hidden={!this.state.specialError} visible={this.state.specialError} negative style={{width: "430px", left: "50%", transform: "translateX(-50%)"}}>
-            <p style={{color: "#eb555c"}}>☝️ No password found! Make sure your Chrome account is <strong>synchronized <a style={{TextDecoration:"underline", color: "#eb555c"}} href="#">Click Here</a></strong>
+            <p style={{color: "#eb555c"}}>☝️ No password found! Make sure your Chrome account is <strong>synchronized. <a style={{textDecoration:"underline",color: "#eb555c"}} href="#">Click Here</a> </strong>
               to find how do it in few clicks.</p>
           </Message>
         </React.Fragment>}
