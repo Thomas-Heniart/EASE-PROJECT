@@ -8,6 +8,9 @@ const teams_cohort_date_start = $("#teams_cohort_date_start");
 const teams_cohort_date_end = $("#teams_cohort_date_end");
 const teams_cohort_avg_clicks = $("#teams_cohort_avg_clicks");
 
+const clickRepartitionCanvas = $("#clickRepartitionChart");
+let clickRepartionChart;
+
 users_cohort_date_range.submit((e) => {
   e.preventDefault();
   ajaxHandler.get("/api/v1/admin/GetUsersCohortData", {
@@ -45,3 +48,58 @@ teams_cohort_date_range.submit((e) => {
     })
   })
 });
+
+$(document).ready(() => {
+  ajaxHandler.get("/api/v1/admin/GetPasswordUsedStatistics", {}, () => {
+  }, (data) => {
+    buildChart(data)
+  })
+});
+
+buildChart = (data) => {
+  const options = {
+    scales: {
+      xAxes: [{
+        stacked: true
+      }],
+      yAxes: [{
+        stacked: true,
+        ticks: {
+          beginAtZero: true
+        }
+      }]
+    }
+  };
+  const labels = data.labels;
+  let datasets = [];
+  datasets.push({
+    backgroundColor: 'red',
+    label: 'DashboardClick',
+    data: data.fromDashboardClick
+  });
+  datasets.push({
+    backgroundColor: 'blue',
+    label: 'Extension',
+    data: data.fromExtension
+  });
+  datasets.push({
+    backgroundColor: 'orange',
+    label: 'FillIn',
+    data: data.fromFillIn
+  });
+  datasets.push({
+    backgroundColor: 'black',
+    label: 'Copy',
+    data: data.fromCopy
+  });
+  if (!!clickRepartionChart)
+    clickRepartionChart.destroy();
+  clickRepartionChart = new Chart(clickRepartitionCanvas, {
+    type: 'bar',
+    data: {
+      labels: labels,
+      datasets: datasets,
+      options: options
+    }
+  })
+};

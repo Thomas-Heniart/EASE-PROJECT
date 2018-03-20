@@ -3,6 +3,7 @@
     <div class="item" data-tab="onboarding">Onboarding</div>
     <div class="item" data-tab="users_cohort">Users cohort</div>
     <div class="item" data-tab="teams_cohort">Teams cohort</div>
+    <div class="item" data-tab="click_repartition">Clicks</div>
 </div>
 <div class="ui bottom attached tab active segment" data-tab="recap">
     <table class="ui compact small selectable sortable celled table" id="stats_table">
@@ -47,5 +48,8 @@
         <input type="number" id="teams_cohort_avg_clicks" value="1" min="1" />
         <button type="submit">Generate</button>
     </form>
+</div>
+<div class="ui bottom attached tab segment" data-tab="click_repartition">
+    <canvas id="clickRepartitionChart" width="400" height="400"></canvas>
 </div>
 <script src="js/backOffice/statistics.js" async></script>

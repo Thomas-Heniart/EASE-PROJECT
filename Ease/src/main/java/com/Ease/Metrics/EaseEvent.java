@@ -129,4 +129,24 @@ public class EaseEvent {
         this.setWeek_of_year(calendar.get(Calendar.WEEK_OF_YEAR));
         this.setDay_of_year(calendar.get(Calendar.DAY_OF_YEAR));
     }
+
+    private String getFrom() {
+        return new JSONObject(this.getData()).optString("from");
+    }
+
+    public boolean isFromDashboardClick() {
+        return this.getFrom().equals("DashboardClick");
+    }
+
+    public boolean isFromExtension() {
+        return this.getFrom().equals("Extension");
+    }
+
+    public boolean isFromFillIn() {
+        return this.getFrom().equals("FillIn");
+    }
+
+    public boolean isFromCopy() {
+        return this.getFrom().equals("Copy");
+    }
 }
