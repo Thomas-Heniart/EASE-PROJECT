@@ -25,7 +25,6 @@ body {
 	background-repeat: no-repeat;
 	background-position-x: left;
 	background-position-y: top;
-	padding-bottom: 40px;
 }
 
 #teamsPreview {
@@ -52,6 +51,9 @@ body {
 }
 
 #pricing {
+	.feature.title span {
+		font-weight: bold;
+	}
 	span {
 		font-weight: normal;
 	}

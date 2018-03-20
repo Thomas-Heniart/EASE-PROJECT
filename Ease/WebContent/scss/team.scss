@@ -1259,7 +1259,6 @@ button.action_text_button {
 }
 
 #enterprise_team_plan {
-  padding-bottom: 40px;
   .button {
     background-color: transparent;
     color: #414141;
@@ -1277,7 +1276,7 @@ button.action_text_button {
   background-repeat: no-repeat;
   background-position-x: left;
   background-position-y: top;
-  padding-bottom: 40px;
+  padding-bottom: 12px;
 }
 
 #starter_plan, #pro_team_plan, #enterprise_team_plan {
@@ -1292,6 +1291,13 @@ button.action_text_button {
     font-size: .8rem;
     margin: 10px 0 15px 0;
     text-align: center;
+    color: $themeBlue2Color;
+  }
+  .seats {
+    font-size: 18px;
+    margin-top: 35px;
+    text-align: center;
+    font-weight: bold;
     color: $themeBlue2Color;
   }
 }
@@ -1365,6 +1371,18 @@ button.action_text_button {
       margin-top: 40px;
     }
   }
+  .feature.title {
+    span {
+      color: $LightGreen;
+      text-transform: uppercase;
+      font-weight: bold;
+    }
+    .plus {
+      font-size: 40px;
+      margin-top: 20px;
+      align-self: center;
+    }
+  }
   .feature {
     @include display-flex();
     margin-bottom: 20px;
@@ -1393,7 +1411,7 @@ button.action_text_button {
   @include flex-shrink(0);
   overflow: hidden;
   position: relative;
-  height: 303px;
+  height: 313px;
   width: 370px;
   padding: 12px 30px;
   border: 1px solid $themeGreyDarkColor;

@@ -589,7 +589,7 @@ class ReferralSection extends Component {
   };
   render(){
     const team = this.props.teams[this.props.match.params.teamId];
-    const maxInvitations = 15 + team.extra_members;
+    const maxInvitations = 10 + team.extra_members;
     const currentInvitations = Object.keys(team.team_users).reduce((value, team_user_id) => {
       const team_user = team.team_users[team_user_id];
       if (team_user.invitation_sent)
@@ -619,7 +619,7 @@ class ReferralSection extends Component {
                   Earn more seats:
                 </strong>
                 <span>
-                  It is simple, 1 friend referred = 1 extra seat for your team. You can go up to 30 persons in your team.
+                  It is simple, 1 friend referred = 1 extra seat for your team. You can go up to 20 persons in your team.
                 </span>
               </Form.Field>
               {this.state.modifying ?
@@ -652,7 +652,7 @@ class ReferralSection extends Component {
                   <Form.Field class="display_flex align_items_center" style={{justifyContent:'flex-end'}}>
                     <strong style={{marginRight: '20px'}}>{team.extra_members} friends referred</strong>
                     <Button
-                        disabled={team.extra_members === 15}
+                        disabled={team.extra_members === 10}
                         type="button"
                         primary
                         size="mini"

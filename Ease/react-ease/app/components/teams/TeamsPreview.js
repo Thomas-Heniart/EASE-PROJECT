@@ -49,6 +49,7 @@ function TeamBasicPlan(props) {
               </NavLink>
             </button>
           </div>
+          <span class="seats">Up to 10 employees</span>
         </div>
         <div class="features first display-flex flex_direction_column full_flex">
           <div class="feature">
@@ -76,12 +77,6 @@ function TeamBasicPlan(props) {
             <span>Multi-device <TeamPlanPopup
                 text={'Your account is automatically synchronized across your devices.'}
                 trigger={<span class="text-underlined">synchronization</span>}/></span>
-          </div>
-        </div>
-        <div class="features first display-flex flex_direction_column full_flex">
-          <div class="feature">
-            <i class="fa fa-check tic"/>
-            <span>Up to 15 employees</span>
           </div>
           <div class="feature">
             <i class="fa fa-check tic"/>
@@ -108,40 +103,16 @@ function TeamProPlan(props){
               </NavLink>
             </button>
           </div>
-          <span class="tip" style={{margin: '5px 0 13px 0'}}>No credit card required</span>
+          <span class="tip" style={{margin: '5px 0 10px 0'}}>No credit card required</span>
+          <span class="seats" style={{marginTop: 0}}>Up to 50 employees</span>
         </div>
         <div class="features first display-flex flex_direction_column full_flex">
-          <div class="feature">
+          <div class="feature title flex_direction_column">
+            <span>
             <i class="fa fa-check tic"/>
-            <span>Unlimited shared passwords</span>
-          </div>
-          <div class="feature">
-            <i class="fa fa-check tic"/>
-            <span>Unlimited enterprise passwords</span>
-          </div>
-          <div class="feature">
-            <i class="fa fa-check tic"/>
-            <span>Unlimited <TeamPlanPopup
-                text={'Rooms group the people  who work together so sharing & organizing passwords is easier'}
-                trigger={<span class="text-underlined">rooms</span>}/></span>
-          </div>
-          <div class="feature">
-            <i class="fa fa-check tic"/>
-            <span><TeamPlanPopup
-                text={'Notifications makes it all work smoothly, it simplifies interacting with team members'}
-                trigger={<span class="text-underlined">Notifications</span>}/></span>
-          </div>
-          <div class="feature">
-            <i class="fa fa-check tic"/>
-            <span>Multi-device <TeamPlanPopup
-                text={'Your account is automatically synchronized across your devices.'}
-                trigger={<span class="text-underlined">synchronization</span>}/></span>
-          </div>
-        </div>
-        <div class="features display-flex flex_direction_column full_flex">
-          <div class="feature">
-            <i class="fa fa-check tic"/>
-            <span>Unlimited employees</span>
+            <span>All features of Starter</span>
+            </span>
+            <i class="fa fa-plus-square plus"/>
           </div>
           <div class="feature">
             <i class="fa fa-check tic"/>
@@ -156,6 +127,10 @@ function TeamProPlan(props){
           <div class="feature">
             <i class="fa fa-check tic"/>
             <span>Password modification policy</span>
+          </div>
+          <div class="feature">
+            <i class="fa fa-check tic"/>
+            <span>Securely receive external passwords</span>
           </div>
         </div>
       </div>
@@ -177,56 +152,16 @@ function TeamEnterprisePlan(props){
               </a>
             </button>
           </div>
+          <span class="seats">Unlimited employees</span>
         </div>
         <div class="features first display-flex flex_direction_column full_flex">
-          <div class="feature">
+          <div class="feature title flex_direction_column">
+            <span>
             <i class="fa fa-check tic"/>
-            <span>Unlimited shared passwords</span>
+            <span>All features of Pro</span>
+            </span>
+            <i class="fa fa-plus-square plus"/>
           </div>
-          <div class="feature">
-            <i class="fa fa-check tic"/>
-            <span>Unlimited enterprise passwords</span>
-          </div>
-          <div class="feature">
-            <i class="fa fa-check tic"/>
-            <span>Unlimited <TeamPlanPopup
-                text={'Rooms group the people  who work together so sharing & organizing passwords is easier'}
-                trigger={<span class="text-underlined">rooms</span>}/></span>
-          </div>
-          <div class="feature">
-            <i class="fa fa-check tic"/>
-            <span><TeamPlanPopup
-                text={'Notifications makes it all work smoothly, it simplifies interacting with team members'}
-                trigger={<span class="text-underlined">Notifications</span>}/></span>
-          </div>
-          <div class="feature">
-            <i class="fa fa-check tic"/>
-            <span>Multi-device <TeamPlanPopup
-                text={'Your account is automatically synchronized across your devices.'}
-                trigger={<span class="text-underlined">synchronization</span>}/></span>
-          </div>
-        </div>
-        <div class="features display-flex flex_direction_column full_flex">
-          <div class="feature">
-            <i class="fa fa-check tic"/>
-            <span>Unlimited employees</span>
-          </div>
-          <div class="feature">
-            <i class="fa fa-check tic"/>
-            <span>Hierarchical access control</span>
-          </div>
-          <div class="feature">
-            <i class="fa fa-check tic"/>
-            <span>Employee's <TeamPlanPopup
-                text={'Set up people’s arrival and departure dates to send or revoke accesses automatically.'}
-                trigger={<span class="text-underlined">on/off boarding</span>}/></span>
-          </div>
-          <div class="feature">
-            <i class="fa fa-check tic"/>
-            <span>Password modification policy</span>
-          </div>
-        </div>
-        <div class="features first display-flex flex_direction_column full_flex">
           <div class="feature">
             <i class="fa fa-check tic"/>
             <span>Mandatory 2FA</span>
@@ -238,10 +173,6 @@ function TeamEnterprisePlan(props){
           <div class="feature">
             <i class="fa fa-check tic"/>
             <span>Geolocated access control</span>
-          </div>
-          <div class="feature">
-            <i class="fa fa-check tic"/>
-            <span>Securely receive external passwords</span>
           </div>
           <div class="feature">
             <i class="fa fa-check tic"/>

@@ -81,7 +81,7 @@ export function sendInvitationToTeamUserList({team_id, team_user_id_list}) {
         return ++stack;
       return stack;
     }, 0);
-    let availableSlots = 15 + team.extra_members - invitedMembers;
+    let availableSlots = 10 + team.extra_members - invitedMembers;
     for (let i = 0; i < availableSlots && i < invitationsToSend.length; i++){
       await reflect(dispatch(sendTeamUserInvitation({
         team_id: team_id,

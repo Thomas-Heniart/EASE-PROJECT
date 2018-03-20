@@ -77,6 +77,9 @@
                                 </a>
                             </button>
                         </div>
+                        <span class="seats">
+                            <fmt:message key="pricing.free.seats"/>
+                        </span>
                     </div>
                     <div class="features display-flex flex_direction_column full_flex">
                         <div class="feature">
@@ -99,8 +102,6 @@
                             <i class="fa fa-check tic"></i>
                             <span><fmt:message key="pricing.feature.5"/></span>
                         </div>
-                    </div>
-                    <div class="features display-flex flex_direction_column full_flex">
                         <div class="feature">
                             <i class="fa fa-check tic"></i>
                             <span><fmt:message key="pricing.feature.6"/></span>
@@ -120,34 +121,18 @@
                                 </a>
                             </button>
                         </div>
-                        <span class="tip" style="margin: 10px 0 0 0;"><fmt:message key="pricing.pro.sub-button"/></span>
+                        <span class="tip" style="margin: 5px 0 10px 0;"><fmt:message key="pricing.pro.sub-button"/></span>
+                        <span class="seats" style="margin-top: 0">
+                            <fmt:message key="pricing.pro.seats"/>
+                        </span>
                     </div>
-                    <div class="features display-flex flex_direction_column full_flex">
-                        <div class="feature">
-                            <i class="fa fa-check tic"></i>
-                            <span><fmt:message key="pricing.feature.1"/></span>
-                        </div>
-                        <div class="feature">
-                            <i class="fa fa-check tic"></i>
-                            <span><fmt:message key="pricing.feature.2"/></span>
-                        </div>
-                        <div class="feature">
-                            <i class="fa fa-check tic"></i>
-                            <span><fmt:message key="pricing.feature.3"/></span>
-                        </div>
-                        <div class="feature">
-                            <i class="fa fa-check tic"></i>
-                            <span><fmt:message key="pricing.feature.4"/></span>
-                        </div>
-                        <div class="feature">
-                            <i class="fa fa-check tic"></i>
-                            <span><fmt:message key="pricing.feature.5"/></span>
-                        </div>
-                    </div>
-                    <div class="features display-flex flex_direction_column full_flex">
-                        <div class="feature">
-                            <i class="fa fa-check tic"></i>
-                            <span><fmt:message key="pricing.feature.8"/></span>
+                    <div class="features first display-flex flex_direction_column full_flex">
+                        <div class="feature title flex_direction_column">
+                            <span>
+                                <i class="fa fa-check tic"></i>
+                                <span><fmt:message key="pricing.pro.features.title"/></span>
+                            </span>
+                            <i class="fa fa-plus-square plus"></i>
                         </div>
                         <div class="feature">
                             <i class="fa fa-check tic"></i>
@@ -180,52 +165,20 @@
                                 </a>
                             </button>
                         </div>
+                        <span class="seats">
+                            <fmt:message key="pricing.premium.seats"/>
+                        </span>
                     </div>
-                    <div class="features display-flex flex_direction_column full_flex">
-                        <div class="feature">
-                            <i class="fa fa-check tic"></i>
-                            <span><fmt:message key="pricing.feature.1"/></span>
+                    <div class="features first display-flex flex_direction_column full_flex">
+                        <div class="feature title flex_direction_column">
+                            <span>
+                                <i class="fa fa-check tic"></i>
+                                <span>
+                                    <fmt:message key="pricing.premium.features.title"/>
+                                </span>
+                            </span>
+                            <i class="fa fa-plus-square plus"></i>
                         </div>
-                        <div class="feature">
-                            <i class="fa fa-check tic"></i>
-                            <span><fmt:message key="pricing.feature.2"/></span>
-                        </div>
-                        <div class="feature">
-                            <i class="fa fa-check tic"></i>
-                            <span><fmt:message key="pricing.feature.3"/></span>
-                        </div>
-                        <div class="feature">
-                            <i class="fa fa-check tic"></i>
-                            <span><fmt:message key="pricing.feature.4"/></span>
-                        </div>
-                        <div class="feature">
-                            <i class="fa fa-check tic"></i>
-                            <span><fmt:message key="pricing.feature.5"/></span>
-                        </div>
-                    </div>
-                    <div class="features display-flex flex_direction_column full_flex">
-                        <div class="feature">
-                            <i class="fa fa-check tic"></i>
-                            <span><fmt:message key="pricing.feature.8"/></span>
-                        </div>
-                        <div class="feature">
-                            <i class="fa fa-check tic"></i>
-                            <span><fmt:message key="pricing.feature.9"/></span>
-                        </div>
-                        <div class="feature">
-                            <i class="fa fa-check tic"></i>
-                            <span><fmt:message key="pricing.feature.10"/></span>
-                        </div>
-                        <div class="feature">
-                            <i class="fa fa-check tic"></i>
-                            <span><fmt:message key="pricing.feature.11"/></span>
-                        </div>
-                        <div class="feature">
-                            <i class="fa fa-check tic"></i>
-                            <span><fmt:message key="pricing.feature.19"/></span>
-                        </div>
-                    </div>
-                    <div class="features display-flex flex_direction_column full_flex">
                         <div class="feature">
                             <i class="fa fa-check tic"></i>
                             <span><fmt:message key="pricing.feature.12"/></span>

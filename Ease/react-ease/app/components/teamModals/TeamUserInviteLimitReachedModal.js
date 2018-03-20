@@ -64,7 +64,7 @@ class TeamUserInviteLimitReachedModal extends Component {
               onSubmit={this.confirm}
               id="team_user_invite_limit_reached_modal">
             <Form.Field>
-              You reached the limit of 15 persons in a team. The following person(s) won’t be able to join your team.
+              You reached the limit of 10 persons in a team. The following person(s) won’t be able to join your team.
             </Form.Field>
             <Form.Field class="display_flex flex_direction_column users">
               {uninvited_users.map((team_user, idx) => {
