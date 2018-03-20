@@ -42,14 +42,12 @@ class Catalog extends Component {
     }, 1);
   }
   resetQuery = () => {
-    console.log("reset query catalog.js");
     this.setState({query: ''});
     this.main_container.scrollTo(0,0);
   };
   render() {
-    if (this.state.query.length > 0 && this.props.location.pathname === '/main/catalog/website/addWebsite') {
+    if (this.state.query.length > 0 && this.props.location.pathname === '/main/catalog/website/addWebsite')
       window.location.href = '/#/main/catalog/website';
-    }
     return (
         <div id="catalog" class="bordered_scrollbar">
           <header>
