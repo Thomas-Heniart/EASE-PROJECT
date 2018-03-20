@@ -11,7 +11,7 @@ public class Options {
     private Integer db_id;
 
     @Column(name = "background_picked")
-    private boolean background_picked = false;
+    private boolean background_picked = true;
 
     @Column(name = "infinite_session")
     private boolean infinite_session = false;

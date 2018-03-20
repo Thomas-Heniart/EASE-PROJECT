@@ -1,6 +1,7 @@
 package com.Ease.API.V1.Teams;
 
 import com.Ease.NewDashboard.Profile;
+import com.Ease.Team.Channel;
 import com.Ease.Team.Team;
 import com.Ease.Team.TeamUser;
 import com.Ease.Utils.Servlets.PostServletManager;
@@ -23,18 +24,24 @@ public class ServletCreateTeamProfiles extends HttpServlet {
             Integer team_id = sm.getIntParam("team_id", true, false);
             Team team = sm.getTeam(team_id);
             sm.needToBeTeamUserOfTeam(team);
-            JSONArray teamUser_ids = sm.getArrayParam("team_user_ids", true, false);
+            JSONObject teamUsers_and_channels = sm.getJsonParam("team_users_and_channels", true, false);
             JSONObject res = new JSONObject();
             Integer my_id = sm.getTeamUser(team).getDb_id();
-            Profile profile = null;
-            for (int i = 0; i < teamUser_ids.length(); i++) {
-                Integer teamUser_id = teamUser_ids.getInt(i);
+            JSONArray profiles = new JSONArray();
+            for (Object o : teamUsers_and_channels.keySet()) {
+                String key = String.valueOf(o);
+                Integer teamUser_id = Integer.valueOf(key);
+                JSONArray channels = teamUsers_and_channels.getJSONArray(key);
                 TeamUser teamUser = team.getTeamUserWithId(teamUser_id);
-                Profile tmp = teamUser.createTeamProfile(sm.getHibernateQuery());
-                if (my_id.equals(teamUser_id))
-                    profile = tmp;
+                for (int i = 0; i < channels.length(); i++) {
+                    Integer channel_id = channels.getInt(i);
+                    Channel channel = team.getChannelWithId(channel_id);
+                    Profile tmp = teamUser.createTeamProfile(channel, sm.getHibernateQuery());
+                    if (my_id.equals(teamUser_id))
+                        profiles.put(tmp.getJson());
+                }
             }
-            res.put("profile", profile == null ? JSONObject.NULL : profile.getJson());
+            res.put("profiles", profiles);
             sm.setSuccess(res);
         } catch (Exception e) {
             sm.setError(e);
