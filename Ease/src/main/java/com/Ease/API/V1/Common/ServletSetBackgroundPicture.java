@@ -1,5 +1,7 @@
 package com.Ease.API.V1.Common;
 
+import com.Ease.Metrics.EaseEvent;
+import com.Ease.Metrics.EaseEventFactory;
 import com.Ease.User.Options;
 import com.Ease.Utils.Servlets.PostServletManager;
 
@@ -21,6 +23,8 @@ public class ServletSetBackgroundPicture extends HttpServlet {
             Options options = sm.getUser().getOptions();
             options.setBackground_picked(active);
             sm.saveOrUpdate(options);
+            EaseEvent easeEvent = EaseEventFactory.getInstance().createBackgroundPictureEvent(sm.getUser().getDb_id(), "Dashboard", active);
+            sm.getTrackingHibernateQuery().saveOrUpdateObject(easeEvent);
             sm.setSuccess("Background picture edited");
         } catch (Exception e) {
             sm.setError(e);

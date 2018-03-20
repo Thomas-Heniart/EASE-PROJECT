@@ -13,6 +13,7 @@ import {setUserDropdownText, PasswordChangeDropdownEnterprise} from "./common";
 import { Header, Label, Container, Icon, Transition, Segment, Input, Dropdown, Button, Popup } from 'semantic-ui-react';
 import {reduxActionBinder} from "../../actions/index";
 import {deleteUpdate, testCredentials} from "../../actions/catalogActions";
+import {updateAccepted} from "../../actions/dashboardActions";
 
 const CredentialInput = ({item, onChange, removeField, receiver_id, readOnly, isMe, classic, first, testConnection}) => {
   return (
@@ -149,7 +150,8 @@ const Receivers = ({receivers, onChange, onDelete, myId, addFields, removeField,
 @connect(store => ({
   team_id: store.teamCard.team_id,
   teams: store.teams,
-  card: store.teamCard
+  card: store.teamCard,
+  updates: store.catalog.updates
 }), reduxActionBinder)
 class EnterpriseTeamAppAdder extends Component {
   constructor(props){
@@ -314,6 +316,9 @@ class EnterpriseTeamAppAdder extends Component {
   };
   finish = () => {
     if (this.props.card.app.update_id) {
+      this.props.dispatch(updateAccepted({
+        type: this.props.updates.find((update) => update.id === this.props.card.app.update_id).type
+      }));
       this.props.dispatch(deleteUpdate({id: this.props.card.app.update_id})).then(() => {
         this.setState({loading: false});
         this.close();
@@ -353,6 +358,9 @@ class EnterpriseTeamAppAdder extends Component {
         connection_information: connection_information,
         receivers: newReceivers
       })).then(response => {
+        this.props.dispatch(cardAdded({
+          card: response
+        }));
         this.finish();
       });
     else if (this.props.card.subtype === 'softwareApp')
@@ -366,6 +374,9 @@ class EnterpriseTeamAppAdder extends Component {
         connection_information: connection_information,
         receivers: newReceivers
       })).then(response => {
+        this.props.dispatch(cardAdded({
+          card: response
+        }));
         this.finish();
       });
     else
@@ -378,6 +389,9 @@ class EnterpriseTeamAppAdder extends Component {
         password_reminder_interval: this.state.password_reminder_interval,
         receivers: newReceivers
       })).then(response => {
+        this.props.dispatch(cardAdded({
+          card: response
+        }));
         this.finish();
       });
   };

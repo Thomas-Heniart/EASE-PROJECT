@@ -152,6 +152,10 @@ class ThirdStep extends React.Component {
                 return true
             });
             Promise.all(response.map(reflect)).then(r => {
+              this.props.dispatch(appAdded({
+                app: r,
+                from: "Catalog"
+              }));
               this.setState({loading: false});
               this.props.showCatalogAddSSOAppModal({active: false})
             }).catch(err => {
@@ -175,6 +179,10 @@ class ThirdStep extends React.Component {
               return true
           });
           Promise.all(response.map(reflect)).then(r => {
+            this.props.dispatch(appAdded({
+              app: r,
+              from: "Catalog"
+            }));
             this.setState({loading: false});
             this.props.showCatalogAddSSOAppModal({active: false})
           }).catch(err => {
@@ -204,6 +212,10 @@ class ThirdStep extends React.Component {
               return true
           });
           Promise.all(response.map(reflect)).then(r => {
+            this.props.dispatch(appAdded({
+              app: r,
+              from: "Catalog"
+            }));
             this.setState({loading: false});
             this.props.showCatalogAddSSOAppModal({active: false})
           }).catch(err => {
@@ -227,6 +239,10 @@ class ThirdStep extends React.Component {
             return true
         });
         Promise.all(response.map(reflect)).then(r => {
+          this.props.dispatch(appAdded({
+            app: r,
+            from: "Catalog"
+          }));
           this.setState({loading: false});
           this.props.showCatalogAddSSOAppModal({active: false})
         }).catch(err => {
@@ -426,6 +442,10 @@ class AddBookmark extends React.Component {
         url: this.state.url,
         img_url: this.props.logo
       }).then(r => {
+        this.props.dispatch(appAdded({
+          app: r,
+          from: "Catalog"
+        }));
         this.setState({loading: false});
         this.props.showCatalogAddSSOAppModal({active: false})
       }).catch(err => {

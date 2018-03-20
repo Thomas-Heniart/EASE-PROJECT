@@ -170,6 +170,7 @@ public class Update {
         res.put("team_id", this.getTeamCard() == null ? -1 : this.getTeamCard().getTeam().getDb_id());
         res.put("team_user_id", this.getTeamUser() == null ? -1 : this.getTeamUser().getDb_id());
         res.put("account_information", this.getUpdateAccount() == null ? JSONObject.NULL : this.getUpdateAccount().getJson());
+        res.put("type", this.getType());
         return res;
     }
 
@@ -187,5 +188,13 @@ public class Update {
 
     public JSONObject getAccountInformation() {
         return this.getUpdateAccount().getAccountInformation();
+    }
+
+    private String getType() {
+        if (this.getApp() == null && this.getTeamCard() == null)
+            return "NewAccountUpdate";
+        if (this.getApp() != null && this.getApp().isEmpty())
+            return "AccountUpdate";
+        return "PasswordUpdate";
     }
 }

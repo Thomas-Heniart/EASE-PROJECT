@@ -20,7 +20,7 @@ class TeamLinkApp extends Component {
       this.props.dispatch(validateApp({
         app_id: this.props.app.id
       }));
-    this.props.dispatch(clickOnAppMetric({app_id: this.props.app.id}));
+    this.props.dispatch(clickOnAppMetric({app: this.props.app}));
     window.open(team_app.url, '_blank');
   };
   render(){

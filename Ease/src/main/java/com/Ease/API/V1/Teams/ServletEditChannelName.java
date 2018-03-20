@@ -1,5 +1,6 @@
 package com.Ease.API.V1.Teams;
 
+import com.Ease.NewDashboard.Profile;
 import com.Ease.Team.Channel;
 import com.Ease.Team.Team;
 import com.Ease.Team.TeamUser;
@@ -48,6 +49,10 @@ public class ServletEditChannelName extends HttpServlet {
             channel.editName(name);
             TeamUser teamUser_connected = sm.getTeamUser(team);
             if (!old_name.equals(channel.getName())) {
+                for (Profile profile : channel.getProfiles()) {
+                    profile.getProfileInformation().setName(channel.getName());
+                    sm.saveOrUpdate(profile.getProfileInformation());
+                }
                 for (TeamUser teamUser : channel.getTeamUsers()) {
                     if (teamUser.equals(teamUser_connected))
                         continue;

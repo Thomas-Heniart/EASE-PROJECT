@@ -7,7 +7,7 @@ import {teamCreateAnySingleCard} from "../../actions/appsActions";
 import {showChooseAnyAppCredentialsModal} from "../../actions/modalActions";
 import { Form, Button, Message, Label, Input, Icon, Segment, Checkbox, Container } from 'semantic-ui-react';
 import {handleSemanticInput, transformWebsiteInfoIntoList, credentialIconType, transformCredentialsListIntoObject} from "../../utils/utils";
-import {showUpgradeTeamPlanModal} from "../../actions/teamModalActions";
+import {cardAdded, showUpgradeTeamPlanModal} from "../../actions/teamModalActions";
 
 const CredentialInput = ({item, onChange, removeField}) => {
   return (
@@ -362,6 +362,9 @@ class ChooseAnyAppCredentialsModal extends React.Component {
         credentials_provided: false,
         generate_magic_link: this.state.check === 3
       })).then(response => {
+        this.props.dispatch(cardAdded({
+          card: response
+        }));
         if (this.state.check === 3)
           this.setState({view: 3, loading: false, link: response.magic_link, website: response.website});
         else

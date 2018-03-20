@@ -3,7 +3,7 @@ import {connect} from "react-redux";
 import CredentialInputs from "./CredentialInputs";
 import {handleSemanticInput} from "../../../utils/utils";
 import SimpleModalTemplate from "../../common/SimpleModalTemplate";
-import {editAppCredentials} from "../../../actions/dashboardActions";
+import {appAdded, editAppCredentials, updateAccepted} from "../../../actions/dashboardActions";
 import { Container, Icon, Form, Message, Button, Checkbox } from 'semantic-ui-react';
 import {deleteUpdate, newAccountUpdateModal, testCredentials} from "../../../actions/catalogActions";
 import {teamEditEnterpriseCardReceiver, teamEditSingleCardCredentials} from "../../../actions/appsActions";
@@ -131,6 +131,13 @@ class AccountUpdateModal extends React.Component {
     }
     else
       this.newAccount();
+    this.props.dispatch(appAdded({
+      app: this.props.app,
+      from: "AccountUpdate"
+    }));
+    this.props.dispatch(updateAccepted({
+      type: "AccountUpdate"
+    }))
   };
   finish = () => {
     this.props.dispatch(deleteUpdate({id: this.props.modal.item.id})).then(() => {

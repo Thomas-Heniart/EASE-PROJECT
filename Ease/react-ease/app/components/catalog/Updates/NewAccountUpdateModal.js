@@ -3,7 +3,7 @@ import {connect} from "react-redux";
 import {logoLetter} from "../../../utils/utils";
 import CredentialInputs from "./CredentialInputs";
 import {handleSemanticInput} from "../../../utils/utils";
-import {createProfile} from "../../../actions/dashboardActions";
+import {appAdded, createProfile, updateAccepted} from "../../../actions/dashboardActions";
 import SimpleModalTemplate from "../../common/SimpleModalTemplate";
 import NewAccountAnyCredentialInputs from "./NewAccountAnyCredentialInputs";
 import {Container, Icon, Form, Message, Button, Checkbox, Input } from 'semantic-ui-react';
@@ -170,6 +170,13 @@ class NewAccountUpdateModal extends React.Component {
           });
         });
       }
+      this.props.dispatch(appAdded({
+        app: this.props.app,
+        from: "NewAccountUpdate"
+      }));
+      this.props.dispatch(updateAccepted({
+        type: "NewAccountUpdate"
+      }))
     }
   };
   close = () => {

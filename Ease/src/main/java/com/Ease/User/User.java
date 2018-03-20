@@ -23,6 +23,7 @@ import java.nio.charset.Charset;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Entity
 @Cacheable
@@ -348,13 +349,14 @@ public class User {
             Integer old_position = profile.getPosition_index();
             if (old_position.equals(position))
                 return;
+            Stream<Profile> column = this.getProfileSet().stream().filter(profile1 -> !profile1.equals(profile) && profile1.getColumn_index().equals(column_index));
             if (position > old_position) {
-                this.getProfileSet().stream().filter(profile1 -> !profile1.equals(profile) && profile1.getColumn_index().equals(column_index) && profile1.getPosition_index() >= old_position && profile1.getPosition_index() <= position).forEach(profile1 -> {
+                column.filter(profile1 -> profile1.getPosition_index() >= old_position && profile1.getPosition_index() <= position).forEach(profile1 -> {
                     profile1.setPosition_index(profile1.getPosition_index() - 1);
                     hibernateQuery.saveOrUpdateObject(profile1);
                 });
             } else {
-                this.getProfileSet().stream().filter(profile1 -> !profile1.equals(profile) && profile1.getColumn_index().equals(column_index) && profile1.getPosition_index() >= position && profile1.getPosition_index() <= old_position).forEach(profile1 -> {
+                column.filter(profile1 -> profile1.getPosition_index() >= position && profile1.getPosition_index() <= old_position).forEach(profile1 -> {
                     profile1.setPosition_index(profile1.getPosition_index() + 1);
                     hibernateQuery.saveOrUpdateObject(profile1);
                 });

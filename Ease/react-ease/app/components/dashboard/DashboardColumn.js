@@ -22,10 +22,17 @@ class DashboardColumn extends Component {
     const {profiles} = this.props.dashboard;
     const {dragging_profile_id, dragging_app_id} = this.props.dashboard_dnd;
     const isFitted = dragging_profile_id === -1 && dragging_app_id === -1 && !profile_ids.length;
-
+    let profilesSort = Object.keys(profiles).sort((a, b) => {
+      if (profiles[a].position_index !== profiles[b].position_index)
+        return profiles[a].position_index - profiles[b].position_index;
+      else
+        return b - a;
+    }).filter(item => {
+      return profile_ids.filter(id => (id === Number(item))).length > 0;
+    });
     return connectDropTarget(
         <div class={classnames("column display_flex flex_direction_column", isFitted ? 'fitted': null)}>
-          {profile_ids.map(id => {
+          {profilesSort.map(id => {
             return (
                 <Profile profile={profiles[id]} key={id}/>
             )

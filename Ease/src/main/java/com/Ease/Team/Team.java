@@ -270,6 +270,10 @@ public class Team {
         this.getTeamCardSet().remove(teamCard);
     }
 
+    public void removeTeamCards(Set<TeamCard> teamCardSet) {
+        this.getTeamCardSet().removeAll(teamCardSet);
+    }
+
     public boolean isFreemium() throws HttpServletException {
         return this.getSubscription().getPlan().getId().equals("EaseFreemium") || this.getSubscription().getPlan().getId().equals("Pro");
     }

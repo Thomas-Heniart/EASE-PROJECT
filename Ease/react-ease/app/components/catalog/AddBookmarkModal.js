@@ -3,7 +3,7 @@ import {handleSemanticInput} from "../../utils/utils";
 import SimpleModalTemplate from "../common/SimpleModalTemplate";
 import ChooseAppLocationModal from './ChooseAppLocationModal';
 import { withRouter} from 'react-router-dom';
-import {createProfile} from "../../actions/dashboardActions";
+import {appAdded, createProfile} from "../../actions/dashboardActions";
 import {reduxActionBinder} from "../../actions/index";
 import {connect} from "react-redux";
 
@@ -121,6 +121,10 @@ class AddBookmarkModal extends Component {
           url: this.state.url,
           img_url: this.state.img_url
         }).then(app => {
+          this.props.dispatch(appAdded({
+            app: app,
+            from: "Catalog"
+          }));
           this.setState({loading: false});
           this.props.modal.resolve(app);
           this.props.showCatalogAddBookmarkModal({active: false});

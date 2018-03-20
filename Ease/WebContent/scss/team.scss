@@ -469,6 +469,9 @@ button.only-text-button {
 
 .backPointer {
   cursor: pointer;
+  &.chrome_import:hover span {
+    text-decoration: underline;
+  }
 }
 
 .ease_popup {

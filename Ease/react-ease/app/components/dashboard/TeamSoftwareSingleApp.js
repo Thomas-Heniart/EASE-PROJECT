@@ -31,7 +31,7 @@ class TeamSoftwareSingleApp extends Component {
       if (this.state.isOpen === false) {
         if (this.props.app.new)
           this.props.dispatch(validateApp({app_id: this.props.app.id}));
-        this.props.dispatch(clickOnAppMetric({app_id: this.props.app.id}));
+        this.props.dispatch(clickOnAppMetric({app: this.props.app}));
         api.dashboard.getAppPassword({
           app_id: this.props.app.id
         }).then(response => {

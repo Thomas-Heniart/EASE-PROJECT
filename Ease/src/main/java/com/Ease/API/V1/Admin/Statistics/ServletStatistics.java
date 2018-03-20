@@ -1,4 +1,4 @@
-package com.Ease.API.V1.Admin;
+package com.Ease.API.V1.Admin.Statistics;
 
 import com.Ease.Hibernate.HibernateQuery;
 import com.Ease.Metrics.WeeklyStats;

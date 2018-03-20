@@ -1,6 +1,8 @@
 package com.Ease.API.V1.Dashboard;
 
-import com.Ease.NewDashboard.*;
+import com.Ease.Metrics.EaseEventFactory;
+import com.Ease.NewDashboard.Account;
+import com.Ease.NewDashboard.App;
 import com.Ease.Team.Team;
 import com.Ease.Team.TeamCardReceiver.TeamCardReceiver;
 import com.Ease.Team.TeamCardReceiver.TeamSingleCardReceiver;
@@ -50,6 +52,7 @@ public class ServletGetAppPassword extends HttpServlet {
             app.decipher(keyUser, team_key);
             password = account.getInformationNamed("password").getDeciphered_information_value();
             res.put("password", sm.cipher(password));
+            sm.saveOrUpdate(EaseEventFactory.getInstance().createPasswordUsedEvent(user.getDb_id(), "Copy", app));
             sm.setSuccess(res);
         } catch (Exception e) {
             sm.setError(e);

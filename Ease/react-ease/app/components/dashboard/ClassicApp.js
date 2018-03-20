@@ -1,7 +1,7 @@
 import React, {Component} from "react";
 import {LoadingAppIndicator, EmptyAppIndicator, NewAppLabel} from "./utils";
 import {showClassicAppSettingsModal} from "../../actions/modalActions";
-import {AppConnection} from "../../actions/dashboardActions";
+import {AppConnection, clickOnAppMetric} from "../../actions/dashboardActions";
 
 class ClassicApp extends Component {
   constructor(props){
@@ -20,6 +20,7 @@ class ClassicApp extends Component {
     }).catch(err => {
       this.setState({loading: false});
     });
+    this.props.dispatch(clickOnAppMetric({app: this.props.app}));
   };
   render(){
     const {app, dispatch} = this.props;

@@ -1575,10 +1575,10 @@ module.exports = {
         throw err;
       })
     },
-    createTeamProfile: ({team_id, team_user_ids}) => {
+    createTeamProfile: ({team_id, team_users_and_channels}) => {
       return axios.post('/api/v1/teams/CreateTeamProfiles', {
         team_id: team_id,
-        team_user_ids: team_user_ids
+        team_users_and_channels: team_users_and_channels
       }).then(response => {
         return response.data;
       }).catch(err => {
