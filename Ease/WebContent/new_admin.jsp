@@ -39,7 +39,7 @@
     <link rel="manifest" href="manifest.json">
     <script src="jsMinified.v00023/jquery-3.1.0.js"></script>
     <script src="js/ajaxHandler.js"></script>
-    <script src="js/backOffice/admin.js?6"></script>
+    <script src="js/backOffice/admin.js?7"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/semantic-ui/2.2.10/semantic.min.css">
     <script src="https://cdn.jsdelivr.net/semantic-ui/2.2.10/semantic.min.js"></script>
     <script src="https://semantic-ui.com/javascript/library/tablesort.js"></script>

@@ -147,6 +147,6 @@ public class EaseEvent {
     }
 
     public boolean isFromCopy() {
-        return this.getFrom().equals("Copy");
+        return this.getFrom().toLowerCase().contains("copy");
     }
 }

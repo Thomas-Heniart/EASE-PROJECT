@@ -23,7 +23,9 @@
     </table>
 </div>
 <div class="ui bottom attached tab segment" data-tab="onboarding">
-    <canvas id="onboardingChart" width="400" height="400"></canvas>
+    <div style="max-height: 600px; max-width: 1000px">
+        <canvas id="onboardingChart" width="800" height="500"></canvas>
+    </div>
 </div>
 <div class="ui bottom attached tab segment" data-tab="users_cohort">
     <div id="main_users_cohort"></div>
@@ -50,6 +52,15 @@
     </form>
 </div>
 <div class="ui bottom attached tab segment" data-tab="click_repartition">
-    <canvas id="clickRepartitionChart" width="400" height="400"></canvas>
+    <form id="click_repartition_date_range">
+        <label for="click_repartition_date_start">From: </label>
+        <input type="date" id="click_repartition_date_start" />
+        <label for="click_repartition_date_end">To: </label>
+        <input type="date" id="click_repartition_date_end" />
+        <button type="submit">Generate</button>
+    </form>
+    <div style="max-height: 600px; max-width: 1000px">
+        <canvas id="clickRepartitionChart" width="800" height="500"></canvas>
+    </div>
 </div>
 <script src="js/backOffice/statistics.js" async></script>

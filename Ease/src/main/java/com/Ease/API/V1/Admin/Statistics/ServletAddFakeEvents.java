@@ -33,6 +33,7 @@ public class ServletAddFakeEvents extends HttpServlet {
                 easeEvent.setCreation_date(calendar);
                 sm.getTrackingHibernateQuery().saveOrUpdateObject(easeEvent);
             }
+            sm.setSuccess("Done");
         } catch (Exception e) {
             sm.setError(e);
         }

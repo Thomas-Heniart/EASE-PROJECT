@@ -9,6 +9,9 @@ const teams_cohort_date_end = $("#teams_cohort_date_end");
 const teams_cohort_avg_clicks = $("#teams_cohort_avg_clicks");
 
 const clickRepartitionCanvas = $("#clickRepartitionChart");
+const click_repartition_date_range = $("#click_repartition_date_range");
+const click_repartition_date_start = $("#click_repartition_date_start");
+const click_repartition_date_end = $("#click_repartition_date_end");
 let clickRepartionChart;
 
 users_cohort_date_range.submit((e) => {
@@ -49,6 +52,17 @@ teams_cohort_date_range.submit((e) => {
   })
 });
 
+click_repartition_date_range.submit((e) => {
+  e.preventDefault();
+  ajaxHandler.get("/api/v1/admin/GetPasswordUsedStatistics", {
+    start_week_ms: click_repartition_date_start[0].valueAsDate.getTime(),
+    end_week_ms: click_repartition_date_end[0].valueAsDate.getTime(),
+  }, () => {
+  }, (data) => {
+    buildChart(data)
+  })
+});
+
 $(document).ready(() => {
   ajaxHandler.get("/api/v1/admin/GetPasswordUsedStatistics", {}, () => {
   }, (data) => {
@@ -65,7 +79,8 @@ buildChart = (data) => {
       yAxes: [{
         stacked: true,
         ticks: {
-          beginAtZero: true
+          beginAtZero: true,
+          max: 100
         }
       }]
     }
@@ -98,8 +113,8 @@ buildChart = (data) => {
     type: 'bar',
     data: {
       labels: labels,
-      datasets: datasets,
-      options: options
-    }
+      datasets: datasets
+    },
+    options: options
   })
 };
