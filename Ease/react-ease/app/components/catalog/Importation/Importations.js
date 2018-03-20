@@ -17,6 +17,7 @@ import {teamCreateSingleApp, teamCreateAnySingleCard, teamCreateLinkCard} from "
 import {createProfile} from "../../../actions/dashboardActions";
 import {createTeamChannel, addTeamUserToChannel} from "../../../actions/channelActions";
 import {getLogo} from "../../../utils/api"
+import * as api from "../../../utils/api";
 import {Loader, Message} from 'semantic-ui-react';
 
 function json(fields, separator, csv, dispatch) {
@@ -210,6 +211,19 @@ class Importations extends React.Component {
       return item;
     });
     this.setState({errorAccounts: errorAccounts});
+  };
+  selectAccount = (account) => {
+    api.dashboard.getAppPassword({
+      app_id: account.sso_app_ids[1]
+    }).then(response => {
+      this.setState({
+        chromeLogin: account.account_information.login,
+        chromePassword: response.password
+      });
+    });
+  };
+  resetChromeCredentials = () => {
+    this.setState({chromeLogin: '', chromePassword: ''});
   };
   createRoom = (id) => {
     if (this.state.roomName[id].length === 0)
@@ -968,13 +982,21 @@ class Importations extends React.Component {
             next={this.changeView}
             passwordManager={this.state.passwordManager}/>}
         {(this.state.view === 2 && this.state.passwordManager === 2 && this.state.loading === false) &&
+        <React.Fragment>
           <ChromeFirstStep
+            resetChromeCredentials={this.resetChromeCredentials}
+            selectAccount={this.selectAccount}
             login={this.state.chromeLogin}
             password={this.state.chromePassword}
             onChange={this.handleInput}
-            error={this.state.error}
             back={this.back}
-            next={this.changeView}/>}
+            next={this.changeView}/>
+          <Message error hidden={this.state.error === ''} visible={this.state.error !== ''} size="mini" content={this.state.error} style={{width: "430px", left: "50%", transform: "translateX(-50%)"}}/>
+          <Message hidden={!this.state.specialError} visible={this.state.specialError} negative style={{width: "430px", left: "50%", transform: "translateX(-50%)"}}>
+            <p style={{color: "#eb555c"}}>☝️ No password found! Make sure your Chrome account is <strong>synchronized <a style={{TextDecoration:"underline", color: "#eb555c"}} href="#">Click Here</a></strong>
+              to find how do it in few clicks.</p>
+          </Message>
+        </React.Fragment>}
         {(this.state.view === 3 && this.state.passwordManager !== 2 && this.state.loading === false) &&
           <PasteStep
             back={this.back}
@@ -1019,19 +1041,12 @@ class Importations extends React.Component {
             accountsPending={this.state.accountsPending}
             selectedProfile={this.state.selectedProfile}/>}
         {(this.state.view === 5 && this.state.errorAccounts && this.state.loading === false) &&
-          <div>
-            <ErrorAccounts
-              errorAccounts={this.state.errorAccounts}
-              handleErrorAppInfo={this.handleErrorAppInfo}
-              importErrorAccounts={this.importErrorAccounts}
-              deleteErrorAccount={this.deleteErrorAccount}
-              fields={this.state.fields}/>
-            <Message visible={this.state.specialError} negative style={{width: "430px", left: "50%", transform: "translateX(-50%)"}}>
-              <p style={{color: "#eb555c"}}>No password found! Make sure your Chrome account is <strong>synchronized <a style={{TextDecoration:"underline", color: "#eb555c"}} href="#">Click Here </a></strong>
-                to find how do it in few clicks.</p>
-            </Message>
-          </div>
-          }
+        <ErrorAccounts
+          errorAccounts={this.state.errorAccounts}
+          handleErrorAppInfo={this.handleErrorAppInfo}
+          importErrorAccounts={this.importErrorAccounts}
+          deleteErrorAccount={this.deleteErrorAccount}
+          fields={this.state.fields}/>}
       </div>
     )
   }
