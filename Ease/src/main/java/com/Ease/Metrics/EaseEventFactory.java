@@ -55,4 +55,15 @@ public class EaseEventFactory {
         easeEvent.setUser_id(user_id);
         return easeEvent;
     }
+
+    public EaseEvent createBackgroundPictureEvent(Integer user_id, String from, Boolean state) {
+        JSONObject data = new JSONObject();
+        data.put("from", from);
+        data.put("state", state);
+        EaseEvent easeEvent = new EaseEvent();
+        easeEvent.setName("BackgroundPictureChanged");
+        easeEvent.setData(data.toString());
+        easeEvent.setUser_id(user_id);
+        return easeEvent;
+    }
 }
