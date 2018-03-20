@@ -1,7 +1,6 @@
 package com.Ease.API.V1.Teams;
 
 import com.Ease.Hibernate.HibernateQuery;
-import com.Ease.Mail.MailJetBuilder;
 import com.Ease.Mail.MailjetContactWrapper;
 import com.Ease.Mail.NewTeamThread;
 import com.Ease.Team.Channel;
@@ -131,12 +130,12 @@ public class ServletCreateTeam extends HttpServlet {
             sm.addWebSocketMessage(WebSocketMessageFactory.createWebSocketMessage(WebSocketMessageType.TEAM, WebSocketMessageAction.CREATED, team.getWebSockeetJson()));
             UserPostRegistrationEmails userPostRegistrationEmails = user.getUserPostRegistrationEmails();
             if (!userPostRegistrationEmails.isEmail_team_creation_sent()) {
-                MailJetBuilder mailJetBuilder = new MailJetBuilder();
+                /* MailJetBuilder mailJetBuilder = new MailJetBuilder();
                 mailJetBuilder.setTemplateId(287210);
                 mailJetBuilder.setFrom("benjamin@ease.space", "Benjamin Prigent");
                 mailJetBuilder.addTo(user.getEmail());
                 mailJetBuilder.activateTemplateLanguage();
-                mailJetBuilder.sendEmail();
+                mailJetBuilder.sendEmail(); */
                 userPostRegistrationEmails.setEmail_team_creation_sent(true);
                 sm.saveOrUpdate(userPostRegistrationEmails);
             }
