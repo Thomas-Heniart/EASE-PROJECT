@@ -194,7 +194,7 @@ class TeamUserInviteIndicators extends Component {
   render(){
     const {team_user} = this.props;
     const team = this.props.teams[team_user.team_id];
-    const maxSeats = 15 + team.extra_members;
+    const maxSeats = 10 + team.extra_members;
     const invitedUsers = Object.keys(team.team_users).reduce((stack, team_user_id) => {
       if (team.team_users[team_user_id].invitation_sent)
         return ++stack;

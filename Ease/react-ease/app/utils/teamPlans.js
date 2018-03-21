@@ -3,7 +3,7 @@ export const proFeaturesDesc = {
   1:'to show passwords to your team members',
   2:'to fill logins and password for your team members. They will have do it themselves',
   3:'to set up Admin role for your team members',
-  4:'to have more than 15 users',
+  4:'to have more than 10 users',
   5:"to set up user's departure in advance",
   6:"to setup arrival date of users (employee onboarding)",
   7:"to setup password modification policies",
@@ -11,7 +11,7 @@ export const proFeaturesDesc = {
 };
 
 export const proFeatures = [
-    'Unlimited employees',
+    'Up to 50 employees',
     'Password modification policy',
     'Automatic employee onboarding',
     'Automatic employee offboarding',

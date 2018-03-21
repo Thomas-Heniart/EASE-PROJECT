@@ -64,7 +64,7 @@ class TeamUserInviteLimitReachedModal extends Component {
               onSubmit={this.confirm}
               id="team_user_invite_limit_reached_modal">
             <Form.Field>
-              You reached the limit of 15 persons in a team. The following person(s) won’t be able to join your team.
+              You reached the limit of 10 persons in a team. The following person(s) won’t be able to join your team.
             </Form.Field>
             <Form.Field class="display_flex flex_direction_column users">
               {uninvited_users.map((team_user, idx) => {
@@ -86,7 +86,7 @@ class TeamUserInviteLimitReachedModal extends Component {
               To send all invitations, try Pro below or <u onClick={this.goToReferralSection}>referre to friends</u>.
             </Form.Field>
             <Form.Field>
-              With Pro, you get unlimited seats and additional security features. Pro is 59€/month before VAT for the whole team.
+              With Pro, you get up to 50 seats and additional security features. Pro is 59€/month before VAT for the whole team.
             </Form.Field>
             <Message error content={this.state.errorMessage}/>
             <Button

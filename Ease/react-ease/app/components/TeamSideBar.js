@@ -81,13 +81,6 @@ function UserList(props){
       return b.invitation_sent - a.invitation_sent;
     return a.username.localeCompare(b.username);
   });
-  const invitedMembers = Object.keys(team.team_users).reduce((stack, team_user_id) => {
-    const team_user = team.team_users[team_user_id];
-    if (team_user.invitation_sent)
-      return ++stack;
-    return stack;
-  }, 0);
-  const maxInvitations = 15 + team.extra_members;
   return (
       <div className="section-holder display-flex flex_direction_column" id="team_users">
         {isAdmin(me.role) &&
@@ -130,7 +123,7 @@ function UserList(props){
                     </NavLink>
                 );
               if (user.state === 0) {
-                const maxSeats = 15 + team.extra_members;
+                const maxSeats = 10 + team.extra_members;
                 const invitedUsers = Object.keys(team.team_users).reduce((stack, team_user_id) => {
                   if (team.team_users[team_user_id].invitation_sent)
                     return ++stack;

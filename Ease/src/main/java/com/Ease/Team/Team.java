@@ -37,7 +37,7 @@ public class Team {
 
     public static final Map<Integer, String> plansMap = new HashMap<>();
     private static final Map<String, Integer> inverse_plansMap = new HashMap<>();
-    public static final int MAX_MEMBERS = 15;
+    public static final int MAX_MEMBERS = 10;
 
     static {
         plansMap.put(0, "FreePlan");
