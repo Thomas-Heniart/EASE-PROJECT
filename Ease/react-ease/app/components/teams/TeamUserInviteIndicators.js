@@ -208,7 +208,7 @@ class TeamUserInviteIndicators extends Component {
       return (
           <TeamUserReInviteSegment {...this.props}/>
       );
-    if (team.plan_id === 0 && maxSeats === invitedUsers)
+    if (team.plan_id === 0 && maxSeats <= invitedUsers)
       return (
           <TeamUserInviteLimitReachedSegmentWithRouter {...this.props}/>
       );
