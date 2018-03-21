@@ -35,10 +35,20 @@ class WebsitesContainer extends Component{
   };
   render(){
     const query = this.props.query;
+    const queryRegexp = new RegExp(query.toLowerCase()
+      .replace(/\s+/g, '')
+      .replace(/\\/g, '\\\\')
+      .replace(/\?/g, '\\?')
+      .replace(/\*/g, '\\*')
+      .replace(/\[/g, '\\[')
+      .replace(/]/g, '\\]')
+      .replace(/\(/g, '\\(')
+      .replace(/\)/g, '\\)')
+      .replace(/\+/g, '\\+'));
     let websites = this.props.catalog.websites;
     if (query.length > 0)
       websites = websites.filter(item => {
-        return item.name.toLowerCase().replace(/\s+/g, '').match(query.toLowerCase().replace(/\s+/g, '')) !== null
+        return item.name.toLowerCase().replace(/\s+/g, '').match(queryRegexp) !== null
       });
     return (
         <Container fluid>
@@ -50,7 +60,7 @@ class WebsitesContainer extends Component{
           <Switch>
             <Route exact
                    path={`${this.props.match.path}`}
-                   render={(props) => <AppsContainer {...props} title={'Recently Added'} websites={websites} updates={query.length > 0 ? [] : this.props.catalog.updates} openModal={this.openModal}/>}/>
+                   render={(props) => <AppsContainer {...props} title={'Most popular Apps'} websites={websites} updates={query.length > 0 ? [] : this.props.catalog.updates} openModal={this.openModal}/>}/>
             <Route path={`${this.props.match.path}/:categoryId`}
                    render={(props) => <CategoryAppsContainer {...props} websites={websites} updates={query.length > 0 ? [] : this.props.catalog.updates} openModal={this.openModal}/>}/>
           </Switch>}
