@@ -11,7 +11,7 @@ export const proFeaturesDesc = {
 };
 
 export const proFeatures = [
-    'Unlimited employees',
+    'Up to 50 employees',
     'Password modification policy',
     'Automatic employee onboarding',
     'Automatic employee offboarding',

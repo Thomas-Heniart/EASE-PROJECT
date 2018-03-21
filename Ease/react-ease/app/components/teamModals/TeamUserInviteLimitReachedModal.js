@@ -86,7 +86,7 @@ class TeamUserInviteLimitReachedModal extends Component {
               To send all invitations, try Pro below or <u onClick={this.goToReferralSection}>referre to friends</u>.
             </Form.Field>
             <Form.Field>
-              With Pro, you get unlimited seats and additional security features. Pro is 59€/month before VAT for the whole team.
+              With Pro, you get up to 50 seats and additional security features. Pro is 59€/month before VAT for the whole team.
             </Form.Field>
             <Message error content={this.state.errorMessage}/>
             <Button
