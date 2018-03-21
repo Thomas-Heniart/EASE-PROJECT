@@ -137,6 +137,18 @@ public class NotificationFactory {
         userWebSocketManager.sendObject(WebSocketMessageFactory.createNotificationMessage(notification));
     }
 
+    public void createRemindTeamEnterpriseCardFiller(TeamCard teamCard, TeamUser teamUser, TeamUser room_manager, WebSocketManager userWebSocketManager, HibernateQuery hibernateQuery) {
+        String content = room_manager + " reminds you to enter " + teamCard.getName() + "'s information";
+        String url = "#/teams/" + teamCard.getChannel().getDb_id() + "?app_id=" + teamCard.getDb_id();
+        String logo = teamCard.getLogo();
+        if (!teamUser.isRegistered())
+            return;
+        User user = teamUser.getUser();
+        Notification notification = this.createNotification(user, content, logo, url);
+        hibernateQuery.saveOrUpdateObject(notification);
+        userWebSocketManager.sendObject(WebSocketMessageFactory.createNotificationMessage(notification));
+    }
+
     public void createEditRoleNotification(TeamUser teamUserToModify, TeamUser teamUser, WebSocketManager userWebSocketManager, HibernateQuery hibernateQuery) {
         Notification notification = this.createNotification(teamUserToModify.getUser(), teamUser.getUsername() + " changed your role to " + teamUserToModify.getTeamUserRole().getRoleName(), "/resources/notifications/user_role_changed.png", teamUserToModify, true);
         hibernateQuery.saveOrUpdateObject(notification);

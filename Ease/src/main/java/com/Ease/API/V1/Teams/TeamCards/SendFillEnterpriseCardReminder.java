@@ -45,7 +45,7 @@ public class SendFillEnterpriseCardReminder extends HttpServlet {
                 mailJetBuilder.addVariable("app_name", teamCard.getName());
                 mailJetBuilder.addVariable("url", Variables.URL_PATH);
                 mailJetBuilder.sendEmail();
-                NotificationFactory.getInstance().createRemindTeamCardFiller(teamCard, teamUser, sm.getTeamUser(team), sm.getUserWebSocketManager(teamUser.getUser().getDb_id()), sm.getHibernateQuery());
+                NotificationFactory.getInstance().createRemindTeamEnterpriseCardFiller(teamCard, teamUser, teamUser_connected, sm.getUserWebSocketManager(teamUser.getUser().getDb_id()), sm.getHibernateQuery());
             }
             sm.setSuccess("Reminder sent");
         } catch (Exception e) {
