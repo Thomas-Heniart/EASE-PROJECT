@@ -50,7 +50,7 @@ public class GetTeamSingleCardPassword extends HttpServlet {
                 throw new HttpServletException(HttpStatus.Forbidden);
             JSONObject res = new JSONObject();
             res.put("password", sm.cipher(password.getDeciphered_information_value()));
-            sm.saveOrUpdate(EaseEventFactory.getInstance().createPasswordUsedEvent(sm.getUser().getDb_id(), "Copy", teamCard));
+            sm.getTrackingHibernateQuery().saveOrUpdateObject(EaseEventFactory.getInstance().createPasswordUsedEvent(sm.getUser().getDb_id(), "Copy", teamCard));
             sm.setSuccess(res);
         } catch (Exception e) {
             sm.setError(e);

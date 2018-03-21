@@ -8,7 +8,7 @@ import {dashboard} from "../../utils/post_api";
 import {reflect, transformWebsiteInfoIntoList, credentialIconType, transformCredentialsListIntoObject} from "../../utils/utils";
 import ChooseAppLocationModal from './ChooseAppLocationModal';
 import ChooseTypeAppModal from './ChooseTypeAppModal';
-import {createSsoGroup, createProfile} from "../../actions/dashboardActions";
+import {createSsoGroup, createProfile, appAdded} from "../../actions/dashboardActions";
 import {catalogAddSsoApp, testCredentials} from "../../actions/catalogActions";
 
 const CredentialInput = ({item, onChange}) => {

@@ -52,7 +52,7 @@ public class ServletGetAppPassword extends HttpServlet {
             app.decipher(keyUser, team_key);
             password = account.getInformationNamed("password").getDeciphered_information_value();
             res.put("password", sm.cipher(password));
-            sm.saveOrUpdate(EaseEventFactory.getInstance().createPasswordUsedEvent(user.getDb_id(), "Copy", app));
+            sm.getTrackingHibernateQuery().saveOrUpdateObject(EaseEventFactory.getInstance().createPasswordUsedEvent(user.getDb_id(), "Copy", app));
             sm.setSuccess(res);
         } catch (Exception e) {
             sm.setError(e);
