@@ -35,6 +35,13 @@ public class WebsiteScheduledTask extends TimerTask {
                     e.printStackTrace();
                 }
             });
+            hibernateQuery.querySQLString("UPDATE websites w\n" +
+                    "SET w.ratio = (SELECT COUNT(websiteApps.id) AS count\n" +
+                    "               FROM websiteApps\n" +
+                    "                 JOIN teamCardReceivers ON teamCardReceivers.id = websiteApps.id\n" +
+                    "               WHERE websiteApps.website_id = w.id\n" +
+                    ");");
+            hibernateQuery.executeUpdate();
             hibernateQuery.commit();
         } catch (Exception e) {
             hibernateQuery.rollback();

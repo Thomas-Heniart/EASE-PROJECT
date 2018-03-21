@@ -160,20 +160,22 @@ FROM users
              WHERE connected = 1
              GROUP BY user_id) AS t2 ON users.id = t2.user_id
   LEFT JOIN (SELECT
-               t5.user_id,
-               t5.date
-             FROM tmp1 AS t5
-             WHERE t5.date = (SELECT MAX(t6.date)
-                              FROM tmp1 AS t6
-                              WHERE t5.user_id = t6.user_id
-                              ORDER BY t6.user_id)
-             ORDER BY t5.user_id) AS t3 ON t3.user_id = users.id
+               user_id,
+               MAX(date1) AS date
+             FROM (SELECT
+                     user_id,
+                     DATE_ADD(DATE(CONCAT(year, '-01-01')), INTERVAL (day_of_year - 1)
+                              DAY) AS 'date1'
+                   FROM METRIC_CONNECTION
+                   WHERE connected = 1
+                   ORDER BY user_id ASC, date DESC) AS t4
+             GROUP BY user_id) AS t3 ON t3.user_id = users.id
 WHERE status.registered = 1 AND teams.active = 1 AND teamUsers.arrival_date IS NOT NULL AND
       users.email NOT LIKE '%@ease.space' AND users.email NOT LIKE '%@ieseg.fr' AND
       users.email NOT LIKE 'prigent.benjamin@gmail.com' AND users.email NOT LIKE 'fisun.serge76@gmail.com'
       AND USER_PERSONAL_INFORMATION.first_name IS NOT NULL AND USER_PERSONAL_INFORMATION.last_name IS NOT NULL
 ORDER BY clickOnApps, nbApps, nbCo
-INTO OUTFILE '/tmp/people2.csv'
+INTO OUTFILE '/tmp/people.csv'
 FIELDS TERMINATED BY ','
   ENCLOSED BY '"'
 LINES TERMINATED BY '\n';
@@ -218,3 +220,15 @@ FROM (SELECT
       FROM metricClickOnApp
       ORDER BY user_id) AS t4
 GROUP BY user_id;
+
+SELECT
+  user_id,
+  MAX(date)
+FROM (SELECT
+        user_id,
+        DATE_ADD(DATE(CONCAT(year, '-01-01')), INTERVAL (day_of_year - 1)
+                 DAY) AS 'date'
+      FROM METRIC_CONNECTION
+      WHERE connected = 1
+      ORDER BY user_id ASC, date DESC) AS t
+GROUP BY user_id
