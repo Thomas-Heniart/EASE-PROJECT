@@ -6,6 +6,21 @@ import {showExtensionDownloadModal} from "./modalActions";
 import {deleteUpdate} from "./catalogActions";
 import * as event_api from "../utils/event_api";
 
+export function setDashboardFooterState({active}){
+  return {
+    type: 'SET_DASHBOARD_FOOTER_ACTIVE',
+    payload: {
+      active: active
+    }
+  }
+}
+
+export function welcomeMessageSeen(){
+  return {
+    type: 'WELCOME_MESSAGE_SEEN'
+  }
+}
+
 export function fetchDashboard(){
   return (dispatch, getState) => {
     const calls = [
