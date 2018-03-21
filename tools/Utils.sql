@@ -157,6 +157,7 @@ FROM users
                user_id,
                COUNT(*) AS nbCo
              FROM METRIC_CONNECTION
+             WHERE connected = 1
              GROUP BY user_id) AS t2 ON users.id = t2.user_id
   JOIN (SELECT
           t5.user_id,

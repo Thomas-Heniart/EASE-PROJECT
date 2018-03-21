@@ -73,7 +73,12 @@ public class ServletUpdate extends HttpServlet {
             Catalog catalog = (Catalog) sm.getContextAttr("catalog");
             HibernateQuery hibernateQuery = sm.getHibernateQuery();
             Set<String> informationNameSet = new HashSet<>();
-            account_information.keySet().forEach(o -> informationNameSet.add((String) o));
+            for (Object object : account_information.keySet()) {
+                String key = (String) object;
+                if (account_information.getString(key).length() > 117)
+                    throw new HttpServletException(HttpStatus.BadRequest, "Cannot encrypt this kink of password");
+                informationNameSet.add(key);
+            }
             Website website = catalog.getPublicWebsiteWithUrl(url, informationNameSet, hibernateQuery);
             if (website != null) {
                 /* Hack for websites with more than 2 fields */
