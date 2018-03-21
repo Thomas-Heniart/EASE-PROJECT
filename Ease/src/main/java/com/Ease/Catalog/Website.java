@@ -50,6 +50,9 @@ public class Website {
     @Column(name = "logo_version")
     private Integer logo_version = 0;
 
+    @Column(name = "ratio")
+    private Long ratio = 0L;
+
     @OneToOne(cascade = CascadeType.ALL)
     @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @JoinColumn(name = "website_attributes_id")
@@ -160,6 +163,14 @@ public class Website {
 
     public void setLogo_version(Integer logo_version) {
         this.logo_version = logo_version;
+    }
+
+    public Long getRatio() {
+        return ratio;
+    }
+
+    public void setRatio(Long ratio) {
+        this.ratio = ratio;
     }
 
     public WebsiteAttributes getWebsiteAttributes() {
@@ -396,6 +407,7 @@ public class Website {
         res.put("pinneable", this.getWebsiteAttributes().isIntegrated());
         res.put("landing_url", this.getWebsite_homepage());
         res.put("login_url", this.getLogin_url());
+        res.put("ratio", this.getRatio());
         return res;
     }
 
