@@ -60,7 +60,7 @@ public class EditTeamAnyEnterpriseCard extends HttpServlet {
             if (!url.equals(teamEnterpriseCard.getWebsite().getLogin_url())) {
                 Catalog catalog = (Catalog) sm.getContextAttr("catalog");
                 JSONObject connection_information = sm.getJsonParam("connection_information", false, false);
-                Website website = catalog.getWebsiteWithUrl(url, connection_information, sm.getHibernateQuery());
+                Website website = catalog.getWebsiteWithStrictUrl(url, connection_information, sm.getHibernateQuery());
                 if (website == null) {
                     String img_url = sm.getStringParam("img_url", false, true);
                     website = WebsiteFactory.getInstance().createWebsiteAndLogo(sm.getUser().getEmail(), url, name, img_url, connection_information, sm.getHibernateQuery());

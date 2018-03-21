@@ -58,7 +58,7 @@ public class ServletEditAnyApp extends HttpServlet {
             Website website = anyApp.getWebsite();
             if (!website.getLogin_url().equals(url)) {
                 JSONObject connection_information = sm.getJsonParam("connection_information", false, false);
-                website = catalog.getWebsiteWithUrl(url, connection_information, hibernateQuery);
+                website = catalog.getWebsiteWithStrictUrl(url, connection_information, hibernateQuery);
                 if (website != null) {
                     if (website.getWebsiteAttributes().isIntegrated()) {
                         App tmp_app = AppFactory.getInstance().createClassicApp(name, website, keyUser, account, sm.getHibernateQuery());

@@ -146,6 +146,20 @@ public class Catalog {
         return website;
     }
 
+    public Website getWebsiteWithStrictUrl(String url, JSONObject connection_information, HibernateQuery hibernateQuery) {
+        hibernateQuery.queryString("SELECT w FROM Website w LEFT JOIN w.websiteAlternativeUrlSet AS url WHERE w.website_homepage LIKE :url OR w.login_url LIKE :url OR url.url LIKE :url ORDER BY w.db_id ASC");
+        hibernateQuery.setParameter("url", url);
+        Website website = (Website) hibernateQuery.getSingleResult();
+        if (website == null || website.getFolder().equals("undefined") || website.getWebsiteInformationList().size() != connection_information.length())
+            return null;
+        for (WebsiteInformation websiteInformation : website.getWebsiteInformationList()) {
+            JSONObject tmp = connection_information.getJSONObject(websiteInformation.getInformation_name());
+            if (tmp == null)
+                return null;
+        }
+        return website;
+    }
+
     public Software getSoftwareWithFolderOrName(String name, String folder, JSONObject connection_information, HibernateQuery hibernateQuery) {
         hibernateQuery.queryString("SELECT s FROM Software s WHERE s.name = :name OR s.folder = :folder");
         hibernateQuery.setParameter("name", name);
