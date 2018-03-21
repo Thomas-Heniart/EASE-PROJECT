@@ -35,10 +35,20 @@ class WebsitesContainer extends Component{
   };
   render(){
     const query = this.props.query;
+    const queryRegexp = new RegExp(query.toLowerCase()
+      .replace(/\s+/g, '')
+      .replace(/\\/g, '\\\\')
+      .replace(/\?/g, '\\?')
+      .replace(/\*/g, '\\*')
+      .replace(/\[/g, '\\[')
+      .replace(/]/g, '\\]')
+      .replace(/\(/g, '\\(')
+      .replace(/\)/g, '\\)')
+      .replace(/\+/g, '\\+'));
     let websites = this.props.catalog.websites;
     if (query.length > 0)
       websites = websites.filter(item => {
-        return item.name.toLowerCase().replace(/\s+/g, '').match(query.toLowerCase().replace(/\s+/g, '')) !== null
+        return item.name.toLowerCase().replace(/\s+/g, '').match(queryRegexp) !== null
       });
     return (
         <Container fluid>
