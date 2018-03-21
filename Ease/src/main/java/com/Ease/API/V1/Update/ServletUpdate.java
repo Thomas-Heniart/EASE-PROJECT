@@ -108,8 +108,8 @@ public class ServletUpdate extends HttpServlet {
             updates = updates.stream().filter(update -> update.accountMatch(account_information)).collect(Collectors.toList());
             for (Update update : updates) {
                 //if (!update.passwordMatch(account_information)) {
-                    update.edit(account_information, user.getUserKeys().getPublicKey());
-                    //res.put(update.getJson());
+                update.edit(account_information, user.getUserKeys().getPublicKey());
+                //res.put(update.getJson());
                 //}
             }
             populateResponse(res, user, account_information, website, url, hibernateQuery, sm, updates);
