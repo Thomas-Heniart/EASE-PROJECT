@@ -2,6 +2,7 @@ import React from 'react';
 import { Switch, Route} from 'react-router-dom';
 import {connect} from "react-redux";
 import {withCookies} from 'react-cookie';
+import {setDashboardFooterState} from "../../../actions/dashboardActions";
 import {setLoginRedirectUrl} from "../../../actions/commonActions";
 import UnknownUserForm from "./UnknownUserForm";
 import PasswordLost from "./passwordLost";
@@ -49,8 +50,12 @@ class Login extends React.Component {
     if (this.state.redirect.length > 0) {
       this.props.history.replace(this.state.redirect);
     }
-    else
-      this.props.history.replace('/main/dashboard/log');
+    else {
+      this.props.history.replace('/main/dashboard');
+      this.props.dispatch(setDashboardFooterState({
+        active: true
+      }));
+    }
   };
   render(){
     if (this.props.authenticated)

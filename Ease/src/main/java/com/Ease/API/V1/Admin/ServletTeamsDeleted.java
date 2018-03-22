@@ -2,6 +2,8 @@ package com.Ease.API.V1.Admin;
 
 import com.Ease.Hibernate.HibernateQuery;
 import com.Ease.Team.Team;
+import com.Ease.Team.TeamUser;
+import com.Ease.User.User;
 import com.Ease.Utils.Servlets.GetServletManager;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -26,10 +28,12 @@ public class ServletTeamsDeleted extends HttpServlet {
             List<Team> teams = hibernateQuery.list();
             JSONArray res = new JSONArray();
             for (Team team : teams) {
+                TeamUser owner = team.getTeamUserOwner();
+                User user_owner = owner.getUser();
                 JSONObject tmp = new JSONObject();
                 tmp.put("name", team.getName());
-                tmp.put("phone_number", team.getTeamUserOwner().getUser().getPersonalInformation().getPhone_number());
-                tmp.put("email", team.getTeamUserOwner().getEmail());
+                tmp.put("phone_number", user_owner != null ? user_owner.getPersonalInformation().getPhone_number() : "Invalid");
+                tmp.put("email", owner.getEmail());
                 res.put(tmp);
             }
             sm.setSuccess(res);

@@ -32,6 +32,7 @@ import {reduxActionBinder} from "../../actions/index";
 import {connect} from "react-redux";
 import {addNotification} from "../../actions/notificationBoxActions";
 import * as api from "../../utils/api";
+import {passwordCopied} from "../../actions/dashboardActions";
 
 const TeamEnterpriseAppButtonSet = ({app, me, dispatch, editMode, selfJoin, requestApp}) => {
   const meReceiver = app.receivers.find(receiver => (receiver.team_user_id === me.id));
@@ -132,6 +133,9 @@ class CopyPasswordButton extends Component {
     setTimeout(() => {
       this.setState({state: 0, open: false});
     }, 2000);
+    this.props.dispatch(passwordCopied({
+      app: this.props.app
+    }))
   };
   fetchPassword = () => {
     this.setState({state: 1, open: true});

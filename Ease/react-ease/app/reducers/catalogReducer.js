@@ -18,7 +18,7 @@ export const catalog = createReducer({
   ['FETCH_CATALOG_FULFILLED'](state, action){
     return {
       ...state,
-      websites: action.payload.websites.sort(function (a, b) {return b.integration_date - a.integration_date;}),
+      websites: action.payload.websites.sort(function (a, b) {return b.ratio - a.ratio;}),
       categories: action.payload.categories,
       sso_list: action.payload.sso_list,
       requests_number: action.payload.requests_number,

@@ -45,7 +45,7 @@ public class ServletGetMyInformation extends HttpServlet {
                         continue;
                     sm.initializeTeamWithContext(team);
                     for (TeamUser teamUser : team.getTeamUsers().values()) {
-                        if (team.getTeamUsers().values().stream().filter(teamUser1 -> teamUser1.getTeamUserStatus().isInvitation_sent()).count() >= (Team.MAX_MEMBERS + team.getInvitedFriendMap().size()) && !team.isValidFreemium())
+                        if (team.getTeamUsers().values().stream().filter(teamUser1 -> teamUser1.getTeamUserStatus().isInvitation_sent()).count() >= team.getExtraMembersCount() && !team.isValidFreemium())
                             break;
                         if (teamUser.getArrival_date() != null && !teamUser.getTeamUserStatus().isInvitation_sent() && teamUser.getArrival_date().getTime() < now)
                             sendTeamUserInvitation(teamUser, team, sm);

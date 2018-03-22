@@ -6,7 +6,7 @@ import {
 import {showLockedTeamAppModal, showTeamSoftwareEnterpriseAppSettingsModal} from "../../actions/modalActions";
 import {Input, Label, Icon, Segment, Popup} from 'semantic-ui-react';
 import {teamUserDepartureDatePassed, needPasswordUpdate, copyTextToClipboard, transformWebsiteInfoIntoListAndSetValues} from "../../utils/utils";
-import {validateApp, clickOnAppMetric} from '../../actions/dashboardActions';
+import {validateApp, clickOnAppMetric, passwordCopied} from '../../actions/dashboardActions';
 import api from "../../utils/api";
 import {connect} from "react-redux";
 
@@ -54,6 +54,9 @@ class TeamSoftwareEnterpriseApp extends Component {
     setTimeout(() => {
       this.setState({copiedPassword: null});
     }, 1000);
+    this.props.dispatch(passwordCopied({
+      app: this.props.app
+    }))
   };
   copy = (item) => {
     copyTextToClipboard(item.value);

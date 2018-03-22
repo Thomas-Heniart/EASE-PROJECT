@@ -5,8 +5,22 @@ export const dashboard = createReducer({
   columns: [],
   profiles: {},
   apps: {},
-  sso_groups: {}
+  sso_groups: {},
+  footerActive: false,
+  welcomeMessageSeen: false
 }, {
+  ['WELCOME_MESSAGE_SEEN'](state,action){
+    return update(state, {
+      welcomeMessageSeen: {$set: true}
+    });
+  },
+  ['SET_DASHBOARD_FOOTER_ACTIVE'](state, action){
+    const {active} = action.payload;
+
+    return update(state, {
+      footerActive: {$set: active}
+    });
+  },
   ['FETCH_DASHBOARD_FULFILLED'](state, action){
     let columns = [];
     let profiles = {};

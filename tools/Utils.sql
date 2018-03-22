@@ -168,7 +168,7 @@ FROM users
                               DAY) AS 'date1'
                    FROM METRIC_CONNECTION
                    WHERE connected = 1
-                   ORDER BY user_id ASC, date DESC) AS t4
+                   ORDER BY user_id ASC, date1 DESC) AS t4
              GROUP BY user_id) AS t3 ON t3.user_id = users.id
 WHERE status.registered = 1 AND teams.active = 1 AND teamUsers.arrival_date IS NOT NULL AND
       users.email NOT LIKE '%@ease.space' AND users.email NOT LIKE '%@ieseg.fr' AND
