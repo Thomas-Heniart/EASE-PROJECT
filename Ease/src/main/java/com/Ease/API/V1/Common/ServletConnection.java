@@ -107,7 +107,7 @@ public class ServletConnection extends HttpServlet {
                         teamUser.setDisabled(false);
                         sm.saveOrUpdate(teamUser);
                     }
-                    if (team.getTeamUsers().values().stream().filter(teamUser1 -> teamUser1.getTeamUserStatus().isInvitation_sent()).count() >= (Team.MAX_MEMBERS + team.getInvitedFriendMap().size()) && !team.isValidFreemium())
+                    if (team.getTeamUsers().values().stream().filter(teamUser1 -> teamUser1.getTeamUserStatus().isInvitation_sent()).count() >= team.getExtraMembersCount() && !team.isValidFreemium())
                         break;
                     if (teamUser.getArrival_date() != null && !teamUser.getTeamUserStatus().isInvitation_sent() && teamUser.getArrival_date().getTime() < now)
                         sendTeamUserInvitation(teamUser, team, sm);
