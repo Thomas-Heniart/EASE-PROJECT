@@ -3,7 +3,7 @@ import {Popup, Input, Icon, Label, Segment} from "semantic-ui-react"
 import {copyTextToClipboard, transformWebsiteInfoIntoListAndSetValues} from "../../utils/utils";
 import {LoadingAppIndicator, EmptyAppIndicator, NewAppLabel} from "./utils";
 import {showSoftwareAppSettingsModal} from "../../actions/modalActions";
-import {validateApp, clickOnAppMetric} from '../../actions/dashboardActions';
+import {validateApp, clickOnAppMetric, passwordCopied} from '../../actions/dashboardActions';
 import api from "../../utils/api";
 import {connect} from "react-redux";
 
@@ -49,6 +49,9 @@ class SoftwareApp extends Component {
     setTimeout(() => {
       this.setState({copiedPassword: null});
     }, 1000);
+    this.props.dispatch(passwordCopied({
+      app: this.props.app
+    }))
   };
   copy = (item) => {
     copyTextToClipboard(item.value);

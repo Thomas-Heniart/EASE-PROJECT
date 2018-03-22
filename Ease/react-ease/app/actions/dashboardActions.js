@@ -732,6 +732,16 @@ export function updateAccepted({type}) {
   }
 }
 
+export function passwordCopied({app}) {
+  return (dispatch, getState) => {
+    return event_api.track.passwordCopied({
+      app: app
+    }).catch(err => {
+      throw err;
+    });
+  }
+}
+
 export function validateTutorial() {
   return (dispatch, getState) => {
     return post_api.dashboard.validateTutorial().then(response => {

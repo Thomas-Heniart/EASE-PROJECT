@@ -3,7 +3,7 @@ import api from "../../utils/api";
 import {Message, Form, Button} from 'semantic-ui-react';
 import SimpleModalTemplate from "../common/SimpleModalTemplate";
 import {showUpdateAppPasswordModal} from "../../actions/modalActions";
-import {AppConnection} from "../../actions/dashboardActions";
+import {AppConnection, passwordCopied} from "../../actions/dashboardActions";
 import {connect} from "react-redux";
 import {copyTextToClipboard} from "../../utils/utils";
 
@@ -43,6 +43,9 @@ class UpdateAppPasswordModal extends Component {
     setTimeout(() => {
       this.setState({copyButtonText: 'Copy current password'});
     }, 2000);
+    this.props.dispatch(passwordCopied({
+      app: this.props.app
+    }))
   };
   componentWillMount(){
     api.dashboard.getAppPassword({

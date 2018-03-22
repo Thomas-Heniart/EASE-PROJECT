@@ -11,6 +11,7 @@ import post_api from "../../utils/post_api";
 import {isAdmin} from "../../utils/helperFunctions";
 import {connect} from "react-redux";
 import {renewMagicLink} from "../../actions/magicLinkActions";
+import {passwordCopied} from "../../actions/dashboardActions";
 
 export class EmptyCredentialsSimpleAppIndicator extends Component {
   constructor(props){
