@@ -3,7 +3,8 @@
     <div class="item" data-tab="onboarding">Onboarding</div>
     <div class="item" data-tab="users_cohort">Users cohort</div>
     <div class="item" data-tab="teams_cohort">Teams cohort</div>
-    <div class="item" data-tab="click_repartition">Clicks</div>
+    <div class="item" data-tab="click_repartition">Click provenance</div>
+    <div class="item" data-tab="click_types">Click types</div>
 </div>
 <div class="ui bottom attached tab active segment" data-tab="recap">
     <table class="ui compact small selectable sortable celled table" id="stats_table">
@@ -63,4 +64,16 @@
         <canvas id="clickRepartitionChart" width="800" height="500"></canvas>
     </div>
 </div>
-<script src="js/backOffice/statistics.js" async></script>
+<div class="ui bottom attached tab segment" data-tab="click_types">
+    <form id="click_types_date_range">
+        <label for="click_types_date_start">From: </label>
+        <input type="date" id="click_types_date_start" />
+        <label for="click_types_date_end">To: </label>
+        <input type="date" id="click_types_date_end" />
+        <button type="submit">Generate</button>
+    </form>
+    <div style="max-height: 600px; max-width: 1000px">
+        <canvas id="clickTypesChart" width="800" height="500"></canvas>
+    </div>
+</div>
+<script src="js/backOffice/statistics.js?v=1" async></script>

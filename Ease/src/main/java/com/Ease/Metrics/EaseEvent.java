@@ -134,6 +134,14 @@ public class EaseEvent {
         return new JSONObject(this.getData()).optString("from");
     }
 
+    private String getType() {
+        return new JSONObject(this.getData()).optString("type");
+    }
+
+    private String getSubType() {
+        return new JSONObject(this.getData()).optString("sub_type");
+    }
+
     public boolean isFromDashboardClick() {
         return this.getFrom().equals("DashboardClick");
     }
@@ -148,5 +156,13 @@ public class EaseEvent {
 
     public boolean isFromCopy() {
         return this.getFrom().toLowerCase().contains("copy");
+    }
+
+    public boolean isClassicAppUsed() {
+        return !this.isAnyAppUsed();
+    }
+
+    public boolean isAnyAppUsed() {
+        return this.getType().equals("any") || this.getSubType().equals("any");
     }
 }

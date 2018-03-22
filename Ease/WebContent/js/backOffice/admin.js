@@ -207,10 +207,8 @@ $(document).ready(function () {
           break;
         case "teams-deleted-segment":
           ajaxHandler.get("/api/v1/admin/TeamsDeleted", null, () => {
-          }, function (websiteFailures) {
-            websiteFailures.forEach(function (websiteFailure) {
-              createWebsiteFailureRow(websiteFailure).appendTo($("#website-failures-body"));
-            });
+          }, function (data) {
+            populateTeamsDeleted(data);
             target.removeClass("loading");
           });
           break;
