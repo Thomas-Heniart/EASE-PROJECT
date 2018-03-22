@@ -6,12 +6,14 @@ import {addTeamUserToChannel} from "../../actions/channelActions";
 import {showAddTeamUserModal, showTeamAddMultipleUsersModal, showUpgradeTeamPlanModal} from "../../actions/teamModalActions"
 import {renderRoomLabel} from "../../utils/renderHelpers";
 import {reflect, handleSemanticInput, isEmail} from "../../utils/utils";
-import { Header, Container, Divider, Icon, Form, Input, Message, Button } from 'semantic-ui-react';
+import { Header, Container, Icon, Form, Input, Message, Button } from 'semantic-ui-react';
 import {addNotification} from "../../actions/notificationBoxActions";
 import {withRouter} from "react-router-dom";
+import {teamShareEnterpriseCard, teamShareLinkCard, teamShareSingleCard} from "../../actions/appsActions";
 
 @connect((store) => ({
-  team: store.teams[store.teamModals.addUserModal.team_id]
+  team: store.teams[store.teamModals.addUserModal.team_id],
+  team_apps: store.team_apps
 }))
 class TeamAddUserModal extends React.Component {
   constructor(props){
@@ -30,10 +32,11 @@ class TeamAddUserModal extends React.Component {
       loading: false,
       errorMessage: '',
       loadingInvitationNow: false,
-      usernameError: false
+      usernameError: false,
+      checkTagUser: false
     };
     const team = this.props.team;
-    this.state.options = Object.keys(team.rooms).map(id => {
+    this.state.options = Object.keys(team.rooms).filter(id => (!team.rooms[id].default)).map(id => {
       const item = team.rooms[id];
       return {
         key: item.id,
@@ -41,14 +44,6 @@ class TeamAddUserModal extends React.Component {
         value: item.id,
         name: item.name
       }
-    });
-    this.state.value = Object.keys(team.rooms).map(id => {
-      const item = team.rooms[id];
-      if (item.default)
-        return item.id;
-      return null;
-    }).filter(item => {
-      return item !== null;
     });
     this.state.defaultRooms = this.state.value.slice();
   }
@@ -142,7 +137,7 @@ class TeamAddUserModal extends React.Component {
       role: this.state.role
     })).then(response => {
       const user = response;
-      const calls = this.state.value.filter(id => {
+      let calls = this.state.value.filter(id => {
         return !team.rooms[id].default;
       }).map(id => {
         return this.props.dispatch(addTeamUserToChannel({
@@ -150,6 +145,33 @@ class TeamAddUserModal extends React.Component {
           channel_id: id,
           team_user_id: user.id
         }));
+      });
+      if (this.state.checkTagUser)
+      this.state.value.map(id => {
+        team.rooms[id].team_card_ids.map(card_id => {
+          if (this.props.team_apps[card_id].type === 'teamSingleCard') {
+            calls.push(this.props.dispatch(teamShareSingleCard({
+              team_id: team.id,
+              team_card_id: card_id,
+              team_user_id: user.id,
+              allowed_to_see_password: true
+            }))); // add the users in all apps of the room
+          }
+          else if (this.props.team_apps[card_id].type === 'teamEnterpriseCard') {
+            calls.push(this.props.dispatch(teamShareEnterpriseCard({
+              team_id: team.id,
+              team_card_id: card_id,
+              team_user_id: user.id,
+              account_information: {}
+            })));
+          }
+          else if (this.props.team_apps[card_id].type === 'teamLinkCard') {
+            calls.push(this.props.dispatch(teamShareLinkCard({
+              team_card_id: card_id,
+              team_user_id: user.id
+            })));
+          }
+        });
       });
       Promise.all(calls.map(reflect)).then(values => {
         this.setState({loadingInvitationNow: false});
@@ -184,7 +206,11 @@ class TeamAddUserModal extends React.Component {
         <WhiteModalTemplate onClose={e => {this.props.dispatch(showAddTeamUserModal({active: false}))}}>
           <Container>
             <Header as="h1">
-              Create a team member
+              Add a new user
+                <Button style={{float:'right'}} primary type="button" onClick={this.switchToMultipleUsers}>
+                  <Icon name="add user"/>
+                  Add a list of users
+                </Button>
             </Header>
             <Form onSubmit={this.confirm} error={this.state.errorMessage.length > 0} id="add_user_modal">
               <Form.Group>
@@ -251,6 +277,15 @@ class TeamAddUserModal extends React.Component {
                   renderLabel={renderRoomLabel}
                   placeholder="Choose room(s)"
                   label="Room(s)"/>
+              <p>New members will automatically join #openspace</p>
+              <label className='check_tag_user_label'>Setting</label>
+              <Form.Checkbox
+                toggle
+                name='checkTagUser'
+                className='check_tag_user'
+                onChange={this.handleInput}
+                checked={this.state.checkTagUser}
+                label="Add this user in all apps of his rooms"/>
               <Message error content={this.state.errorMessage}/>
               <Form.Group id='invitationButton' class="overflow-hidden">
                 {!this.state.arrival_date ?
@@ -289,13 +324,6 @@ class TeamAddUserModal extends React.Component {
                       </Form.Button>
                     </React.Fragment>
                 }
-              </Form.Group>
-              <Divider horizontal>Or</Divider>
-              <Form.Group class="justify_content_center">
-                <Form.Button primary type="button" onClick={this.switchToMultipleUsers}>
-                  <Icon name="add user"/>
-                  Add a list of users
-                </Form.Button>
               </Form.Group>
             </Form>
           </Container>

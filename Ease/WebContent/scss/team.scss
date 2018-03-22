@@ -1487,6 +1487,27 @@ button.action_text_button {
   label {
     line-height: 1.8;
   }
+  .check_tag_user_label {
+    display: block;
+    margin: 0 0 .28571429rem 0;
+    color: rgba(41,41,41,.95);
+    font-size: .92857143em;
+    font-weight: 700;
+    text-transform: none;
+  }
+  .check_tag_user {
+    label {
+      padding-left: 2.5rem;
+    }
+    ::before {
+      top: 50%;
+      transform: translateY(-50%);
+    }
+    ::after {
+      top: 50%;
+      transform: translateY(-50%);
+    }
+  }
 }
 
 #team_user_invite_limit_reached_modal {
