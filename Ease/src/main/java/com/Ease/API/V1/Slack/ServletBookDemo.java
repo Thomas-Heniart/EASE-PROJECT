@@ -22,12 +22,12 @@ public class ServletBookDemo extends HttpServlet {
             String firstName = sm.getStringParam("et_pb_contact_prénom_1", true, true);
             String lastName = sm.getStringParam("et_pb_contact_nom_1", true, true);
             String fullName = sm.getStringParam("et_pb_contact_firstname_lastname_1", true, true);
-            if (firstName != null && lastName != null)
+            if (firstName != null && lastName != null && !firstName.equals("") && !lastName.equals(""))
                 fullName = firstName + " " + lastName;
             if (fullName == null || fullName.equals("") || fullName.equals(" "))
                 throw new HttpServletException(HttpStatus.BadRequest, "Empty name");
             String email = sm.getStringParam("et_pb_contact_votre_email_1", true, true);
-            if (email == null || !Regex.isEmail(email))
+            if (email == null || email.equals("") || !Regex.isEmail(email))
                 email = sm.getStringParam("et_pb_contact_email_1", true, false);
             if (!Regex.isEmail(email))
                 throw new HttpServletException(HttpStatus.BadRequest, "Invalid email");
