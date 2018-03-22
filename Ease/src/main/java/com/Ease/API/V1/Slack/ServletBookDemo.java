@@ -26,7 +26,9 @@ public class ServletBookDemo extends HttpServlet {
                 fullName = firstName + " " + lastName;
             if (fullName == null || fullName.equals("") || fullName.equals(" "))
                 throw new HttpServletException(HttpStatus.BadRequest, "Empty name");
-            String email = sm.getStringParam("et_pb_contact_votre_email_1", true, false);
+            String email = sm.getStringParam("et_pb_contact_votre_email_1", true, true);
+            if (email == null || !Regex.isEmail(email))
+                email = sm.getStringParam("et_pb_contact_email_1", true, false);
             if (!Regex.isEmail(email))
                 throw new HttpServletException(HttpStatus.BadRequest, "Invalid email");
             String phoneNumber = sm.getStringParam("et_pb_contact_phone_1", true, false);
