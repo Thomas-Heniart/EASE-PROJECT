@@ -21,21 +21,18 @@ class MainView extends Component {
   };
   render() {
     return (
-        <Form as="div" class="container">
-          <Form.Field>
-            This computer doesn’t have the Ease.space extension yet.
+        <Form as="div" class="container" style={{paddingTop: '20px'}}>
+          <Form.Field style={{color: "#45C997"}}>
+            It seems you don’t have our extension yet! Or it has been disabled lately. Access the Chrome Store to solve this.
           </Form.Field>
           <Form.Field>
-            It needs to be installed on your browser in order to fully work. <a class="inline-text-button"
-                                                                                onClick={this.props.showInfo}>Why is the
-            extension necessary.</a>
+            <img class="full_width" src="/resources/images/image_popup_extension.jpg"/>
           </Form.Field>
-          <Message size="mini" style={{fontSize: '.78571429em'}} content={"Maybe you already have our extension but it’s disabled. Hit the button bellow, then click on « Enable this item » on top of the screen :)"}/>
           <Button
               positive
               className="modal-button"
               onClick={this.onClick}
-              content={!this.state.step ? 'DOWNLOAD EASE.SPACE EXTENSION' : 'DONE'}/>
+              content={!this.state.step ? 'ACCESS CHROME STORE' : 'DONE'}/>
         </Form>
     )
   }
@@ -104,6 +101,7 @@ class ExtensionDownloadModal extends Component {
     return (
         <SimpleModalTemplate
             onClose={this.close}
+            id={isChrome ? 'download_extension' : null}
             headerContent={title}>
           {view === 'Download' && isChrome &&
           <MainView showInfo={this.changeView.bind(null, 'Our browser extension', 'Information')}/>}

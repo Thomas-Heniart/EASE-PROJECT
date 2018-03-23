@@ -118,7 +118,7 @@ const extension_api = {
     )
   },
   easeLogin: () => {
-    browser.runtime.sendMessage(
+    !!browser && browser.runtime.sendMessage(
         extensionId,
         {
           type: 'easeLogin'
@@ -126,7 +126,7 @@ const extension_api = {
     )
   },
   easeLogout: () => {
-    browser.runtime.sendMessage(
+    !!browser && browser.runtime.sendMessage(
         extensionId,
         {
           type: 'easeLogout'
