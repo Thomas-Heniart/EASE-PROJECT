@@ -69,6 +69,17 @@ click_repartition_date_range.submit((e) => {
   })
 });
 
+click_types_date_range.submit((e) => {
+  e.preventDefault();
+  ajaxHandler.get("/api/v1/admin/GetAppTypesStatistics", {
+    start_week_ms: click_types_date_start[0].valueAsDate.getTime(),
+    end_week_ms: click_types_date_end[0].valueAsDate.getTime(),
+  }, () => {
+  }, (data) => {
+    buildClickChart(data)
+  })
+});
+
 $(document).ready(() => {
   ajaxHandler.get("/api/v1/admin/GetPasswordUsedStatistics", {}, () => {
   }, (data) => {
@@ -98,22 +109,22 @@ buildClickChart = (data) => {
   const labels = data.labels;
   let datasets = [];
   datasets.push({
-    backgroundColor: 'red',
+    backgroundColor: '#27053A',
     label: 'DashboardClick',
     data: data.fromDashboardClick
   });
   datasets.push({
-    backgroundColor: 'blue',
+    backgroundColor: '#E56EBD',
     label: 'Extension',
     data: data.fromExtension
   });
   datasets.push({
-    backgroundColor: 'orange',
+    backgroundColor: '#8CB8FF',
     label: 'FillIn',
     data: data.fromFillIn
   });
   datasets.push({
-    backgroundColor: 'black',
+    backgroundColor: '#D6A0AD',
     label: 'Copy',
     data: data.fromCopy
   });
@@ -147,12 +158,12 @@ buildAppTypesChart = (data) => {
   const labels = data.labels;
   let datasets = [];
   datasets.push({
-    backgroundColor: 'red',
+    backgroundColor: '#E56EBD',
     label: 'Classic',
     data: data.classicApps
   });
   datasets.push({
-    backgroundColor: 'blue',
+    backgroundColor: '#8CB8FF',
     label: 'Any',
     data: data.anyApps
   });

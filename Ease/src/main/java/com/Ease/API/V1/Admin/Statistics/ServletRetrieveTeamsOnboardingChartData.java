@@ -25,12 +25,12 @@ public class ServletRetrieveTeamsOnboardingChartData extends HttpServlet {
             JSONObject res = new JSONObject();
             res.put("type", "bar");
             JSONArray labels = new JSONArray()
-                    .put("Subscription")
-                    .put("Channels creation")
-                    .put("Invite people")
-                    .put("Add people to rooms")
-                    .put("Importation done")
-                    .put("Apps added")
+                    .put("Subscription done")
+                    .put("Rooms chosen")
+                    .put("Emails entered")
+                    .put("People added in rooms")
+                    .put("Importation saved")
+                    .put("Onboarding finished")
                     .put("Active teams");
             HibernateQuery hibernateQuery = sm.getHibernateQuery();
             hibernateQuery.queryString("SELECT t.onboardingStatus FROM Team t WHERE t.active IS true");

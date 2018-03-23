@@ -66,7 +66,7 @@ public class ServletGetTeamsCohortData extends HttpServlet {
                 trackWeek(start_calendar, avg_clicks, trackingHibernateQuery, this_week, teamIds, hibernateQuery);
                 weeksAdded++;
             }
-            while (start_calendar.get(Calendar.WEEK_OF_YEAR) < end_calendar.get(Calendar.WEEK_OF_YEAR)) {
+            while (start_calendar.get(Calendar.WEEK_OF_YEAR) <= end_calendar.get(Calendar.WEEK_OF_YEAR)) {
                 trackWeek(start_calendar, avg_clicks, trackingHibernateQuery, this_week, teamIds, hibernateQuery);
                 weeksAdded++;
             }
@@ -76,7 +76,7 @@ public class ServletGetTeamsCohortData extends HttpServlet {
                 weeksAdded++;
                 start_calendar.add(Calendar.WEEK_OF_YEAR, 1);
             }
-            while (start_calendar.get(Calendar.WEEK_OF_YEAR) < end_calendar.get(Calendar.WEEK_OF_YEAR)) {
+            while (start_calendar.get(Calendar.WEEK_OF_YEAR) <= end_calendar.get(Calendar.WEEK_OF_YEAR)) {
                 this_week.put(0);
                 weeksAdded++;
                 start_calendar.add(Calendar.WEEK_OF_YEAR, 1);
