@@ -46,7 +46,6 @@ public class ServletGetPasswordUsedStatistics extends HttpServlet {
                     throw new HttpServletException(HttpStatus.BadRequest, "End cannot be before start");
                 end_calendar.setTimeInMillis(end_week_ms);
             }
-            /* for a week */
             while (start_calendar.get(Calendar.YEAR) < end_calendar.get(Calendar.YEAR)) {
                 trackWeek(trackingHibernateQuery, start_calendar, labels, totals, fromDashboardClick, fromExtension, fromFillIn, fromCopy);
                 start_calendar.add(Calendar.WEEK_OF_YEAR, 1);
@@ -55,7 +54,6 @@ public class ServletGetPasswordUsedStatistics extends HttpServlet {
                 trackWeek(trackingHibernateQuery, start_calendar, labels, totals, fromDashboardClick, fromExtension, fromFillIn, fromCopy);
                 start_calendar.add(Calendar.WEEK_OF_YEAR, 1);
             }
-            /* end of a week */
             res.put("labels", labels);
             res.put("totals", totals);
             res.put("fromDashboardClick", fromDashboardClick);
@@ -70,7 +68,7 @@ public class ServletGetPasswordUsedStatistics extends HttpServlet {
     }
 
     private void trackWeek(HibernateQuery trackingHibernateQuery, Calendar calendar, JSONArray labels, JSONArray totals, JSONArray fromDashboardClick, JSONArray fromExtension, JSONArray fromFillIn, JSONArray fromCopy) {
-        trackingHibernateQuery.queryString("SELECT e FROM EaseEvent e WHERE e.name LIKE 'PasswordUsed' AND e.year = :year AND e.week_of_year = :week_of_year");
+        trackingHibernateQuery.queryString("SELECT e FROM EaseEvent e WHERE (e.name LIKE 'PasswordUsed' OR e.name LIKE 'PasswordUser') AND e.year = :year AND e.week_of_year = :week_of_year");
         trackingHibernateQuery.setParameter("year", calendar.get(Calendar.YEAR));
         trackingHibernateQuery.setParameter("week_of_year", calendar.get(Calendar.WEEK_OF_YEAR));
         List<EaseEvent> easeEvents = trackingHibernateQuery.list();

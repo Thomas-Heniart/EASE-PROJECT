@@ -6,7 +6,7 @@ import {
 import {showTeamEnterpriseAppSettingsModal, showLockedTeamAppModal, showUpdateAppPasswordModal} from "../../actions/modalActions";
 import {teamUserDepartureDatePassed, needPasswordUpdate} from "../../utils/utils";
 import {connect} from "react-redux";
-import {AppConnection} from "../../actions/dashboardActions";
+import {AppConnection, clickOnAppMetric} from "../../actions/dashboardActions";
 
 @connect(store => ({
   teams: store.teams,
@@ -29,6 +29,7 @@ class TeamEnterpriseApp extends Component {
     }).catch(err => {
       this.setState({loading: false});
     });
+    this.props.dispatch(clickOnAppMetric({app: this.props.app}));
   };
   connectWithPasswordUpdate = (e) => {
     this.props.dispatch(showUpdateAppPasswordModal({

@@ -20,6 +20,12 @@ const click_types_date_start = $("#click_types_date_start");
 const click_types_date_end = $("#click_types_date_end");
 let clickTypesChart;
 
+const clickHistoryCanvas = $("#clickHistoryChart");
+const click_history_date_range = $("#click_history_date_range");
+const click_history_date_start = $("#click_history_date_start");
+const click_history_date_end = $("#click_history_date_end");
+let clickHistoryChart;
+
 users_cohort_date_range.submit((e) => {
   e.preventDefault();
   ajaxHandler.get("/api/v1/admin/GetUsersCohortData", {
@@ -65,7 +71,7 @@ click_repartition_date_range.submit((e) => {
     end_week_ms: click_repartition_date_end[0].valueAsDate.getTime(),
   }, () => {
   }, (data) => {
-    buildClickChart(data)
+    buildAppTypesChart(data)
   })
 });
 
@@ -74,6 +80,17 @@ click_types_date_range.submit((e) => {
   ajaxHandler.get("/api/v1/admin/GetAppTypesStatistics", {
     start_week_ms: click_types_date_start[0].valueAsDate.getTime(),
     end_week_ms: click_types_date_end[0].valueAsDate.getTime(),
+  }, () => {
+  }, (data) => {
+    buildClickHistoryChart(data)
+  })
+});
+
+click_history_date_range.submit((e) => {
+  e.preventDefault();
+  ajaxHandler.get("/api/v1/admin/GetClickHistoryStatistics", {
+    start_week_ms: click_history_date_start[0].valueAsDate.getTime(),
+    end_week_ms: click_history_date_end[0].valueAsDate.getTime(),
   }, () => {
   }, (data) => {
     buildClickChart(data)
@@ -88,6 +105,10 @@ $(document).ready(() => {
   ajaxHandler.get("/api/v1/admin/GetAppTypesStatistics", {}, () => {
   }, (data) => {
     buildAppTypesChart(data)
+  });
+  ajaxHandler.get("/api/v1/admin/GetClickHistoryStatistics", {}, () => {
+  }, (data) => {
+    buildClickHistoryChart(data)
   })
 });
 
@@ -171,6 +192,35 @@ buildAppTypesChart = (data) => {
     clickTypesChart.destroy();
   clickTypesChart = new Chart(clickTypesCanvas, {
     type: 'bar',
+    data: {
+      labels: labels,
+      datasets: datasets
+    },
+    options: options
+  })
+};
+
+buildClickHistoryChart = (data) => {
+  const options = {
+    scales: {
+      yAxes: [{
+        ticks: {
+          beginAtZero: true,
+        }
+      }]
+    }
+  };
+  const labels = data.labels;
+  let datasets = [];
+  datasets.push({
+    backgroundColor: '#8CB8FF',
+    label: 'Clicks',
+    data: data.clicks
+  });
+  if (!!clickHistoryChart)
+    clickHistoryChart.destroy();
+  clickHistoryChart = new Chart(clickHistoryCanvas, {
+    type: 'line',
     data: {
       labels: labels,
       datasets: datasets
