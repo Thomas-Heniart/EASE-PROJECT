@@ -18,7 +18,7 @@ import java.io.IOException;
 import java.util.Calendar;
 import java.util.List;
 
-@WebServlet("/api/v1/admin/GetAppTypesStatistics")
+@WebServlet("/api/v1/admin/GetClickHistoryStatistics")
 public class ServletGetClickStatistics extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         GetServletManager sm = new GetServletManager(this.getClass().getName(), request, response, true);

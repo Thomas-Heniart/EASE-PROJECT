@@ -88,7 +88,7 @@ click_types_date_range.submit((e) => {
 
 click_history_date_range.submit((e) => {
   e.preventDefault();
-  ajaxHandler.get("/api/v1/admin/GetAppHistoryStatistics", {
+  ajaxHandler.get("/api/v1/admin/GetClickHistoryStatistics", {
     start_week_ms: click_history_date_start[0].valueAsDate.getTime(),
     end_week_ms: click_history_date_end[0].valueAsDate.getTime(),
   }, () => {
@@ -106,7 +106,7 @@ $(document).ready(() => {
   }, (data) => {
     buildAppTypesChart(data)
   });
-  ajaxHandler.get("/api/v1/admin/GetClickStatistics", {}, () => {
+  ajaxHandler.get("/api/v1/admin/GetClickHistoryStatistics", {}, () => {
   }, (data) => {
     buildClickHistoryChart(data)
   })
