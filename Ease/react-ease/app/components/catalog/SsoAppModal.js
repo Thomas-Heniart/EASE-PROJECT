@@ -784,6 +784,7 @@ class SsoAppModal extends React.Component {
         {this.state.view === 4 &&
           <ChooseTypeAppModal
             {...this.props}
+            subtype={'classic'}
             website={this.state.website}
             appName={this.state.name}
             team_id={this.state.selectedTeam}
