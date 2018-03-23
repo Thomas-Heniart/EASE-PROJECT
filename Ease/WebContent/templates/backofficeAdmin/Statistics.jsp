@@ -77,7 +77,7 @@
         <canvas id="clickTypesChart" width="800" height="500"></canvas>
     </div>
 </div>
-<div class="ui bottom attached tab segment" data-tab="click_types">
+<div class="ui bottom attached tab segment" data-tab="click_history">
     <form id="click_history_date_range">
         <label for="click_history_date_start">From: </label>
         <input type="date" id="click_history_date_start" />

@@ -51,7 +51,7 @@ public class ServletGetClickStatistics extends HttpServlet {
                 start_calendar.add(Calendar.WEEK_OF_YEAR, 1);
             }
             res.put("labels", labels);
-
+            res.put("clicks", clicks);
             sm.setSuccess(res);
         } catch (Exception e) {
             sm.setError(e);
