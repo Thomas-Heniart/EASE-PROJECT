@@ -1,4 +1,4 @@
-import {teamShareEnterpriseCard, teamShareLinkCard, teamShareSingleCard} from "../../actions/appsActions";
+import {teamShareCard} from "../../actions/appsActions";
 
 var React = require('react');
 import {connect} from "react-redux";
@@ -201,28 +201,13 @@ class TeamAddMultipleUsersModal extends React.Component {
               openspaceId = room_id;
           });
           team.rooms[openspaceId].team_card_ids.map(card_id => {
-            if (this.props.team_apps[card_id].type === 'teamSingleCard') {
-              calls.push(this.props.dispatch(teamShareSingleCard({
-                team_id: team.id,
-                team_card_id: card_id,
-                team_user_id: user_id,
-                allowed_to_see_password: true
-              })));
-            }
-            else if (this.props.team_apps[card_id].type === 'teamEnterpriseCard') {
-              calls.push(this.props.dispatch(teamShareEnterpriseCard({
-                team_id: team.id,
-                team_card_id: card_id,
-                team_user_id: user_id,
-                account_information: {}
-              })));
-            }
-            else if (this.props.team_apps[card_id].type === 'teamLinkCard') {
-              calls.push(this.props.dispatch(teamShareLinkCard({
-                team_card_id: card_id,
-                team_user_id: user_id
-              })));
-            }
+            calls.push(this.props.dispatch(teamShareCard({
+              type: this.props.team_apps[card_id].type,
+              team_id: team.id,
+              team_card_id: card_id,
+              team_user_id: user_id,
+              account_information: {}
+            })));
           });
         });
       }
@@ -289,28 +274,13 @@ class TeamAddMultipleUsersModal extends React.Component {
               openspaceId = room_id;
           });
           team.rooms[openspaceId].team_card_ids.map(card_id => {
-            if (this.props.team_apps[card_id].type === 'teamSingleCard') {
-              calls.push(this.props.dispatch(teamShareSingleCard({
-                team_id: team.id,
-                team_card_id: card_id,
-                team_user_id: user_id,
-                allowed_to_see_password: true
-              })));
-            }
-            else if (this.props.team_apps[card_id].type === 'teamEnterpriseCard') {
-              calls.push(this.props.dispatch(teamShareEnterpriseCard({
-                team_id: team.id,
-                team_card_id: card_id,
-                team_user_id: user_id,
-                account_information: {}
-              })));
-            }
-            else if (this.props.team_apps[card_id].type === 'teamLinkCard') {
-              calls.push(this.props.dispatch(teamShareLinkCard({
-                team_card_id: card_id,
-                team_user_id: user_id
-              })));
-            }
+            calls.push(this.props.dispatch(teamShareCard({
+              type: this.props.team_apps[card_id].type,
+              team_id: team.id,
+              team_card_id: card_id,
+              team_user_id: user_id,
+              account_information: {}
+            })));
           });
         });
       }

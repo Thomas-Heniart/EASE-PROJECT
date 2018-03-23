@@ -9,7 +9,7 @@ import {reflect, handleSemanticInput, isEmail} from "../../utils/utils";
 import { Header, Container, Icon, Form, Input, Message, Button } from 'semantic-ui-react';
 import {addNotification} from "../../actions/notificationBoxActions";
 import {withRouter} from "react-router-dom";
-import {teamShareEnterpriseCard, teamShareLinkCard, teamShareSingleCard} from "../../actions/appsActions";
+import {teamShareCard} from "../../actions/appsActions";
 
 @connect((store) => ({
   team: store.teams[store.teamModals.addUserModal.team_id],
@@ -109,30 +109,20 @@ class TeamAddUserModal extends React.Component {
         }));
       });
       if (this.state.checkTagUser) {
-        this.state.value.map(id => {
+        const room_ids = this.state.value;
+        Object.keys(team.rooms).map(room_id => {
+          if (team.rooms[room_id].default)
+            room_ids.push(room_id)
+        });
+        room_ids.map(id => {
           team.rooms[id].team_card_ids.map(card_id => {
-            if (this.props.team_apps[card_id].type === 'teamSingleCard') {
-              calls.push(this.props.dispatch(teamShareSingleCard({
-                team_id: team.id,
-                team_card_id: card_id,
-                team_user_id: user.id,
-                allowed_to_see_password: true
-              })));
-            }
-            else if (this.props.team_apps[card_id].type === 'teamEnterpriseCard') {
-              calls.push(this.props.dispatch(teamShareEnterpriseCard({
-                team_id: team.id,
-                team_card_id: card_id,
-                team_user_id: user.id,
-                account_information: {}
-              })));
-            }
-            else if (this.props.team_apps[card_id].type === 'teamLinkCard') {
-              calls.push(this.props.dispatch(teamShareLinkCard({
-                team_card_id: card_id,
-                team_user_id: user.id
-              })));
-            }
+            calls.push(this.props.dispatch(teamShareCard({
+              type: this.props.team_apps[card_id].type,
+              team_id: team.id,
+              team_card_id: card_id,
+              team_user_id: user.id,
+              account_information: {}
+            })));
           });
         });
       }
@@ -175,30 +165,20 @@ class TeamAddUserModal extends React.Component {
         }));
       });
       if (this.state.checkTagUser) {
-        this.state.value.map(id => {
+        const room_ids = this.state.value;
+        Object.keys(team.rooms).map(room_id => {
+          if (team.rooms[room_id].default)
+            room_ids.push(room_id)
+        });
+        room_ids.map(id => {
           team.rooms[id].team_card_ids.map(card_id => {
-            if (this.props.team_apps[card_id].type === 'teamSingleCard') {
-              calls.push(this.props.dispatch(teamShareSingleCard({
-                team_id: team.id,
-                team_card_id: card_id,
-                team_user_id: user.id,
-                allowed_to_see_password: true
-              })));
-            }
-            else if (this.props.team_apps[card_id].type === 'teamEnterpriseCard') {
-              calls.push(this.props.dispatch(teamShareEnterpriseCard({
-                team_id: team.id,
-                team_card_id: card_id,
-                team_user_id: user.id,
-                account_information: {}
-              })));
-            }
-            else if (this.props.team_apps[card_id].type === 'teamLinkCard') {
-              calls.push(this.props.dispatch(teamShareLinkCard({
-                team_card_id: card_id,
-                team_user_id: user.id
-              })));
-            }
+            calls.push(this.props.dispatch(teamShareCard({
+              type: this.props.team_apps[card_id].type,
+              team_id: team.id,
+              team_card_id: card_id,
+              team_user_id: user.id,
+              account_information: {}
+            })));
           });
         });
       }
