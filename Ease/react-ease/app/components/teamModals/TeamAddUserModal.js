@@ -108,6 +108,34 @@ class TeamAddUserModal extends React.Component {
           team_user_id: user.id
         }));
       });
+      if (this.state.checkTagUser) {
+        this.state.value.map(id => {
+          team.rooms[id].team_card_ids.map(card_id => {
+            if (this.props.team_apps[card_id].type === 'teamSingleCard') {
+              calls.push(this.props.dispatch(teamShareSingleCard({
+                team_id: team.id,
+                team_card_id: card_id,
+                team_user_id: user.id,
+                allowed_to_see_password: true
+              })));
+            }
+            else if (this.props.team_apps[card_id].type === 'teamEnterpriseCard') {
+              calls.push(this.props.dispatch(teamShareEnterpriseCard({
+                team_id: team.id,
+                team_card_id: card_id,
+                team_user_id: user.id,
+                account_information: {}
+              })));
+            }
+            else if (this.props.team_apps[card_id].type === 'teamLinkCard') {
+              calls.push(this.props.dispatch(teamShareLinkCard({
+                team_card_id: card_id,
+                team_user_id: user.id
+              })));
+            }
+          });
+        });
+      }
       Promise.all(calls.map(reflect)).then(values => {
         this.setState({loading: false});
         this.props.dispatch(addNotification({
@@ -146,33 +174,34 @@ class TeamAddUserModal extends React.Component {
           team_user_id: user.id
         }));
       });
-      if (this.state.checkTagUser)
-      this.state.value.map(id => {
-        team.rooms[id].team_card_ids.map(card_id => {
-          if (this.props.team_apps[card_id].type === 'teamSingleCard') {
-            calls.push(this.props.dispatch(teamShareSingleCard({
-              team_id: team.id,
-              team_card_id: card_id,
-              team_user_id: user.id,
-              allowed_to_see_password: true
-            }))); // add the users in all apps of the room
-          }
-          else if (this.props.team_apps[card_id].type === 'teamEnterpriseCard') {
-            calls.push(this.props.dispatch(teamShareEnterpriseCard({
-              team_id: team.id,
-              team_card_id: card_id,
-              team_user_id: user.id,
-              account_information: {}
-            })));
-          }
-          else if (this.props.team_apps[card_id].type === 'teamLinkCard') {
-            calls.push(this.props.dispatch(teamShareLinkCard({
-              team_card_id: card_id,
-              team_user_id: user.id
-            })));
-          }
+      if (this.state.checkTagUser) {
+        this.state.value.map(id => {
+          team.rooms[id].team_card_ids.map(card_id => {
+            if (this.props.team_apps[card_id].type === 'teamSingleCard') {
+              calls.push(this.props.dispatch(teamShareSingleCard({
+                team_id: team.id,
+                team_card_id: card_id,
+                team_user_id: user.id,
+                allowed_to_see_password: true
+              })));
+            }
+            else if (this.props.team_apps[card_id].type === 'teamEnterpriseCard') {
+              calls.push(this.props.dispatch(teamShareEnterpriseCard({
+                team_id: team.id,
+                team_card_id: card_id,
+                team_user_id: user.id,
+                account_information: {}
+              })));
+            }
+            else if (this.props.team_apps[card_id].type === 'teamLinkCard') {
+              calls.push(this.props.dispatch(teamShareLinkCard({
+                team_card_id: card_id,
+                team_user_id: user.id
+              })));
+            }
+          });
         });
-      });
+      }
       Promise.all(calls.map(reflect)).then(values => {
         this.setState({loadingInvitationNow: false});
         this.props.dispatch(addNotification({
