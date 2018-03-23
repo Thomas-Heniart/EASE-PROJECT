@@ -68,7 +68,7 @@ public class ServletGetPasswordUsedStatistics extends HttpServlet {
     }
 
     private void trackWeek(HibernateQuery trackingHibernateQuery, Calendar calendar, JSONArray labels, JSONArray totals, JSONArray fromDashboardClick, JSONArray fromExtension, JSONArray fromFillIn, JSONArray fromCopy) {
-        trackingHibernateQuery.queryString("SELECT e FROM EaseEvent e WHERE e.name LIKE 'PasswordUsed' AND e.year = :year AND e.week_of_year = :week_of_year");
+        trackingHibernateQuery.queryString("SELECT e FROM EaseEvent e WHERE (e.name LIKE 'PasswordUsed' OR e.name LIKE 'PasswordUser') AND e.year = :year AND e.week_of_year = :week_of_year");
         trackingHibernateQuery.setParameter("year", calendar.get(Calendar.YEAR));
         trackingHibernateQuery.setParameter("week_of_year", calendar.get(Calendar.WEEK_OF_YEAR));
         List<EaseEvent> easeEvents = trackingHibernateQuery.list();
