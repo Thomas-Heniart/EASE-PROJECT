@@ -44,7 +44,6 @@ public class ServletGetAppTypesStatistics extends HttpServlet {
                     throw new HttpServletException(HttpStatus.BadRequest, "End cannot be before start");
                 end_calendar.setTimeInMillis(end_week_ms);
             }
-            /* for a week */
             while (start_calendar.get(Calendar.YEAR) < end_calendar.get(Calendar.YEAR)) {
                 trackWeek(trackingHibernateQuery, start_calendar, labels, totals, classic, any);
                 start_calendar.add(Calendar.WEEK_OF_YEAR, 1);
@@ -53,7 +52,6 @@ public class ServletGetAppTypesStatistics extends HttpServlet {
                 trackWeek(trackingHibernateQuery, start_calendar, labels, totals, classic, any);
                 start_calendar.add(Calendar.WEEK_OF_YEAR, 1);
             }
-            /* end of a week */
             res.put("labels", labels);
             res.put("totals", totals);
             res.put("classicApps", classic);
