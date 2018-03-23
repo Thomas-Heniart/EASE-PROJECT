@@ -39,8 +39,8 @@ public class ServletSendTeamUserInvitation extends HttpServlet {
             Integer team_id = sm.getIntParam("team_id", true, false);
             Team team = sm.getTeam(team_id);
             sm.needToBeAdminOfTeam(team);
-            if (team.getTeamUsers().values().stream().filter(teamUser -> teamUser.getTeamUserStatus().isInvitation_sent()).count() >= (Team.MAX_MEMBERS + team.getInvitedFriendMap().size()) && !team.isValidFreemium())
-                throw new HttpServletException(HttpStatus.BadRequest, "You must upgrade to have more than " + Team.MAX_MEMBERS + " members.");
+            if (team.getTeamUsers().values().stream().filter(teamUser -> teamUser.getTeamUserStatus().isInvitation_sent()).count() >= (team.getExtraMembersCount()) && !team.isValidFreemium())
+                throw new HttpServletException(HttpStatus.BadRequest, "You must upgrade to have more than " + team.getExtraMembersCount() + " members.");
             Integer teamUser_id = sm.getIntParam("team_user_id", true, false);
             TeamUser teamUser = team.getTeamUserWithId(teamUser_id);
             if (teamUser.getState() != 0)

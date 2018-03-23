@@ -6,7 +6,7 @@ import {handleSemanticInput,
   transformWebsiteInfoIntoList,
   credentialIconType} from "../../utils/utils";
 import {newSelectUserFromListById} from "../../utils/helperFunctions";
-import {requestWebsite} from "../../actions/teamModalActions";
+import {cardAdded, requestWebsite} from "../../actions/teamModalActions";
 import {teamCreateEnterpriseCard, teamCreateAnyEnterpriseCard, teamCreateSoftwareEnterpriseCard} from "../../actions/appsActions";
 import {connect} from "react-redux";
 import {setUserDropdownText, PasswordChangeDropdownEnterprise} from "./common";

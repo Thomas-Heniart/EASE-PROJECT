@@ -53,6 +53,17 @@ module.exports = {
           type: type
         }
       })
+    }),
+    passwordCopied: (({app}) => {
+      return basic_post('/api/v1/trackEvent', {
+        name: 'PasswordUsed',
+        data: {
+          id: app.id,
+          type: app.type,
+          sub_type: app.sub_type,
+          from: 'CopyFromDashboard'
+        }
+      })
     })
   }
 };

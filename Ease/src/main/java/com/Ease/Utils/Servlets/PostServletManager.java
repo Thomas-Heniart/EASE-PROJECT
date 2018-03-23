@@ -91,13 +91,8 @@ public class PostServletManager extends ServletManager {
         try {
             if (params == null)
                 return request.getParameter(paramName);
-            else {
-                if (canBeNull) {
-                    String val = params.optString(paramName);
-                    return val.equals("") ? null : val;
-                } else
-                    return params.getString(paramName);
-            }
+            else
+                return canBeNull ? (String) params.opt(paramName) : params.getString(paramName);
         } catch (Exception e) {
             throw new HttpServletException(HttpStatus.BadRequest, "Invalid parameter " + paramName + " type (Expected String).");
         }

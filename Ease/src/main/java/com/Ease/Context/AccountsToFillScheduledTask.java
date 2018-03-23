@@ -49,7 +49,7 @@ public class AccountsToFillScheduledTask extends TimerTask {
                 if (!team.isActive())
                     continue;
                 Map<String, Object> teamProperties = teamIdMap.computeIfAbsent(team.getDb_id(), k -> new HashMap<>());
-                if ((teamUser.getArrival_date() != null && teamUser.getArrival_date().getTime() > now) || (team.getTeamUsers().values().stream().filter(teamUser1 -> teamUser1.getTeamUserStatus().isInvitation_sent()).count() >= (Team.MAX_MEMBERS + team.getInvitedFriendMap().size()) && !team.isValidFreemium()))
+                if ((teamUser.getArrival_date() != null && teamUser.getArrival_date().getTime() > now) || (team.getTeamUsers().values().stream().filter(teamUser1 -> teamUser1.getTeamUserStatus().isInvitation_sent()).count() >= team.getExtraMembersCount() && !team.isValidFreemium()))
                     continue;
                 team.initializeStripe(teamProperties);
                 Set<TeamCardReceiver> teamCardReceiverSet = entry.getValue();

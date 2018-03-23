@@ -35,7 +35,7 @@ public class InvitationScheduledTask extends TimerTask {
                     teamIdMap.put(team.getDb_id(), teamProperties);
                 }
                 team.initializeStripe(teamProperties);
-                if (team.getTeamUsers().values().stream().filter(teamUser1 -> teamUser1.getTeamUserStatus().isInvitation_sent()).count() >= (Team.MAX_MEMBERS + team.getInvitedFriendMap().size()) && !team.isValidFreemium())
+                if (team.getTeamUsers().values().stream().filter(teamUser1 -> teamUser1.getTeamUserStatus().isInvitation_sent()).count() >= team.getExtraMembersCount() && !team.isValidFreemium())
                     continue;
                 TeamUser admin = teamUser.getAdmin();
                 Set<TeamUser> teamUserSet = adminAndTeamUsersMap.get(admin);

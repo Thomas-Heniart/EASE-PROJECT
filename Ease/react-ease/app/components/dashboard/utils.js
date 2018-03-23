@@ -4,6 +4,8 @@ import post_api from "../../utils/post_api";
 import {copyTextToClipboard, basicDateFormat} from "../../utils/utils";
 import {Label,Icon, Popup} from 'semantic-ui-react';
 import {testCredentials} from "../../actions/catalogActions";
+import {passwordCopied} from "../../actions/dashboardActions";
+import {connect} from "react-redux";
 
 export const EmptyAppIndicator = (props) => {
   return (
@@ -110,6 +112,9 @@ export const UpdatePasswordLabel = (props)=> {
   )
 };
 
+@connect(store => ({
+  apps: store.dashboard.apps
+}))
 export class CopyPasswordIcon extends Component {
   constructor(props){
     super(props);
@@ -135,6 +140,9 @@ export class CopyPasswordIcon extends Component {
     setTimeout(() => {
       this.setState({popupText: 'Copy', open: undefined});
     }, 1000);
+    this.props.dispatch(passwordCopied({
+      app: this.props.apps[this.state.app_id]
+    }))
   };
   render(){
     return (
