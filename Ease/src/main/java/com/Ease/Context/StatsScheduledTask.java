@@ -2,7 +2,7 @@ package com.Ease.Context;
 
 import com.Ease.Hibernate.HibernateQuery;
 import com.Ease.Mail.MailJetBuilder;
-import com.Ease.Metrics.ClickOnApp;
+import com.Ease.Metrics.EaseEvent;
 import com.Ease.Metrics.WeeklyStats;
 import com.Ease.Utils.HttpServletException;
 import org.json.JSONArray;
@@ -21,6 +21,7 @@ public class StatsScheduledTask extends TimerTask {
         Calendar last_week = Calendar.getInstance();
         last_week.add(Calendar.WEEK_OF_YEAR, -4);
         HibernateQuery hibernateQuery = new HibernateQuery();
+        HibernateQuery trackingQuery = new HibernateQuery("tracking");
         try {
             JSONArray rows = new JSONArray();
             for (int i = 0; i < 3; i++) {
@@ -38,19 +39,21 @@ public class StatsScheduledTask extends TimerTask {
             mailJetBuilder.addTo("clement@ease.space");
             Date this_week = calendar.getTime();
             Date last_week_date = last_week.getTime();
-            WeeklyStats weeklyStats = this.generateWeeklyStats(hibernateQuery, last_week_date, this_week, last_week);
+            WeeklyStats weeklyStats = this.generateWeeklyStats(hibernateQuery, trackingQuery, last_week_date, this_week, last_week);
             rows.put(weeklyStats.getJson());
             mailJetBuilder.addVariable("rows", rows);
             mailJetBuilder.sendEmail();
             hibernateQuery.commit();
+            trackingQuery.commit();
             System.out.println("End StatsScheduledTask");
         } catch (HttpServletException e) {
             e.printStackTrace();
             hibernateQuery.rollback();
+            trackingQuery.rollback();
         }
     }
 
-    private WeeklyStats generateWeeklyStats(HibernateQuery hibernateQuery, Date last_week_date, Date this_week, Calendar last_week) {
+    private WeeklyStats generateWeeklyStats(HibernateQuery hibernateQuery, HibernateQuery trackingQuery, Date last_week_date, Date this_week, Calendar last_week) {
         hibernateQuery.queryString("SELECT t FROM Team t WHERE t.active IS true AND t.subscription_date >= :date_start AND t.subscription_date < :date_end");
         hibernateQuery.setTimestamp("date_start", last_week_date);
         hibernateQuery.setTimestamp("date_end", this_week);
@@ -67,15 +70,15 @@ public class StatsScheduledTask extends TimerTask {
         hibernateQuery.setTimestamp("date_start", last_week_date);
         hibernateQuery.setTimestamp("date_end", this_week);
         int new_team_apps = hibernateQuery.list().size();
-        hibernateQuery.queryString("SELECT m FROM ClickOnApp m WHERE m.week_of_year = :week_of_year AND m.year = :year");
-        hibernateQuery.setParameter("week_of_year", last_week.get(Calendar.WEEK_OF_YEAR));
-        hibernateQuery.setParameter("year", last_week.get(Calendar.YEAR));
-        List<ClickOnApp> clickOnApps = hibernateQuery.list();
+        trackingQuery.queryString("SELECT e FROM EaseEvent e WHERE (e.name LIKE 'PasswordUsed' OR e.name LIKE 'PasswordUser') AND e.week_of_year = :week_of_year AND e.year = :year");
+        trackingQuery.setParameter("week_of_year", last_week.get(Calendar.WEEK_OF_YEAR));
+        trackingQuery.setParameter("year", last_week.get(Calendar.YEAR));
+        List<EaseEvent> easeEvents = trackingQuery.list();
         int passwords_killed = 0;
         Set<Integer> userIds = new HashSet<>();
-        for (ClickOnApp clickOnApp : clickOnApps) {
-            passwords_killed += clickOnApp.getTotalClicks();
-            userIds.add(clickOnApp.getUser_id());
+        for (EaseEvent easeEvent : easeEvents) {
+            passwords_killed++;
+            userIds.add(easeEvent.getUser_id());
         }
         Integer teamCount = 0;
         if (!userIds.isEmpty()) {
