@@ -324,7 +324,7 @@ class RoomPurposeSection extends React.Component {
     const room = this.props.room;
     const me = this.props.me;
     return (
-        <Grid.Column>
+        <Grid.Column style={{paddingTop:'0'}}>
           <span>Purpose: </span>
           {!this.state.modifying ?
               <span>{room.purpose}
@@ -404,7 +404,7 @@ class TeamChannelFlexTab extends React.Component{
                         <Label circular color="red" size="mini">{channel.join_requests.length}</Label>: null}
                     Members :
                   </Header>
-                  <div>
+                  <div style={{marginBottom: 10}}>
                     {isAdmin(me.role) && !channel.default &&
                     <AddMemberToRoomDiv
                       team={team}
