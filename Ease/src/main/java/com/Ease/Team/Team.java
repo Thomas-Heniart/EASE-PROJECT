@@ -38,6 +38,7 @@ public class Team {
     public static final Map<Integer, String> plansMap = new HashMap<>();
     private static final Map<String, Integer> inverse_plansMap = new HashMap<>();
     public static final int MAX_MEMBERS = 10;
+    public static final int RAIZERS_ID = 209;
 
     static {
         plansMap.put(0, "FreePlan");
@@ -422,7 +423,7 @@ public class Team {
         res.put("onboarding_step", this.getOnboardingStatus().getStep());
         res.put("payment_required", this.isBlocked());
         res.put("show_invite_people_popup", !this.isInvitations_sent() && this.getTeamCardSet().size() >= 8 && DateUtils.isOutdated(this.getSubscription_date(), 0, 1));
-        res.put("extra_members", this.getInvitedFriendMap().size());
+        res.put("extra_members", this.getDb_id().equals(RAIZERS_ID) ? 20 : this.getInvitedFriendMap().size());
         return res;
     }
 
@@ -656,6 +657,10 @@ public class Team {
             res.put(day_seven / teamUsers_size);
         }
         return res;
+    }
+
+    public int getExtraMembersCount() {
+        return this.getDb_id().equals(RAIZERS_ID) ? 30 : (MAX_MEMBERS + this.getInvitedFriendMap().size());
     }
 
     @Override

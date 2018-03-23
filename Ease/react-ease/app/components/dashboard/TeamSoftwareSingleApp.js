@@ -6,7 +6,7 @@ import {
 import {showTeamSoftwareSingleAppSettingsModal, showLockedTeamAppModal} from "../../actions/modalActions";
 import {Popup, Input, Label, Icon, Segment} from 'semantic-ui-react';
 import {teamUserDepartureDatePassed, needPasswordUpdate, copyTextToClipboard, transformWebsiteInfoIntoListAndSetValues} from "../../utils/utils";
-import {validateApp, clickOnAppMetric} from '../../actions/dashboardActions';
+import {validateApp, clickOnAppMetric, passwordCopied} from '../../actions/dashboardActions';
 import {connect} from "react-redux";
 import api from "../../utils/api";
 
@@ -54,6 +54,9 @@ class TeamSoftwareSingleApp extends Component {
     setTimeout(() => {
       this.setState({copiedPassword: null});
     }, 1000);
+    this.props.dispatch(passwordCopied({
+      app: this.props.app
+    }))
   };
   copy = (item) => {
     copyTextToClipboard(item.value);

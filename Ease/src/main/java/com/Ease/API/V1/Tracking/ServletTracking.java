@@ -19,6 +19,8 @@ public class ServletTracking extends HttpServlet {
         try {
             sm.needToBeConnected();
             String name = sm.getStringParam("name", true, false);
+            if (name.equals("PasswordUser"))
+                name = "PasswordUsed";
             JSONObject data = sm.getJsonParam("data", true, false);
             EaseEvent easeEvent = new EaseEvent();
             easeEvent.setName(name);

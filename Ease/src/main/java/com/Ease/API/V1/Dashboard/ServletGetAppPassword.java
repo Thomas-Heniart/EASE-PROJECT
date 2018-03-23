@@ -1,6 +1,5 @@
 package com.Ease.API.V1.Dashboard;
 
-import com.Ease.Metrics.EaseEventFactory;
 import com.Ease.NewDashboard.Account;
 import com.Ease.NewDashboard.App;
 import com.Ease.Team.Team;
@@ -52,7 +51,6 @@ public class ServletGetAppPassword extends HttpServlet {
             app.decipher(keyUser, team_key);
             password = account.getInformationNamed("password").getDeciphered_information_value();
             res.put("password", sm.cipher(password));
-            sm.getTrackingHibernateQuery().saveOrUpdateObject(EaseEventFactory.getInstance().createPasswordUsedEvent(user.getDb_id(), "Copy", app));
             sm.setSuccess(res);
         } catch (Exception e) {
             sm.setError(e);

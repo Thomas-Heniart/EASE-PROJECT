@@ -33,6 +33,7 @@ import {connect} from "react-redux";
 import {addNotification} from "../../actions/notificationBoxActions";
 import * as api from "../../utils/api";
 import {testCredentials} from "../../actions/catalogActions";
+import {passwordCopied} from "../../actions/dashboardActions";
 
 const TeamEnterpriseAppButtonSet = ({app, me, dispatch, editMode, selfJoin, requestApp}) => {
   const meReceiver = app.receivers.find(receiver => (receiver.team_user_id === me.id));
@@ -118,6 +119,9 @@ const EnterpriseAppReceiverLabel = ({receiver, reminder_interval}) => {
   )
 };
 
+@connect(store => ({
+  apps: store.dashboard.apps
+}))
 class CopyPasswordButton extends Component {
   constructor(props){
     super(props);
@@ -133,6 +137,9 @@ class CopyPasswordButton extends Component {
     setTimeout(() => {
       this.setState({state: 0, open: false});
     }, 2000);
+    this.props.dispatch(passwordCopied({
+      app: this.props.apps[this.props.app_id]
+    }))
   };
   fetchPassword = () => {
     this.setState({state: 1, open: true});
