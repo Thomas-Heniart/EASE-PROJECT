@@ -57,13 +57,26 @@ class Footer extends Component {
                 <p>Credits for icons: <a href="https://semantic-ui.com">semantic-ui.com</a></p>
               </div>
               <div class="footerCenterBox">
-                {!welcomeMessageSeen &&<p>Have a good day {this.props.username}</p>}
+                {!welcomeMessageSeen &&<p style={{fontWeight:'bold'}}>Have a good day {this.props.username}!</p>}
                 {welcomeMessageSeen &&
                 <p><a style={{textDecoration: "underline"}} href="https://ease.space/product">Product</a> - <a style={{textDecoration: "underline"}} href="https://ease.space/security">Security</a> - <a style={{textDecoration: "underline"}} href="https://ease.space/pricing">Team plans</a></p>}
               </div>
               <div class="footerRightBox">
                 <div>
-                  <p>Help us by giving a review!</p>
+                  <p style={{marginBottom: '5px'}}>Help us by giving a review!</p>
+                  <span style={{color:'white'}}>
+                    <a href="https://twitter.com/intent/tweet?text=%40ease_space%20%23thiseaselove" target="_blank">
+                      Twitter
+                    </a>
+                    &nbsp;-&nbsp;
+                    <a href="https://chrome.google.com/webstore/detail/ease/hnacegpfmpknpdjmhdmpkmedplfcmdmp/reviews" target="_blank">
+                      Chrome store
+                    </a>
+                    &nbsp;-&nbsp;
+                    <a href="https://www.facebook.com/pg/YourEaseSpace/reviews/" target="_blank">
+                      Facebook
+                    </a>
+                  </span>
                 </div>
               </div>
             </div>
