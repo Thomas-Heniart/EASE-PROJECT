@@ -36,8 +36,11 @@ import {
 import {withRouter} from "react-router-dom";
 import {connect} from "react-redux";
 import {DepartureDatePassedIndicator} from "./dashboard/utils";
+import {teamShareCard} from "../actions/appsActions";
 
-@connect()
+@connect(store => ({
+  team_apps: store.team_apps
+}))
 class AddMemberToRoomDiv extends React.Component {
   constructor(props){
     super(props);
@@ -45,7 +48,8 @@ class AddMemberToRoomDiv extends React.Component {
       modifying: false,
       loading:false,
       options: [],
-      value: []
+      value: [],
+      check: false
     };
   }
   handleInput = handleSemanticInput.bind(this);
@@ -61,6 +65,19 @@ class AddMemberToRoomDiv extends React.Component {
       }));
     });
     Promise.all(calls.map(reflect)).then(results => {
+      if (this.state.check) {
+        this.state.value.map(user_id => {
+          this.props.team.rooms[room.id].team_card_ids.map(card_id => {
+            calls.push(this.props.dispatch(teamShareCard({
+              type: this.props.team_apps[card_id].type,
+              team_id: this.props.team.id,
+              team_card_id: card_id,
+              team_user_id: user_id,
+              account_information: {}
+            })));
+          });
+        });
+      }
       this.setState({loading: false, modifying:false});
     });
   };
@@ -110,6 +127,13 @@ class AddMemberToRoomDiv extends React.Component {
                       renderLabel={renderUserLabel}
                       placeholder="Tag users here..."/>
                 </Form.Field>
+                <Form.Checkbox
+                  toggle
+                  name='check'
+                  className='check_tag_user flex_panel'
+                  onChange={this.handleInput}
+                  checked={this.state.check}
+                  label="Add user(s) in all apps of this room"/>
                 <Form.Field>
                   <Button basic size="mini" type="button" onClick={this.setModifying.bind(null, false)}>Cancel</Button>
                   <Button primary size="mini" loading={this.state.loading}>Save</Button>
@@ -301,7 +325,7 @@ class RoomPurposeSection extends React.Component {
     const me = this.props.me;
     return (
         <Grid.Column>
-          <h5>Purpose</h5>
+          <span>Purpose: </span>
           {!this.state.modifying ?
               <span>{room.purpose}
                 {isAdmin(me.role) &&
@@ -360,8 +384,6 @@ class TeamChannelFlexTab extends React.Component{
                     room={channel}
                     me={me}
                     team_id={team.id}/>
-              </Grid.Row>
-              <Grid.Row>
                 <RoomPurposeSection
                     dispatch={this.props.dispatch}
                     room={channel}
@@ -382,6 +404,12 @@ class TeamChannelFlexTab extends React.Component{
                         <Label circular color="red" size="mini">{channel.join_requests.length}</Label>: null}
                     Members :
                   </Header>
+                  <div>
+                    {isAdmin(me.role) && !channel.default &&
+                    <AddMemberToRoomDiv
+                      team={team}
+                      room={channel}/>}
+                  </div>
                   {channel_users.map(user => {
                     return (
                         <Label size="mini" key={user.id}>
@@ -400,12 +428,6 @@ class TeamChannelFlexTab extends React.Component{
                                 }))
                               }}/>}
                         </Label>)})}
-                  <div>
-                    {isAdmin(me.role) && !channel.default &&
-                    <AddMemberToRoomDiv
-                        team={team}
-                        room={channel}/>}
-                  </div>
                 </Grid.Column>
               </Grid.Row>
               {isAdmin(me.role) && !channel.default &&

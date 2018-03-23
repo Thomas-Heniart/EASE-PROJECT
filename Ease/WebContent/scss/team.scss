@@ -1480,6 +1480,23 @@ button.action_text_button {
   }
 }
 
+.check_tag_user.flex_panel {
+  label {
+    font-size: 14px;
+    padding-left: 2.5rem !important;
+  }
+  ::before {
+    width: 30px !important;
+    height: 17px !important;
+    top: 50%;
+    transform: translateY(-50%);
+  }
+  ::after {
+    width: 13px !important;
+    height: 13px !important;
+  }
+}
+
 #add_user_modal {
   ::-webkit-inner-spin-button {
     display: none;
