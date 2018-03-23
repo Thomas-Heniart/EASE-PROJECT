@@ -76,4 +76,4 @@
         <canvas id="clickTypesChart" width="800" height="500"></canvas>
     </div>
 </div>
-<script src="js/backOffice/statistics.js?v=1" async></script>
+<script src="js/backOffice/statistics.js?v=2" async></script>

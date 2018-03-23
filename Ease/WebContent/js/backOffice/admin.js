@@ -311,14 +311,28 @@ $(document).ready(function () {
               onboarding_chart = new Chart(graph, data);
             }
           );
+          let initialDate = new Date();
+          initialDate.setDate(initialDate.getDate() - 4*7);
+          let day = initialDate.getDay();
+          if( day !== 0 )
+            initialDate.setHours(-24 * day);
           ajaxHandler.get("/api/v1/admin/GetUsersCohortData", {}, () => {
           }, (data) => {
-            let initialDate = new Date(2018, 2, 11);
             Cornelius.draw({
               initialDate: initialDate,
               container: document.getElementById('main_users_cohort'),
               cohort: data,
               title: "Users cohort",
+              timeInterval: 'weekly'
+            })
+          });
+          ajaxHandler.get("/api/v1/admin/GetTeamsCohortData", {}, () => {
+          }, (data) => {
+            Cornelius.draw({
+              initialDate: initialDate,
+              container: document.getElementById('main_teams_cohort'),
+              cohort: data,
+              title: "Teams cohort",
               timeInterval: 'weekly'
             })
           });

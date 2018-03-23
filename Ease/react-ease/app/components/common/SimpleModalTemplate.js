@@ -3,7 +3,7 @@ import {Header, Icon, Transition} from 'semantic-ui-react';
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 
 export default function (props) {
-  const {onClose, headerContent, children} = props;
+  const {onClose, headerContent, children, id} = props;
   return (
       <div class="popupHandler myshow">
         <Transition
@@ -19,7 +19,7 @@ export default function (props) {
             transitionEnterTimeout={0}
             transitionLeaveTimeout={0}
             transitionAppearTimeout={295}>
-          <div class="ease_popup ease_team_popup">
+          <div class="ease_popup ease_team_popup" id={id}>
             {!!onClose &&
             <button class="button-unstyle action_button close_button" onClick={props.onClose}>
               <Icon name="close" class="mrgn0" link/>

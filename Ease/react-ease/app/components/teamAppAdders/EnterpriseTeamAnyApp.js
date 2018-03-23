@@ -106,6 +106,9 @@ const EnterpriseAppReceiverLabel = ({receiver, reminder_interval}) => {
   )
 };
 
+@connect(store => ({
+  apps: store.dashboard.apps
+}))
 class CopyPasswordButton extends Component {
   constructor(props){
     super(props);
@@ -122,7 +125,7 @@ class CopyPasswordButton extends Component {
       this.setState({state: 0, open: false});
     }, 2000);
     this.props.dispatch(passwordCopied({
-      app: this.props.app
+      app: this.props.apps[this.props.app_id]
     }))
   };
   fetchPassword = () => {

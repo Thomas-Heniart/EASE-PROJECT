@@ -1044,9 +1044,6 @@ header .intro-text .intro-heading {
 #mainNav a#connexionButton {
     margin-left: 15px;
 }
-#mainNav.affix .nav a#connexionButton {
-    color: #373b60;
-}
 #mainNav.affix-top .navbar-header a#ease-logo {
   background-image: url("/resources/images/ease_logo_white.svg");
   background-size: 100%;
@@ -1558,10 +1555,6 @@ header {
     padding-top: 10px;
     padding-bottom: 10px;
 }
-.navbar-nav #connexionButton {
-        border: 1px solid;
-        border-radius: 5px;    
-}
 
 /* ease popups */
 .submitButton {
@@ -1577,6 +1570,11 @@ header {
         z-index: -1;
         pointer-events: none;
     }
+}
+
+.nav.navbar-nav.navbar-right {
+    display: flex;
+    height: 40px;
 }
 
 .alert-message {

@@ -1,9 +1,9 @@
 import React from 'react';
-import {Segment, Button, Icon, Dropdown, Message, Input, Grid, Loader, Popup} from 'semantic-ui-react';
 import Joyride from "react-joyride";
-import {setTipSeen} from "../../../actions/commonActions";
 import {logoLetter} from "../../../utils/utils";
+import {setTipSeen} from "../../../actions/commonActions";
 import {testCredentials} from "../../../actions/catalogActions";
+import {Segment, Button, Icon, Dropdown, Message, Input, Grid, Loader, Popup} from 'semantic-ui-react';
 
 class DisplayAccounts extends React.Component {
   constructor(props) {
