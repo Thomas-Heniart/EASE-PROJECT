@@ -71,7 +71,7 @@ click_repartition_date_range.submit((e) => {
     end_week_ms: click_repartition_date_end[0].valueAsDate.getTime(),
   }, () => {
   }, (data) => {
-    buildAppTypesChart(data)
+    buildClickChart(data)
   })
 });
 
@@ -82,7 +82,7 @@ click_types_date_range.submit((e) => {
     end_week_ms: click_types_date_end[0].valueAsDate.getTime(),
   }, () => {
   }, (data) => {
-    buildClickHistoryChart(data)
+    buildAppTypesChart(data)
   })
 });
 
@@ -93,7 +93,7 @@ click_history_date_range.submit((e) => {
     end_week_ms: click_history_date_end[0].valueAsDate.getTime(),
   }, () => {
   }, (data) => {
-    buildClickChart(data)
+    buildClickHistoryChart(data)
   })
 });
 
