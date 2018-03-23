@@ -84,6 +84,7 @@ public class EditTeamSoftwareSingleCard extends HttpServlet {
                         teamCardReceiver.getApp().getAccount().edit(account_information, sm.getHibernateQuery());
                 }
             }
+            teamSingleSoftwareCard.decipher(sm.getTeamKey(team));
             sm.saveOrUpdate(teamSingleSoftwareCard);
             sm.addWebSocketMessage(WebSocketMessageFactory.createWebSocketMessage(WebSocketMessageType.TEAM_CARD, WebSocketMessageAction.CHANGED, teamSingleSoftwareCard.getWebSocketJson()));
             sm.setSuccess(teamSingleSoftwareCard.getJson());
