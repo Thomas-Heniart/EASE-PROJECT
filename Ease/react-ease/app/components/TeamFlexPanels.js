@@ -327,7 +327,7 @@ class RoomPurposeSection extends React.Component {
         <Grid.Column style={{paddingTop:'0'}}>
           <span>Purpose: </span>
           {!this.state.modifying ?
-              <span>{room.purpose}
+              <span style={{wordBreak:'break-all'}}>{room.purpose}
                 {isAdmin(me.role) &&
                 <button class="button-unstyle mrgnLeft5 action_button"
                         onClick={this.setModifying.bind(null, true)}>
