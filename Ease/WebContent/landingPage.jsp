@@ -6,7 +6,7 @@
        value="${not empty param.language ? param.language : not empty language ? language : pageContext.request.locale}"
        scope="session"/>
 <c:if test="${language ne 'en' and language ne 'fr_FR'}">
-    <c:set var="language" value="fr_FR" scope="session"/>
+    <c:set var="language" value="en" scope="session"/>
 </c:if>
 <fmt:setLocale value="${language}"/>
 <fmt:setBundle basename="languages/text"/>
@@ -41,12 +41,12 @@
     <link rel="manifest" href="manifest.json">
     <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Raleway:500,700"/>
     <link rel="stylesheet" href="semantic/dist/semantic.min.css">
-    <link rel="stylesheet" type="text/css" href="/cssMinified.v00057/lib/fonts/museo-font.css"/>
-    <link rel="stylesheet" href="/cssMinified.v00057/default_style.css"/>
-    <link rel="stylesheet" href="/cssMinified.v00057/bootstrap.css"/>
-    <link rel="stylesheet" href="/cssMinified.v00057/landingPage.css"/>
+    <link rel="stylesheet" type="text/css" href="/cssMinified.v00058/lib/fonts/museo-font.css"/>
+    <link rel="stylesheet" href="/cssMinified.v00058/default_style.css"/>
+    <link rel="stylesheet" href="/cssMinified.v00058/bootstrap.css"/>
+    <link rel="stylesheet" href="/cssMinified.v00058/landingPage.css"/>
     <link rel="stylesheet" type="text/css"
-          href="/cssMinified.v00057/lib/fonts/font-awesome-4.2.0/css/font-awesome.min.css"/>
+          href="/cssMinified.v00058/lib/fonts/font-awesome-4.2.0/css/font-awesome.min.css"/>
     <style>
         .digit {
             border-radius: 4px;

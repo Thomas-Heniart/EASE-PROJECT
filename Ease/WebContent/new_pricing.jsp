@@ -3,7 +3,7 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <c:set var="language" value="${not empty param.language ? param.language : not empty language ? language : pageContext.request.locale}" scope="session" />
 <c:if test="${language ne 'en' and language ne 'fr_FR'}">
-    <c:set var="language" value="fr_FR" scope="session"/>
+    <c:set var="language" value="en" scope="session"/>
 </c:if>
 <fmt:setLocale value="${language}" />
 <fmt:setBundle basename="languages/text" />
@@ -37,13 +37,13 @@
     <link rel="icon" type="image/png" href="resources/icons/APPEASE.png" />
     <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Raleway:500,700" />
     <link rel="stylesheet" href="semantic/dist/semantic.min.css">
-    <link rel="stylesheet" type="text/css" href="/cssMinified.v00057/lib/fonts/museo-font.css"/>
-    <link rel="stylesheet" href="/cssMinified.v00057/default_style.css"/>
-    <link rel="stylesheet" href="/cssMinified.v00057/bootstrap.css"/>
-    <link rel="stylesheet" href="/cssMinified.v00057/landingPage.css"/>
-    <link rel="stylesheet" href="/cssMinified.v00057/lib/fonts/font-awesome-4.2.0/css/font-awesome.min.css"/>
-    <link rel="stylesheet" href="/cssMinified.v00057/team.css"/>
-    <link rel="stylesheet" href="/cssMinified.v00057/pricingPage.css"/>
+    <link rel="stylesheet" type="text/css" href="/cssMinified.v00058/lib/fonts/museo-font.css"/>
+    <link rel="stylesheet" href="/cssMinified.v00058/default_style.css"/>
+    <link rel="stylesheet" href="/cssMinified.v00058/bootstrap.css"/>
+    <link rel="stylesheet" href="/cssMinified.v00058/landingPage.css"/>
+    <link rel="stylesheet" href="/cssMinified.v00058/lib/fonts/font-awesome-4.2.0/css/font-awesome.min.css"/>
+    <link rel="stylesheet" href="/cssMinified.v00058/team.css"/>
+    <link rel="stylesheet" href="/cssMinified.v00058/pricingPage.css"/>
 
 
     <!-- Global site tag (gtag.js) - Google Analytics -->

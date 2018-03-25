@@ -55,9 +55,13 @@ public class ServletGetTeamsCohortData extends HttpServlet {
     }
 
     private void trackFullWeek(Calendar start_calendar, Calendar end_calendar, Integer avg_clicks, HibernateQuery trackingHibernateQuery, HibernateQuery hibernateQuery, JSONArray cohort) {
+        Calendar subscription_week = Calendar.getInstance();
+        subscription_week.setTime(start_calendar.getTime());
+        subscription_week.add(Calendar.WEEK_OF_YEAR, 1);
         JSONArray this_week = new JSONArray();
-        hibernateQuery.queryString("SELECT t.db_id FROM Team t WHERE t.subscription_date <= :start_week");
+        hibernateQuery.queryString("SELECT t.db_id FROM Team t WHERE t.subscription_date BETWEEN :start_week AND :subscription_week");
         hibernateQuery.setDate("start_week", start_calendar);
+        hibernateQuery.setDate("subscription_week", subscription_week);
         List<Integer> teamIds = hibernateQuery.list();
         this_week.put(teamIds.size());
         int weeksAdded = 0;

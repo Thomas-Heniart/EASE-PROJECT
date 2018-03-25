@@ -40,7 +40,7 @@ public class ServletGetUsersCohortData extends HttpServlet {
             HibernateQuery hibernateQuery = sm.getHibernateQuery();
             end_calendar.set(Calendar.DAY_OF_WEEK, Calendar.SATURDAY);
             Integer avg_clicks = sm.getIntParam("avg_clicks", true, true);
-            if(avg_clicks == null)
+            if (avg_clicks == null)
                 avg_clicks = 1;
             JSONArray cohort = new JSONArray();
             while (start_calendar.get(Calendar.YEAR) < end_calendar.get(Calendar.YEAR))
@@ -55,9 +55,13 @@ public class ServletGetUsersCohortData extends HttpServlet {
     }
 
     private void trackFullWeek(Calendar start_calendar, Calendar end_calendar, Integer avg_clicks, HibernateQuery trackingHibernateQuery, HibernateQuery hibernateQuery, JSONArray cohort) {
+        Calendar subscription_week = Calendar.getInstance();
+        subscription_week.setTime(start_calendar.getTime());
+        subscription_week.add(Calendar.WEEK_OF_YEAR, 1);
         JSONArray this_week = new JSONArray();
-        hibernateQuery.queryString("SELECT u.db_id FROM User u WHERE u.registration_date <= :start_week AND u.userStatus.registered IS true");
+        hibernateQuery.queryString("SELECT u.db_id FROM User u WHERE u.userStatus.registered IS true AND u.registration_date BETWEEN :start_week AND :subscription_week");
         hibernateQuery.setDate("start_week", start_calendar);
+        hibernateQuery.setDate("subscription_week", subscription_week);
         List<Integer> userIds = hibernateQuery.list();
         this_week.put(userIds.size());
         int weeksAdded = 0;
