@@ -75,6 +75,8 @@ const TeamSimpleAppButtonSet = ({app, me, dispatch, editMode, selfJoin, requestA
                              onClick={isAdmin(me.role) ? selfJoin : asked ? null : requestApp}
                              icon="pointing up"
                              disabled={asked}/>}
+        {isAdmin(me.role) &&
+        <TeamAppActionButton text='Move App' icon='share' onClick={e => console.log('[CLICK]: Move App')}/>}
         {(isAdmin(me.role) || app.team_user_sender_id === me.id) &&
         <TeamAppActionButton text='Edit App' icon='pencil' onClick={editMode}/>}
         {(isAdmin(me.role) || app.team_user_sender_id === me.id) &&
