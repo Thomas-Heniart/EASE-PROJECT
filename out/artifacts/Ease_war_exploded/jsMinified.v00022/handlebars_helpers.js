@@ -1,1 +1,0 @@
-!function(e){e.registerHelper("fullName",function(e,r,n){var t=[];for(var o in n.hash)t.push(o+'="'+n.hash[o]+'"');return console.log(t.join(" ")),e+" bot"+r}),e.registerHelper("bold",function(r){return new e.SafeString("<strong>"+r.fn(this)+"</strong>")}),e.registerPartial("person",e.templates.second_template)}(window.Handlebars);
