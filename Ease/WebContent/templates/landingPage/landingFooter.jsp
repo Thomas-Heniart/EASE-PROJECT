@@ -5,13 +5,13 @@
 			<div class="left-part left">
 				<div class="left-menu ui row menu-column">
 					<div class="links">
-						<a href="product">
+						<a href="/product">
 							<fmt:message key="landing.footer.section-product.title"/>
 						</a>
-						<a href="security">
+						<a href="/security">
 							<fmt:message key="landing.header.security-link"/>
 						</a>
-						<a href="pricing">
+						<a href="/pricing">
 							<fmt:message key="landing.header.price-link"/>
 						</a>
 						<a href="/rgpd">
@@ -33,10 +33,10 @@
 						<a href="/#/teamCreation?plan_id=0">
 							<fmt:message key="landing.footer.link.create-account"/>
 						</a>
-						<a href="contact">
+						<a href="/contact">
 							<fmt:message key="landing.header.contact-link"/>
 						</a>
-						<a href="legalNotice">
+						<a href="/legalNotice">
 							<fmt:message key="landing.footer.legal-notice"/>
 						</a>
 						<a href="/resources/CGU_Ease.pdf" target="_blank">
@@ -48,7 +48,7 @@
 			</div>
 			<div class="ui row easeExplore right">
 				<div class="logo">
-					<img class="ui small image" src="resources/images/ease_logo_blue.svg"/>
+					<img class="ui small image" src="/resources/images/ease_logo_blue.svg"/>
 				</div>
 				<div class="social_links">
 					<div class="link">

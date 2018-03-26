@@ -115,7 +115,7 @@
     </servlet>
     <servlet-mapping>
         <servlet-name>landing</servlet-name>
-        <url-pattern>/discover</url-pattern>
+        <url-pattern>/discover/*</url-pattern>
     </servlet-mapping>
     <servlet>
         <servlet-name>privacy.jsp</servlet-name>
