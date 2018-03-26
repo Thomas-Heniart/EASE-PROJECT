@@ -81,6 +81,25 @@ export function setTeamsTutorial(state) {
   }
 }
 
+export const setDailyLogoutActive = ({active}) => {
+  return (dispatch, getState) => {
+    return post_api.common.setDailyLogout({
+      active: active,
+      ws_id: getState().common.ws_id
+    }).then(response => {
+      dispatch({
+        type: 'SET_DAILY_LOGOUT_ACTIVE',
+        payload: {
+          active: active
+        }
+      });
+      return response;
+    }).catch(err => {
+      throw err;
+    });
+  }
+};
+
 export function setWSId(id){
   return {
     type: 'SET_WS_ID',

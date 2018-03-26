@@ -1380,6 +1380,12 @@ module.exports = {
         throw err.response.data;
       })
     },
+    setDailyLogout: ({active,ws_id}) => {
+      return basic_post('/dailyLogout', {
+        active: active,
+        ws_id: ws_id
+      })
+    },
     passwordLost: ({email}) => {
       return basic_post('/passwordLost', {
         email: email
@@ -1498,8 +1504,7 @@ module.exports = {
         url:url,
         is_public: is_public,
         login: cipher(login),
-        password: cipher(password),
-        timestamp: new Date().getTime()
+        password: cipher(password)
       }).then(r => {
         return r.data;
       }).catch(err => {

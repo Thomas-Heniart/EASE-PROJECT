@@ -7,7 +7,8 @@ const initialState = {
   loginRedirectUrl: '',
   teamsTutorial: false,
   homepage: false,
-  generalLogoutModal: false
+  generalLogoutModal: false,
+  dailyLogout: false
 };
 
 export default function reducer(state=initialState, action) {
@@ -102,6 +103,13 @@ export default function reducer(state=initialState, action) {
       const {active} = action.payload;
       return update(state, {
         generalLogoutModal: {$set: active}
+      })
+    }
+    case 'SET_DAILY_LOGOUT_ACTIVE': {
+      const {active} = action.payload;
+
+      return update(state, {
+        dailyLogout: {$set: active}
       })
     }
   }
