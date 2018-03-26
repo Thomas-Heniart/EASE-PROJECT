@@ -29,11 +29,12 @@ class TeamAnySingleApp extends Component {
   }
   connect = () => {
     const {app} = this.props;
+    const team_app = this.props.team_apps[app.team_card_id];
 
     if (app.new)
       this.props.dispatch(validateApp({app_id: app.id}));
     this.props.dispatch(clickOnAppMetric({app: app}));
-    window.open(app.website.login_url);
+    window.open(team_app.website.login_url);
     extension.fillActiveTab({app_id: app.id});
   };
   handleOpenClose = () => {

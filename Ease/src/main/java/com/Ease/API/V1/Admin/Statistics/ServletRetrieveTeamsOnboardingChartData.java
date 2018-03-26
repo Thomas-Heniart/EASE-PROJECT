@@ -40,7 +40,7 @@ public class ServletRetrieveTeamsOnboardingChartData extends HttpServlet {
                 datasetsData.put(0);
             for (OnboardingStatus onboardingStatus : onboardingStatuses) {
                 int step = onboardingStatus.getStep();
-                for (int i=0; i <= step; i++) {
+                for (int i = 0; i <= step; i++) {
                     int val = datasetsData.getInt(i);
                     datasetsData.put(i, val + 1);
                 }
@@ -48,10 +48,9 @@ public class ServletRetrieveTeamsOnboardingChartData extends HttpServlet {
             hibernateQuery.queryString("SELECT w.active_teams FROM WeeklyStats w WHERE w.year = :year AND w.week = :week");
             Calendar calendar = Calendar.getInstance();
             calendar.add(Calendar.WEEK_OF_YEAR, -1);
-            System.out.println(calendar.get(Calendar.WEEK_OF_YEAR));
             hibernateQuery.setParameter("year", calendar.get(Calendar.YEAR));
             hibernateQuery.setParameter("week", calendar.get(Calendar.WEEK_OF_YEAR));
-            datasetsData.put(hibernateQuery.list().size());
+            datasetsData.put(hibernateQuery.getSingleResult());
             JSONObject data = new JSONObject();
             JSONArray datasets = new JSONArray();
             datasets.put(new JSONObject()

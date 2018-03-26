@@ -1,10 +1,7 @@
 var React = require('react');
 var classnames = require('classnames');
 import {showTeamManageAppRequestModal} from "../../actions/teamModalActions";
-import {
-  acceptTeamCardRequest,
-  deleteTeamCardRequest
-} from "../../actions/appsActions";
+import {acceptTeamCardRequest, deleteTeamCardRequest} from "../../actions/appsActions";
 
 import {connect} from "react-redux";
 

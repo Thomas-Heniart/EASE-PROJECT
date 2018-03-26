@@ -138,7 +138,7 @@ public class NotificationFactory {
     }
 
     public void createRemindTeamEnterpriseCardFiller(TeamCard teamCard, TeamUser teamUser, TeamUser room_manager, WebSocketManager userWebSocketManager, HibernateQuery hibernateQuery) {
-        String content = room_manager + " reminds you to enter " + teamCard.getName() + "'s information";
+        String content = room_manager.getUsername() + " reminds you to enter " + teamCard.getName() + "'s information";
         String url = "#/teams/" + teamCard.getChannel().getDb_id() + "?app_id=" + teamCard.getDb_id();
         String logo = teamCard.getLogo();
         if (!teamUser.isRegistered())
