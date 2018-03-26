@@ -8,6 +8,7 @@ import {showTeamAddMultipleUsersModal, showUpgradeTeamPlanModal} from "../../act
 import { Header, Label, Container, Divider, Icon, TextArea, Form, Input, Button, Message } from 'semantic-ui-react';
 import {addNotification} from "../../actions/notificationBoxActions";
 import {withRouter} from "react-router-dom";
+import {createTeamProfile} from "../../actions/onBoardingActions";
 
 class PreviewStep extends React.Component {
   constructor(props){
@@ -256,6 +257,7 @@ class TeamAddMultipleUsersModal extends React.Component {
     });
     const invitationsToSend = [];
     let lastInvitedUser = null;
+    let callback = [];
     Promise.all(calls.map(reflect)).then(async results => {
       results.map((item, idx) => {
         if (item.error)
@@ -267,14 +269,14 @@ class TeamAddMultipleUsersModal extends React.Component {
         }
       });
       if (this.state.checkTagUser) {
+        let openspaceId = null;
+        Object.keys(team.rooms).map(room_id => {
+          if (team.rooms[room_id].default)
+            openspaceId = room_id;
+        });
         invitationsToSend.map(user_id => {
-          let openspaceId = null;
-          Object.keys(team.rooms).map(room_id => {
-            if (team.rooms[room_id].default)
-              openspaceId = room_id;
-          });
           team.rooms[openspaceId].team_card_ids.map(card_id => {
-            calls.push(this.props.dispatch(teamShareCard({
+            callback.push(this.props.dispatch(teamShareCard({
               type: this.props.team_apps[card_id].type,
               team_id: team.id,
               team_card_id: card_id,
@@ -283,6 +285,7 @@ class TeamAddMultipleUsersModal extends React.Component {
             })));
           });
         });
+        await Promise.all(callback.map(reflect)).then(res => {});
       }
       invitations = invitations.filter(item => (item.error.length > 0));
       if (!!invitationsToSend.length)
