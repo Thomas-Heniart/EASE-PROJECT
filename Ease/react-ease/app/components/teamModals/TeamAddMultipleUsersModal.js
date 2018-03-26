@@ -1,3 +1,5 @@
+import {teamShareCard} from "../../actions/appsActions";
+
 var React = require('react');
 import {connect} from "react-redux";
 import {createTeamUser, createTeamUserNow, sendInvitationToTeamUserList} from "../../actions/userActions";
@@ -33,7 +35,7 @@ class PreviewStep extends React.Component {
       )
     });
     return (
-        <Form onSubmit={this.submit} error={this.props.errorMessage.length > 0}>
+        <Form onSubmit={this.submit} error={this.props.errorMessage.length > 0} id='add_user_modal'>
           <Divider hidden clearing/>
           <Form.Group>
             <Form.Field><label>Email address</label></Form.Field>
@@ -46,6 +48,14 @@ class PreviewStep extends React.Component {
             <button class="button-unstyle inline-text-button primary" type="button" onClick={this.props.changeStep}>Paste a list of emails</button>
           </Form.Field>
           <Message error content={this.props.errorMessage}/>
+          <label className='check_tag_user_label'>Setting</label>
+          <Form.Checkbox
+            toggle
+            name='checkTagUser'
+            className='check_tag_user'
+            onChange={this.props.handleInput}
+            checked={this.props.checkTagUser}
+            label="Add these users in all apps of #openspace"/>
           <Form.Group id='invitationButton' class="overflow-hidden">
             <Form.Button
                 basic color='green'
@@ -126,7 +136,8 @@ class EmailListStep extends React.Component {
 
 @connect(store => ({
   teams: store.teams,
-  team_id: store.teamModals.teamAddMultipleUsersModal.team_id
+  team_id: store.teamModals.teamAddMultipleUsersModal.team_id,
+  team_apps: store.team_apps
 }))
 class TeamAddMultipleUsersModal extends React.Component {
   constructor(props){
@@ -141,9 +152,11 @@ class TeamAddMultipleUsersModal extends React.Component {
       loadingInvitationsNow: false,
       validateButtonText: 'Send invitations',
       cancelButtonText: 'Cancel',
-      errorMessage: ''
+      errorMessage: '',
+      checkTagUser: false
     }
   }
+  handleInput = handleSemanticInput.bind(this);
   showUpgradeModal = () => {
     this.props.dispatch(showUpgradeTeamPlanModal(true, 4));
   };
@@ -169,15 +182,35 @@ class TeamAddMultipleUsersModal extends React.Component {
     this.setState({loading: true, errorMessage: ''});
     let lastInvitedUser = null;
     Promise.all(calls.map(reflect)).then(results => {
+      let newUsers = [];
       results.map((item, idx) => {
         if (item.error)
           invitations[idx].error = item.data;
         else {
           invitations[idx].error = '';
+          newUsers.push(item.data.id);
           lastInvitedUser = item.data;
         }
       });
       invitations = invitations.filter(item => (item.error.length > 0));
+      if (this.state.checkTagUser) {
+        newUsers.map(user_id => {
+          let openspaceId = null;
+          Object.keys(team.rooms).map(room_id => {
+            if (team.rooms[room_id].default)
+              openspaceId = room_id;
+          });
+          team.rooms[openspaceId].team_card_ids.map(card_id => {
+            calls.push(this.props.dispatch(teamShareCard({
+              type: this.props.team_apps[card_id].type,
+              team_id: team.id,
+              team_card_id: card_id,
+              team_user_id: user_id,
+              account_information: {}
+            })));
+          });
+        });
+      }
       if (!!lastInvitedUser)
         this.props.history.replace(`/teams/${team.id}/@${lastInvitedUser.id}`);
       if (calls.length !== invitations.length){
@@ -233,6 +266,24 @@ class TeamAddMultipleUsersModal extends React.Component {
           lastInvitedUser = item.data;
         }
       });
+      if (this.state.checkTagUser) {
+        invitationsToSend.map(user_id => {
+          let openspaceId = null;
+          Object.keys(team.rooms).map(room_id => {
+            if (team.rooms[room_id].default)
+              openspaceId = room_id;
+          });
+          team.rooms[openspaceId].team_card_ids.map(card_id => {
+            calls.push(this.props.dispatch(teamShareCard({
+              type: this.props.team_apps[card_id].type,
+              team_id: team.id,
+              team_card_id: card_id,
+              team_user_id: user_id,
+              account_information: {}
+            })));
+          });
+        });
+      }
       invitations = invitations.filter(item => (item.error.length > 0));
       if (!!invitationsToSend.length)
         await this.props.dispatch(sendInvitationToTeamUserList({
@@ -320,10 +371,12 @@ class TeamAddMultipleUsersModal extends React.Component {
             <div class="contents">
               <Container>
                 <Header as="h1">
-                  Create several users at once
+                  Add several users at once
                 </Header>
                 {this.state.view === 'main' &&
                 <PreviewStep
+                    handleInput={this.handleInput}
+                    checkTagUser={this.state.checkTagUser}
                     dispatch={this.props.dispatch}
                     changeStep={this.changeView.bind(null, 'emailList')}
                     invitations={this.state.invitations}

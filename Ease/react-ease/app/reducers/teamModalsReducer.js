@@ -149,6 +149,12 @@ const initialState = {
   manageMagicLinkModal: {
     active: false,
     team_card: null
+  },
+  tagUserInAllAppsModal: {
+    active: false,
+    team_id: null,
+    room_id: null,
+    user_id: null
   }
 };
 export default function reducer(state=initialState, action){
@@ -355,6 +361,12 @@ export default function reducer(state=initialState, action){
       return {
         ...state,
         manageMagicLinkModal: action.payload
+      }
+    }
+    case 'SHOW_TAG_USER_IN_ALL_APPS_MODAL': {
+      return {
+        ...state,
+        tagUserInAllAppsModal: action.payload
       }
     }
   }
