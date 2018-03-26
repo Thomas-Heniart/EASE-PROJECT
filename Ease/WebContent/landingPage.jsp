@@ -169,7 +169,7 @@
 <script src="/jsMinified.v00023/basic-utils.js" async></script>
 <script src="/jsMinified.v00023/languageChooser.js" async></script>
 <script src="/jsMinified.v00023/tracker.js" async></script>
-<script src="semantic/dist/semantic.min.js"></script>
+<script src="/semantic/dist/semantic.min.js"></script>
 <script type="text/javascript">
     if (window.matchMedia("(max-width: 768px)").matches) {
         $('.inTheMac img').addClass('big');
