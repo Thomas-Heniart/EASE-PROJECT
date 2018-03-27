@@ -95,13 +95,13 @@ public class ServletTeamRegistration extends HttpServlet {
             userProperties.put("keyUser", keyUser);
             userProperties.put("privateKey", privateKey);
             Key secret = (Key) sm.getContextAttr("secret");
-            newUser.setJsonWebToken(JsonWebTokenFactory.getInstance().createJsonWebToken(newUser.getDb_id(), keyUser, secret));
+            newUser.setJsonWebToken(JsonWebTokenFactory.getInstance().createJsonWebToken(newUser.getDb_id(), newUser.getOptions().getConnection_lifetime(), keyUser, secret));
             sm.saveOrUpdate(newUser.getJsonWebToken());
             String jwt = newUser.getJsonWebToken().getJwt(keyUser);
             Cookie cookie = new Cookie("JWT", jwt);
             Calendar calendar = Calendar.getInstance();
-            calendar.add(Calendar.DAY_OF_YEAR, 1);
-            calendar.set(Calendar.HOUR_OF_DAY, 4);
+            calendar.add(Calendar.DAY_OF_YEAR, newUser.getOptions().getConnection_lifetime());
+            calendar.set(Calendar.HOUR_OF_DAY, 3);
             calendar.set(Calendar.MINUTE, 0);
             calendar.set(Calendar.SECOND, 0);
             calendar.set(Calendar.MILLISECOND, 0);

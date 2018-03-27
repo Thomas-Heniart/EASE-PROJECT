@@ -19,26 +19,25 @@ public class JsonWebTokenFactory {
     private JsonWebTokenFactory() {
     }
 
-    public JsonWebToken createJsonWebToken(Integer user_id, String keyUser, Key secretKey) throws HttpServletException {
+    public JsonWebToken createJsonWebToken(Integer userId, Integer connectionLifetime, String keyUser, Key secretKey) throws HttpServletException {
         String salt = AES.generateSalt();
         Map<String, Object> claims = new HashMap<>();
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(new Date());
-        calendar.add(Calendar.DAY_OF_YEAR, 1);
+        calendar.add(Calendar.DAY_OF_YEAR, connectionLifetime);
         calendar.set(Calendar.HOUR_OF_DAY, 3);
         calendar.set(Calendar.MINUTE, 0);
         calendar.set(Calendar.SECOND, 0);
         calendar.set(Calendar.MILLISECOND, 0);
-        Long expiration_date = calendar.getTimeInMillis();
+        Long expirationDate = calendar.getTimeInMillis();
         calendar.clear();
-        String connection_token = UUID.randomUUID().toString();
-        claims.put("exp", expiration_date);
-        claims.put("tok", connection_token);
-        claims.put("id", user_id);
+        String connectionToken = UUID.randomUUID().toString();
+        claims.put("exp", expirationDate);
+        claims.put("tok", connectionToken);
+        claims.put("id", userId);
         String jwt = Jwts.builder().setClaims(claims).signWith(SignatureAlgorithm.HS512, secretKey).compact();
-        String jwt_ciphered = AES.encrypt(jwt, keyUser);
-        String keyUser_ciphered = AES.cipherKey(keyUser, connection_token, salt);
-        JsonWebToken jsonWebToken = new JsonWebToken(Hashing.hash(connection_token), jwt_ciphered, keyUser_ciphered, salt);
-        return jsonWebToken;
+        String jwtCiphered = AES.encrypt(jwt, keyUser);
+        String keyUserCiphered = AES.cipherKey(keyUser, connectionToken, salt);
+        return new JsonWebToken(Hashing.hash(connectionToken), jwtCiphered, keyUserCiphered, salt, connectionLifetime);
     }
 }

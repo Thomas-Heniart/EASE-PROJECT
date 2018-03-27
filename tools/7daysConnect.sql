@@ -1,0 +1,2 @@
+ALTER TABLE options
+  ADD COLUMN connection_lifetime TINYINT UNSIGNED NOT NULL DEFAULT 1;

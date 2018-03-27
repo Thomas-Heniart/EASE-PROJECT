@@ -73,7 +73,7 @@ public class ServletResetPassword extends HttpServlet {
             ((Map<Integer, Map<String, Object>>) sm.getContextAttr("userIdMap")).remove(user.getDb_id());
             if (user.getJsonWebToken() != null) {
                 Key secret = (Key) sm.getContextAttr("secret");
-                user.getJsonWebToken().renew(keyUser, user.getDb_id(), secret);
+                user.getJsonWebToken().renew(keyUser, user.getDb_id(), secret, user.getOptions().getConnection_lifetime());
                 sm.saveOrUpdate(user.getJsonWebToken());
             }
             MailJetBuilder mailJetBuilder;
