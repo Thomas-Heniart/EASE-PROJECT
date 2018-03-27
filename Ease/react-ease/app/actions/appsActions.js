@@ -4,6 +4,28 @@ import {dashboardAppRemovedAction, deleteAppAction, fetchApp} from "./dashboardA
 import {fetchTeamApp} from "../actions/teamActions";
 import {addNotification} from "./notificationBoxActions";
 
+export function fetchAllTeamCards({team_id}) {
+  return (dispatch, getState) => {
+    return api.teams.getAllTeamCards({
+      team_id: team_id
+    }).then(cards => {
+      const team_cards = getState().team_apps;
+      cards.forEach(card => {
+        if (!team_cards[card.id])
+          dispatch({
+            type: 'FETCH_TEAM_APP_FULFILLED',
+            payload: {
+              app: card
+            }
+          });
+      });
+      return cards;
+    }).catch(err => {
+      throw err;
+    });
+  }
+}
+
 export function teamCreateEnterpriseCard({team_id, channel_id, website_id, name, description, password_reminder_interval, receivers}){
   return (dispatch, getState) => {
     return post_api.teamApps.createEnterpriseCard({

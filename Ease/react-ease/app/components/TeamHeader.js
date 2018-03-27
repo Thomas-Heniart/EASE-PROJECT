@@ -3,56 +3,54 @@ var classnames = require('classnames');
 var EaseMainNavbar = require('./common/EaseMainNavbar');
 import {NavLink, withRouter} from "react-router-dom";
 import Joyride from "react-joyride";
+import TeamHeaderAppsSearch from "./teams/teamHeaderAppsSearch";
 import {setTipSeen} from "../actions/commonActions";
 import {isAdmin} from "../utils/helperFunctions";
 
 const FlexPanelButton = ({location, match}) => {
-    const isActive = location.pathname === `${match.url}/flexPanel`;
-    const path = isActive ? match.url : `${match.url}/flexPanel`;
-    return (
-        <NavLink class="mrgnLeft5" to={path} id="open_card_button">
-            <i className="fa fa-cog"/>
-        </NavLink>
-    )
+  const isActive = location.pathname === `${match.url}/flexPanel`;
+  const path = isActive ? match.url : `${match.url}/flexPanel`;
+  return (
+      <NavLink class="mrgnLeft5" title="Settings" to={path} id="open_card_button">
+        <i className="fa fa-cog"/>
+      </NavLink>
+  )
 };
 
 const FlexPanelButtonWithRouter = withRouter(FlexPanelButton);
 
 function TeamHeader(props){
-  const {item, user, me, dispatch} = props;
+  const {item, user, me,team, dispatch} = props;
   return (
       <header id="client_header">
         <div className="channel_header">
           <div className="tab_header">
-            <div className="channel_title">
-              <div id="channel_name_container" className="channel_name_container">
-                            <span id="channel_name" className="channel_name">
-                              <i className={classnames("fa icon_wrapper", props.item.username !== undefined ? 'fa-user' : 'fa-hashtag')}/>
-                              {props.item.name ? props.item.name : props.item.username}
-                            </span>
-                  <FlexPanelButtonWithRouter/>
+            <div id="channel_name_container" className="channel_name_container">
+                <span id="channel_name" className="channel_name">
+                  <i className={classnames("fa icon_wrapper", props.item.username !== undefined ? 'fa-user' : 'fa-hashtag')}/>
+                  {props.item.name ? props.item.name : props.item.username}
+                </span>
+              <div className="channel_header_info_item" title="Shared apps" id="apps_number">
+                <i className="icon_left fa fa-square"/>
+                <span className="value">{props.item.team_card_ids.length}</span>
               </div>
-              <div className="channel_header_info">
-                <div className="channel_header_info_item" id="apps_number">
-                  <i className="icon_left fa fa-square"/>
-                  <span className="value">{props.item.team_card_ids.length}</span>
-                </div>
-                {props.item.team_user_ids &&
-                <div className="channel_header_info_item" id="users_number">
-                  <i className="icon_left fa fa-user-o"/>
-                  <span className="value">{props.item.team_user_ids.length}</span>
-                </div>}
-                {!!props.item.purpose && !!props.item.purpose.length &&
-                <div className="channel_header_info_item" id="channel_purpose">
-                  <span className="value">{props.item.purpose}</span>
-                </div>}
-                {props.item.username &&
-                <div className="channel_header_info_item">
-                  <span className="value">Here is {props.item.username}'s accesses list</span>
-                </div>}
-              </div>
+              {props.item.team_user_ids &&
+              <div className="channel_header_info_item" title="Room members" id="users_number">
+                <i className="icon_left fa fa-user-o"/>
+                <span className="value">{props.item.team_user_ids.length}</span>
+              </div>}
+              <FlexPanelButtonWithRouter/>
             </div>
+            {!!props.item.purpose && !!props.item.purpose.length &&
+            <span className="channel_description" id="channel_purpose" title="Description">
+                {props.item.purpose}
+              </span>}
+            {props.item.username &&
+            <span className="channel_description" title="Description">
+                Here is {props.item.username}'s accesses list
+              </span>}
           </div>
+          <TeamHeaderAppsSearch team={team} me={me}/>
           {isAdmin(me.role) && !!item.team_user_ids && !item.default && !user.status.tip_team_channel_settings_seen &&
           <Joyride
               steps={[{
