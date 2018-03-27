@@ -3559,6 +3559,8 @@ button.big-button {
   }
   .results {
     width: 450px;
+    max-height: 400px;
+    overflow: auto;
     .message.empty {
       padding: 10px;
       .header {
@@ -3569,7 +3571,7 @@ button.big-button {
   .result {
     padding: 10px;
     font-size: .7rem;
-    background-color: $themeGreyColor;
+    background-color: $themeGreyLightColor;
     position: relative;
     .overlay {
       position: absolute;

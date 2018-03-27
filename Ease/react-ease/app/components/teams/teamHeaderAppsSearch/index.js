@@ -1,10 +1,23 @@
 import React, {Component, Fragment} from "react";
-import {Search} from 'semantic-ui-react';
+import {Search, Popup} from 'semantic-ui-react';
 import {withRouter} from "react-router-dom";
 import {askJoinChannel, addTeamUserToChannel} from "../../../actions/channelActions";
 import {fetchAllTeamCards} from "../../../actions/appsActions";
 import {isAdmin} from "../../../utils/helperFunctions";
+import {objectToList} from "../../../utils/utils";
 import {connect} from "react-redux";
+
+const DisabledCardPopup = ({trigger, room_name, room_manager_name}) => {
+  return (
+      <Popup size="mini"
+             position="right center"
+             inverted
+             hideOnScroll={true}
+             trigger={trigger}
+             content={`Join #${room_name} to get access. Room manager: ${room_manager_name}`}
+      />
+  )
+};
 
 @connect(store => ({
   team_cards: store.team_apps
@@ -69,16 +82,20 @@ class TeamAppsHeaderSearch extends Component {
     return (
         <Fragment>
           {!isInRoom &&
-          <div class="overlay" onClick={e => {e.stopPropagation();e.nativeEvent.stopImmediatePropagation();}}/>}
+          <DisabledCardPopup
+              trigger={<div class="overlay" onClick={e => {e.stopPropagation();e.nativeEvent.stopImmediatePropagation();}}/>}
+              room_name={room.name}
+              room_manager_name={team.team_users[room.room_manager_id].username}
+          />}
           <img class="logo" src={!!card.logo ? card.logo : card.website.logo}/>
           <span>&nbsp;{name}</span>
           <span class="muted">&nbsp;|&nbsp;#{room.name}</span>
           <span class="muted overflow-ellipsis full_flex">,&nbsp;multiple logins</span>
           {!isInRoom &&
           (isRequested ?
-              <span class="muted min_flex_shrink">&nbsp;-&nbsp;Join request sent</span> :
+              <span class="muted min_flex_shrink">&nbsp;Join request sent</span> :
               <span class="muted min_flex_shrink action_button"
-                    onClick={e => {this.sendJoinRoomRequest(e, room.id)}}>&nbsp;-&nbsp;<a>Ask to join room</a></span>)
+                    onClick={e => {this.sendJoinRoomRequest(e, room.id)}}>&nbsp;<a>Ask to join room</a></span>)
           }
         </Fragment>
     )
@@ -93,16 +110,20 @@ class TeamAppsHeaderSearch extends Component {
     return (
         <Fragment>
           {!isInRoom &&
-          <div class="overlay" onClick={e => {e.stopPropagation();e.nativeEvent.stopImmediatePropagation();}}/>}
+          <DisabledCardPopup
+              trigger={<div class="overlay" onClick={e => {e.stopPropagation();e.nativeEvent.stopImmediatePropagation();}}/>}
+              room_name={room.name}
+              room_manager_name={team.team_users[room.room_manager_id].username}
+          />}
           <img class="logo" src={!!card.logo ? card.logo : card.website.logo}/>
           <span>&nbsp;{name}</span>
           <span class="muted">&nbsp;|&nbsp;#{room.name}</span>
           <span class="muted overflow-ellipsis full_flex">,&nbsp;{empty ? 'waiting for login' : card.account_information.login}</span>
           {!isInRoom &&
           (isRequested ?
-              <span class="muted min_flex_shrink">&nbsp;-&nbsp;Join request sent</span> :
+              <span class="muted min_flex_shrink">&nbsp;Join request sent</span> :
               <span class="muted min_flex_shrink action_button"
-                    onClick={e => {this.sendJoinRoomRequest(e, room.id)}}>&nbsp;-&nbsp;<a>Ask to join room</a></span>)
+                    onClick={e => {this.sendJoinRoomRequest(e, room.id)}}>&nbsp;<a>Ask to join room</a></span>)
           }
         </Fragment>
     )
@@ -117,16 +138,20 @@ class TeamAppsHeaderSearch extends Component {
     return (
         <Fragment>
           {!isInRoom &&
-          <div class="overlay" onClick={e => {e.stopPropagation();e.nativeEvent.stopImmediatePropagation();}}/>}
+          <DisabledCardPopup
+              trigger={<div class="overlay" onClick={e => {e.stopPropagation();e.nativeEvent.stopImmediatePropagation();}}/>}
+              room_name={room.name}
+              room_manager_name={team.team_users[room.room_manager_id].username}
+          />}
           <img class="logo" src={card.logo}/>
           <span>&nbsp;{name}</span>
           <span class="muted">&nbsp;|&nbsp;#{room.name}</span>
           <span class="muted overflow-ellipsis full_flex">,&nbsp;{card.url}</span>
           {!isInRoom &&
           (isRequested ?
-              <span class="muted min_flex_shrink">&nbsp;-&nbsp;Join request sent</span> :
+              <span class="muted min_flex_shrink">&nbsp;Join request sent</span> :
               <span class="muted min_flex_shrink action_button"
-                    onClick={e => {this.sendJoinRoomRequest(e, room.id)}}>&nbsp;-&nbsp;<a>Ask to join room</a></span>)
+                    onClick={e => {this.sendJoinRoomRequest(e, room.id)}}>&nbsp;<a>Ask to join room</a></span>)
           }
         </Fragment>
     )
@@ -149,13 +174,15 @@ class TeamAppsHeaderSearch extends Component {
     let team_cards_results = [];
 
     if (!!value.length) {
-      Object.keys(team_cards).forEach(item => {
-        team_cards_results.push({...team_cards[item], key: item});
-      });
       const searchValue = value.replace(/\s+/g, '').toLowerCase();
-      team_cards_results = team_cards_results.filter(item => {
+      team_cards_results = objectToList(team_cards).filter(item => {
         const cardName = item.name.replace(/\s+/g, '').toLowerCase();
         return item.team_id === team.id && cardName.includes(searchValue);
+      }).map(item => {
+        return {
+            ...item,
+          key: item.id
+        }
       });
     }
     return (
