@@ -86,7 +86,7 @@ public class ServletConnection extends HttpServlet {
             cookie.setHttpOnly(true);
             cookie.setSecure(true);
             Calendar calendar = Calendar.getInstance();
-            calendar.add(Calendar.DAY_OF_YEAR, 1);
+            calendar.add(Calendar.DAY_OF_YEAR, user.getOptions().getConnection_lifetime());
             calendar.set(Calendar.HOUR_OF_DAY, 4);
             calendar.set(Calendar.MINUTE, 0);
             calendar.set(Calendar.SECOND, 0);
