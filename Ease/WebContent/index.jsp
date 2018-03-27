@@ -50,7 +50,7 @@
 <BODY class="notranslate">
 <div id="app">
 </div>
-<script src="teams_bundle.js?v=104"></script>
+<script src="teams_bundle.js?v=105"></script>
 <script type="text/javascript">
   window.addEventListener('load', function () {
     $crisp = [];

@@ -125,13 +125,14 @@ class TeamAddUserModal extends React.Component {
         });
       }
       Promise.all(calls.map(reflect)).then(values => {
-        Promise.all(callback.map(reflect)).then();
-        this.setState({loading: false});
-        this.props.dispatch(addNotification({
-          text: "New team user(s) successfully created!"
-        }));
-        this.props.dispatch(showAddTeamUserModal({active: false}));
-        this.props.history.push(`/teams/${team.id}/@${user.id}`);
+        Promise.all(callback.map(reflect)).then(response => {
+          this.setState({loading: false});
+          this.props.dispatch(addNotification({
+            text: "New team user(s) successfully created!"
+          }));
+          this.props.dispatch(showAddTeamUserModal({active: false}));
+          this.props.history.push(`/teams/${team.id}/@${user.id}`);
+        });
       });
     }).catch(err => {
       this.setState({loading: false, errorMessage: err});
@@ -180,17 +181,18 @@ class TeamAddUserModal extends React.Component {
         });
       }
       Promise.all(calls.map(reflect)).then(values => {
-        Promise.all(callback.map(reflect)).then();
-        this.setState({loadingInvitationNow: false});
-        this.props.dispatch(addNotification({
-          text: "New team user(s) successfully created!"
-        }));
-        this.props.history.push(`/teams/${team.id}/@${user.id}`);
-        this.props.dispatch(showAddTeamUserModal({active: false}));
-        this.props.dispatch(userActions.sendInvitationToTeamUserList({
-          team_id: team.id,
-          team_user_id_list: [user.id]
-        }));
+        Promise.all(callback.map(reflect)).then(response => {
+          this.setState({loadingInvitationNow: false});
+          this.props.dispatch(addNotification({
+            text: "New team user(s) successfully created!"
+          }));
+          this.props.history.push(`/teams/${team.id}/@${user.id}`);
+          this.props.dispatch(showAddTeamUserModal({active: false}));
+          this.props.dispatch(userActions.sendInvitationToTeamUserList({
+            team_id: team.id,
+            team_user_id_list: [user.id]
+          }));
+        });
       });
     }).catch(err => {
       this.setState({loadingInvitationNow: false, errorMessage: err});
