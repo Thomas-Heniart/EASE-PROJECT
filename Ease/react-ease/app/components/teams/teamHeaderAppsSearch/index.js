@@ -30,6 +30,11 @@ class TeamAppsHeaderSearch extends Component {
       value: ''
     };
   }
+  shouldComponentUpdate(nextProps, nextState){
+    if (!this.state.loading && !this.state.value.length && !nextState.value.length)
+      return false;
+    return true;
+  };
   onSearchChange = (e, {value}) => {
     this.setState({value: value});
     if (!this.state.value.length && !!value.length){
