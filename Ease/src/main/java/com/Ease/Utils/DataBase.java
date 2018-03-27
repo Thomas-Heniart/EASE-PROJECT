@@ -19,7 +19,7 @@ public final class DataBase {
         dataSource.setMinEvictableIdleTimeMillis(60000);
         dataSource.setPoolPreparedStatements(true);
         dataSource.setDriverClassName("com.mysql.jdbc.Driver");
-        dataSource.setUrl("jdbc:mysql://" + Variables.DATABASE_IP + ":3306/ease?charset=utf8");
+        dataSource.setUrl("jdbc:mysql://" + Variables.DATABASE_IP + ":3306/ease?charset=utf8&amp;useLegacyDatetimeCode=false&amp;serverTimezone=Europe/Paris");
         dataSource.setUsername("client");
         dataSource.setPassword("P6au23q7");
     }
