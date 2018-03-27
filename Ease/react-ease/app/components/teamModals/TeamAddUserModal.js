@@ -108,6 +108,7 @@ class TeamAddUserModal extends React.Component {
           team_user_id: user.id
         }));
       });
+      let callback = [];
       if (this.state.checkTagUser) {
         const room_ids = this.state.value;
         Object.keys(team.rooms).map(room_id => {
@@ -116,7 +117,7 @@ class TeamAddUserModal extends React.Component {
         });
         room_ids.map(id => {
           team.rooms[id].team_card_ids.map(card_id => {
-            calls.push(this.props.dispatch(teamShareCard({
+            callback.push(this.props.dispatch(teamShareCard({
               type: this.props.team_apps[card_id].type,
               team_id: team.id,
               team_card_id: card_id,
@@ -127,6 +128,7 @@ class TeamAddUserModal extends React.Component {
         });
       }
       Promise.all(calls.map(reflect)).then(values => {
+        Promise.all(callback.map(reflect)).then();
         this.setState({loading: false});
         this.props.dispatch(addNotification({
           text: "New team user(s) successfully created!"
@@ -164,6 +166,7 @@ class TeamAddUserModal extends React.Component {
           team_user_id: user.id
         }));
       });
+      let callback = [];
       if (this.state.checkTagUser) {
         const room_ids = this.state.value;
         Object.keys(team.rooms).map(room_id => {
@@ -172,7 +175,7 @@ class TeamAddUserModal extends React.Component {
         });
         room_ids.map(id => {
           team.rooms[id].team_card_ids.map(card_id => {
-            calls.push(this.props.dispatch(teamShareCard({
+            callback.push(this.props.dispatch(teamShareCard({
               type: this.props.team_apps[card_id].type,
               team_id: team.id,
               team_card_id: card_id,
@@ -183,6 +186,7 @@ class TeamAddUserModal extends React.Component {
         });
       }
       Promise.all(calls.map(reflect)).then(values => {
+        Promise.all(callback.map(reflect)).then();
         this.setState({loadingInvitationNow: false});
         this.props.dispatch(addNotification({
           text: "New team user(s) successfully created!"
