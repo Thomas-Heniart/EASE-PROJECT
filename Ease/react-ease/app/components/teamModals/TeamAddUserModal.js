@@ -114,7 +114,7 @@ class TeamAddUserModal extends React.Component {
         room_ids.push(Object.keys(team.rooms).find(room_id => {return team.rooms[room_id].default}));
         room_ids.map(id => {
           team.rooms[id].team_card_ids.map(card_id => {
-            callback.push(this.props.dispatch(teamShareCard({
+            return callback.push(this.props.dispatch(teamShareCard({
               type: this.props.team_apps[card_id].type,
               team_id: team.id,
               team_card_id: card_id,
@@ -170,7 +170,7 @@ class TeamAddUserModal extends React.Component {
         room_ids.push(Object.keys(team.rooms).find(room_id => {return team.rooms[room_id].default}));
         room_ids.map(id => {
           team.rooms[id].team_card_ids.map(card_id => {
-            callback.push(this.props.dispatch(teamShareCard({
+            return callback.push(this.props.dispatch(teamShareCard({
               type: this.props.team_apps[card_id].type,
               team_id: team.id,
               team_card_id: card_id,
