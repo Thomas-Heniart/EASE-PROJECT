@@ -17,7 +17,7 @@ const TeamLinkAppButtonSet = ({app, me, dispatch, editMode, meReceiver, join}) =
                              onClick={join}
                              icon="pointing up"/>}
         {isAdmin(me.role) &&
-        <TeamAppActionButton text='Move App' icon='share' onClick={e => console.log('[CLICK]: Move App')}/>}
+        <TeamAppActionButton text='Move App' icon='share' onClick={e => {dispatch(modalActions.showMoveAppModal({active: true, app_id: app.id}))}}/>}
         {isAdmin(me.role) &&
         <TeamAppActionButton text='Edit App' icon='pencil' onClick={editMode}/>}
         {isAdmin(me.role) &&

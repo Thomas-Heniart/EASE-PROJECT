@@ -152,9 +152,13 @@ const initialState = {
   },
   tagUserInAllAppsModal: {
     active: false,
-    team_id: null,
-    room_id: null,
-    user_id: null
+    team_id: -1,
+    room_id: -1,
+    user_id: -1
+  },
+  moveAppModal: {
+    active: false,
+    app_id: -1
   }
 };
 export default function reducer(state=initialState, action){
@@ -367,6 +371,12 @@ export default function reducer(state=initialState, action){
       return {
         ...state,
         tagUserInAllAppsModal: action.payload
+      }
+    }
+    case 'SHOW_MOVE_APP_MODAL': {
+      return {
+        ...state,
+        moveAppModal: action.payload
       }
     }
   }
