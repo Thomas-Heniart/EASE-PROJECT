@@ -180,6 +180,7 @@ class TeamAddUserModal extends React.Component {
           });
         });
       }
+      console.log('[CALLS]: ', callback);
       Promise.all(calls.map(reflect)).then(values => {
         Promise.all(callback.map(reflect)).then(response => {
           this.setState({loadingInvitationNow: false});
@@ -287,14 +288,14 @@ class TeamAddUserModal extends React.Component {
                   placeholder="Choose room(s)"
                   label="Room(s)"/>
               <p>New members will automatically join #openspace</p>
-              {/*<label className='check_tag_user_label'>Setting</label>*/}
-              {/*<Form.Checkbox*/}
-                {/*toggle*/}
-                {/*name='checkTagUser'*/}
-                {/*className='check_tag_user'*/}
-                {/*onChange={this.handleInput}*/}
-                {/*checked={this.state.checkTagUser}*/}
-                {/*label="Add this user in all apps of his rooms"/>*/}
+              <label className='check_tag_user_label'>Setting</label>
+              <Form.Checkbox
+                toggle
+                name='checkTagUser'
+                className='check_tag_user'
+                onChange={this.handleInput}
+                checked={this.state.checkTagUser}
+                label="Add this user in all apps of his rooms"/>
               <Message error content={this.state.errorMessage}/>
               <Form.Group id='invitationButton' class="overflow-hidden">
                 {!this.state.arrival_date ?
