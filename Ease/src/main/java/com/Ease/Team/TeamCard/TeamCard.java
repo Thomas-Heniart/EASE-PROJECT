@@ -193,7 +193,7 @@ public abstract class TeamCard {
     }
 
     public boolean containsTeamUser(TeamUser teamUser_receiver) {
-        return this.getTeamCardReceiverMap().values().stream().filter(teamCardReceiver -> teamCardReceiver.getTeamUser() == teamUser_receiver).findFirst().orElse(null) != null;
+        return this.getTeamCardReceiverMap().values().stream().filter(teamCardReceiver -> teamCardReceiver.getTeamUser().equals(teamUser_receiver)).findFirst().orElse(null) != null;
     }
 
     public boolean isTeamWebsiteCard() {

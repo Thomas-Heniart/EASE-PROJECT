@@ -111,10 +111,7 @@ class TeamAddUserModal extends React.Component {
       let callback = [];
       if (this.state.checkTagUser) {
         const room_ids = this.state.value;
-        Object.keys(team.rooms).map(room_id => {
-          if (team.rooms[room_id].default)
-            room_ids.push(room_id)
-        });
+        room_ids.push(Object.keys(team.rooms).find(room_id => {return team.rooms[room_id].default}));
         room_ids.map(id => {
           team.rooms[id].team_card_ids.map(card_id => {
             callback.push(this.props.dispatch(teamShareCard({
@@ -169,10 +166,7 @@ class TeamAddUserModal extends React.Component {
       let callback = [];
       if (this.state.checkTagUser) {
         const room_ids = this.state.value;
-        Object.keys(team.rooms).map(room_id => {
-          if (team.rooms[room_id].default)
-            room_ids.push(room_id)
-        });
+        room_ids.push(Object.keys(team.rooms).find(room_id => {return team.rooms[room_id].default}));
         room_ids.map(id => {
           team.rooms[id].team_card_ids.map(card_id => {
             callback.push(this.props.dispatch(teamShareCard({
