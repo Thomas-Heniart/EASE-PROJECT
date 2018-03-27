@@ -40,13 +40,13 @@
     <link rel="icon" type="image/png" href="resources/icons/APPEASE.png"/>
     <link rel="manifest" href="manifest.json">
     <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Raleway:500,700"/>
-    <link rel="stylesheet" href="semantic/dist/semantic.min.css">
-    <link rel="stylesheet" type="text/css" href="/cssMinified.v00058/lib/fonts/museo-font.css"/>
-    <link rel="stylesheet" href="/cssMinified.v00058/default_style.css"/>
-    <link rel="stylesheet" href="/cssMinified.v00058/bootstrap.css"/>
-    <link rel="stylesheet" href="/cssMinified.v00058/landingPage.css"/>
+    <link rel="stylesheet" href="/semantic/dist/semantic.min.css">
+    <link rel="stylesheet" type="text/css" href="/cssMinified.v00059/lib/fonts/museo-font.css"/>
+    <link rel="stylesheet" href="/cssMinified.v00059/default_style.css"/>
+    <link rel="stylesheet" href="/cssMinified.v00059/bootstrap.css"/>
+    <link rel="stylesheet" href="/cssMinified.v00059/landingPage.css"/>
     <link rel="stylesheet" type="text/css"
-          href="/cssMinified.v00058/lib/fonts/font-awesome-4.2.0/css/font-awesome.min.css"/>
+          href="/cssMinified.v00059/lib/fonts/font-awesome-4.2.0/css/font-awesome.min.css"/>
     <style>
         .digit {
             border-radius: 4px;
@@ -79,7 +79,7 @@
 <nav id="mainNav" class="navbar navbar-default navbar-custom navbar-fixed-top affix" style="box-shadow:none;position:absolute;background-color:transparent;">
     <div class="container">
         <div class="navbar-header page-scroll">
-            <a class="navbar-brand page-scroll" href="discover"><img src="resources/images/ease_logo_blue.svg" /></a>
+            <a class="navbar-brand page-scroll" href="/discover"><img src="/resources/images/ease_logo_blue.svg" /></a>
         </div>
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
             <ul class="nav navbar-nav navbar-right">
@@ -169,7 +169,7 @@
 <script src="/jsMinified.v00023/basic-utils.js" async></script>
 <script src="/jsMinified.v00023/languageChooser.js" async></script>
 <script src="/jsMinified.v00023/tracker.js" async></script>
-<script src="semantic/dist/semantic.min.js"></script>
+<script src="/semantic/dist/semantic.min.js"></script>
 <script type="text/javascript">
     if (window.matchMedia("(max-width: 768px)").matches) {
         $('.inTheMac img').addClass('big');

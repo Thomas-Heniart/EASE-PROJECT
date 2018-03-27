@@ -1056,14 +1056,21 @@
 
 #modal_app_requests {
 	.buttons {
-		button.accept {
+		button {
+			color: #aeafaf;
 			margin-right: 10px;
 		}
 		.accept {
 			color: $themeGreenColor;
+			&.selected {
+				font-weight: bold;
+			}
 		}
 		.refuse {
 			color: $themeRedColor;
+			&.selected {
+				font-weight: bold;
+			}
 		}
 	}
 }
