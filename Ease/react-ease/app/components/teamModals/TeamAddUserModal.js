@@ -10,6 +10,7 @@ import { Header, Container, Icon, Form, Input, Message, Button } from 'semantic-
 import {addNotification} from "../../actions/notificationBoxActions";
 import {withRouter} from "react-router-dom";
 import {teamShareCard} from "../../actions/appsActions";
+import {fetchTeamApp} from "../../actions/teamActions";
 
 @connect((store) => ({
   team: store.teams[store.teamModals.addUserModal.team_id],
@@ -114,13 +115,24 @@ class TeamAddUserModal extends React.Component {
         room_ids.push(Object.keys(team.rooms).find(room_id => {return team.rooms[room_id].default}));
         room_ids.map(id => {
           team.rooms[id].team_card_ids.map(card_id => {
-            return callback.push(this.props.dispatch(teamShareCard({
-              type: this.props.team_apps[card_id].type,
-              team_id: team.id,
-              team_card_id: card_id,
-              team_user_id: user.id,
-              account_information: {}
-            })));
+            if (!this.props.team_apps[card_id])
+              this.props.dispatch(fetchTeamApp({team_id: team.id, app_id: card_id})).then(res => {
+                callback.push(this.props.dispatch(teamShareCard({
+                  type: res.type,
+                  team_id: team.id,
+                  team_card_id: card_id,
+                  team_user_id: user.id,
+                  account_information: {}
+                })));
+              });
+            else
+              callback.push(this.props.dispatch(teamShareCard({
+                type: this.props.team_apps[card_id].type,
+                team_id: team.id,
+                team_card_id: card_id,
+                team_user_id: user.id,
+                account_information: {}
+              })));
           });
         });
       }
@@ -170,17 +182,27 @@ class TeamAddUserModal extends React.Component {
         room_ids.push(Object.keys(team.rooms).find(room_id => {return team.rooms[room_id].default}));
         room_ids.map(id => {
           team.rooms[id].team_card_ids.map(card_id => {
-            return callback.push(this.props.dispatch(teamShareCard({
-              type: this.props.team_apps[card_id].type,
-              team_id: team.id,
-              team_card_id: card_id,
-              team_user_id: user.id,
-              account_information: {}
-            })));
+            if (!this.props.team_apps[card_id])
+              this.props.dispatch(fetchTeamApp({team_id: team.id, app_id: card_id})).then(res => {
+                callback.push(this.props.dispatch(teamShareCard({
+                  type: res.type,
+                  team_id: team.id,
+                  team_card_id: card_id,
+                  team_user_id: user.id,
+                  account_information: {}
+                })));
+              });
+            else
+              callback.push(this.props.dispatch(teamShareCard({
+                type: this.props.team_apps[card_id].type,
+                team_id: team.id,
+                team_card_id: card_id,
+                team_user_id: user.id,
+                account_information: {}
+              })));
           });
         });
       }
-      console.log('[CALLS]: ', callback);
       Promise.all(calls.map(reflect)).then(values => {
         Promise.all(callback.map(reflect)).then(response => {
           this.setState({loadingInvitationNow: false});
