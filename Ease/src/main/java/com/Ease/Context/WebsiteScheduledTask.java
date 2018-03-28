@@ -42,6 +42,10 @@ public class WebsiteScheduledTask extends TimerTask {
                     "               WHERE websiteApps.website_id = w.id\n" +
                     ");");
             hibernateQuery.executeUpdate();
+            hibernateQuery.querySQLString("UPDATE websites w\n" +
+                    "SET w.ratio = 10\n" +
+                    "WHERE w.website_name LIKE 'Brainsfeed';");
+            hibernateQuery.executeUpdate();
             hibernateQuery.commit();
         } catch (Exception e) {
             hibernateQuery.rollback();
