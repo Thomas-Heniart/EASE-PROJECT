@@ -17,16 +17,16 @@ export function createTeamCard({team_id, channel_id, website, type, name, url, s
 
 export function resetTeamCard() {
   return (dispatch) => {
+    dispatch({type: 'RESET_TEAM_CARD'});
+  }
+}
+
+export function moveTeamCard({card_id}) {
+  return (dispatch) => {
     dispatch({
-      type: 'RESET_TEAM_CARD', payload: {
-        team_id: -1,
-        channel_id: -1,
-        app: {},
-        name: '',
-        url: '',
-        type: '',
-        subtype: ''
+      type: 'MOVE_TEAM_CARD', payload: {
+        card_id: card_id
       }
-    });
+    })
   }
 }

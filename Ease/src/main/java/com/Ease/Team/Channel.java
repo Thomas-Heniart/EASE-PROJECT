@@ -9,6 +9,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import javax.persistence.*;
+import java.util.Collection;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -263,5 +264,9 @@ public class Channel {
         if (teamUser == null)
             throw new HttpServletException(HttpStatus.BadRequest, "No such teamUser in this team");
         return teamUser;
+    }
+
+    public boolean containsAllTeamUsers(Collection<TeamUser> teamUsers) {
+        return this.getTeamUsers().containsAll(teamUsers);
     }
 }

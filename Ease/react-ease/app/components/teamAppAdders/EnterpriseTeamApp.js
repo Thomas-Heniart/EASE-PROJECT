@@ -46,10 +46,10 @@ const TeamEnterpriseAppButtonSet = ({app, me, dispatch, editMode, selfJoin, requ
                              onClick={isAdmin(me.role) ? selfJoin : asked ? null : requestApp}
                              icon="pointing up"
                              disabled={asked}/>}
+        {isAdmin(me.role) &&
+        <TeamAppActionButton text='Move App' icon='share' onClick={e => {dispatch(modalActions.showMoveAppModal({active: true, app_id: app.id}))}}/>}
         {(isAdmin(me.role) || !!meReceiver) &&
-        <TeamAppActionButton text='Edit App'
-                             icon='pencil'
-                             onClick={editMode}/>}
+        <TeamAppActionButton text='Edit App' icon='pencil' onClick={editMode}/>}
         {isAdmin(me.role) &&
         <TeamAppActionButton text='Delete App' icon='trash outline' onClick={e => {dispatch(modalActions.showTeamDeleteAppModal({active: true, app_id: app.id}))}}/>}
       </div>
@@ -321,14 +321,15 @@ const isDifferentCredentials = (first, second) => {
 };
 
 @connect(store => ({
-  teams: store.teams
+  teams: store.teams,
+  teamCard: store.teamCard
 }), reduxActionBinder)
 class EnterpriseTeamApp extends Component {
   constructor(props){
     super(props);
     this.state = {
       loading: false,
-      edit: false,
+      edit: this.props.app.id === this.props.teamCard.edit,
       name: '',
       password_reminder_interval: 0,
       description: '',
@@ -338,15 +339,6 @@ class EnterpriseTeamApp extends Component {
     }
   }
   handleInput = handleSemanticInput.bind(this);
-  changeFillInSwitch = (e, {checked}) => {
-    if (this.props.plan_id === 0 && !checked){
-      this.props.dispatch(showUpgradeTeamPlanModal(true, 2));
-      return;
-    }
-    if (this.props.app.fill_in_switch && checked)
-      return;
-    this.setState({fill_in_switch: !checked});
-  };
   setShowMore = (state) => {
     this.setState({show_more: state});
   };
@@ -430,17 +422,6 @@ class EnterpriseTeamApp extends Component {
     }
     this.setState({edit: state, loading: false, show_more: false});
   };
-  // testConnection = (user_id) => {
-  //   let credentials = [];
-  //   this.state.users.map(user => {
-  //     if (user.id === user_id)
-  //       credentials = user.credentials;
-  //   });
-  //   this.props.dispatch(testCredentials({
-  //     account_information: transformCredentialsListIntoObject(credentials),
-  //     website_id: this.props.app.website.id
-  //   }));
-  // };
   testConnection = (user_id) => {
     let credentials = [];
     let app_id = null;
