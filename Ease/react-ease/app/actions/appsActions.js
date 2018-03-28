@@ -168,6 +168,28 @@ export function teamEditSoftwareEnterpriseCard({team_card_id, name, description,
   }
 }
 
+export function teamShareCard({type, team_id, team_card_id, team_user_id, account_information}) {
+  if (type === 'teamSingleCard')
+    return teamShareSingleCard({
+      team_id: team_id,
+      team_card_id: team_card_id,
+      team_user_id: team_user_id,
+      allowed_to_see_password: true
+    });
+  else if (type === 'teamEnterpriseCard')
+    return teamShareEnterpriseCard({
+      team_id: team_id,
+      team_card_id: team_card_id,
+      team_user_id: team_user_id,
+      account_information: account_information
+    });
+  else
+    return teamShareLinkCard({
+      team_card_id: team_card_id,
+      team_user_id: team_user_id
+    });
+}
+
 export function teamShareEnterpriseCard({team_id, team_card_id, team_user_id, account_information}) {
   return (dispatch, getState) => {
     return post_api.teamApps.shareEnterpriseCard({

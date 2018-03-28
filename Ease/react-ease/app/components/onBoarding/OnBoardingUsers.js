@@ -7,28 +7,33 @@ function checkTextArea(paste) {
   const semicolon = paste.search(/[;]/g);
   const space = paste.search(/[' ']/g);
   const tab = paste.search(/[\t]/g);
+  const emails = [];
 
   if (comma !== -1 && isEmail(paste.substring(0, comma))) {
-    const emails = paste.split(',').filter(item => {
-      return isEmail(item);
+    paste.split(',').filter(item => {
+      if (isEmail(item.trim()))
+        return emails.push(item.trim())
     });
     return emails;
   }
   else if (semicolon !== -1 && isEmail(paste.substring(0, semicolon))) {
-    const emails = paste.split(';').filter(item => {
-      return isEmail(item);
+    paste.split(';').filter(item => {
+      if (isEmail(item.trim()))
+        return emails.push(item.trim())
     });
     return emails;
   }
   else if (space !== -1 && isEmail(paste.substring(0, space))) {
-    const emails = paste.split(' ').filter(item => {
-      return isEmail(item);
+    paste.split(' ').filter(item => {
+      if (isEmail(item.trim()))
+        return emails.push(item.trim())
     });
     return emails;
   }
   else if (tab !== -1 && isEmail(paste.substring(0, tab))) {
-    const emails = paste.split('\t').filter(item => {
-      return isEmail(item);
+    paste.split('\t').filter(item => {
+      if (isEmail(item.trim()))
+        return emails.push(item.trim())
     });
     return emails;
   }
@@ -50,7 +55,7 @@ class OnBoardingUsers extends React.Component {
     if (!isEmail(value))
       emails = checkTextArea(value);
     else
-      emails = [value];
+      emails = [value.trim()];
     this.props.textareaToEmails(emails);
     this.setState({[name]: value, emails: emails});
   };
