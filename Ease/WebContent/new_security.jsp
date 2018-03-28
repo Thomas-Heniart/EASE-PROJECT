@@ -34,12 +34,12 @@
     <link rel="icon" type="image/png" href="resources/icons/APPEASE.png" />
 
     <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Raleway:500,700" />
-    <link rel="stylesheet" type="text/css" href="/cssMinified.v00060/lib/fonts/museo-font.css"/>
-    <link rel="stylesheet" href="/cssMinified.v00060/default_style.css"/>
-    <link rel="stylesheet" href="/cssMinified.v00060/bootstrap.css"/>
-    <link rel="stylesheet" href="/cssMinified.v00060/landingPage.css"/>
-    <link rel="stylesheet" href="/cssMinified.v00060/lib/fonts/font-awesome-4.2.0/css/font-awesome.min.css"/>
-    <link rel="stylesheet" href="/cssMinified.v00060/securityPage.css"/>
+    <link rel="stylesheet" type="text/css" href="/css/lib/fonts/museo-font.css?cssv=1"/>
+    <link rel="stylesheet" href="/css/default_style.css?cssv=1"/>
+    <link rel="stylesheet" href="/css/bootstrap.css?cssv=1"/>
+    <link rel="stylesheet" href="/css/landingPage.css?cssv=1"/>
+    <link rel="stylesheet" href="/css/lib/fonts/font-awesome-4.2.0/css/font-awesome.min.css?cssv=1"/>
+    <link rel="stylesheet" href="/css/securityPage.css?cssv=1"/>
 
     <!-- Global site tag (gtag.js) - Google Analytics -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=UA-75916041-5"></script>
@@ -224,14 +224,14 @@
     </div>
 </section>
 <%@ include file="templates/landingPage/landingFooter.jsp" %>
-<script src="/jsMinified.v00023/jquery1.12.4.js"></script>
-<script src="/jsMinified.v00023/jquery.complexify.js"></script>
-<script src="/jsMinified.v00023/bootstrap.js" async></script>
-<script src="/jsMinified.v00023/ajaxHandler.js" async></script>
-<script src="/jsMinified.v00023/landingPage.js" async></script>
-<script src="/jsMinified.v00023/basic-utils.js" async></script>
-<script src="/jsMinified.v00023/languageChooser.js" async></script>
-<script src="/jsMinified.v00023/tracker.js" async></script>
+<script src="/jsMinified/jquery1.12.4.js?jsv=1"></script>
+<script src="/jsMinified/jquery.complexify.js?jsv=1"></script>
+<script src="/jsMinified/bootstrap.js?jsv=1" async></script>
+<script src="/jsMinified/ajaxHandler.js?jsv=1" async></script>
+<script src="/jsMinified/landingPage.js?jsv=1" async></script>
+<script src="/jsMinified/basic-utils.js?jsv=1" async></script>
+<script src="/jsMinified/languageChooser.js?jsv=1" async></script>
+<script src="/jsMinified/tracker.js?jsv=1" async></script>
 <script type="text/javascript">
     if (window.matchMedia("(max-width: 768px)").matches) {
         $('#docs-content').removeClass('docs-content');
