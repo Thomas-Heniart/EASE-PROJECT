@@ -34,12 +34,12 @@
     <link rel="icon" type="image/png" href="resources/icons/APPEASE.png" />
 
     <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Raleway:500,700" />
-    <link rel="stylesheet" type="text/css" href="/cssMinified.v00059/lib/fonts/museo-font.css"/>
-    <link rel="stylesheet" href="/cssMinified.v00059/default_style.css"/>
-    <link rel="stylesheet" href="/cssMinified.v00059/bootstrap.css"/>
-    <link rel="stylesheet" href="/cssMinified.v00059/landingPage.css"/>
-    <link rel="stylesheet" href="/cssMinified.v00059/lib/fonts/font-awesome-4.2.0/css/font-awesome.min.css"/>
-    <link rel="stylesheet" href="/cssMinified.v00059/securityPage.css"/>
+    <link rel="stylesheet" type="text/css" href="/cssMinified.v00061/lib/fonts/museo-font.css"/>
+    <link rel="stylesheet" href="/cssMinified.v00061/default_style.css"/>
+    <link rel="stylesheet" href="/cssMinified.v00061/bootstrap.css"/>
+    <link rel="stylesheet" href="/cssMinified.v00061/landingPage.css"/>
+    <link rel="stylesheet" href="/cssMinified.v00061/lib/fonts/font-awesome-4.2.0/css/font-awesome.min.css"/>
+    <link rel="stylesheet" href="/cssMinified.v00061/securityPage.css"/>
 
     <!-- Global site tag (gtag.js) - Google Analytics -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=UA-75916041-5"></script>
@@ -63,11 +63,6 @@
             <ul class="nav navbar-nav navbar-right">
                 <li class="hidden">
                     <a href="#page-top"></a>
-                </li>
-                <li>
-                    <a href="/product">
-                        <fmt:message key="landing.footer.section-product.title" />
-                    </a>
                 </li>
                 <li>
                     <a href="/security">

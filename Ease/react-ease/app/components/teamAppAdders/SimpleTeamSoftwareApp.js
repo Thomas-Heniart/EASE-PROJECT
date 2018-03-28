@@ -145,14 +145,15 @@ class ReceiversLabelGroup extends Component {
 };
 
 @connect(store => ({
-  teams: store.teams
+  teams: store.teams,
+  teamCard: store.teamCard
 }))
 class SimpleTeamSoftwareApp extends Component {
   constructor(props){
     super(props);
     this.state = {
       loading: false,
-      edit: false,
+      edit: this.props.app.id === this.props.teamCard.edit,
       name: '',
       credentials: [],
       password_reminder_interval: 0,

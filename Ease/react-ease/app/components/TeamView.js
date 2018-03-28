@@ -207,6 +207,7 @@ class TeamView extends React.Component {
                   item={selectedItem}
                   user={user}
                   me={me}
+                  team={team}
                   setAddAppView={this.setAddAppView}
                   match={this.props.match}
                   dispatch={this.props.dispatch}/>
@@ -217,7 +218,7 @@ class TeamView extends React.Component {
                                team={team}
                                me={me}
                                dispatch={this.props.dispatch}/>}
-                  {(this.props.card.type && this.props.card.channel_id === selectedItem.id) &&
+                  {(this.props.card.type && this.props.card.edit === -1 && this.props.card.channel_id === selectedItem.id) &&
                   <TeamAppAddingUi
                       addAppView={this.props.card.type}
                       item={selectedItem}
