@@ -55,11 +55,11 @@ class Preferences extends React.Component {
     }
   };
   toggleConnectionLifetime = () => {
-    const connectionLifetime = this.props.common.connectionLifetime;
+    const connection_lifetime = this.props.common.user.connection_lifetime;
 
     this.setState({loadingConnectionLifetime: true});
     this.props.dispatch(setConnectionLifetime({
-      connectionLifetime: connectionLifetime === 1 ? 7 : 1
+      connection_lifetime: connection_lifetime === 1 ? 7 : 1
     })).then(response => {
       this.setState({loadingConnectionLifetime: false});
     }).catch(err => {
@@ -67,7 +67,7 @@ class Preferences extends React.Component {
     });
   };
   render(){
-    const connectionLifetime = this.props.common.connectionLifetime;
+    const connection_lifetime = this.props.common.user.connection_lifetime;
 
     return (
       <Segment>
@@ -91,7 +91,7 @@ class Preferences extends React.Component {
           behind your Apps.</p>
         <div>
           <Checkbox toggle
-                    checked={connectionLifetime === 1}
+                    checked={connection_lifetime === 1}
                     onChange={this.toggleConnectionLifetime}
                     disabled={this.state.loadingConnectionLifetime}/>
           <span>Logout everyday</span>

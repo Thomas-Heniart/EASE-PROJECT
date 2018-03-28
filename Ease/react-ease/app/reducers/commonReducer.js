@@ -7,8 +7,7 @@ const initialState = {
   loginRedirectUrl: '',
   teamsTutorial: false,
   homepage: false,
-  generalLogoutModal: false,
-  connectionLifetime: 1
+  generalLogoutModal: false
 };
 
 export default function reducer(state=initialState, action) {
@@ -106,10 +105,12 @@ export default function reducer(state=initialState, action) {
       })
     }
     case 'SET_CONNECTION_LIFETIME': {
-      const {connectionLifetime} = action.payload;
+      const {connection_lifetime} = action.payload;
 
       return update(state, {
-        connectionLifetime: {$set: connectionLifetime}
+        user: {
+          connection_lifetime: {$set: connection_lifetime}
+        }
       })
     }
   }

@@ -1390,9 +1390,9 @@ module.exports = {
         throw err.response.data;
       })
     },
-    setConnectionLifetime: ({connectionLifetime,ws_id}) => {
+    setConnectionLifetime: ({connection_lifetime,ws_id}) => {
       return basic_put('/api/v1/users/EditConnectionLifetime', {
-        connection_lifetime: connectionLifetime,
+        connection_lifetime: connection_lifetime,
         ws_id: ws_id
       })
     },
