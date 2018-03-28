@@ -1,6 +1,6 @@
 import React, {Component, Fragment} from "react";
 import {Search, Popup} from 'semantic-ui-react';
-import {withRouter} from "react-router-dom";
+import {NavLink, withRouter} from "react-router-dom";
 import {askJoinChannel, addTeamUserToChannel} from "../../../actions/channelActions";
 import {fetchAllTeamCards} from "../../../actions/appsActions";
 import {isAdmin} from "../../../utils/helperFunctions";
@@ -12,6 +12,7 @@ const DisabledCardPopup = ({trigger, room_name, room_manager_name}) => {
       <Popup size="mini"
              position="right center"
              inverted
+             id="team_apps_search_popup"
              hideOnScroll={true}
              trigger={trigger}
              content={`Join #${room_name} to get access. Room manager: ${room_manager_name}`}
@@ -196,7 +197,7 @@ class TeamAppsHeaderSearch extends Component {
                   placeholder="Search for an app"
                   size="mini"
                   fluid
-                  noResultsMessage={loading ? 'Searching...' : 'No apps found...'}
+                  noResultsMessage={loading ? 'Searching...' : <span>No app found! Add it from <NavLink to={'/main/catalog/website'}>the catalogue</NavLink>.</span>}
                   onResultSelect={this.onResultSelect}
                   resultRenderer={this.teamCardRenderer}
                   results={team_cards_results}

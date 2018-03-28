@@ -3551,6 +3551,10 @@ button.big-button {
   opacity: 0;
 }
 
+#team_apps_search_popup {
+  font-size: .7rem;
+}
+
 #team_header_apps_search {
   margin-right: 50px;
   width: 250px;
@@ -3607,7 +3611,7 @@ button.big-button {
     .logo {
       width: 25px;
       height: 25px;
-      border-radius: 5px;
+      border-radius: 3px;
     }
   }
 }
