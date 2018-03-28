@@ -21,12 +21,15 @@ class MoveAppModal extends Component {
   selectRoom = (roomId) => {
     this.setState({selectedRoom: Number(roomId), checkRoom: roomId});
   };
+  next = () => {
+    this.props.history.push(`/teams/${this.state.team.id}/${this.state.selectedRoom}`);
+  };
   close = () => {
     this.props.dispatch(showMoveAppModal({active: false}));
   };
   render() {
     const card = this.props.card;
-    const website = card.software ? card.software : card.website ? card.website : {card};
+    const website = card.software ? card.software : card.website ? card.website : card;
     const rooms = this.state.team.rooms;
     return (
       <SimpleModalTemplate
@@ -69,7 +72,7 @@ class MoveAppModal extends Component {
             attached='bottom'
             className="modal-button"
             loading={this.state.loading}
-            disabled={this.state.loading}/>
+            disabled={this.state.loading || this.state.selectedRoom === -1}/>
         </Form>
       </SimpleModalTemplate>
     )
