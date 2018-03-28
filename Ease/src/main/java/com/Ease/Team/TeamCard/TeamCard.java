@@ -103,7 +103,11 @@ public abstract class TeamCard {
     }
 
     public void setChannel(Channel channel) {
+        if (this.channel != null)
+            this.channel.removeTeamCard(this);
         this.channel = channel;
+        if (this.channel != null)
+            this.channel.addTeamCard(this);
     }
 
     public String getDescription() {

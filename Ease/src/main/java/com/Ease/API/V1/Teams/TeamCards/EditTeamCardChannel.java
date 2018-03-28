@@ -1,4 +1,4 @@
-package com.Ease.API.V1.Teams.TeamCards.TeamEnterpriseCard;
+package com.Ease.API.V1.Teams.TeamCards;
 
 import com.Ease.Hibernate.HibernateQuery;
 import com.Ease.NewDashboard.App;
@@ -42,6 +42,7 @@ public class EditTeamCardChannel extends HttpServlet {
             if (!channel.containsAllTeamUsers(teamCard.getTeamUsers()))
                 throw new HttpServletException(HttpStatus.BadRequest, "All team users must be part of new channel");
             HibernateQuery hibernateQuery = sm.getHibernateQuery();
+            teamCard.setChannel(channel);
             for (TeamCardReceiver teamCardReceiver : teamCard.getTeamCardReceiverMap().values()) {
                 TeamUser teamUserReceiver = teamCardReceiver.getTeamUser();
                 App app = teamCardReceiver.getApp();
@@ -55,7 +56,6 @@ public class EditTeamCardChannel extends HttpServlet {
                 newProfile.addAppAndUpdatePositions(app, 0, hibernateQuery);
                 sm.addWebSocketMessage(WebSocketMessageFactory.createWebSocketMessage(WebSocketMessageType.TEAM_CARD_RECEIVER, WebSocketMessageAction.CHANGED, teamCardReceiver.getWebSocketJson()));
             }
-            teamCard.setChannel(channel);
             sm.saveOrUpdate(teamCard);
             sm.addWebSocketMessage(WebSocketMessageFactory.createWebSocketMessage(WebSocketMessageType.TEAM_CARD, WebSocketMessageAction.CHANGED, teamCard.getWebSocketJson()));
             sm.setSuccess(teamCard.getJson());
