@@ -1,4 +1,5 @@
 import React, {Component} from "react";
+import {connect} from "react-redux";
 import classnames from "classnames";
 import {getClearbitLogo} from '../../utils/api';
 import {Button, Container, Header, Icon, Input, Label, Popup, Segment, Dropdown} from 'semantic-ui-react';
@@ -16,6 +17,8 @@ const TeamLinkAppButtonSet = ({app, me, dispatch, editMode, meReceiver, join}) =
         <TeamAppActionButton text={'Join App'}
                              onClick={join}
                              icon="pointing up"/>}
+        {isAdmin(me.role) &&
+        <TeamAppActionButton text='Move App' icon='share' onClick={e => {dispatch(modalActions.showMoveAppModal({active: true, app_id: app.id}))}}/>}
         {isAdmin(me.role) &&
         <TeamAppActionButton text='Edit App' icon='pencil' onClick={editMode}/>}
         {isAdmin(me.role) &&
@@ -85,6 +88,9 @@ class ReceiversLabelGroup extends Component {
   }
 };
 
+@connect(store => ({
+  teamCard: store.teamCard
+}))
 class LinkTeamApp extends Component {
   constructor(props){
     super(props);
@@ -93,7 +99,7 @@ class LinkTeamApp extends Component {
       url: '',
       img_url: '',
       loading: false,
-      edit: false,
+      edit: this.props.app.id === this.props.teamCard.edit,
       description: '',
       users: [],
       selected_users: []

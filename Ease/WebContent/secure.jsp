@@ -30,7 +30,7 @@
 
 
     <script src="//code.jquery.com/jquery-1.10.2.min.js"></script>
-    <script src="/jsMinified.v00023/tracker.js"></script>
+    <script src="/jsMinified/tracker.js"></script>
     <title> Ease.space | The easiest way to connect to your professional and personal web.</title>
     <!-- Description shown in Google -->
     <meta name="description" content="Ease is an intuitive password manager working as a browser homepage.">

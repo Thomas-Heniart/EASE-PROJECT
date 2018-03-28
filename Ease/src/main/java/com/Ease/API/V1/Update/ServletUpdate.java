@@ -4,6 +4,7 @@ import com.Ease.Catalog.Catalog;
 import com.Ease.Catalog.Website;
 import com.Ease.Catalog.WebsiteInformation;
 import com.Ease.Hibernate.HibernateQuery;
+import com.Ease.NewDashboard.App;
 import com.Ease.NewDashboard.SsoApp;
 import com.Ease.NewDashboard.WebsiteApp;
 import com.Ease.Team.Team;
@@ -111,11 +112,22 @@ public class ServletUpdate extends HttpServlet {
             for (Update update : updates)
                 update.decipher(privateKey);
             updates = updates.stream().filter(update -> update.accountMatch(account_information)).collect(Collectors.toList());
-            for (Update update : updates) {
-                //if (!update.passwordMatch(account_information)) {
+            Iterator<Update> updateIterator = updates.iterator();
+            while (updateIterator.hasNext()) {
+                Update update = updateIterator.next();
                 update.edit(account_information, user.getUserKeys().getPublicKey());
-                //res.put(update.getJson());
-                //}
+                App app = update.getApp();
+                if (app == null)
+                    continue;
+                String teamKey = null;
+                String keyUser = sm.getKeyUser();
+                if (app.getTeamCardReceiver() != null)
+                    teamKey = sm.getTeamKey(app.getTeamCardReceiver().getTeamCard().getTeam());
+                app.decipher(keyUser, teamKey);
+                if (app.getAccount() != null && app.getAccount().sameAs(account_information)) {
+                    hibernateQuery.deleteObject(update);
+                    updateIterator.remove();
+                }
             }
             populateResponse(res, user, account_information, website, url, hibernateQuery, sm, updates);
             sm.setSuccess(res);

@@ -75,6 +75,8 @@ const TeamSimpleAppButtonSet = ({app, me, dispatch, editMode, selfJoin, requestA
                              onClick={isAdmin(me.role) ? selfJoin : asked ? null : requestApp}
                              icon="pointing up"
                              disabled={asked}/>}
+        {isAdmin(me.role) &&
+        <TeamAppActionButton text='Move App' icon='share' onClick={e => {dispatch(modalActions.showMoveAppModal({active: true, app_id: app.id}))}}/>}
         {(isAdmin(me.role) || app.team_user_sender_id === me.id) &&
         <TeamAppActionButton text='Edit App' icon='pencil' onClick={editMode}/>}
         {(isAdmin(me.role) || app.team_user_sender_id === me.id) &&
@@ -177,14 +179,15 @@ const AcceptRefuseAppHeader = ({pinneable, onAccept, onRefuse}) => {
 };
 
 @connect(store => ({
-  teams: store.teams
+  teams: store.teams,
+  teamCard: store.teamCard
 }))
 class SimpleTeamApp extends Component {
   constructor(props){
     super(props);
     this.state = {
       loading: false,
-      edit: false,
+      edit: this.props.app.id === this.props.teamCard.edit,
       name: '',
       credentials: [],
       password_reminder_interval: 0,
