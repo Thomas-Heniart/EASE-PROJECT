@@ -34,6 +34,7 @@ import {addNotification} from "../../actions/notificationBoxActions";
 import * as api from "../../utils/api";
 import {testCredentials} from "../../actions/catalogActions";
 import {passwordCopied} from "../../actions/dashboardActions";
+import {resetTeamCard} from "../../actions/teamCardActions";
 
 const TeamEnterpriseAppButtonSet = ({app, me, dispatch, editMode, selfJoin, requestApp}) => {
   const meReceiver = app.receivers.find(receiver => (receiver.team_user_id === me.id));
@@ -340,8 +341,10 @@ class EnterpriseTeamApp extends Component {
   }
   handleInput = handleSemanticInput.bind(this);
   componentDidMount() {
-    if (this.props.app.id === this.props.teamCard.edit)
+    if (this.props.app.id === this.props.teamCard.edit) {
+      this.props.dispatch(resetTeamCard());
       this.setEdit(this.state);
+    }
   }
   setShowMore = (state) => {
     this.setState({show_more: state});

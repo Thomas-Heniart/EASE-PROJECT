@@ -33,6 +33,7 @@ import {
 } from "../../utils/helperFunctions";
 import {addNotification} from "../../actions/notificationBoxActions";
 import {connect} from "react-redux";
+import {resetTeamCard} from "../../actions/teamCardActions";
 
 const TeamAppCredentialInput = ({item, onChange, disabled, readOnly}) => {
   return <Input size="mini"
@@ -164,8 +165,10 @@ class SimpleTeamSoftwareApp extends Component {
   }
   handleInput = handleSemanticInput.bind(this);
   componentDidMount() {
-    if (this.props.app.id === this.props.teamCard.edit)
+    if (this.props.app.id === this.props.teamCard.edit) {
+      this.props.dispatch(resetTeamCard());
       this.setEdit(this.state);
+    }
   }
   toggleCanSeeInformation = (id) => {
     let users = this.state.users.map(item => {

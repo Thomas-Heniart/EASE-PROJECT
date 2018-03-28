@@ -9,6 +9,7 @@ import {teamEditLinkCard, teamShareLinkCard, removeTeamCardReceiver} from "../..
 import {handleSemanticInput, reflect} from "../../utils/utils";
 import {getReceiverInList, isAdmin, sortReceiversAndMap, selectItemFromListById,} from "../../utils/helperFunctions";
 import {addNotification} from "../../actions/notificationBoxActions";
+import {resetTeamCard} from "../../actions/teamCardActions";
 
 const TeamLinkAppButtonSet = ({app, me, dispatch, editMode, meReceiver, join}) => {
   return (
@@ -106,8 +107,10 @@ class LinkTeamApp extends Component {
     }
   }
   componentDidMount() {
-    if (this.props.app.id === this.props.teamCard.edit)
+    if (this.props.app.id === this.props.teamCard.edit) {
+      this.props.dispatch(resetTeamCard());
       this.setEdit(this.state);
+    }
   }
   getLogo = () => {
     getClearbitLogo(this.state.url).then(response => {
