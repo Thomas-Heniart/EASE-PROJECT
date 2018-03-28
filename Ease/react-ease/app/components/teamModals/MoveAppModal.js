@@ -1,8 +1,9 @@
 import React, {Component} from 'react';
 import {connect} from "react-redux";
+import {moveTeamCard} from "../../actions/teamCardActions";
 import SimpleModalTemplate from "../common/SimpleModalTemplate";
 import {showMoveAppModal} from "../../actions/teamModalActions";
-import {Form, Button, Label, Icon, Segment, Container, Loader, Checkbox} from 'semantic-ui-react';
+import {Form, Button, Checkbox} from 'semantic-ui-react';
 
 @connect(store => ({
   card: store.team_apps[store.teamModals.moveAppModal.app_id],
@@ -22,7 +23,9 @@ class MoveAppModal extends Component {
     this.setState({selectedRoom: Number(roomId), checkRoom: roomId});
   };
   next = () => {
-    this.props.history.push(`/teams/${this.state.team.id}/${this.state.selectedRoom}`);
+    this.props.dispatch(moveTeamCard({card_id: Number(this.props.card.id)}));
+    // this.props.history.push(`/teams/${this.state.team.id}/${this.state.selectedRoom}`);
+    this.close();
   };
   close = () => {
     this.props.dispatch(showMoveAppModal({active: false}));
@@ -35,7 +38,7 @@ class MoveAppModal extends Component {
       <SimpleModalTemplate
         onClose={this.close}
         headerContent={'Move App'}>
-        <Form class="container" id="add_bookmark_form">
+        <Form class="container" id="add_bookmark_form" onSubmit={this.next}>
           <Form.Field class="display-flex align_items_center" style={{marginBottom: '30px'}}>
             <div className="squared_image_handler">
               <img src={website.logo} alt="Website logo"/>
@@ -66,6 +69,7 @@ class MoveAppModal extends Component {
           </Form.Field>
           <p>As room members might be different you’ll be able to setup the app as you want it to be.</p>
           <Button
+            onClick={this.next}
             positive
             type="submit"
             content="NEXT"

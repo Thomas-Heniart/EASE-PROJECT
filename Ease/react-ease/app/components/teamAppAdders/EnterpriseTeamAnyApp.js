@@ -293,14 +293,15 @@ const isDifferentCredentials = (first, second) => {
 };
 
 @connect(store => ({
-  teams: store.teams
+  teams: store.teams,
+  teamCard: store.teamCard
 }), reduxActionBinder)
 class EnterpriseTeamAnyApp extends Component {
   constructor(props){
     super(props);
     this.state = {
       loading: false,
-      edit: false,
+      edit: this.props.app.id === this.props.teamCard.edit,
       name: '',
       password_reminder_interval: 0,
       description: '',
@@ -312,15 +313,6 @@ class EnterpriseTeamAnyApp extends Component {
     }
   }
   handleInput = handleSemanticInput.bind(this);
-  changeFillInSwitch = (e, {checked}) => {
-    if (this.props.plan_id === 0 && !checked){
-      this.props.dispatch(showUpgradeTeamPlanModal(true, 2));
-      return;
-    }
-    if (this.props.app.fill_in_switch && checked)
-      return;
-    this.setState({fill_in_switch: !checked});
-  };
   getLogo = () => {
     getClearbitLogo(this.state.url).then(response => {
       this.setState({img_url: response});
