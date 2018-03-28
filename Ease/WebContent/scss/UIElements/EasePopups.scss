@@ -1040,6 +1040,11 @@
 				background-color: #979797 !important;
 			}
 		}
+		&.accept_user_room {
+			border: none !important;
+			border-top-right-radius: 0;
+			border-top-left-radius: 0;
+		}
 	}
 }
 

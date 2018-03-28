@@ -1,1 +1,0 @@
-var constructorErrorMsg=function(s,r){var o=this;this.qRoot=s,this.oParent=r,this.qMsg=this.qRoot.find("p"),this.display=function(s){o.qMsg.addClass("show"),o.qMsg.innerHTML(s)},this.reset=function(){o.qMsg.innerHTML(""),o.qMsg.removeClass("show")}},ErrorMsg={ClassicErrorMsg:function(){constructorErrorMsg.apply(this,arguments)}};

@@ -41,12 +41,12 @@
     <link rel="manifest" href="manifest.json">
     <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Raleway:500,700"/>
     <link rel="stylesheet" href="/semantic/dist/semantic.min.css">
-    <link rel="stylesheet" type="text/css" href="/cssMinified.v00059/lib/fonts/museo-font.css"/>
-    <link rel="stylesheet" href="/cssMinified.v00059/default_style.css"/>
-    <link rel="stylesheet" href="/cssMinified.v00059/bootstrap.css"/>
-    <link rel="stylesheet" href="/cssMinified.v00059/landingPage.css"/>
+    <link rel="stylesheet" type="text/css" href="/css/lib/fonts/museo-font.css?cssv=1"/>
+    <link rel="stylesheet" href="/css/default_style.css?cssv=1"/>
+    <link rel="stylesheet" href="/css/bootstrap.css?cssv=1"/>
+    <link rel="stylesheet" href="/css/landingPage.css?cssv=1"/>
     <link rel="stylesheet" type="text/css"
-          href="/cssMinified.v00059/lib/fonts/font-awesome-4.2.0/css/font-awesome.min.css"/>
+          href="/css/lib/fonts/font-awesome-4.2.0/css/font-awesome.min.css?cssv=1"/>
     <style>
         .digit {
             border-radius: 4px;
@@ -162,13 +162,13 @@
 </section>
 
 <%@ include file="templates/landingPage/landingFooter.jsp" %>
-<script src="/jsMinified.v00023/jquery1.12.4.js"></script>
-<script src="/jsMinified.v00023/jquery.complexify.js"></script>
-<script src="/jsMinified.v00023/bootstrap.js" async></script>
-<script src="/jsMinified.v00023/ajaxHandler.js" async></script>
-<script src="/jsMinified.v00023/basic-utils.js" async></script>
-<script src="/jsMinified.v00023/languageChooser.js" async></script>
-<script src="/jsMinified.v00023/tracker.js" async></script>
+<script src="/jsMinified/jquery1.12.4.js"></script>
+<script src="/jsMinified/jquery.complexify.js"></script>
+<script src="/jsMinified/bootstrap.js" async></script>
+<script src="/jsMinified/ajaxHandler.js" async></script>
+<script src="/jsMinified/basic-utils.js" async></script>
+<script src="/jsMinified/languageChooser.js" async></script>
+<script src="/jsMinified/tracker.js" async></script>
 <script src="/semantic/dist/semantic.min.js"></script>
 <script type="text/javascript">
     if (window.matchMedia("(max-width: 768px)").matches) {

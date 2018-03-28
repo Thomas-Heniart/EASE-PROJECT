@@ -1,6 +1,7 @@
 package com.Ease.API.V1.Teams.Settings;
 
 import com.Ease.Hibernate.HibernateQuery;
+import com.Ease.Mail.MailJetBuilder;
 import com.Ease.Team.InvitedFriend;
 import com.Ease.Team.Team;
 import com.Ease.Utils.HttpServletException;
@@ -22,6 +23,7 @@ import java.util.List;
 @WebServlet("/api/v1/teams/InviteFriend")
 public class ServletInvitedFriend extends HttpServlet {
 
+    @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         PostServletManager sm = new PostServletManager(this.getClass().getName(), request, response, true);
         try {
@@ -48,6 +50,14 @@ public class ServletInvitedFriend extends HttpServlet {
                 throw new HttpServletException(HttpStatus.BadRequest, "This person already uses Ease.space, please referre another one!");
             InvitedFriend invitedFriend = new InvitedFriend(email, team);
             team.addInvitedFriend(invitedFriend);
+            MailJetBuilder mailJetBuilder = new MailJetBuilder();
+            mailJetBuilder.setFrom("contact@ease.space", "Agathe The Power");
+            mailJetBuilder.addTo("benjamin@ease.space");
+            mailJetBuilder.setTemplateId(348038);
+            mailJetBuilder.addVariable("username", sm.getTeamUser(team).getUsername());
+            mailJetBuilder.addVariable("team_name", team.getName());
+            mailJetBuilder.addVariable("contact_email", email);
+            mailJetBuilder.sendEmail();
             sm.saveOrUpdate(team);
             sm.setSuccess("Done");
         } catch (Exception e) {
@@ -56,6 +66,7 @@ public class ServletInvitedFriend extends HttpServlet {
         sm.sendResponse();
     }
 
+    @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         GetServletManager sm = new GetServletManager(this.getClass().getName(), request, response, true);
         try {

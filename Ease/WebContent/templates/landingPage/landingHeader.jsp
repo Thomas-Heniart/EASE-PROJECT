@@ -11,11 +11,6 @@
 					<a href="#page-top"></a>
 				</li>
 				<li>
-					<a href="/product">
-						<fmt:message key="landing.footer.section-product.title" />
-					</a>
-				</li>
-				<li>
 					<a href="/security">
 						<fmt:message key="landing.header.security-link" />
 					</a>

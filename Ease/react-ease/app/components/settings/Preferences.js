@@ -1,6 +1,6 @@
 import React from 'react';
 import { Segment, Checkbox, Header } from 'semantic-ui-react';
-import {setBackgroundPicture, setHomepage, setDailyLogoutActive} from "../../actions/commonActions";
+import {setBackgroundPicture, setHomepage, setConnectionLifetime} from "../../actions/commonActions";
 import {reduxActionBinder} from "../../actions/index";
 import extension from "../../utils/extension_api";
 import {connect} from "react-redux";
@@ -16,7 +16,7 @@ class Preferences extends React.Component {
       background: this.props.common.user.background_picture,
       loadingHomepage: false,
       loadingBackground: false,
-      loadingDailyLogout: false,
+      loadingConnectionLifetime: false,
       errorMessage: ''
     }
   }
@@ -54,20 +54,20 @@ class Preferences extends React.Component {
       });
     }
   };
-  toggleDailyLogout = () => {
-    const dailyLogout = this.props.common.dailyLogout;
+  toggleConnectionLifetime = () => {
+    const connectionLifetime = this.props.common.connectionLifetime;
 
-    this.setState({loadingDailyLogout: true});
-    this.props.dispatch(setDailyLogoutActive({
-      active: !dailyLogout
+    this.setState({loadingConnectionLifetime: true});
+    this.props.dispatch(setConnectionLifetime({
+      connectionLifetime: connectionLifetime === 1 ? 7 : 1
     })).then(response => {
-      this.setState({loadingDailyLogout: false});
+      this.setState({loadingConnectionLifetime: false});
     }).catch(err => {
-      this.setState({loadingDailyLogout: false});
+      this.setState({loadingConnectionLifetime: false});
     });
   };
   render(){
-    const dailyLogout = this.props.common.dailyLogout;
+    const connectionLifetime = this.props.common.connectionLifetime;
 
     return (
       <Segment>
@@ -91,9 +91,9 @@ class Preferences extends React.Component {
           behind your Apps.</p>
         <div>
           <Checkbox toggle
-                    checked={dailyLogout}
-                    onChange={this.toggleDailyLogout}
-                    disabled={this.state.loadingDailyLogout}/>
+                    checked={connectionLifetime === 1}
+                    onChange={this.toggleConnectionLifetime}
+                    disabled={this.state.loadingConnectionLifetime}/>
           <span>Logout everyday</span>
         </div>
         <p>

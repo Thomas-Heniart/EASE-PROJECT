@@ -33,24 +33,24 @@
 
     <link rel="icon" type="image/png" href="resources/icons/APPEASE.png"/>
     <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Raleway:500,700" />
-    <link rel="stylesheet" type="text/css" href="/cssMinified.v00059/lib/fonts/museo-font.css"/>
+    <link rel="stylesheet" type="text/css" href="/css/lib/fonts/museo-font.css?cssv=1"/>
     <link rel="stylesheet" href="/semantic/dist/semantic.min.css"/>
-    <link rel="stylesheet" href="/cssMinified.v00059/default_style.css"/>
-    <link rel="stylesheet" href="/cssMinified.v00059/lib/fonts/font-awesome-4.2.0/css/font-awesome.min.css"/>
-    <link rel="stylesheet" href="/cssMinified.v00059/lib/fonts/untitled-font-4/styles.css"/>
-    <link rel="stylesheet" href="/cssMinified.v00059/team.css"/>
-    <link rel="stylesheet" href="/css/lib/loading.min.css"/>
+    <link rel="stylesheet" href="/css/default_style.css?cssv=1"/>
+    <link rel="stylesheet" href="/css/lib/fonts/font-awesome-4.2.0/css/font-awesome.min.css?cssv=1"/>
+    <link rel="stylesheet" href="/css/lib/fonts/untitled-font-4/styles.css?cssv=1"/>
+    <link rel="stylesheet" href="/css/team.css?cssv=1"/>
+    <link rel="stylesheet" href="/css/lib/loading.min.css?cssv=1"/>
 
     <script src="https://js.stripe.com/v3/"></script>
-    <script src="/jsMinified.v00023/jsencrypt.js"></script>
-    <script src="/jsMinified.v00023/moment.js"></script>
-    <script src="/jsMinified.v00023/tracker.js"></script>
+    <script src="/jsMinified/jsencrypt.js?jsv=1"></script>
+    <script src="/jsMinified/moment.js?jsv=1"></script>
+    <script src="/jsMinified/tracker.js?jsv=1"></script>
 
 </head>
 <BODY class="notranslate">
 <div id="app">
 </div>
-<script src="teams_bundle.js?v=101"></script>
+<script src="teams_bundle.js?v=110"></script>
 <script type="text/javascript">
   window.addEventListener('load', function () {
     $crisp = [];

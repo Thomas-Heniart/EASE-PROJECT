@@ -8,7 +8,7 @@ const initialState = {
   teamsTutorial: false,
   homepage: false,
   generalLogoutModal: false,
-  dailyLogout: false
+  connectionLifetime: 1
 };
 
 export default function reducer(state=initialState, action) {
@@ -105,11 +105,11 @@ export default function reducer(state=initialState, action) {
         generalLogoutModal: {$set: active}
       })
     }
-    case 'SET_DAILY_LOGOUT_ACTIVE': {
-      const {active} = action.payload;
+    case 'SET_CONNECTION_LIFETIME': {
+      const {connectionLifetime} = action.payload;
 
       return update(state, {
-        dailyLogout: {$set: active}
+        connectionLifetime: {$set: connectionLifetime}
       })
     }
   }

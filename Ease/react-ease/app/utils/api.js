@@ -342,6 +342,11 @@ module.exports = {
         team_card_id: app_id,
       })
     },
+    getAllTeamCards: ({team_id}) => {
+      return basic_get('/api/v1/teams/GetAllTeamCards', {
+        team_id: team_id
+      })
+    },
     getInvitationInformation : function({code}){
       return axios.get('/api/v1/teams/GetInvitationInformation', {
         params : {

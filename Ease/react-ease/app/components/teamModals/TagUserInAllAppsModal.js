@@ -88,7 +88,7 @@ class TagUserInAllAppsModal extends React.Component {
           <Button positive
                   onClick={this.confirmModal}
                   loading={this.state.loading}
-                  class="row button-unstyle big_validate_button"
+                  class="row button-unstyle big_validate_button accept_user_room"
                   disabled={this.state.loading || this.state.selected === null}>
             DONE
           </Button>

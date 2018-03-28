@@ -12,6 +12,16 @@ const basic_post = (url, params) => {
       });
 };
 
+const basic_put = (url, params) => {
+  return axios.put(url, params)
+      .then(response => {
+        return response.data;
+      })
+      .catch(err => {
+        throw err.response.data;
+      });
+};
+
 module.exports = {
   dashboard: {
     clickOnAppMetric: ({app_id}) => {
@@ -1380,9 +1390,9 @@ module.exports = {
         throw err.response.data;
       })
     },
-    setDailyLogout: ({active,ws_id}) => {
-      return basic_post('/dailyLogout', {
-        active: active,
+    setConnectionLifetime: ({connectionLifetime,ws_id}) => {
+      return basic_put('/api/v1/users/EditConnectionLifetime', {
+        connection_lifetime: connectionLifetime,
         ws_id: ws_id
       })
     },
