@@ -12,7 +12,7 @@ public final class LogsDatabase {
 
     static {
         dataSource.setDriverClassName("com.mysql.jdbc.Driver");
-        dataSource.setUrl("jdbc:mysql://" + Variables.DATABASE_IP + ":3306/easeLogs?charset=utf8");
+        dataSource.setUrl("jdbc:mysql://" + Variables.DATABASE_IP + ":3306/easeLogs?charset=utf8&useLegacyDatetimeCode=false&serverTimezone=Europe/Paris");
         dataSource.setUsername("client");
         dataSource.setPassword("P6au23q7");
     }
