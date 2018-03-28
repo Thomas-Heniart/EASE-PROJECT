@@ -18,7 +18,7 @@ public class ServletNewFeatureSeen extends HttpServlet {
         try {
             sm.needToBeConnected();
             UserStatus userStatus = sm.getUser().getUserStatus();
-            userStatus.setNew_feature_seen(true);
+            userStatus.setNewFeatureSeen(true);
             sm.saveOrUpdate(userStatus);
             sm.setSuccess(sm.getUser().getJson());
         } catch (Exception e) {

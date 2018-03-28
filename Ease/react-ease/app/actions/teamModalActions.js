@@ -307,6 +307,18 @@ export function showManageMagicLinkModal({active, team_card}) {
   }
 }
 
+export function showTagUserInAllAppsModal({active, team_id, room_id, user_id}) {
+  return {
+    type: 'SHOW_TAG_USER_IN_ALL_APPS_MODAL',
+    payload: {
+      active: active,
+      team_id: team_id,
+      room_id: room_id,
+      user_id: user_id
+    }
+  }
+}
+
 export function cardAdded({card}) {
   return (dispatch, getState) => {
     return event_api.track.cardAdded({

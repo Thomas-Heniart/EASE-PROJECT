@@ -3,6 +3,7 @@ import {connect} from "react-redux";
 import React, {Component} from "react";
 import {isAdmin} from "../../utils/helperFunctions";
 import {List, Icon, Label, Segment} from 'semantic-ui-react';
+import {showTagUserInAllAppsModal} from "../../actions/teamModalActions";
 
 function ChannelJoinRequestList(props){
   const {room, team} = props;
@@ -16,21 +17,22 @@ function ChannelJoinRequestList(props){
           <div key={item} className="user_invitation_indicator" style={{color: "white"}}>
             <Segment style={{backgroundColor: "#ff9a00"}}>
               <List.Item>
-                  <Icon name="user"/>
-                  {user.username} would like to access this Room.&nbsp;
-                  <a style={{fontWeight: "bold"}} onClick={e => {props.dispatch(channelActions.addTeamUserToChannel({
-                    team_id: room.team_id,
-                    channel_id: room.id,
-                    team_user_id: item
-                  }))}}>
-                    Accept</a>
-                  &nbsp;or&nbsp;
-                  <a style={{fontWeight: "bold"}} onClick={e => {props.dispatch(channelActions.deleteJoinChannelRequest({
-                    team_id: team.id,
-                    room_id: room.id,
-                    team_user_id: item
-                  }))}}>
-                    refuse</a> ?
+                <Icon name="user"/>
+                {user.username} would like to access this Room.&nbsp;
+                <a style={{fontWeight: "bold"}} onClick={e => {props.dispatch(showTagUserInAllAppsModal({
+                  active: true,
+                  team_id: room.team_id,
+                  room_id: room.id,
+                  user_id: item
+                }))}}>
+                  Accept</a>
+                &nbsp;or&nbsp;
+                <a style={{fontWeight: "bold"}} onClick={e => {props.dispatch(channelActions.deleteJoinChannelRequest({
+                  team_id: team.id,
+                  room_id: room.id,
+                  team_user_id: item
+                }))}}>
+                  refuse</a> ?
               </List.Item>
             </Segment>
           </div>

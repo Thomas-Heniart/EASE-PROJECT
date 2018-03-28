@@ -545,7 +545,7 @@ public class TeamUser {
      * @return Profile profile
      * @throws HttpServletException
      */
-    public Profile getOrCreateProfile(Channel channel, HibernateQuery hibernateQuery) throws HttpServletException {
+    public synchronized Profile getOrCreateProfile(Channel channel, HibernateQuery hibernateQuery) throws HttpServletException {
         if (this.getUser() == null || !this.getUser().getUserStatus().isRegistered())
             throw new HttpServletException(HttpStatus.InternError);
         Profile profile = this.getProfiles().stream().filter(profile1 -> channel.equals(profile1.getChannel())).findFirst().orElse(null);

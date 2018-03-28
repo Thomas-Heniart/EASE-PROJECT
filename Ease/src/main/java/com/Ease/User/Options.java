@@ -19,6 +19,9 @@ public class Options {
     @Column(name = "homepage_state")
     private boolean homepage_state = false;
 
+    @Column(name = "connection_lifetime")
+    private Integer connection_lifetime = 1;
+
     public Options() {
 
     }
@@ -53,6 +56,14 @@ public class Options {
 
     public void setHomepage_state(boolean homepage_state) {
         this.homepage_state = homepage_state;
+    }
+
+    public Integer getConnection_lifetime() {
+        return connection_lifetime;
+    }
+
+    public void setConnection_lifetime(Integer connection_lifetime) {
+        this.connection_lifetime = connection_lifetime;
     }
 
     @Override

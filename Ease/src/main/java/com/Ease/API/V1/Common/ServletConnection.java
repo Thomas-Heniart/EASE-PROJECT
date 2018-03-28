@@ -72,11 +72,11 @@ public class ServletConnection extends HttpServlet {
             sm.getUserProperties(user.getDb_id()).put("privateKey", user.getUserKeys().getDecipheredPrivateKey(keyUser));
             Key secret = (Key) sm.getContextAttr("secret");
             if (user.getJsonWebToken() == null) {
-                user.setJsonWebToken(JsonWebTokenFactory.getInstance().createJsonWebToken(user.getDb_id(), keyUser, secret));
+                user.setJsonWebToken(JsonWebTokenFactory.getInstance().createJsonWebToken(user.getDb_id(), user.getOptions().getConnection_lifetime(), keyUser, secret));
                 sm.saveOrUpdate(user.getJsonWebToken());
             } else {
                 if (user.getJsonWebToken().getExpiration_date() < new Date().getTime()) {
-                    user.getJsonWebToken().renew(keyUser, user.getDb_id(), secret);
+                    user.getJsonWebToken().renew(keyUser, user.getDb_id(), secret, user.getOptions().getConnection_lifetime());
                     sm.saveOrUpdate(user.getJsonWebToken());
                 }
             }
@@ -86,7 +86,7 @@ public class ServletConnection extends HttpServlet {
             cookie.setHttpOnly(true);
             cookie.setSecure(true);
             Calendar calendar = Calendar.getInstance();
-            calendar.add(Calendar.DAY_OF_YEAR, 1);
+            calendar.add(Calendar.DAY_OF_YEAR, user.getOptions().getConnection_lifetime());
             calendar.set(Calendar.HOUR_OF_DAY, 4);
             calendar.set(Calendar.MINUTE, 0);
             calendar.set(Calendar.SECOND, 0);

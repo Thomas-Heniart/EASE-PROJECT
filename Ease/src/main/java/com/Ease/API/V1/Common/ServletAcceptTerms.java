@@ -18,7 +18,7 @@ public class ServletAcceptTerms extends HttpServlet {
         try {
             sm.needToBeConnected();
             User user = sm.getUser();
-            user.getUserStatus().setTerms_reviewed(true);
+            user.getUserStatus().setTermsReviewed(true);
             sm.saveOrUpdate(user.getUserStatus());
             sm.setSuccess(sm.getUser().getJson());
         } catch (Exception e) {
