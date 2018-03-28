@@ -86,10 +86,10 @@
     <link rel="chrome-webstore-item" href="https://chrome.google.com/webstore/detail/hnacegpfmpknpdjmhdmpkmedplfcmdmp"/>
     <link rel="icon" type="image/png" href="resources/icons/APPEASE.png"/>
     <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Raleway:500,700"/>
-    <link rel="stylesheet" type="text/css" href="/cssMinified.v00059/lib/fonts/museo-font.css"/>
+    <link rel="stylesheet" type="text/css" href="/cssMinified.v00061/lib/fonts/museo-font.css"/>
 
-    <link rel="stylesheet" href="/cssMinified.v00059/default_style.css"/>
-    <link rel="stylesheet" href="/cssMinified.v00059/bootstrap.css"/>
+    <link rel="stylesheet" href="/cssMinified.v00061/default_style.css"/>
+    <link rel="stylesheet" href="/cssMinified.v00061/bootstrap.css"/>
     <link rel="manifest" href="manifest.json">
 
 </head>

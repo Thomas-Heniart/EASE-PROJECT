@@ -17,6 +17,7 @@
 #main_navbar {
 	font-size: .7rem;
 	margin: auto;
+	@include flex-shrink(0);
 	.menu {
 		left: auto;
 		right: 0;
