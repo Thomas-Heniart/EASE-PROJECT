@@ -99,11 +99,15 @@ class LinkTeamApp extends Component {
       url: '',
       img_url: '',
       loading: false,
-      edit: this.props.app.id === this.props.teamCard.edit,
+      edit: false,
       description: '',
       users: [],
       selected_users: []
     }
+  }
+  componentDidMount() {
+    if (this.props.app.id === this.props.teamCard.edit)
+      this.setEdit(this.state);
   }
   getLogo = () => {
     getClearbitLogo(this.state.url).then(response => {

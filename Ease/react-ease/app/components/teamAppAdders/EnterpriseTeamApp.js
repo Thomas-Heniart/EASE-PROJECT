@@ -329,7 +329,7 @@ class EnterpriseTeamApp extends Component {
     super(props);
     this.state = {
       loading: false,
-      edit: this.props.app.id === this.props.teamCard.edit,
+      edit: false,
       name: '',
       password_reminder_interval: 0,
       description: '',
@@ -339,6 +339,10 @@ class EnterpriseTeamApp extends Component {
     }
   }
   handleInput = handleSemanticInput.bind(this);
+  componentDidMount() {
+    if (this.props.app.id === this.props.teamCard.edit)
+      this.setEdit(this.state);
+  }
   setShowMore = (state) => {
     this.setState({show_more: state});
   };

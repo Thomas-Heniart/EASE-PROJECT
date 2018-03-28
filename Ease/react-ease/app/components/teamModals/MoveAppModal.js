@@ -1,9 +1,10 @@
 import React, {Component} from 'react';
 import {connect} from "react-redux";
+import {withRouter} from "react-router-dom";
+import {Form, Button, Checkbox} from 'semantic-ui-react';
 import {moveTeamCard} from "../../actions/teamCardActions";
 import SimpleModalTemplate from "../common/SimpleModalTemplate";
 import {showMoveAppModal} from "../../actions/teamModalActions";
-import {Form, Button, Checkbox} from 'semantic-ui-react';
 
 @connect(store => ({
   card: store.team_apps[store.teamModals.moveAppModal.app_id],
@@ -23,8 +24,10 @@ class MoveAppModal extends Component {
     this.setState({selectedRoom: Number(roomId), checkRoom: roomId});
   };
   next = () => {
-    this.props.dispatch(moveTeamCard({card_id: Number(this.props.card.id)}));
-    // this.props.history.push(`/teams/${this.state.team.id}/${this.state.selectedRoom}`);
+    // this.props.dispatch(moveTeamCard({card_id: Number(this.props.card.id)}));
+    // this.props.history.push(`/teams/${this.state.team.id}/${this.state.selectedRoom}?app_id=${this.props.card.id}`);
+    this.props.dispatch(moveTeamCard({card_id: 30990}));
+    this.props.history.push(`/teams/${this.state.team.id}/434?app_id=30990`);
     this.close();
   };
   close = () => {
@@ -83,4 +86,4 @@ class MoveAppModal extends Component {
   }
 }
 
-export default MoveAppModal;
+export default withRouter(MoveAppModal);

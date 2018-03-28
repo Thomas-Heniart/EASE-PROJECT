@@ -187,7 +187,7 @@ class SimpleTeamApp extends Component {
     super(props);
     this.state = {
       loading: false,
-      edit: this.props.app.id === this.props.teamCard.edit,
+      edit: false,
       name: '',
       credentials: [],
       password_reminder_interval: 0,
@@ -197,6 +197,10 @@ class SimpleTeamApp extends Component {
     }
   }
   handleInput = handleSemanticInput.bind(this);
+  componentDidMount() {
+    if (this.props.app.id === this.props.teamCard.edit)
+      this.setEdit(this.state);
+  }
   toggleCanSeeInformation = (id) => {
     let users = this.state.users.map(item => {
       return {
