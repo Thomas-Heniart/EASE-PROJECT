@@ -18,7 +18,7 @@ public class ServletTutoDone extends HttpServlet {
         try {
             sm.needToBeConnected();
             UserStatus status = sm.getUser().getUserStatus();
-            status.setTuto_done(true);
+            status.setTutoDone(true);
             sm.saveOrUpdate(status);
             sm.setSuccess("Tuto done");
         } catch (Exception e) {

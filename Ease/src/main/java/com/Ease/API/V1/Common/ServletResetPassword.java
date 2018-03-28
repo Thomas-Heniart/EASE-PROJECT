@@ -101,9 +101,9 @@ public class ServletResetPassword extends HttpServlet {
                 } else {
                     TeamUser admin;
                     if (teamUser.isTeamOwner()) {
-                        admin = team.getTeamUsers().values().stream().filter(teamUser1 -> !teamUser1.isDisabled() && !teamUser1.equals(teamUser) && teamUser1.isRegistered() && teamUser1.isTeamAdmin()).sorted((t1, t2) -> t2.getUser().getUserStatus().getLast_connection().compareTo(t1.getUser().getUserStatus().getLast_connection())).findFirst().orElse(null);
+                        admin = team.getTeamUsers().values().stream().filter(teamUser1 -> !teamUser1.isDisabled() && !teamUser1.equals(teamUser) && teamUser1.isRegistered() && teamUser1.isTeamAdmin()).sorted((t1, t2) -> t2.getUser().getUserStatus().getLastConnection().compareTo(t1.getUser().getUserStatus().getLastConnection())).findFirst().orElse(null);
                         if (admin == null)
-                            admin = team.getTeamUsers().values().stream().filter(teamUser1 -> !teamUser1.isDisabled() && !teamUser1.equals(teamUser) && teamUser1.isRegistered()).sorted((t1, t2) -> t2.getUser().getUserStatus().getLast_connection().compareTo(t1.getUser().getUserStatus().getLast_connection())).findFirst().get();
+                            admin = team.getTeamUsers().values().stream().filter(teamUser1 -> !teamUser1.isDisabled() && !teamUser1.equals(teamUser) && teamUser1.isRegistered()).sorted((t1, t2) -> t2.getUser().getUserStatus().getLastConnection().compareTo(t1.getUser().getUserStatus().getLastConnection())).findFirst().get();
                         teamUser.setAdmin_id(admin.getDb_id());
                     } else
                         admin = team.getTeamUserWithId(teamUser.getAdmin_id());

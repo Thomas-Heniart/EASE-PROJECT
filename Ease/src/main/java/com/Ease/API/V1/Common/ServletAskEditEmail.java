@@ -41,8 +41,8 @@ public class ServletAskEditEmail extends HttpServlet {
             if (hibernateQuery.getSingleResult() != null)
                 throw new HttpServletException(HttpStatus.BadRequest, "This email is already used for another Ease.space account.");
             String edit_email_code = CodeGenerator.generateDigits(6);
-            user.getUserStatus().setEdit_email_code(edit_email_code);
-            user.getUserStatus().setEmail_requested(new_email);
+            user.getUserStatus().setEditEmailCode(edit_email_code);
+            user.getUserStatus().setEmailRequested(new_email);
             sm.saveOrUpdate(user.getUserStatus());
             MailJetBuilder mailJetBuilder = new MailJetBuilder();
             mailJetBuilder.setFrom("contact@ease.space", "Agathe @Ease");

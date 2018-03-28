@@ -35,9 +35,9 @@ public class ServletEditEmail extends HttpServlet {
                 throw new HttpServletException(HttpStatus.BadRequest, "Please, provide a valid email.");
             if (user.getEmail().equals(new_email))
                 throw new HttpServletException(HttpStatus.BadRequest, "This email is already your reference email.");
-            if (!new_email.equals(user.getUserStatus().getEmail_requested()))
+            if (!new_email.equals(user.getUserStatus().getEmailRequested()))
                 throw new HttpServletException(HttpStatus.BadRequest, "This is not the email you requested.");
-            if (!digits.equals(user.getUserStatus().getEdit_email_code()))
+            if (!digits.equals(user.getUserStatus().getEditEmailCode()))
                 throw new HttpServletException(HttpStatus.BadRequest, "This code isn't valid.");
             HibernateQuery hibernateQuery = sm.getHibernateQuery();
             hibernateQuery.queryString("SELECT u FROM User u WHERE u.email = :email");
@@ -46,8 +46,8 @@ public class ServletEditEmail extends HttpServlet {
                 throw new HttpServletException(HttpStatus.BadRequest, "This email is already used for another Ease.space account.");
             String old_email = user.getEmail();
             user.setEmail(new_email);
-            user.getUserStatus().setEmail_requested(null);
-            user.getUserStatus().setEdit_email_code(null);
+            user.getUserStatus().setEmailRequested(null);
+            user.getUserStatus().setEditEmailCode(null);
             sm.saveOrUpdate(user);
             sm.getUser().getCookies().forEach(response::addCookie);
             MailjetContactWrapper mailjetContactWrapper = new MailjetContactWrapper();

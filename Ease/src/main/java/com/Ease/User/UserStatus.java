@@ -11,193 +11,196 @@ public class UserStatus {
     @Id
     @GeneratedValue
     @Column(name = "id")
-    private Integer db_id;
+    private Integer id;
 
     @Column(name = "first_connection")
-    private boolean first_connection = true;
+    private boolean firstConnection = true;
 
     @Column(name = "chrome_scrapping")
-    private boolean chrome_scrapping_done = false;
+    private boolean chromeScrappingDone = false;
 
     @Column(name = "apps_manually_added")
-    private boolean apps_manually_added = false;
+    private boolean appsManuallyAdded = false;
 
     @Column(name = "tuto_done")
-    private boolean tuto_done = false;
+    private boolean tutoDone = false;
 
     @Column(name = "last_connection")
     @Temporal(TemporalType.TIMESTAMP)
-    private Date last_connection = new Date();
+    private Date lastConnection = new Date();
 
     @Column(name = "homepage_email_sent")
-    private boolean homepage_email_sent = false;
+    private boolean homepageEmailSent = false;
 
     @Column(name = "terms_reviewed")
-    private boolean terms_reviewed = true;
+    private boolean termsReviewed = true;
 
     @Column(name = "team_tuto_done")
-    private boolean team_tuto_done = false;
+    private boolean teamTutoDone = false;
 
     @Column(name = "edit_email_code")
-    private String edit_email_code;
+    private String editEmailCode;
 
     @Column(name = "email_requested")
-    private String email_requested;
+    private String emailRequested;
 
     @Column(name = "new_feature_seen")
-    private boolean new_feature_seen = false;
+    private boolean newFeatureSeen = false;
 
     @Column(name = "onboarding_step")
-    private Integer onboarding_step = 0;
+    private Integer onboardingStep = 0;
 
     @Column(name = "tip_team_user_settings_seen")
-    private boolean tip_team_user_settings_seen = false;
+    private boolean tipTeamUserSettingsSeen = false;
 
     @Column(name = "tip_team_channel_settings_seen")
-    private boolean tip_team_channel_settings_seen = false;
+    private boolean tipTeamChannelSettingsSeen = false;
 
     @Column(name = "tip_importation_seen")
-    private boolean tip_importation_seen = false;
+    private boolean tipImportationSeen = false;
 
     @Column(name = "registered")
     private boolean registered = false;
 
     @Column(name = "click_on_eight_apps_in_a_day")
-    private boolean click_on_eight_apps_in_a_day = false;
+    private boolean clickOnEightAppsInADay = false;
 
     @Column(name = "click_on_thirty_apps_in_a_week")
-    private boolean click_on_thirty_apps_in_a_week = false;
+    private boolean clickOnThirtyAppsInAWeek = false;
+
+    @Column(name = "popup_choose_connection_lifetime_seen")
+    private boolean popupChooseConnectionLifetimeSeen = false;
 
     public UserStatus() {
 
     }
 
-    public Integer getDb_id() {
-        return db_id;
+    public Integer getId() {
+        return id;
     }
 
-    public void setDb_id(Integer db_id) {
-        this.db_id = db_id;
+    public void setId(Integer id) {
+        this.id = id;
     }
 
-    public boolean isFirst_connection() {
-        return first_connection;
+    public boolean isFirstConnection() {
+        return firstConnection;
     }
 
-    public void setFirst_connection(boolean first_connection) {
-        this.first_connection = first_connection;
+    public void setFirstConnection(boolean firstConnection) {
+        this.firstConnection = firstConnection;
     }
 
-    public boolean isChrome_scrapping_done() {
-        return chrome_scrapping_done;
+    public boolean isChromeScrappingDone() {
+        return chromeScrappingDone;
     }
 
-    public void setChrome_scrapping_done(boolean chrome_scrapping_done) {
-        this.chrome_scrapping_done = chrome_scrapping_done;
+    public void setChromeScrappingDone(boolean chromeScrappingDone) {
+        this.chromeScrappingDone = chromeScrappingDone;
     }
 
-    public boolean isApps_manually_added() {
-        return apps_manually_added;
+    public boolean isAppsManuallyAdded() {
+        return appsManuallyAdded;
     }
 
-    public void setApps_manually_added(boolean apps_manually_added) {
-        this.apps_manually_added = apps_manually_added;
+    public void setAppsManuallyAdded(boolean appsManuallyAdded) {
+        this.appsManuallyAdded = appsManuallyAdded;
     }
 
-    public boolean isTuto_done() {
-        return tuto_done;
+    public boolean isTutoDone() {
+        return tutoDone;
     }
 
-    public void setTuto_done(boolean tuto_done) {
-        this.tuto_done = tuto_done;
+    public void setTutoDone(boolean tutoDone) {
+        this.tutoDone = tutoDone;
     }
 
-    public Date getLast_connection() {
-        return last_connection;
+    public Date getLastConnection() {
+        return lastConnection;
     }
 
-    public void setLast_connection(Date last_connection) {
-        this.last_connection = last_connection;
+    public void setLastConnection(Date lastConnection) {
+        this.lastConnection = lastConnection;
     }
 
-    public boolean isHomepage_email_sent() {
-        return homepage_email_sent;
+    public boolean isHomepageEmailSent() {
+        return homepageEmailSent;
     }
 
-    public void setHomepage_email_sent(boolean homepage_email_sent) {
-        this.homepage_email_sent = homepage_email_sent;
+    public void setHomepageEmailSent(boolean homepageEmailSent) {
+        this.homepageEmailSent = homepageEmailSent;
     }
 
-    public boolean isTerms_reviewed() {
-        return terms_reviewed;
+    public boolean isTermsReviewed() {
+        return termsReviewed;
     }
 
-    public void setTerms_reviewed(boolean terms_reviewed) {
-        this.terms_reviewed = terms_reviewed;
+    public void setTermsReviewed(boolean termsReviewed) {
+        this.termsReviewed = termsReviewed;
     }
 
-    public boolean isTeam_tuto_done() {
-        return team_tuto_done;
+    public boolean isTeamTutoDone() {
+        return teamTutoDone;
     }
 
-    public void setTeam_tuto_done(boolean team_tuto_done) {
-        this.team_tuto_done = team_tuto_done;
+    public void setTeamTutoDone(boolean teamTutoDone) {
+        this.teamTutoDone = teamTutoDone;
     }
 
-    public String getEdit_email_code() {
-        return edit_email_code;
+    public String getEditEmailCode() {
+        return editEmailCode;
     }
 
-    public void setEdit_email_code(String edit_email_code) {
-        this.edit_email_code = edit_email_code;
+    public void setEditEmailCode(String editEmailCode) {
+        this.editEmailCode = editEmailCode;
     }
 
-    public String getEmail_requested() {
-        return email_requested;
+    public String getEmailRequested() {
+        return emailRequested;
     }
 
-    public void setEmail_requested(String email_requested) {
-        this.email_requested = email_requested;
+    public void setEmailRequested(String emailRequested) {
+        this.emailRequested = emailRequested;
     }
 
-    public boolean isNew_feature_seen() {
-        return new_feature_seen;
+    public boolean isNewFeatureSeen() {
+        return newFeatureSeen;
     }
 
-    public void setNew_feature_seen(boolean new_feature_seen) {
-        this.new_feature_seen = new_feature_seen;
+    public void setNewFeatureSeen(boolean newFeatureSeen) {
+        this.newFeatureSeen = newFeatureSeen;
     }
 
-    public Integer getOnboarding_step() {
-        return onboarding_step;
+    public Integer getOnboardingStep() {
+        return onboardingStep;
     }
 
-    public void setOnboarding_step(Integer onboarding_step) {
-        this.onboarding_step = onboarding_step;
+    public void setOnboardingStep(Integer onboardingStep) {
+        this.onboardingStep = onboardingStep;
     }
 
-    public boolean isTip_team_user_settings_seen() {
-        return tip_team_user_settings_seen;
+    public boolean isTipTeamUserSettingsSeen() {
+        return tipTeamUserSettingsSeen;
     }
 
-    public void setTip_team_user_settings_seen(boolean tip_team_user_settings_seen) {
-        this.tip_team_user_settings_seen = tip_team_user_settings_seen;
+    public void setTipTeamUserSettingsSeen(boolean tipTeamUserSettingsSeen) {
+        this.tipTeamUserSettingsSeen = tipTeamUserSettingsSeen;
     }
 
-    public boolean isTip_team_channel_settings_seen() {
-        return tip_team_channel_settings_seen;
+    public boolean isTipTeamChannelSettingsSeen() {
+        return tipTeamChannelSettingsSeen;
     }
 
-    public void setTip_team_channel_settings_seen(boolean tip_team_channel_settings_seen) {
-        this.tip_team_channel_settings_seen = tip_team_channel_settings_seen;
+    public void setTipTeamChannelSettingsSeen(boolean tipTeamChannelSettingsSeen) {
+        this.tipTeamChannelSettingsSeen = tipTeamChannelSettingsSeen;
     }
 
-    public boolean isTip_importation_seen() {
-        return tip_importation_seen;
+    public boolean isTipImportationSeen() {
+        return tipImportationSeen;
     }
 
-    public void setTip_importation_seen(boolean tip_importation_seen) {
-        this.tip_importation_seen = tip_importation_seen;
+    public void setTipImportationSeen(boolean tipImportationSeen) {
+        this.tipImportationSeen = tipImportationSeen;
     }
 
     public boolean isRegistered() {
@@ -208,20 +211,28 @@ public class UserStatus {
         this.registered = registered;
     }
 
-    public boolean click_on_eight_apps_in_a_day() {
-        return click_on_eight_apps_in_a_day;
+    public boolean clickOnEightAppsInADay() {
+        return clickOnEightAppsInADay;
     }
 
-    public void setClick_on_eight_apps_in_a_day(boolean click_on_eight_apps_in_a_day) {
-        this.click_on_eight_apps_in_a_day = click_on_eight_apps_in_a_day;
+    public void setClickOnEightAppsInADay(boolean clickOnEightAppsInADay) {
+        this.clickOnEightAppsInADay = clickOnEightAppsInADay;
     }
 
-    public boolean click_on_thirty_apps_in_a_week() {
-        return click_on_thirty_apps_in_a_week;
+    public boolean clickOnThirtyAppsInAWeek() {
+        return clickOnThirtyAppsInAWeek;
     }
 
-    public void setClick_on_thirty_apps_in_a_week(boolean click_on_thirty_apps_in_a_week) {
-        this.click_on_thirty_apps_in_a_week = click_on_thirty_apps_in_a_week;
+    public void setClickOnThirtyAppsInAWeek(boolean clickOnThirtyAppsInAWeek) {
+        this.clickOnThirtyAppsInAWeek = clickOnThirtyAppsInAWeek;
+    }
+
+    public boolean isPopupChooseConnectionLifetimeSeen() {
+        return popupChooseConnectionLifetimeSeen;
+    }
+
+    public void setPopupChooseConnectionLifetimeSeen(boolean popupChooseConnectionLifetimeSeen) {
+        this.popupChooseConnectionLifetimeSeen = popupChooseConnectionLifetimeSeen;
     }
 
     @Override
@@ -231,36 +242,38 @@ public class UserStatus {
 
         UserStatus that = (UserStatus) o;
 
-        return db_id.equals(that.db_id);
+        return id.equals(that.id);
     }
 
     @Override
     public int hashCode() {
-        return db_id.hashCode();
+        return id.hashCode();
     }
 
     public JSONObject getJson() {
         JSONObject res = new JSONObject();
-        res.put("tuto_done", this.isTuto_done());
-        res.put("team_tuto_done", this.isTeam_tuto_done());
-        res.put("terms_reviewed", this.isTerms_reviewed());
-        res.put("onboarding_step", this.getOnboarding_step());
-        res.put("tip_team_user_settings_seen", this.isTip_team_user_settings_seen());
-        res.put("tip_team_channel_settings_seen", this.isTip_team_channel_settings_seen());
-        res.put("tip_importation_seen", this.isTip_importation_seen());
+        res.put("tuto_done", this.isTutoDone());
+        res.put("team_tuto_done", this.isTeamTutoDone());
+        res.put("terms_reviewed", this.isTermsReviewed());
+        res.put("onboarding_step", this.getOnboardingStep());
+        res.put("tip_team_user_settings_seen", this.isTipTeamUserSettingsSeen());
+        res.put("tip_team_channel_settings_seen", this.isTipTeamChannelSettingsSeen());
+        res.put("tip_importation_seen", this.isTipImportationSeen());
+        res.put("popup_choose_connection_lifetime_seen", this.isPopupChooseConnectionLifetimeSeen());
         return res;
     }
 
     public void setTip(String name, boolean value) {
         switch (name) {
             case "tip_team_user_settings_seen":
-                this.setTip_team_user_settings_seen(value);
+                this.setTipTeamUserSettingsSeen(value);
                 break;
             case "tip_team_channel_settings_seen":
-                this.setTip_team_channel_settings_seen(value);
+                this.setTipTeamChannelSettingsSeen(value);
                 break;
             case "tip_importation_seen":
-                this.setTip_importation_seen(value);
+                this.setTipImportationSeen(value);
+                break;
             default:
                 break;
         }
