@@ -81,16 +81,16 @@ export function setTeamsTutorial(state) {
   }
 }
 
-export const setDailyLogoutActive = ({active}) => {
+export const setConnectionLifetime = ({connectionLifetime}) => {
   return (dispatch, getState) => {
-    return post_api.common.setDailyLogout({
-      active: active,
+    return post_api.common.setConnectionLifetime({
+      connectionLifetime: connectionLifetime,
       ws_id: getState().common.ws_id
     }).then(response => {
       dispatch({
-        type: 'SET_DAILY_LOGOUT_ACTIVE',
+        type: 'SET_CONNECTION_LIFETIME',
         payload: {
-          active: active
+          connectionLifetime: connectionLifetime
         }
       });
       return response;
