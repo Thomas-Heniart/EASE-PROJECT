@@ -61,6 +61,7 @@ class TeamAppsContainer extends React.Component{
         if (query.app_id !== undefined && query.app_id.length !== 0) {
           const el = document.getElementById(`app_${query.app_id}`);
           if (el) {
+            this.props.history.replace(this.props.location.pathname);
             el.scrollIntoView(true);
             el.classList.add('blink');
             window.setTimeout(() => {

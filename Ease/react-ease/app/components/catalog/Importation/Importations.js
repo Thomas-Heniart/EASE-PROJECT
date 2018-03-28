@@ -44,15 +44,15 @@ function json(fields, separator, csv, dispatch) {
           k++;
         item[fields[object[l++]]] = field[k].replace(/^["]+|["]+$/g, '');
       }
-      if (!item.url.startsWith('http://') && !item.url.startsWith('https://') && item.url !== '')
-        item.url = "https://" + item.url;
-      if (item.url !== '' && item.url.match(/^(https?:\/\/)?([\da-z.-]+)\.([a-z.]{2,6})(\/?)/) !== null) {
+      if (!item.url.trim().startsWith('http://') && !item.url.trim().startsWith('https://') && item.url.trim() !== '')
+        item.url = "https://" + item.url.trim();
+      if (item.url.trim() !== '' && item.url.trim().match(/^(https?:\/\/)?([\da-z.-]+)\.([a-z.]{2,6})(\/?)/) !== null) {
         calls.push(dispatch(importAccount({
-          name: item.name ? item.name : '',
-          url: item.url,
+          name: item.name.trim() ? item.name.trim() : '',
+          url: item.url.trim(),
           account_information: {
-            login: {name: "login", value: item.login ? item.login : ''},
-            password: {name: "password", value: item.password ? item.password : ''}
+            login: {name: "login", value: item.login.trim() ? item.login.trim() : ''},
+            password: {name: "password", value: item.password.trim() ? item.password.trim() : ''}
           }
         })))
       }

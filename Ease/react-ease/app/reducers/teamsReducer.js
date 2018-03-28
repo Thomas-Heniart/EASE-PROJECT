@@ -351,10 +351,11 @@ export const team_apps = createReducer({
 }, {
   ['FETCH_TEAM_APP_FULFILLED'](state,action){
     const app = action.payload.app;
+
     return {
       ...state,
       [app.id]: app
-    }
+    };
   },
   ['TEAM_REMOVED'](state, action){
     const {team_id} = action.payload;

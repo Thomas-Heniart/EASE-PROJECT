@@ -37,7 +37,7 @@
     <title>Ease.space admin</title>
     <link rel="icon" type="image/png" href="resources/icons/APPEASE.png"/>
     <link rel="manifest" href="manifest.json">
-    <script src="jsMinified.v00023/jquery-3.1.0.js"></script>
+    <script src="jsMinified/jquery-3.1.0.js?jsv=1"></script>
     <script src="js/ajaxHandler.js"></script>
     <script src="js/backOffice/admin.js?9"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/semantic-ui/2.2.10/semantic.min.css">

@@ -36,12 +36,12 @@
     <link rel="icon" type="image/png" href="resources/icons/APPEASE.png" />
 
     <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Raleway:500,700" />
-    <link rel="stylesheet" type="text/css" href="/cssMinified.v00058/lib/fonts/museo-font.css"/>
-    <link rel="stylesheet" href="/cssMinified.v00058/default_style.css"/>
-    <link rel="stylesheet" href="/cssMinified.v00058/bootstrap.css"/>
-    <link rel="stylesheet" href="/cssMinified.v00058/landingPage.css"/>
-    <link rel="stylesheet" href="/cssMinified.v00058/lib/fonts/font-awesome-4.2.0/css/font-awesome.min.css"/>
-    <link rel="stylesheet" href="/cssMinified.v00058/securityPage.css"/>
+    <link rel="stylesheet" type="text/css" href="/css/lib/fonts/museo-font.css?cssv=1"/>
+    <link rel="stylesheet" href="/css/default_style.css?cssv=1"/>
+    <link rel="stylesheet" href="/css/bootstrap.css?cssv=1"/>
+    <link rel="stylesheet" href="/css/landingPage.css?cssv=1"/>
+    <link rel="stylesheet" href="/css/lib/fonts/font-awesome-4.2.0/css/font-awesome.min.css?cssv=1"/>
+    <link rel="stylesheet" href="/css/securityPage.css?cssv=1"/>
 
     <link rel="manifest" href="manifest.json">
 </head>
@@ -252,14 +252,14 @@
 <%@ include file="templates/landingPage/landingFooter.jsp" %>
 <%@ include file="templates/landingPage/registrationPopup.jsp" %>
 
-<script src="/jsMinified.v00023/jquery1.12.4.js"></script>
-<script src="/jsMinified.v00023/jquery.complexify.js"></script>
-<script src="/jsMinified.v00023/bootstrap.js" async></script>
-<script src="/jsMinified.v00023/ajaxHandler.js" async></script>
-<script src="/jsMinified.v00023/registrationPopup.js" async></script>
-<script src="/jsMinified.v00023/languageChooser.js" async></script>
-<script src="/jsMinified.v00023/basic-utils.js" async></script>
-<script src="/jsMinified.v00023/tracker.js" async></script>
+<script src="/jsMinified/jquery1.12.4.js"></script>
+<script src="/jsMinified/jquery.complexify.js"></script>
+<script src="/jsMinified/bootstrap.js" async></script>
+<script src="/jsMinified/ajaxHandler.js" async></script>
+<script src="/jsMinified/registrationPopup.js" async></script>
+<script src="/jsMinified/languageChooser.js" async></script>
+<script src="/jsMinified/basic-utils.js" async></script>
+<script src="/jsMinified/tracker.js" async></script>
 <script type="text/javascript">
     window.addEventListener('load',function(){
         $crisp = [];
