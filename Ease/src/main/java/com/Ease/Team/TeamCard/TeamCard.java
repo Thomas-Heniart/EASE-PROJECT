@@ -12,10 +12,12 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import javax.persistence.*;
+import java.util.Collection;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
 
 @Entity
 @Cacheable
@@ -276,4 +278,8 @@ public abstract class TeamCard {
     }
 
     public abstract String getMetricName();
+
+    public Collection<TeamUser> getTeamUsers() {
+        return this.getTeamCardReceiverMap().values().stream().map(TeamCardReceiver::getTeamUser).collect(Collectors.toList());
+    }
 }
