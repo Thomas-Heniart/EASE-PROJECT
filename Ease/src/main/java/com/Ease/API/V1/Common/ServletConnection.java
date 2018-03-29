@@ -102,11 +102,11 @@ public class ServletConnection extends HttpServlet {
                     continue;
                 sm.initializeTeamWithContext(team);
                 for (TeamUser teamUser : team.getTeamUsers().values()) {
-                    if (teamUser.isVerified() && teamUser.isDisabled() && teamUser.getTeamKey() != null) {
+                    /* if (teamUser.isVerified() && teamUser.isDisabled() && teamUser.getTeamKey() != null) {
                         teamUser.setTeamKey(AES.encrypt(RSA.Decrypt(teamUser.getTeamKey(), user.getUserKeys().getDecipheredPrivateKey(keyUser)), keyUser));
                         teamUser.setDisabled(false);
                         sm.saveOrUpdate(teamUser);
-                    }
+                    } */
                     if (team.getTeamUsers().values().stream().filter(teamUser1 -> teamUser1.getTeamUserStatus().isInvitation_sent()).count() >= team.getExtraMembersCount() && !team.isValidFreemium())
                         break;
                     if (teamUser.getArrival_date() != null && !teamUser.getTeamUserStatus().isInvitation_sent() && teamUser.getArrival_date().getTime() < now)
