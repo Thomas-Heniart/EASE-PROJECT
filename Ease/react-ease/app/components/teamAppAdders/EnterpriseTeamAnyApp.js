@@ -34,8 +34,6 @@ const TeamEnterpriseAppButtonSet = ({app, me, dispatch, editMode, selfJoin, requ
                            onClick={isAdmin(me.role) ? selfJoin : asked ? null : requestApp}
                            icon="pointing up"
                            disabled={asked}/>}
-      {isAdmin(me.role) &&
-      <TeamAppActionButton text='Move App' icon='share' onClick={e => {dispatch(modalActions.showMoveAppModal({active: true, app_id: app.id}))}}/>}
       {(isAdmin(me.role) || !!meReceiver) &&
       <TeamAppActionButton text='Edit App' icon='pencil' onClick={editMode}/>}
       {isAdmin(me.role) &&
