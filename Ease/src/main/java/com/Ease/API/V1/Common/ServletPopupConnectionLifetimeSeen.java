@@ -11,7 +11,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-@WebServlet("/api/v1/commonPopupConnectionLifetimeSeen")
+@WebServlet("/api/v1/common/PopupConnectionLifetimeSeen")
 public class ServletPopupConnectionLifetimeSeen extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
