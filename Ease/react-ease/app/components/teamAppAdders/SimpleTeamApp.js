@@ -185,7 +185,7 @@ class SimpleTeamApp extends Component {
     super(props);
     this.state = {
       loading: false,
-      edit: this.props.app.id === this.props.teamCard.edit,
+      edit: false,
       name: '',
       credentials: [],
       password_reminder_interval: 0,
