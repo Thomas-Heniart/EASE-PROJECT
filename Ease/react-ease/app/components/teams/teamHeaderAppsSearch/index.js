@@ -101,7 +101,7 @@ class TeamAppsHeaderSearch extends Component {
           (isRequested ?
               <span class="muted min_flex_shrink">&nbsp;Join request sent</span> :
               <span class="muted min_flex_shrink action_button"
-                    onClick={e => {this.sendJoinRoomRequest(e, room.id)}}>&nbsp;<a>Ask to join room</a></span>)
+                    onClick={e => {this.sendJoinRoomRequest(e, room.id)}}>&nbsp;<a>{isAdmin(me.role) ? 'Join room' : 'Ask to join room'}</a></span>)
           }
         </Fragment>
     )
@@ -129,7 +129,7 @@ class TeamAppsHeaderSearch extends Component {
           (isRequested ?
               <span class="muted min_flex_shrink">&nbsp;Join request sent</span> :
               <span class="muted min_flex_shrink action_button"
-                    onClick={e => {this.sendJoinRoomRequest(e, room.id)}}>&nbsp;<a>Ask to join room</a></span>)
+                    onClick={e => {this.sendJoinRoomRequest(e, room.id)}}>&nbsp;<a>{isAdmin(me.role) ? 'Join room' : 'Ask to join room'}</a></span>)
           }
         </Fragment>
     )
@@ -157,7 +157,7 @@ class TeamAppsHeaderSearch extends Component {
           (isRequested ?
               <span class="muted min_flex_shrink">&nbsp;Join request sent</span> :
               <span class="muted min_flex_shrink action_button"
-                    onClick={e => {this.sendJoinRoomRequest(e, room.id)}}>&nbsp;<a>Ask to join room</a></span>)
+                    onClick={e => {this.sendJoinRoomRequest(e, room.id)}}>&nbsp;<a>{isAdmin(me.role) ? 'Join room' : 'Ask to join room'}</a></span>)
           }
         </Fragment>
     )

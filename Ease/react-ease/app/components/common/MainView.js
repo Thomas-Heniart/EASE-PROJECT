@@ -9,7 +9,6 @@ import HTML5Backend from 'react-dnd-html5-backend';
 import { DragDropContext } from 'react-dnd';
 import CustomDragLayer from "../dashboard/CustomDragLayer";
 import NotificationBoxContainer from "../common/NotificationBoxContainer";
-var SimpleTeamCreationView = require('../teams/SimpleTeamCreationView');
 var NewSimpleTeamCreationView = require('../onBoarding/NewSimpleTeamCreationView');
 import {connect} from "react-redux";
 import {showExtensionDownloadModal, showConnectionDurationChooserModal} from "../../actions/modalActions";
@@ -22,7 +21,9 @@ class MainView extends Component {
     setTimeout(() => {
       const user = this.props.common.user;
       const extensionInstalled = !!document.querySelector('#new_ease_extension');
-      if (!!this.props.common.afterConnection && !!user.new_feature_seen && !user.status.popup_choose_connection_lifetime_seen){
+      if (!user.new_feature_seen)
+        return;
+      if (!user.status.popup_choose_connection_lifetime_seen){
         this.props.dispatch(showConnectionDurationChooserModal({
           active: true
         }));
