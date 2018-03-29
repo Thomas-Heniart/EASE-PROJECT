@@ -3,6 +3,7 @@ import update from 'immutability-helper';
 const initialState = {
   user : null,
   ws_id: '-1',
+  afterConnection: false,
   authenticated : false,
   loginRedirectUrl: '',
   teamsTutorial: false,
@@ -23,7 +24,8 @@ export default function reducer(state=initialState, action) {
       return {
         ...state,
         user : action.payload.user,
-        authenticated : true
+        authenticated : true,
+        afterConnection: true
       }
     }
     case 'CHECK_PASSWORD_FULFILLED': {
@@ -110,6 +112,15 @@ export default function reducer(state=initialState, action) {
       return update(state, {
         user: {
           connection_lifetime: {$set: connection_lifetime}
+        }
+      })
+    }
+    case 'CONNECTION_LIFETIME_MODAL_SEEN': {
+      return update(state, {
+        user: {
+          status: {
+            popup_choose_connection_lifetime_seen: {$set: true}
+          }
         }
       })
     }

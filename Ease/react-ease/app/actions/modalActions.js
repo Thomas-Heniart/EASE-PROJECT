@@ -221,3 +221,12 @@ export function showNewFeatureModal({active}) {
     }
   }
 }
+
+export function showConnectionDurationChooserModal({active}){
+  return {
+    type: 'SHOW_CONNECTION_DURATION_CHOOSER_MODAL',
+    payload: {
+      active: active
+    }
+  }
+}

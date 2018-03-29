@@ -58,6 +58,7 @@ import PasswordUpdateModal from "../catalog/Updates/PasswordUpdateModal";
 import NewAccountUpdateLocationModal from "../catalog/Updates/NewAccountUpdateLocationModal";
 import ManageMagicLinkModal from "../teamModals/ManageMagicLinkModal";
 import TagUserInAllAppsModal from "../teamModals/TagUserInAllAppsModal";
+import ConnectionDurationChooserModal from "../modals/ConnectionDurationChooserModal";
 
 @connect(store => ({
   addUserModal: store.teamModals.addUserModal,
@@ -217,10 +218,12 @@ class ModalsContainer extends Component{
           <NewAccountUpdateLocationModal/>}
           {this.props.modals.passwordUpdate.active &&
           <PasswordUpdateModal/>}
-          {this.props.manageMagicLinkModal.active && 
+          {this.props.manageMagicLinkModal.active &&
           <ManageMagicLinkModal/>}
           {this.props.tagUserInAllAppsModal.active &&
           <TagUserInAllAppsModal/>}
+          {this.props.modals.connectionDurationChooser.active &&
+          <ConnectionDurationChooserModal/>}
         </div>
     )
   }
