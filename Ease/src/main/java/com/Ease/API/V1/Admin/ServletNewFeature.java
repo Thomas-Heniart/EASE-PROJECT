@@ -18,7 +18,7 @@ public class ServletNewFeature extends HttpServlet {
         try {
             sm.needToBeEaseAdmin();
             HibernateQuery hibernateQuery = sm.getHibernateQuery();
-            hibernateQuery.queryString("UPDATE UserStatus status SET status.new_feature_seen = false");
+            hibernateQuery.queryString("UPDATE UserStatus status SET status.newFeatureSeen = false");
             hibernateQuery.executeUpdate();
             sm.setSuccess("new feature popup enable");
         } catch (Exception e) {

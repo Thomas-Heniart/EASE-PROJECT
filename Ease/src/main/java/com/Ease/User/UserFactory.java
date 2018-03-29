@@ -37,8 +37,8 @@ public class UserFactory {
         user.getPersonalInformation().setFirst_name(first_name);
         user.getPersonalInformation().setLast_name(last_name);
         user.getPersonalInformation().setPhone_number(phone_number);
-        user.getUserStatus().setNew_feature_seen(false);
-        user.getUserStatus().setOnboarding_step(1);
+        user.getUserStatus().setNewFeatureSeen(false);
+        user.getUserStatus().setOnboardingStep(1);
         user.getUserStatus().setRegistered(true);
         return user;
     }
@@ -49,7 +49,7 @@ public class UserFactory {
         String keyUser = AES.keyGenerator();
         UserKeys userKeys = new UserKeys(Hashing.hash(access_code), saltPerso, AES.encryptUserKey(keyUser, access_code, saltPerso), publicAndPrivateKey.getKey(), AES.encrypt(publicAndPrivateKey.getValue(), keyUser));
         User user = new User(username, email, userKeys, new Options(), new UserStatus());
-        user.getUserStatus().setNew_feature_seen(false);
+        user.getUserStatus().setNewFeatureSeen(false);
         return user;
     }
 

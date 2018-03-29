@@ -10,7 +10,7 @@ export function fetchMyInformation(){
     dispatch({type: 'FETCH_MY_INFORMATION_PENDING'});
     return api.common.fetchMyInformation().then(response => {
       if (response.user !== undefined)
-      dispatch({type: 'FETCH_MY_INFORMATION_FULFILLED', payload: response});
+        dispatch({type: 'FETCH_MY_INFORMATION_FULFILLED', payload: response});
       return response;
     }).catch(err => {
       dispatch({type: 'FETCH_MY_INFORMATION_REJECTED', payload: err});
@@ -80,6 +80,25 @@ export function setTeamsTutorial(state) {
     payload: state
   }
 }
+
+export const setConnectionLifetime = ({connection_lifetime}) => {
+  return (dispatch, getState) => {
+    return post_api.common.setConnectionLifetime({
+      connection_lifetime: connection_lifetime,
+      ws_id: getState().common.ws_id
+    }).then(response => {
+      dispatch({
+        type: 'SET_CONNECTION_LIFETIME',
+        payload: {
+          connection_lifetime: connection_lifetime
+        }
+      });
+      return response;
+    }).catch(err => {
+      throw err;
+    });
+  }
+};
 
 export function setWSId(id){
   return {
@@ -235,5 +254,18 @@ export function setGeneralLogoutModal({active}) {
     payload: {
       active: active
     }
+  }
+}
+
+export function connectionLifetimeModalSeen() {
+  return (dispatch, getState) => {
+    return post_api.common.connectionLifetimeModalSeen().then(response => {
+      dispatch({
+        type: 'CONNECTION_LIFETIME_MODAL_SEEN'
+      });
+      return response;
+    }).catch(err => {
+      throw err;
+    });
   }
 }
