@@ -1,4 +1,5 @@
 import React, {Component} from "react";
+import {connect} from "react-redux";
 import classnames from "classnames";
 import {getClearbitLogo} from '../../utils/api';
 import {Button, Container, Header, Icon, Input, Label, Popup, Segment, Dropdown} from 'semantic-ui-react';
@@ -85,6 +86,9 @@ class ReceiversLabelGroup extends Component {
   }
 };
 
+@connect(store => ({
+  teamCard: store.teamCard
+}))
 class LinkTeamApp extends Component {
   constructor(props){
     super(props);

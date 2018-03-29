@@ -46,9 +46,7 @@ const TeamEnterpriseAppButtonSet = ({app, me, dispatch, editMode, selfJoin, requ
                              icon="pointing up"
                              disabled={asked}/>}
         {(isAdmin(me.role) || !!meReceiver) &&
-        <TeamAppActionButton text='Edit App'
-                             icon='pencil'
-                             onClick={editMode}/>}
+        <TeamAppActionButton text='Edit App' icon='pencil' onClick={editMode}/>}
         {isAdmin(me.role) &&
         <TeamAppActionButton text='Delete App' icon='trash outline' onClick={e => {dispatch(modalActions.showTeamDeleteAppModal({active: true, app_id: app.id}))}}/>}
       </div>
@@ -304,7 +302,8 @@ const isDifferentCredentials = (first, second) => {
 };
 
 @connect(store => ({
-  teams: store.teams
+  teams: store.teams,
+  teamCard: store.teamCard
 }), reduxActionBinder)
 class EnterpriseTeamSoftwareApp extends Component {
   constructor(props){
@@ -321,15 +320,6 @@ class EnterpriseTeamSoftwareApp extends Component {
     }
   }
   handleInput = handleSemanticInput.bind(this);
-  changeFillInSwitch = (e, {checked}) => {
-    if (this.props.plan_id === 0 && !checked){
-      this.props.dispatch(showUpgradeTeamPlanModal(true, 2));
-      return;
-    }
-    if (this.props.app.fill_in_switch && checked)
-      return;
-    this.setState({fill_in_switch: !checked});
-  };
   setShowMore = (state) => {
     this.setState({show_more: state});
   };

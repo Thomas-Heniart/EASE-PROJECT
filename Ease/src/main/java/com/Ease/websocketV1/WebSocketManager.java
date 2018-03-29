@@ -39,7 +39,7 @@ public class WebSocketManager {
         for (WebSocketSession ws : webSocketSessions) {
             if (ws_id != null && ws.getSession().getId().equals(ws_id))
                 continue;
-            System.out.println("Start to send objects to: " + ws_id + " nb of objects: " + objects.size());
+            System.out.println("Start to send objects from: " + ws_id + " to: " + ws.getSession().getId() + " nb of objects: " + objects.size());
             for (Object object : objects) {
                 ws.sendObject(object);
             }

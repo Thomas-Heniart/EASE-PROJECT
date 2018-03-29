@@ -177,7 +177,8 @@ const AcceptRefuseAppHeader = ({pinneable, onAccept, onRefuse}) => {
 };
 
 @connect(store => ({
-  teams: store.teams
+  teams: store.teams,
+  teamCard: store.teamCard
 }))
 class SimpleTeamApp extends Component {
   constructor(props){

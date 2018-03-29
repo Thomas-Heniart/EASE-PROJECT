@@ -151,8 +151,7 @@ class TeamEnterpriseAppSettingsModal extends Component {
     const {app, teams} = this.props;
     const team_app = this.props.team_apps[app.team_card_id];
     const team = teams[team_app.team_id];
-    const me = team.team_users[team.my_team_user_id];
-    const meOwner = isOwner(me.role);
+    const senderUser = team.team_users[team_app.team_user_sender_id];
     const room = teams[team_app.team_id].rooms[team_app.channel_id];
     const inputs = credentials.map((item, idx) => {
       if (item.name === 'password')
@@ -237,13 +236,9 @@ class TeamEnterpriseAppSettingsModal extends Component {
                 onChange={this.handleInput}/>}
             {view === 'Account' &&
             <Form onSubmit={this.edit} error={!!this.state.errorMessage.length}>
-              {this.state.isEmpty && meOwner &&
+              {this.state.isEmpty &&
               <Form.Field>
-                <Icon name="wrench" style={{color: '#ff9a00'}}/> An app cannot stay empty! You must fill connection information.
-              </Form.Field>}
-              {this.state.isEmpty && !meOwner &&
-              <Form.Field>
-                <Icon name="wrench" style={{color: '#ff9a00'}}/> Your admin asked you to enter the connection information.
+                <Icon name="wrench" style={{color: '#ff9a00'}}/> {!!senderUser ? senderUser.username : `${team_app.name}'s manager`} asked you to enter your connection information.
               </Form.Field>}
               {inputs}
               <Message error content={this.state.errorMessage}/>

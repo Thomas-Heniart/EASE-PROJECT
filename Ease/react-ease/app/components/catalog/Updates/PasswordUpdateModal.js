@@ -187,7 +187,8 @@ class PasswordUpdateModal extends React.Component {
               type="submit"
               className="modal-button"
               content={(this.state.team === -1 || this.state.team.team_users[this.state.team.my_team_user_id].role > 1
-                || this.props.team_apps[this.state.app.team_card_id].team_user_filler_id === this.state.team.my_team_user_id) ? "SAVE NEW PASSWORD" : "SAVE AND SUGGEST NEW PASSWORD"}
+                || this.props.team_apps[this.state.app.team_card_id].team_user_filler_id === this.state.team.my_team_user_id
+                || this.props.team_apps[this.state.app.team_card_id].type === 'teamEnterpriseCard') ? "SAVE NEW PASSWORD" : "SAVE AND SUGGEST NEW PASSWORD"}
               loading={this.state.loading}
               disabled={this.state.loading}/>
           </Form>

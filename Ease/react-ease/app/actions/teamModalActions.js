@@ -319,6 +319,16 @@ export function showTagUserInAllAppsModal({active, team_id, room_id, user_id}) {
   }
 }
 
+export function showMoveAppModal({active, app_id}) {
+  return {
+    type: 'SHOW_MOVE_APP_MODAL',
+    payload: {
+      active: active,
+      app_id: app_id
+    }
+  }
+}
+
 export function cardAdded({card}) {
   return (dispatch, getState) => {
     return event_api.track.cardAdded({

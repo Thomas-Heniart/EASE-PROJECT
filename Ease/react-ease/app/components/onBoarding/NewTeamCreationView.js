@@ -320,7 +320,9 @@ class NewTeamCreationView extends React.Component {
     else if (this.state.viewInfo === 3) {
       this.setState({loading: true});
       // get Info and create user
-      const username = this.state.email.split('@')[0];
+      const username = this.state.email.split('@')[0].length === 1 ? this.state.email.split('@')[0] + "11"
+        : this.state.email.split('@')[0].length === 2 ? this.state.email.split('@')[0] + "1"
+          : this.state.email.split('@')[0].match(/.{3,21}/g)[0];
       this.props.dispatch(newRegistration({
         username: username,
         email: this.state.email,

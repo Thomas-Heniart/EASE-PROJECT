@@ -143,7 +143,8 @@ class ReceiversLabelGroup extends Component {
 };
 
 @connect(store => ({
-  teams: store.teams
+  teams: store.teams,
+  teamCard: store.teamCard
 }))
 class SimpleTeamAnyApp extends Component {
   constructor(props){

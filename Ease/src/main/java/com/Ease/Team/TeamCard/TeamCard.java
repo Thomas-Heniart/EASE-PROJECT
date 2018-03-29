@@ -12,10 +12,12 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import javax.persistence.*;
+import java.util.Collection;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
 
 @Entity
 @Cacheable
@@ -101,7 +103,11 @@ public abstract class TeamCard {
     }
 
     public void setChannel(Channel channel) {
+        if (this.channel != null)
+            this.channel.removeTeamCard(this);
         this.channel = channel;
+        if (this.channel != null)
+            this.channel.addTeamCard(this);
     }
 
     public String getDescription() {
@@ -192,7 +198,7 @@ public abstract class TeamCard {
         this.getTeamCardReceiverMap().remove(team_card_receiver_id);
     }
 
-    public boolean containsTeamUser(TeamUser teamUser_receiver) {
+    public synchronized boolean containsTeamUser(TeamUser teamUser_receiver) {
         return this.getTeamCardReceiverMap().values().stream().filter(teamCardReceiver -> teamCardReceiver.getTeamUser().equals(teamUser_receiver)).findFirst().orElse(null) != null;
     }
 
@@ -276,4 +282,8 @@ public abstract class TeamCard {
     }
 
     public abstract String getMetricName();
+
+    public Collection<TeamUser> getTeamUsers() {
+        return this.getTeamCardReceiverMap().values().stream().map(TeamCardReceiver::getTeamUser).collect(Collectors.toList());
+    }
 }
