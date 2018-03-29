@@ -81,16 +81,16 @@ export function setTeamsTutorial(state) {
   }
 }
 
-export const setConnectionLifetime = ({connectionLifetime}) => {
+export const setConnectionLifetime = ({connection_lifetime}) => {
   return (dispatch, getState) => {
     return post_api.common.setConnectionLifetime({
-      connectionLifetime: connectionLifetime,
+      connection_lifetime: connection_lifetime,
       ws_id: getState().common.ws_id
     }).then(response => {
       dispatch({
         type: 'SET_CONNECTION_LIFETIME',
         payload: {
-          connectionLifetime: connectionLifetime
+          connection_lifetime: connection_lifetime
         }
       });
       return response;
