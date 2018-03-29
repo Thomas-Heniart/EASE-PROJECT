@@ -109,7 +109,6 @@ class TeamAddUserModal extends React.Component {
           team_user_id: user.id
         }));
       });
-      let callback = [];
       if (this.state.checkTagUser) {
         const room_ids = this.state.value;
         room_ids.push(Object.keys(team.rooms).find(room_id => {return team.rooms[room_id].default}));
@@ -117,7 +116,7 @@ class TeamAddUserModal extends React.Component {
           team.rooms[id].team_card_ids.map(card_id => {
             if (!this.props.team_apps[card_id])
               this.props.dispatch(fetchTeamApp({team_id: team.id, app_id: card_id})).then(res => {
-                callback.push(this.props.dispatch(teamShareCard({
+                calls.push(this.props.dispatch(teamShareCard({
                   type: res.type,
                   team_id: team.id,
                   team_card_id: card_id,
@@ -126,7 +125,7 @@ class TeamAddUserModal extends React.Component {
                 })));
               });
             else
-              callback.push(this.props.dispatch(teamShareCard({
+              calls.push(this.props.dispatch(teamShareCard({
                 type: this.props.team_apps[card_id].type,
                 team_id: team.id,
                 team_card_id: card_id,
@@ -137,14 +136,12 @@ class TeamAddUserModal extends React.Component {
         });
       }
       Promise.all(calls.map(reflect)).then(values => {
-        Promise.all(callback.map(reflect)).then(response => {
-          this.setState({loading: false});
-          this.props.dispatch(addNotification({
-            text: "New team user(s) successfully created!"
-          }));
-          this.props.dispatch(showAddTeamUserModal({active: false}));
-          this.props.history.push(`/teams/${team.id}/@${user.id}`);
-        });
+        this.setState({loading: false});
+        this.props.dispatch(addNotification({
+          text: "New team user(s) successfully created!"
+        }));
+        this.props.dispatch(showAddTeamUserModal({active: false}));
+        this.props.history.push(`/teams/${team.id}/@${user.id}`);
       });
     }).catch(err => {
       this.setState({loading: false, errorMessage: err});
@@ -176,7 +173,6 @@ class TeamAddUserModal extends React.Component {
           team_user_id: user.id
         }));
       });
-      let callback = [];
       if (this.state.checkTagUser) {
         const room_ids = this.state.value;
         room_ids.push(Object.keys(team.rooms).find(room_id => {return team.rooms[room_id].default}));
@@ -184,7 +180,7 @@ class TeamAddUserModal extends React.Component {
           team.rooms[id].team_card_ids.map(card_id => {
             if (!this.props.team_apps[card_id])
               this.props.dispatch(fetchTeamApp({team_id: team.id, app_id: card_id})).then(res => {
-                callback.push(this.props.dispatch(teamShareCard({
+                calls.push(this.props.dispatch(teamShareCard({
                   type: res.type,
                   team_id: team.id,
                   team_card_id: card_id,
@@ -193,7 +189,7 @@ class TeamAddUserModal extends React.Component {
                 })));
               });
             else
-              callback.push(this.props.dispatch(teamShareCard({
+              calls.push(this.props.dispatch(teamShareCard({
                 type: this.props.team_apps[card_id].type,
                 team_id: team.id,
                 team_card_id: card_id,
@@ -204,18 +200,16 @@ class TeamAddUserModal extends React.Component {
         });
       }
       Promise.all(calls.map(reflect)).then(values => {
-        Promise.all(callback.map(reflect)).then(response => {
-          this.setState({loadingInvitationNow: false});
-          this.props.dispatch(addNotification({
-            text: "New team user(s) successfully created!"
-          }));
-          this.props.history.push(`/teams/${team.id}/@${user.id}`);
-          this.props.dispatch(showAddTeamUserModal({active: false}));
-          this.props.dispatch(userActions.sendInvitationToTeamUserList({
-            team_id: team.id,
-            team_user_id_list: [user.id]
-          }));
-        });
+        this.setState({loadingInvitationNow: false});
+        this.props.dispatch(addNotification({
+          text: "New team user(s) successfully created!"
+        }));
+        this.props.history.push(`/teams/${team.id}/@${user.id}`);
+        this.props.dispatch(showAddTeamUserModal({active: false}));
+        this.props.dispatch(userActions.sendInvitationToTeamUserList({
+          team_id: team.id,
+          team_user_id_list: [user.id]
+        }));
       });
     }).catch(err => {
       this.setState({loadingInvitationNow: false, errorMessage: err});
