@@ -144,6 +144,7 @@ class TeamSingleAppSettingsModal extends Component{
     const team = teams[team_app.team_id];
     const me = team.team_users[team.my_team_user_id];
     const meReceiver = team_app.receivers.find(item => (item.team_user_id === me.id));
+    const senderUser = team.team_users[team_app.team_user_sender_id];
     const meAdmin = isAdmin(me.role);
     const room = team.rooms[team_app.channel_id];
     const inputs = credentials.map((item, idx) => {
@@ -231,13 +232,13 @@ class TeamSingleAppSettingsModal extends Component{
                 onChange={this.handleInput}/>}
             {view === 'Account' &&
             <Form onSubmit={this.edit} error={!!this.state.errorMessage}>
-              {(isAdmin(me.role) || team_app.team_user_filler_id !== me.id) &&
+              {!this.state.isEmpty && isAdmin(me.role) &&
               <Form.Field>
                 Modifications will be applied to your Team.
               </Form.Field>}
               {this.state.isEmpty && me.id === team_app.team_user_filler_id &&
               <Form.Field>
-                <Icon name="wrench" style={{color: '#ff9a00'}}/> Your admin asked you to enter the connection information.
+                <Icon name="wrench" style={{color: '#ff9a00'}}/> {!!senderUser ? senderUser.username : `${team_app.name}'s manager`} asked you to enter the connection information.
               </Form.Field>}
               {!isAdmin(me.role) && me.id !== team_app.team_user_filler_id &&
               <Message content={'This app is shared with your team, you’re not allowed to modify it.'}/>}
