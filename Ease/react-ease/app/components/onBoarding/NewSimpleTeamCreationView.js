@@ -610,7 +610,9 @@ class NewSimpleTeamCreationView extends React.Component {
   next = () => {
     this.setState({loading: true});
     if (this.state.view === 1) {
-      const username = this.state.email.split('@')[0];
+      const username = this.state.email.split('@')[0].length === 1 ? this.state.email.split('@')[0] + "11"
+        : this.state.email.split('@')[0].length === 2 ? this.state.email.split('@')[0] + "1"
+          : this.state.email.split('@')[0].match(/.{3,21}/g)[0];
       this.props.dispatch(createTeam({
         name: this.state.companyName,
         email: this.state.email,
