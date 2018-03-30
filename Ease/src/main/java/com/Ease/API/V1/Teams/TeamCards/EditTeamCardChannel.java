@@ -53,7 +53,7 @@ public class EditTeamCardChannel extends HttpServlet {
                 oldProfile.removeAppAndUpdatePositions(app, hibernateQuery);
                 //Get new profile and add app
                 Profile newProfile = teamUserReceiver.getOrCreateProfile(channel, hibernateQuery);
-                newProfile.addAppAndUpdatePositions(app, 0, hibernateQuery);
+                newProfile.addAppAndUpdatePositions(app, newProfile.getSize(), hibernateQuery);
                 sm.addWebSocketMessage(WebSocketMessageFactory.createWebSocketMessage(WebSocketMessageType.TEAM_CARD_RECEIVER, WebSocketMessageAction.CHANGED, teamCardReceiver.getWebSocketJson()));
             }
             teamCard.setChannel(channel);
