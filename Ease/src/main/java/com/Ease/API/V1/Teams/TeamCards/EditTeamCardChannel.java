@@ -39,7 +39,6 @@ public class EditTeamCardChannel extends HttpServlet {
                 throw new HttpServletException(HttpStatus.Forbidden, "You are not allowed to move this card");
             Integer channelId = sm.getIntParam("channel_id", true, false);
             Channel channel = team.getChannelWithId(channelId);
-            Channel oldChannel = teamCard.getChannel();
             if (!channel.containsAllTeamUsers(teamCard.getTeamUsers()))
                 throw new HttpServletException(HttpStatus.BadRequest, "All team users must be part of new channel");
             HibernateQuery hibernateQuery = sm.getHibernateQuery();
