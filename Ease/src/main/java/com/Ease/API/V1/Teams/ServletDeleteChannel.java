@@ -43,10 +43,8 @@ public class ServletDeleteChannel extends HttpServlet {
             if (channel.getName().equals("openspace"))
                 throw new HttpServletException(HttpStatus.Forbidden, "You cannot modify this channel.");
             HibernateQuery hibernateQuery = sm.getHibernateQuery();
+            team.removeTeamCards(channel.getTeamCardSet());
             for (TeamCard teamCard : channel.getTeamCardSet()) {
-                hibernateQuery.queryString("DELETE FROM Update u WHERE u.teamCard.db_id = :card_id");
-                hibernateQuery.setParameter("card_id", teamCard.getDb_id());
-                hibernateQuery.executeUpdate();
                 for (TeamCardReceiver teamCardReceiver : teamCard.getTeamCardReceiverMap().values()) {
                     App app = teamCardReceiver.getApp();
                     if (app.isWebsiteApp()) {
@@ -78,15 +76,18 @@ public class ServletDeleteChannel extends HttpServlet {
                     if (profile != null)
                         profile.removeAppAndUpdatePositions(teamCardReceiver.getApp(), sm.getHibernateQuery());
                 }
+                /* hibernateQuery.queryString("DELETE FROM Update u WHERE u.teamCard.db_id = :card_id");
+                hibernateQuery.setParameter("card_id", teamCard.getDb_id());
+                hibernateQuery.executeUpdate(); */
+                sm.deleteObject(teamCard);
             }
             for (Profile profile : channel.getProfiles()) {
                 profile.setChannel(null);
                 profile.setTeamUser(null);
                 sm.saveOrUpdate(profile);
             }
-            channel.getTeamUsers().forEach(teamUser1 -> teamUser1.getChannels().remove(channel));
-            team.removeTeamCards(channel.getTeamCardSet());
             channel.getTeamCardSet().clear();
+            channel.getTeamUsers().forEach(teamUser1 -> teamUser1.getChannels().remove(channel));
             channel.getPending_teamUsers().forEach(teamUser1 -> teamUser1.getPending_channels().remove(channel));
             team.removeChannel(channel);
             sm.deleteObject(channel);
