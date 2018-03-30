@@ -25,7 +25,7 @@ class MoveAppUserLooseAccess extends Component {
     } = this.props;
     const room = this.props.team.rooms[this.props.selectedRoom];
     return (
-      <Form class="container" id="add_bookmark_form" onSubmit={next}>
+      <Form class="container ease_modal" id="add_bookmark_form" onSubmit={next}>
         <p>The following users don’t have access to <strong>#{room.name}</strong>. In case you don’t add them, they <strong>will loose access</strong> to {this.props.card.name} and info related.</p>
         <p style={{cursor:'pointer'}} onClick={back} className="back_modal">
           <Icon name="arrow left"/>Back
@@ -37,7 +37,7 @@ class MoveAppUserLooseAccess extends Component {
                 <span>{this.props.team.team_users[user_id].username}</span>
                 {usersAdded.find(userAddedId => (user_id === userAddedId)) ?
                   <Icon name='check'/>
-                 : <Button type='button' onClick={e => loadingAddInRoom[user_id] ? null : addInRoom(user_id)}>
+                 : <Button type='button' onClick={e => loadingAddInRoom[user_id] || loading ? null : addInRoom(user_id)}>
                     {loadingAddInRoom[user_id] ? <Loader size='mini' inverted active/> : 'Add'}
                     </Button>
                 }
@@ -143,7 +143,7 @@ class MoveAppModal extends Component {
         onClose={this.close}
         headerContent={this.state.view === 1 ? 'Move App' : 'Some users can loose access'}>
         {this.state.view === 1 &&
-        <Form class="container" id="add_bookmark_form" onSubmit={this.next}>
+        <Form class="container ease_modal" id="add_bookmark_form" onSubmit={this.next}>
           <Form.Field class="display-flex align_items_center" style={{marginBottom: '30px'}}>
             <div className="squared_image_handler">
               <img src={website.logo} alt="Website logo"/>
