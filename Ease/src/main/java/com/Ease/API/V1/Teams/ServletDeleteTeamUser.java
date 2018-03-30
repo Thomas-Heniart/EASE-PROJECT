@@ -48,7 +48,7 @@ public class ServletDeleteTeamUser extends HttpServlet {
             if (!teamUser_connected.isSuperior(teamUser_to_delete))
                 throw new HttpServletException(HttpStatus.Forbidden, "You cannot do this");
             if (!teamUser_to_delete.getTeamSingleCardToFillSet().isEmpty() || !teamUser_to_delete.getTeamSingleSoftwareCardSet().isEmpty()) {
-                StringBuilder message = new StringBuilder("This persone cannot be delete while he/she is responsble to fill credentials. To delete ").append(teamUser_to_delete.getUsername()).append("  you need to delete him/her first from ");
+                StringBuilder message = new StringBuilder("This person cannot be deleted while he/she is responsible to fill credentials. To delete ").append(teamUser_to_delete.getUsername()).append("  you need to delete him/her first from ");
                 teamUser_to_delete.getTeamSingleCardToFillSet().forEach(teamSingleCard -> message.append(teamSingleCard.getName()).append(", "));
                 teamUser_to_delete.getTeamSingleSoftwareCardSet().forEach(teamSingleSoftwareCard -> message.append(teamSingleSoftwareCard.getName()).append(", "));
                 message.replace(message.length() - 2, message.length(), ".");

@@ -121,7 +121,7 @@ public class ServletImportedAccount extends HttpServlet {
             Catalog catalog = (Catalog) sm.getContextAttr("catalog");
             HibernateQuery hibernateQuery = sm.getHibernateQuery();
             Website website = catalog.getPublicWebsiteWithUrl(url, account_information.keySet(), hibernateQuery);
-            if (website != null && (!website.getWebsiteAttributes().isIntegrated() || website.getWebsiteInformationList().size() > 2))
+            if (website != null && !website.getWebsiteAttributes().isIntegrated())
                 website = null;
             User user = sm.getUser();
             String name = sm.getStringParam("name", true, false);

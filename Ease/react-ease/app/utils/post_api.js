@@ -12,6 +12,16 @@ const basic_post = (url, params) => {
       });
 };
 
+const basic_put = (url, params) => {
+  return axios.put(url, params)
+      .then(response => {
+        return response.data;
+      })
+      .catch(err => {
+        throw err.response.data;
+      });
+};
+
 module.exports = {
   dashboard: {
     clickOnAppMetric: ({app_id}) => {
@@ -1388,6 +1398,12 @@ module.exports = {
         throw err.response.data;
       })
     },
+    setConnectionLifetime: ({connection_lifetime,ws_id}) => {
+      return basic_put('/api/v1/users/EditConnectionLifetime', {
+        connection_lifetime: connection_lifetime,
+        ws_id: ws_id
+      })
+    },
     passwordLost: ({email}) => {
       return basic_post('/passwordLost', {
         email: email
@@ -1506,8 +1522,7 @@ module.exports = {
         url:url,
         is_public: is_public,
         login: cipher(login),
-        password: cipher(password),
-        timestamp: new Date().getTime()
+        password: cipher(password)
       }).then(r => {
         return r.data;
       }).catch(err => {
@@ -1521,6 +1536,9 @@ module.exports = {
           }).catch(err => {
             throw err;
           })
+    },
+    connectionLifetimeModalSeen: () => {
+      return basic_post('/api/v1/common/PopupConnectionLifetimeSeen');
     },
     tipDone: ({name}) => {
       return basic_post('/api/v1/common/TipDone', {

@@ -98,6 +98,9 @@ export const modals = createReducer({
     active: false,
     resolve: null,
     reject: null
+  },
+  connectionDurationChooser: {
+    active: false
   }
 }, {
   ['SHOW_CLASSIC_APP_SETTINGS_MODAL'](state, action){
@@ -248,6 +251,12 @@ export const modals = createReducer({
     return {
       ...state,
       newAccountUpdate: action.payload
+    }
+  },
+  ['SHOW_CONNECTION_DURATION_CHOOSER_MODAL'](state, action){
+    return {
+        ...state,
+      connectionDurationChooser: action.payload
     }
   }
 });

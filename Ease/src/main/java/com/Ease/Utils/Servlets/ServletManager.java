@@ -8,7 +8,6 @@ import com.Ease.User.NotificationManager;
 import com.Ease.User.User;
 import com.Ease.User.UserFactory;
 import com.Ease.User.UserKeys;
-import com.Ease.Utils.Crypto.AES;
 import com.Ease.Utils.Crypto.RSA;
 import com.Ease.Utils.*;
 import com.Ease.websocketV1.WebSocketManager;
@@ -219,11 +218,11 @@ public abstract class ServletManager {
             if (!team.isActive())
                 continue;
             this.initializeTeamWithContext(teamUser.getTeam());
-            if (teamUser.isVerified() && teamUser.isDisabled() && teamUser.getTeamKey() != null) {
+            /* if (teamUser.isVerified() && teamUser.isDisabled() && teamUser.getTeamKey() != null) {
                 teamUser.setTeamKey(AES.encrypt(RSA.Decrypt(teamUser.getTeamKey(), user.getUserKeys().getDecipheredPrivateKey(keyUser)), keyUser));
                 teamUser.setDisabled(false);
                 this.saveOrUpdate(teamUser);
-            }
+            } */
             if (teamUser.isDisabled())
                 continue;
             Map<String, Object> teamProperties = this.getTeamProperties(team.getDb_id());

@@ -269,8 +269,9 @@ public class User {
         }
         res.put("teams", teams);
         res.put("status", this.getUserStatus().getJson());
+        res.put("connection_lifetime", this.getOptions().getConnection_lifetime());
         res.put("background_picture", this.getOptions().isBackground_picked());
-        res.put("new_feature_seen", this.getUserStatus().isNew_feature_seen());
+        res.put("new_feature_seen", this.getUserStatus().isNewFeatureSeen());
         return res;
     }
 
@@ -505,8 +506,8 @@ public class User {
         this.getUserKeys().setKeyUser(AES.encryptUserKey(this.getUserKeys().getDecipheredKeyUser(access_code), password, this.getUserKeys().getSaltPerso()));
         this.getUserKeys().setAccess_code_hash(null);
         this.getUserStatus().setRegistered(true);
-        this.getUserStatus().setNew_feature_seen(false);
-        this.getUserStatus().setOnboarding_step(1);
+        this.getUserStatus().setNewFeatureSeen(false);
+        this.getUserStatus().setOnboardingStep(1);
         this.getPersonalInformation().setFirst_name(first_name);
         this.getPersonalInformation().setLast_name(last_name);
         this.getPersonalInformation().setPhone_number(phone_number);

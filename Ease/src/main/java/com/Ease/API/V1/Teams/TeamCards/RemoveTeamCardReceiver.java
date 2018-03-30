@@ -39,8 +39,6 @@ public class RemoveTeamCardReceiver extends HttpServlet {
             sm.initializeTeamWithContext(team);
             sm.needToBeTeamUserOfTeam(team);
             TeamUser teamUser_connected = sm.getTeamUser(team);
-            if (!teamUser_connected.isTeamAdmin() && !teamUser_connected.equals(teamCard.getTeamUser_sender()))
-                throw new HttpServletException(HttpStatus.BadRequest, "You cannot edit this card");
             TeamUser teamUser = teamCardReceiver.getTeamUser();
             if (!teamUser_connected.isTeamAdmin() && !teamUser.equals(teamUser_connected))
                 throw new HttpServletException(HttpStatus.Forbidden);

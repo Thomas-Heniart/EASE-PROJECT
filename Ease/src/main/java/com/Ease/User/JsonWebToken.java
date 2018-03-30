@@ -38,13 +38,13 @@ public class JsonWebToken {
 
     }
 
-    public JsonWebToken(String connection_token_hash, String jwt_ciphered, String keyUser_ciphered, String salt) {
+    public JsonWebToken(String connection_token_hash, String jwt_ciphered, String keyUser_ciphered, String salt, Integer lifetime) {
         this.connection_token_hash = connection_token_hash;
         this.jwt_ciphered = jwt_ciphered;
         this.keyUser_ciphered = keyUser_ciphered;
         this.salt = salt;
         Calendar calendar = Calendar.getInstance();
-        calendar.add(Calendar.DAY_OF_YEAR, 1);
+        calendar.add(Calendar.DAY_OF_YEAR, lifetime);
         calendar.set(Calendar.HOUR_OF_DAY, 3);
         calendar.set(Calendar.MINUTE, 0);
         calendar.set(Calendar.SECOND, 0);
@@ -110,12 +110,12 @@ public class JsonWebToken {
         return AES.decryptUserKey(this.getKeyUser_ciphered(), connection_token, this.getSalt());
     }
 
-    public void renew(String keyUser, Integer user_id, Key secret) throws HttpServletException {
+    public void renew(String keyUser, Integer user_id, Key secret, Integer lifetime) throws HttpServletException {
         this.setSalt(AES.generateSalt());
         Map<String, Object> claims = new HashMap<>();
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(new Date());
-        calendar.add(Calendar.DAY_OF_YEAR, 1);
+        calendar.add(Calendar.DAY_OF_YEAR, lifetime);
         calendar.set(Calendar.HOUR_OF_DAY, 3);
         calendar.set(Calendar.MINUTE, 0);
         calendar.set(Calendar.SECOND, 0);

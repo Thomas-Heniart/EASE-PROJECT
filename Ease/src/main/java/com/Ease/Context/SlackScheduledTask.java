@@ -112,7 +112,7 @@ public class SlackScheduledTask extends TimerTask {
             return new HashSet<>();
         Map<Integer, Integer> appIdAndDayCountMap = new HashMap<>();
         appIdAndDayCount.forEach(integers -> appIdAndDayCountMap.put((Integer) integers[0], (Integer) integers[1]));
-        hibernateQuery.queryString("SELECT DISTINCT a FROM App a WHERE a.profile IS NOT NULL AND a.profile.user IS NOT NULL AND a.profile.user.userStatus.click_on_eight_apps_in_a_day is false AND a.db_id IN (:appIds)");
+        hibernateQuery.queryString("SELECT DISTINCT a FROM App a WHERE a.profile IS NOT NULL AND a.profile.user IS NOT NULL AND a.profile.user.userStatus.clickOnEightAppsInADay is false AND a.db_id IN (:appIds)");
         hibernateQuery.setParameter("appIds", appIdAndDayCountMap.keySet());
         List<App> apps = hibernateQuery.list();
         Map<User, Integer> userAndCountMap = new HashMap<>();
@@ -143,7 +143,7 @@ public class SlackScheduledTask extends TimerTask {
             return new HashSet<>();
         Map<Integer, Integer> appIdAndDayCountMap = new HashMap<>();
         appIdAndDayCount.forEach(integers -> appIdAndDayCountMap.put((Integer) integers[0], ((ClickOnApp) integers[1]).getTotalClicks()));
-        hibernateQuery.queryString("SELECT DISTINCT a FROM App a WHERE a.profile IS NOT NULL AND a.profile.user IS NOT NULL AND a.profile.user.userStatus.click_on_thirty_apps_in_a_week is false AND a.db_id IN (:appIds)");
+        hibernateQuery.queryString("SELECT DISTINCT a FROM App a WHERE a.profile IS NOT NULL AND a.profile.user IS NOT NULL AND a.profile.user.userStatus.clickOnThirtyAppsInAWeek is false AND a.db_id IN (:appIds)");
         hibernateQuery.setParameter("appIds", appIdAndDayCountMap.keySet());
         List<App> apps = hibernateQuery.list();
         Map<User, Integer> userAndCountMap = new HashMap<>();
@@ -297,14 +297,14 @@ public class SlackScheduledTask extends TimerTask {
 
     private void notificationClickOnEightAppsInADay(HibernateQuery hibernateQuery) throws Exception {
         Set<User> users = this.getUsersWhoClickOnEightAppsInADay(hibernateQuery);
-        users = users.stream().filter(user -> user.getUserStatus().click_on_eight_apps_in_a_day()).collect(Collectors.toSet());
+        users = users.stream().filter(user -> user.getUserStatus().clickOnEightAppsInADay()).collect(Collectors.toSet());
         if (users.isEmpty())
             return;
         StringBuilder stringBuilder = new StringBuilder("*✅New users")
                 .append(users.size())
                 .append(")*\nThese people made 8 click on apps this day for the first time:\n");
         users.forEach(user -> {
-            user.getUserStatus().setClick_on_eight_apps_in_a_day(true);
+            user.getUserStatus().setClickOnEightAppsInADay(true);
             hibernateQuery.saveOrUpdateObject(user.getUserStatus());
             printUser(stringBuilder, user);
         });
@@ -318,14 +318,14 @@ public class SlackScheduledTask extends TimerTask {
             return;
         calendar.add(Calendar.WEEK_OF_YEAR, -1);
         Set<User> users = this.getUsersWhoClickOnThirtyAppsThisWeek(hibernateQuery);
-        users = users.stream().filter(user -> user.getUserStatus().click_on_thirty_apps_in_a_week()).collect(Collectors.toSet());
+        users = users.stream().filter(user -> user.getUserStatus().clickOnThirtyAppsInAWeek()).collect(Collectors.toSet());
         if (users.isEmpty())
             return;
         StringBuilder stringBuilder = new StringBuilder("*✅New weekly users (")
                 .append(users.size())
                 .append(")*\nThese people made 30 click on apps this week for the first time:\n");
         users.forEach(user -> {
-            user.getUserStatus().setClick_on_thirty_apps_in_a_week(true);
+            user.getUserStatus().setClickOnThirtyAppsInAWeek(true);
             hibernateQuery.saveOrUpdateObject(user.getUserStatus());
             printUser(stringBuilder, user);
         });

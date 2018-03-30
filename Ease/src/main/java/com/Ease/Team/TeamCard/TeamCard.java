@@ -198,7 +198,7 @@ public abstract class TeamCard {
         this.getTeamCardReceiverMap().remove(team_card_receiver_id);
     }
 
-    public boolean containsTeamUser(TeamUser teamUser_receiver) {
+    public synchronized boolean containsTeamUser(TeamUser teamUser_receiver) {
         return this.getTeamCardReceiverMap().values().stream().filter(teamCardReceiver -> teamCardReceiver.getTeamUser().equals(teamUser_receiver)).findFirst().orElse(null) != null;
     }
 

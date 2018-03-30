@@ -16,7 +16,7 @@ public class ServletTutoDone extends HttpServlet {
         PostServletManager sm = new PostServletManager(this.getClass().getName(), request, response, true);
         try {
             sm.needToBeTeamUser();
-            sm.getUser().getUserStatus().setTeam_tuto_done(true);
+            sm.getUser().getUserStatus().setTeamTutoDone(true);
             sm.saveOrUpdate(sm.getUser().getUserStatus());
             sm.setSuccess("Team tuto done");
         } catch (Exception e) {
