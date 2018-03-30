@@ -1181,6 +1181,14 @@ module.exports = {
       }).catch(err => {
         throw err.response.data;
       })
+    },
+    moveTeamCard: ({ws_id, team_id, team_card_id, channel_id}) => {
+      return basic_post('/api/v1/teams/EditTeamCardChannel', {
+        ws_id: ws_id,
+        team_id: team_id,
+        team_card_id: team_card_id,
+        channel_id: channel_id
+      });
     }
   },
   teams: {

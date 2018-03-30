@@ -2,10 +2,12 @@ import React, {Component} from 'react';
 import {connect} from "react-redux";
 import {withRouter} from "react-router-dom";
 import {moveTeamCard} from "../../actions/teamCardActions";
-import {Form, Button, Checkbox, Icon} from 'semantic-ui-react';
 import SimpleModalTemplate from "../common/SimpleModalTemplate";
 import {showMoveAppModal} from "../../actions/teamModalActions";
 import {addTeamUserToChannel} from "../../actions/channelActions";
+import {Form, Button, Checkbox, Icon, Loader} from 'semantic-ui-react';
+import {removeTeamCardReceiver, teamMoveCard} from "../../actions/appsActions";
+import {reflect} from "../../utils/utils";
 
 @connect(store => ({
   card: store.team_apps[store.teamModals.moveAppModal.app_id],
@@ -15,27 +17,18 @@ class MoveAppUserLooseAccess extends Component {
   constructor(props){
     super(props);
     this.state = {
-      loadingAddInRoom: false,
       team: this.props.teams[this.props.card.team_id],
       room: this.props.teams[this.props.card.team_id].rooms[this.props.selectedRoom]
     }
   }
-  addInRoom = (user_id) => {
-    this.setState({loadingAddInRoom: true});
-    this.props.dispatch(addTeamUserToChannel({
-      team_id: this.state.team.id,
-      channel_id: this.props.selectedRoom,
-      team_user_id: user_id
-    })).then(() => {
-      this.setState({loadingAddInRoom: false});
-    });
-  };
   render() {
     const {
       next,
       back,
       loading,
-      usersAdded
+      addInRoom,
+      usersAdded,
+      loadingAddInRoom
     } = this.props;
     return (
       <Form class="container" id="add_bookmark_form" onSubmit={next}>
@@ -45,12 +38,13 @@ class MoveAppUserLooseAccess extends Component {
         </p>
         <Form.Field className='choose_type_app'>
           {this.props.usersNotInRoom.map(user_id => {
-              return <Checkbox radio
-                               key={user_id}
-                               name={user_id}
-                               value={user_id}
-                               style={{margin: "0 0 10px 0"}}
-                               label={this.state.team.team_users[user_id].username}/>
+            return (
+              <div key={user_id} className='move_app'>
+                <span>{this.state.team.team_users[user_id].username}</span>
+                {usersAdded.find(userAddedId => (user_id === userAddedId)) ?
+                  <Icon name='check'/>
+                  : <Button type='button' onClick={e => addInRoom(user_id)}>{loadingAddInRoom[user_id] ? <Loader active/> : 'Add'}</Button>}
+              </div>);
           })}
         </Form.Field>
         <Button
@@ -81,6 +75,7 @@ class MoveAppModal extends Component {
       checkRoom: null,
       selectedRoom: -1,
       usersNotInRoom: [],
+      loadingAddInRoom: [],
       team: this.props.teams[this.props.card.team_id]
     }
   }
@@ -90,20 +85,56 @@ class MoveAppModal extends Component {
   back = () => {
     this.setState({view: 1, usersNotInRoom: [], selectedRoom: -1, checkRoom: null})
   };
+  addInRoom = (user_id) => {
+    const newUsersAdded = [...this.state.usersAdded];
+    let loading = {...this.state.loadingAddInRoom};
+    loading[user_id] = true;
+    this.setState({loadingAddInRoom: loading});
+    this.props.dispatch(addTeamUserToChannel({
+      team_id: this.state.team.id,
+      channel_id: this.state.selectedRoom,
+      team_user_id: user_id
+    })).then(() => {
+      newUsersAdded.push(user_id);
+      loading[user_id] = false;
+      this.setState({loadingAddInRoom: loading, usersAdded: newUsersAdded});
+    });
+  };
   next = () => {
     const usersNotInRoom = [];
     this.props.card.receivers.filter(receiver => {
       if (!this.state.team.rooms[this.state.selectedRoom].team_user_ids.find(user_id => (user_id === receiver.team_user_id)))
         usersNotInRoom.push(receiver.team_user_id);
     });
-    if (this.state.view === 1 && usersNotInRoom.length > 0)
-      this.setState({view: 2, usersNotInRoom: usersNotInRoom});
+    if (this.state.view === 1 && usersNotInRoom.length > 0) {
+      let loadingAddInRoom = {};
+      usersNotInRoom.map(user_id => {
+        loadingAddInRoom[user_id] = false;
+      });
+      this.setState({view: 2, usersNotInRoom: usersNotInRoom, loadingAddInRoom: loadingAddInRoom});
+    }
     else {
-      // this.props.dispatch(moveTeamCard({card_id: Number(this.props.card.id)}));
-      // this.props.history.push(`/teams/${this.state.team.id}/${this.state.selectedRoom}?app_id=${this.props.card.id}`);
-      this.props.dispatch(moveTeamCard({card_id: 30990}));
-      this.props.history.push(`/teams/${this.state.team.id}/434?app_id=30990`);
-      this.close();
+      const calls = [];
+      usersNotInRoom.map(user_id => {
+        calls.push(this.props.dispatch(removeTeamCardReceiver({
+          team_id:this.state.team_id,
+          team_card_id: this.props.card.id,
+          team_card_receiver_id: this.props.card.receivers.find(receiver => (receiver.team_user_id === user_id)).id
+        })));
+      });
+      Promise.all(calls.map(reflect)).then(res => {
+        this.props.dispatch(teamMoveCard({
+          team_id: this.state.team.id,
+          team_card_id: this.props.card.id,
+          channel_id: this.state.selectedRoom
+        })).then(response => {
+          this.props.dispatch(moveTeamCard({card_id: Number(this.props.card.id)}));
+          this.props.history.push(`/teams/${this.state.team.id}/${this.state.selectedRoom}?app_id=${this.props.card.id}`);
+          this.close();
+        });
+      });
+      // this.props.dispatch(moveTeamCard({card_id: 30990}));
+      // this.props.history.push(`/teams/${this.state.team.id}/434?app_id=30990`);
     }
   };
   close = () => {
@@ -162,10 +193,12 @@ class MoveAppModal extends Component {
         <MoveAppUserLooseAccess
           back={this.back}
           next={this.next}
+          addInRoom={this.addInRoom}
           loading={this.state.loading}
           usersAdded={this.state.usersAdded}
           selectedRoom={this.state.selectedRoom}
-          usersNotInRoom={this.state.usersNotInRoom}/>}
+          usersNotInRoom={this.state.usersNotInRoom}
+          loadingAddInRoom={this.state.loadingAddInRoom}/>}
       </SimpleModalTemplate>
     )
   }

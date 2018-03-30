@@ -756,6 +756,24 @@ export function teamCardReceiverRemovedAction({team_id, team_card_id, team_user_
   }
 }
 
+export function teamMoveCard({team_id, team_card_id, channel_id}) {
+  return (dispatch, getState) => {
+    return post_api.teamApps.moveTeamCard({
+      team_id: team_id,
+      team_card_id: team_card_id,
+      channel_id: channel_id,
+      ws_id: getState().common.ws_id
+    }).then(team_card => {
+      dispatch({
+        type: 'TEAM_CARD_CHANGED',
+        payload: {
+          team_card: team_card
+        }
+      })
+    })
+  }
+}
+
 export function teamCardRequestCreatedAction({team_card_id, request}) {
   return {
     type: 'TEAM_CARD_REQUEST_CREATED',
