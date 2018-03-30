@@ -20,12 +20,14 @@ class TeamDeleteAppModal extends React.Component {
   constructor(props){
     super(props);
     this.state = {
+      loading: false,
       confirmed: false,
       app: this.props.team_apps[this.props.app_id]
     };
   }
   confirmModal = (e) => {
     e.preventDefault();
+    this.setState({loading: true});
     const app = this.state.app;
     this.props.dispatch(deleteTeamCard({
       team_id: app.team_id,
@@ -35,7 +37,7 @@ class TeamDeleteAppModal extends React.Component {
     });
   };
   confirm = () => {
-    this.setState({confirmed: !this.state.confirmed});
+    this.setState({loading: false, confirmed: !this.state.confirmed});
   };
   close = () => {
     this.props.dispatch(showTeamDeleteAppModal({active: false}));
@@ -73,11 +75,13 @@ class TeamDeleteAppModal extends React.Component {
                 Yes, I am absolutely sure
               </label>
             </div>
-            <button class="row button-unstyle negative_button big_validate_button"
-                    disabled={!this.state.confirmed}
-                    onClick={this.confirmModal}>
+            <Button negative
+                    onClick={this.confirmModal}
+                    loading={this.state.loading}
+                    class="row button-unstyle negative_button big_validate_button accept_user_room"
+                    disabled={!this.state.confirmed || this.state.loading}>
               DELETE
-            </button>
+            </Button>
           </div>
         </div>
     )

@@ -9,6 +9,7 @@ import {teamEditLinkCard, teamShareLinkCard, removeTeamCardReceiver} from "../..
 import {handleSemanticInput, reflect} from "../../utils/utils";
 import {getReceiverInList, isAdmin, sortReceiversAndMap, selectItemFromListById,} from "../../utils/helperFunctions";
 import {addNotification} from "../../actions/notificationBoxActions";
+import {resetTeamCard} from "../../actions/teamCardActions";
 
 const TeamLinkAppButtonSet = ({app, me, dispatch, editMode, meReceiver, join}) => {
   return (
@@ -17,6 +18,8 @@ const TeamLinkAppButtonSet = ({app, me, dispatch, editMode, meReceiver, join}) =
         <TeamAppActionButton text={'Join App'}
                              onClick={join}
                              icon="pointing up"/>}
+        {isAdmin(me.role) &&
+        <TeamAppActionButton text='Move App' icon='share' onClick={e => {dispatch(modalActions.showMoveAppModal({active: true, app_id: app.id}))}}/>}
         {isAdmin(me.role) &&
         <TeamAppActionButton text='Edit App' icon='pencil' onClick={editMode}/>}
         {isAdmin(me.role) &&
@@ -101,6 +104,12 @@ class LinkTeamApp extends Component {
       description: '',
       users: [],
       selected_users: []
+    }
+  }
+  componentDidMount() {
+    if (this.props.app.id === this.props.teamCard.edit) {
+      this.props.dispatch(resetTeamCard());
+      this.setEdit(this.state);
     }
   }
   getLogo = () => {

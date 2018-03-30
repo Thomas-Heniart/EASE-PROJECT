@@ -1,3 +1,5 @@
+import {showMoveAppModal} from "./teamModalActions";
+
 var api = require('../utils/api');
 var post_api = require('../utils/post_api');
 import {dashboardAppRemovedAction, deleteAppAction, fetchApp} from "./dashboardActions";
@@ -753,6 +755,22 @@ export function teamCardReceiverRemovedAction({team_id, team_card_id, team_user_
         team_user_id: team_user_id
       }
     });
+  }
+}
+
+export function teamMoveCard({team_id, team_card_id, channel_id}) {
+  return (dispatch, getState) => {
+    return post_api.teamApps.moveTeamCard({
+      team_id: team_id,
+      team_card_id: team_card_id,
+      channel_id: channel_id,
+      ws_id: getState().common.ws_id
+    }).then(team_card => {
+      dispatch(showMoveAppModal({active: false}));
+      dispatch(teamCardRemovedAction({team_id, team_card_id}));
+      dispatch(teamCardCreatedAction({team_card}));
+      return team_card;
+    })
   }
 }
 
