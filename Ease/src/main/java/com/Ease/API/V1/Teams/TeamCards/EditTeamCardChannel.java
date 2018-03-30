@@ -39,7 +39,6 @@ public class EditTeamCardChannel extends HttpServlet {
                 throw new HttpServletException(HttpStatus.Forbidden, "You are not allowed to move this card");
             Integer channelId = sm.getIntParam("channel_id", true, false);
             Channel channel = team.getChannelWithId(channelId);
-            Channel oldChannel = teamCard.getChannel();
             if (!channel.containsAllTeamUsers(teamCard.getTeamUsers()))
                 throw new HttpServletException(HttpStatus.BadRequest, "All team users must be part of new channel");
             HibernateQuery hibernateQuery = sm.getHibernateQuery();
@@ -53,7 +52,7 @@ public class EditTeamCardChannel extends HttpServlet {
                 oldProfile.removeAppAndUpdatePositions(app, hibernateQuery);
                 //Get new profile and add app
                 Profile newProfile = teamUserReceiver.getOrCreateProfile(channel, hibernateQuery);
-                newProfile.addAppAndUpdatePositions(app, 0, hibernateQuery);
+                newProfile.addAppAndUpdatePositions(app, newProfile.getSize(), hibernateQuery);
                 sm.addWebSocketMessage(WebSocketMessageFactory.createWebSocketMessage(WebSocketMessageType.TEAM_CARD_RECEIVER, WebSocketMessageAction.CHANGED, teamCardReceiver.getWebSocketJson()));
             }
             teamCard.setChannel(channel);
