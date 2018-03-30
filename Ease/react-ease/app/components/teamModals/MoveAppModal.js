@@ -43,7 +43,10 @@ class MoveAppUserLooseAccess extends Component {
                 <span>{this.state.team.team_users[user_id].username}</span>
                 {usersAdded.find(userAddedId => (user_id === userAddedId)) ?
                   <Icon name='check'/>
-                  : <Button type='button' onClick={e => addInRoom(user_id)}>{loadingAddInRoom[user_id] ? <Loader active/> : 'Add'}</Button>}
+                 : <Button type='button' onClick={e => loadingAddInRoom[user_id] ? null : addInRoom(user_id)}>
+                    {loadingAddInRoom[user_id] ? <Loader size='mini' inverted active/> : 'Add'}
+                    </Button>
+                }
               </div>);
           })}
         </Form.Field>
@@ -101,9 +104,10 @@ class MoveAppModal extends Component {
     });
   };
   next = () => {
+    this.setState({loading: true});
     const usersNotInRoom = [];
     this.props.card.receivers.filter(receiver => {
-      if (!this.state.team.rooms[this.state.selectedRoom].team_user_ids.find(user_id => (user_id === receiver.team_user_id)))
+      if (!this.props.teams[this.props.card.team_id].rooms[this.state.selectedRoom].team_user_ids.find(user_id => (user_id === receiver.team_user_id)))
         usersNotInRoom.push(receiver.team_user_id);
     });
     if (this.state.view === 1 && usersNotInRoom.length > 0) {
@@ -111,7 +115,7 @@ class MoveAppModal extends Component {
       usersNotInRoom.map(user_id => {
         loadingAddInRoom[user_id] = false;
       });
-      this.setState({view: 2, usersNotInRoom: usersNotInRoom, loadingAddInRoom: loadingAddInRoom});
+      this.setState({view: 2, usersNotInRoom: usersNotInRoom, loadingAddInRoom: loadingAddInRoom, loading: false});
     }
     else {
       const calls = [];
@@ -130,11 +134,8 @@ class MoveAppModal extends Component {
         })).then(response => {
           this.props.dispatch(moveTeamCard({card_id: Number(this.props.card.id)}));
           this.props.history.push(`/teams/${this.state.team.id}/${this.state.selectedRoom}?app_id=${this.props.card.id}`);
-          this.close();
         });
       });
-      // this.props.dispatch(moveTeamCard({card_id: 30990}));
-      // this.props.history.push(`/teams/${this.state.team.id}/434?app_id=30990`);
     }
   };
   close = () => {
