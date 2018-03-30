@@ -172,7 +172,7 @@ class MoveAppModal extends Component {
                                  checked={this.state.checkRoom === room_id}/>
             })}
           </Form.Field>
-          <p>As room members might be different you’ll be able to setup the app as you want it to be.</p>
+          <p className='move_app_modal_p'>As room members might be different you’ll be able to setup the app as you want it to be.</p>
           <Button
             onClick={this.next}
             positive
