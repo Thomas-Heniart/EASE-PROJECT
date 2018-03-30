@@ -58,7 +58,7 @@ public class EditTeamCardChannel extends HttpServlet {
             teamCard.setChannel(channel);
             sm.saveOrUpdate(teamCard);
             teamCard.decipher(sm.getTeamKey(team));
-            sm.addWebSocketMessage(WebSocketMessageFactory.createWebSocketMessage(WebSocketMessageType.TEAM_CARD, WebSocketMessageAction.CHANGED, teamCard.getWebSocketJson()));
+            sm.addWebSocketMessage(WebSocketMessageFactory.createWebSocketMessage(WebSocketMessageType.TEAM_CARD, WebSocketMessageAction.MOVED, teamCard.getWebSocketJson()));
             sm.setSuccess(teamCard.getJson());
         } catch (Exception e) {
             sm.setError(e);
