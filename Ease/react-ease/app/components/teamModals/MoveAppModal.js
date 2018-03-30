@@ -11,16 +11,9 @@ import {reflect} from "../../utils/utils";
 
 @connect(store => ({
   card: store.team_apps[store.teamModals.moveAppModal.app_id],
-  teams: store.teams
+  team: store.teams[store.team_apps[store.teamModals.moveAppModal.app_id].team_id]
 }))
 class MoveAppUserLooseAccess extends Component {
-  constructor(props){
-    super(props);
-    this.state = {
-      team: this.props.teams[this.props.card.team_id],
-      room: this.props.teams[this.props.card.team_id].rooms[this.props.selectedRoom]
-    }
-  }
   render() {
     const {
       next,
@@ -30,9 +23,10 @@ class MoveAppUserLooseAccess extends Component {
       usersAdded,
       loadingAddInRoom
     } = this.props;
+    const room = this.props.team.rooms[this.props.selectedRoom];
     return (
-      <Form class="container" id="add_bookmark_form" onSubmit={next}>
-        <p>The following users don’t have access to <strong>#{this.state.room.name}</strong>. In case you don’t add them, they <strong>will loose access</strong> to {this.props.card.name} and info related.</p>
+      <Form class="container ease_modal" id="add_bookmark_form" onSubmit={next}>
+        <p>The following users don’t have access to <strong>#{room.name}</strong>. In case you don’t add them, they <strong>will loose access</strong> to {this.props.card.name} and info related.</p>
         <p style={{cursor:'pointer'}} onClick={back} className="back_modal">
           <Icon name="arrow left"/>Back
         </p>
@@ -40,10 +34,10 @@ class MoveAppUserLooseAccess extends Component {
           {this.props.usersNotInRoom.map(user_id => {
             return (
               <div key={user_id} className='move_app'>
-                <span>{this.state.team.team_users[user_id].username}</span>
+                <span>{this.props.team.team_users[user_id].username}</span>
                 {usersAdded.find(userAddedId => (user_id === userAddedId)) ?
                   <Icon name='check'/>
-                 : <Button type='button' onClick={e => loadingAddInRoom[user_id] ? null : addInRoom(user_id)}>
+                 : <Button type='button' onClick={e => loadingAddInRoom[user_id] || loading ? null : addInRoom(user_id)}>
                     {loadingAddInRoom[user_id] ? <Loader size='mini' inverted active/> : 'Add'}
                     </Button>
                 }
@@ -66,7 +60,7 @@ class MoveAppUserLooseAccess extends Component {
 
 @connect(store => ({
   card: store.team_apps[store.teamModals.moveAppModal.app_id],
-  teams: store.teams
+  team: store.teams[store.team_apps[store.teamModals.moveAppModal.app_id].team_id]
 }))
 class MoveAppModal extends Component {
   constructor(props) {
@@ -79,7 +73,6 @@ class MoveAppModal extends Component {
       selectedRoom: -1,
       usersNotInRoom: [],
       loadingAddInRoom: [],
-      team: this.props.teams[this.props.card.team_id]
     }
   }
   selectRoom = (roomId) => {
@@ -94,7 +87,7 @@ class MoveAppModal extends Component {
     loading[user_id] = true;
     this.setState({loadingAddInRoom: loading});
     this.props.dispatch(addTeamUserToChannel({
-      team_id: this.state.team.id,
+      team_id: this.props.team.id,
       channel_id: this.state.selectedRoom,
       team_user_id: user_id
     })).then(() => {
@@ -107,7 +100,7 @@ class MoveAppModal extends Component {
     this.setState({loading: true});
     const usersNotInRoom = [];
     this.props.card.receivers.filter(receiver => {
-      if (!this.props.teams[this.props.card.team_id].rooms[this.state.selectedRoom].team_user_ids.find(user_id => (user_id === receiver.team_user_id)))
+      if (!this.props.team.rooms[this.state.selectedRoom].team_user_ids.find(user_id => (user_id === receiver.team_user_id)))
         usersNotInRoom.push(receiver.team_user_id);
     });
     if (this.state.view === 1 && usersNotInRoom.length > 0) {
@@ -115,25 +108,25 @@ class MoveAppModal extends Component {
       usersNotInRoom.map(user_id => {
         loadingAddInRoom[user_id] = false;
       });
-      this.setState({view: 2, usersNotInRoom: usersNotInRoom, loadingAddInRoom: loadingAddInRoom, loading: false});
+      this.setState({view: 2, usersNotInRoom: usersNotInRoom, loadingAddInRoom: loadingAddInRoom, usersAdded: [], loading: false});
     }
     else {
       const calls = [];
       usersNotInRoom.map(user_id => {
         calls.push(this.props.dispatch(removeTeamCardReceiver({
-          team_id:this.state.team_id,
+          team_id:this.props.team.id,
           team_card_id: this.props.card.id,
           team_card_receiver_id: this.props.card.receivers.find(receiver => (receiver.team_user_id === user_id)).id
         })));
       });
       Promise.all(calls.map(reflect)).then(res => {
         this.props.dispatch(teamMoveCard({
-          team_id: this.state.team.id,
+          team_id: this.props.team.id,
           team_card_id: this.props.card.id,
           channel_id: this.state.selectedRoom
         })).then(response => {
           this.props.dispatch(moveTeamCard({card_id: Number(this.props.card.id)}));
-          this.props.history.push(`/teams/${this.state.team.id}/${this.state.selectedRoom}?app_id=${this.props.card.id}`);
+          this.props.history.push(`/teams/${this.props.team.id}/${this.state.selectedRoom}?app_id=${this.props.card.id}`);
         });
       });
     }
@@ -144,13 +137,13 @@ class MoveAppModal extends Component {
   render() {
     const card = this.props.card;
     const website = card.software ? card.software : card.website ? card.website : card;
-    const rooms = this.state.team.rooms;
+    const rooms = this.props.team.rooms;
     return (
       <SimpleModalTemplate
         onClose={this.close}
         headerContent={this.state.view === 1 ? 'Move App' : 'Some users can loose access'}>
         {this.state.view === 1 &&
-        <Form class="container" id="add_bookmark_form" onSubmit={this.next}>
+        <Form class="container ease_modal" id="add_bookmark_form" onSubmit={this.next}>
           <Form.Field class="display-flex align_items_center" style={{marginBottom: '30px'}}>
             <div className="squared_image_handler">
               <img src={website.logo} alt="Website logo"/>
@@ -168,7 +161,7 @@ class MoveAppModal extends Component {
                 return 1000;
               return rooms[a].name.localeCompare(rooms[b].name);
             }).map(room_id => {
-              if (room_id && rooms[room_id].team_user_ids.filter(id => (id === this.state.team.my_team_user_id)).length > 0 && Number(room_id) !== card.channel_id)
+              if (room_id && rooms[room_id].team_user_ids.filter(id => (id === this.props.team.my_team_user_id)).length > 0 && Number(room_id) !== card.channel_id)
                 return <Checkbox radio
                                  key={room_id}
                                  name={room_id}
