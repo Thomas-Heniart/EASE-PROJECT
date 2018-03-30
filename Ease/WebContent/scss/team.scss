@@ -494,6 +494,11 @@ button.only-text-button {
     padding: 15px 22px;
     .move_app {
       line-height: 2.5;
+      .loader {
+        top: auto;
+        left: auto;
+        display: inline-flex;
+      }
       span {
         color: #939eb7;
         font-size: 14px;
@@ -505,8 +510,12 @@ button.only-text-button {
       i {
         float: right;
         color: #45c997;
+        margin-right: 20px;
       }
       button {
+        padding: 3px;
+        font-weight: 300;
+        margin-top: 7px;
         float: right;
         width: 52px;
         height: 22px;
