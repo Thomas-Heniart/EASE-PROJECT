@@ -36,6 +36,7 @@ const update_client_actions = {
   'TEAM_ROOM_MEMBER_REMOVED': roomActions.teamRoomMemberRemoved,
   'TEAM_CARD_CREATED': teamCardActions.teamCardCreatedAction,
   'TEAM_CARD_CHANGED': teamCardActions.teamCardChangedAction,
+  'TEAM_CARD_MOVED': teamCardActions.teamCardMovedAction,
   'TEAM_CARD_REMOVED': teamCardActions.teamCardRemovedAction,
   'TEAM_CARD_RECEIVER_CREATED': teamCardActions.teamCardReceiverCreatedAction,
   'TEAM_CARD_RECEIVER_CHANGED': teamCardActions.teamCardReceiverChangedAction,

@@ -320,6 +320,33 @@ export const teams = createReducer({
     });
     return new_state;
   },
+  ['TEAM_CARD_MOVED'](state, action){
+    const {team_card, old_channel_id} = action.payload;
+    const team_id = team_card.team_id;
+    const team = state[team_id];
+    const channel_id = old_channel_id;
+    const next_channel_id = team_card.channel_id;
+    const channel = team.rooms[channel_id];
+    let new_state = update(state, {
+      [team_id]: {
+        rooms: {
+          [channel_id]: {
+            team_card_ids: {$splice: [[channel.team_card_ids.indexOf(team_card.id), 1]]}
+          },
+          [next_channel_id]: {
+            team_card_ids: {$push: [team_card.id]}
+          }
+        }
+      }
+    });
+    team_card.receivers.map(item => {
+      let user = new_state[team_id].team_users[item.team_user_id];
+      new_state[team_id].team_users[item.team_user_id] = update(user, {
+        team_card_ids: {$push: [team_card.id]}
+      });
+    });
+    return new_state;
+  },
   ['TEAM_CARD_REMOVED'](state, action){
     const {team_id, team_card_id} = action.payload;
     const team = state[team_id];
@@ -425,6 +452,14 @@ export const team_apps = createReducer({
     });
   },
   ['TEAM_CARD_CHANGED'](state, action){
+    const team_card = action.payload.team_card;
+    if (!!state[team_card.id])
+      return update(state, {
+        [team_card.id]: {$set: team_card}
+      });
+    return state;
+  },
+  ['TEAM_CARD_MOVED'](state, action){
     const team_card = action.payload.team_card;
     if (!!state[team_card.id])
       return update(state, {
