@@ -50,7 +50,7 @@ public class Channel {
     @JoinTable(name = "pendingJoinChannelRequests", joinColumns = @JoinColumn(name = "channel_id"), inverseJoinColumns = @JoinColumn(name = "teamUser_id"))
     private Set<TeamUser> pending_teamUsers = ConcurrentHashMap.newKeySet();
 
-    @OneToMany(mappedBy = "channel", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "channel", cascade = CascadeType.ALL)
     @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     private Set<TeamCard> teamCardSet = ConcurrentHashMap.newKeySet();
 

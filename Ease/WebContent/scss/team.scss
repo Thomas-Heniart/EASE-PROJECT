@@ -513,10 +513,48 @@ button.only-text-button {
     cursor: pointer;
     font-size: 14px;
   }
+  .move_app_modal_p {
+    font-size: 16px;
+    color: #949eb7;
+  }
   .choose_type_app {
     border: solid 1px #45c997;
     border-radius: 5px;
     padding: 15px 22px;
+    overflow: auto;
+    max-height: 190px;
+    .move_app {
+      line-height: 2.25;
+      .loader {
+        top: auto;
+        left: auto;
+        display: inline-flex;
+      }
+      span {
+        color: #939eb7;
+        font-size: 14px;
+        font-weight: bold;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+      i {
+        float: right;
+        color: #45c997;
+        margin-right: 20px;
+      }
+      button {
+        padding: 3px;
+        font-weight: 300;
+        margin-top: 5px;
+        float: right;
+        width: 52px;
+        height: 22px;
+        border-radius: 5px;
+        background-color: #949eb7;
+        color: white;
+      }
+    }
     .checkbox {
       display: flex;
       margin: 0;

@@ -46,7 +46,9 @@ public class ServletCreateTeam extends HttpServlet {
             String digits = sm.getStringParam("digits", false, true);
             String teamName = sm.getStringParam("team_name", true, false);
             String email = sm.getStringParam("email", true, false);
+            email = email.toLowerCase();
             String username = sm.getStringParam("username", true, false);
+            username = username.toLowerCase();
             Integer plan_id = sm.getIntParam("plan_id", true, false);
             Integer company_size = sm.getIntParam("company_size", true, false);
             if (teamName.equals(""))

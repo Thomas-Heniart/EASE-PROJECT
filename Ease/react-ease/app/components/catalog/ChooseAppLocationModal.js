@@ -50,7 +50,7 @@ class ChooseAppLocationModal extends React.Component {
                 onChange={e => selectTeam(team_id)}
                 label={this.props.teams[team_id].name}/>));
     return (
-      <Form class="container" id="add_bookmark_form" onSubmit={this.changeView}>
+      <Form class="container ease_modal" id="add_bookmark_form" onSubmit={this.changeView}>
         <Form.Field class="display-flex align_items_center" style={{marginBottom: '30px'}}>
           {website.logo ?
             <div className="squared_image_handler">

@@ -35,8 +35,9 @@ public class ServletUnsubscribe extends HttpServlet {
             sm.needToBeConnected();
             Integer team_id = sm.getIntParam("team_id", true, false);
             Team team = sm.getTeam(team_id);
-            sm.needToBeOwnerOfTeam(team);
-            String password = sm.getStringParam("password", false, false);
+            TeamUser teamUser_connected = sm.getUser().getTeamUser(team);
+            if (!teamUser_connected.isTeamOwner())
+                throw new HttpServletException(HttpStatus.Forbidden, "You must be owner of the team.");            String password = sm.getStringParam("password", false, false);
             if (!sm.getUser().getUserKeys().isGoodPassword(password))
                 throw new HttpServletException(HttpStatus.BadRequest, "Wrong password.");
             Subscription subscription = team.getSubscription();

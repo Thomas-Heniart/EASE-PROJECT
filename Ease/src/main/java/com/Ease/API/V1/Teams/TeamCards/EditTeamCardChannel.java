@@ -42,7 +42,6 @@ public class EditTeamCardChannel extends HttpServlet {
             if (!channel.containsAllTeamUsers(teamCard.getTeamUsers()))
                 throw new HttpServletException(HttpStatus.BadRequest, "All team users must be part of new channel");
             HibernateQuery hibernateQuery = sm.getHibernateQuery();
-            teamCard.setChannel(channel);
             for (TeamCardReceiver teamCardReceiver : teamCard.getTeamCardReceiverMap().values()) {
                 TeamUser teamUserReceiver = teamCardReceiver.getTeamUser();
                 App app = teamCardReceiver.getApp();
@@ -53,11 +52,13 @@ public class EditTeamCardChannel extends HttpServlet {
                 oldProfile.removeAppAndUpdatePositions(app, hibernateQuery);
                 //Get new profile and add app
                 Profile newProfile = teamUserReceiver.getOrCreateProfile(channel, hibernateQuery);
-                newProfile.addAppAndUpdatePositions(app, 0, hibernateQuery);
+                newProfile.addAppAndUpdatePositions(app, newProfile.getSize(), hibernateQuery);
                 sm.addWebSocketMessage(WebSocketMessageFactory.createWebSocketMessage(WebSocketMessageType.TEAM_CARD_RECEIVER, WebSocketMessageAction.CHANGED, teamCardReceiver.getWebSocketJson()));
             }
+            teamCard.setChannel(channel);
             sm.saveOrUpdate(teamCard);
-            sm.addWebSocketMessage(WebSocketMessageFactory.createWebSocketMessage(WebSocketMessageType.TEAM_CARD, WebSocketMessageAction.CHANGED, teamCard.getWebSocketJson()));
+            teamCard.decipher(sm.getTeamKey(team));
+            sm.addWebSocketMessage(WebSocketMessageFactory.createWebSocketMessage(WebSocketMessageType.TEAM_CARD, WebSocketMessageAction.MOVED, teamCard.getWebSocketJson()));
             sm.setSuccess(teamCard.getJson());
         } catch (Exception e) {
             sm.setError(e);

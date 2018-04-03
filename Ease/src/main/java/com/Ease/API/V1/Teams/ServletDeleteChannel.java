@@ -6,6 +6,8 @@ import com.Ease.Team.Channel;
 import com.Ease.Team.Team;
 import com.Ease.Team.TeamCard.TeamCard;
 import com.Ease.Team.TeamCard.TeamLinkCard;
+import com.Ease.Team.TeamCard.TeamSingleCard;
+import com.Ease.Team.TeamCard.TeamSingleSoftwareCard;
 import com.Ease.Team.TeamCardReceiver.TeamCardReceiver;
 import com.Ease.Team.TeamUser;
 import com.Ease.Utils.HttpServletException;
@@ -23,6 +25,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Iterator;
 
 /**
  * Created by thomas on 09/06/2017.
@@ -38,12 +41,14 @@ public class ServletDeleteChannel extends HttpServlet {
             sm.needToBeAdminOfTeam(team);
             TeamUser teamUser = sm.getTeamUser(team);
             Channel channel = team.getChannelWithId(channel_id);
-            if (!teamUser.isTeamOwner() && channel.getRoom_manager() != teamUser)
+            if (!teamUser.isTeamOwner() && !channel.getRoom_manager().equals(teamUser))
                 throw new HttpServletException(HttpStatus.Forbidden, "Only room manager and owner can delete a room.");
             if (channel.getName().equals("openspace"))
                 throw new HttpServletException(HttpStatus.Forbidden, "You cannot modify this channel.");
             HibernateQuery hibernateQuery = sm.getHibernateQuery();
-            for (TeamCard teamCard : channel.getTeamCardSet()) {
+            Iterator<TeamCard> teamCardIterator = channel.getTeamCardSet().iterator();
+            while (teamCardIterator.hasNext()) {
+                TeamCard teamCard = teamCardIterator.next();
                 hibernateQuery.queryString("DELETE FROM Update u WHERE u.teamCard.db_id = :card_id");
                 hibernateQuery.setParameter("card_id", teamCard.getDb_id());
                 hibernateQuery.executeUpdate();
@@ -72,21 +77,37 @@ public class ServletDeleteChannel extends HttpServlet {
                             }
                         }
                     }
-                    TeamUser teamUser1 = teamCardReceiver.getTeamUser();
-                    teamUser1.removeTeamCardReceiver(teamCardReceiver);
                     Profile profile = teamCardReceiver.getApp().getProfile();
                     if (profile != null)
                         profile.removeAppAndUpdatePositions(teamCardReceiver.getApp(), sm.getHibernateQuery());
+                    TeamUser teamUser1 = teamCardReceiver.getTeamUser();
+                    teamUser1.removeTeamCardReceiver(teamCardReceiver);
                 }
+                if (teamCard.isTeamSingleCard()) {
+                    if (teamCard.isTeamSoftwareCard()) {
+                        TeamSingleSoftwareCard teamSingleSoftwareCard = (TeamSingleSoftwareCard) teamCard;
+                        TeamUser teamUser1 = teamSingleSoftwareCard.getTeamUser_filler_test();
+                        if (teamUser1 != null)
+                            teamUser1.removeTeamSingleSoftwareCardToFill(teamSingleSoftwareCard);
+                    } else {
+                        TeamSingleCard teamSingleCard = (TeamSingleCard) teamCard;
+                        TeamUser teamUser1 = teamSingleCard.getTeamUser_filler();
+                        if (teamUser1 != null)
+                            teamUser1.removeTeamSingleCardToFill(teamSingleCard);
+                    }
+                }
+                team.removeTeamCard(teamCard);
+                teamCardIterator.remove();
+                sm.deleteObject(teamCard);
             }
             for (Profile profile : channel.getProfiles()) {
                 profile.setChannel(null);
                 profile.setTeamUser(null);
                 sm.saveOrUpdate(profile);
             }
-            channel.getTeamUsers().forEach(teamUser1 -> teamUser1.getChannels().remove(channel));
             team.removeTeamCards(channel.getTeamCardSet());
             channel.getTeamCardSet().clear();
+            channel.getTeamUsers().forEach(teamUser1 -> teamUser1.getChannels().remove(channel));
             channel.getPending_teamUsers().forEach(teamUser1 -> teamUser1.getPending_channels().remove(channel));
             team.removeChannel(channel);
             sm.deleteObject(channel);

@@ -7,6 +7,7 @@ function checkTextArea(paste) {
   const semicolon = paste.search(/[;]/g);
   const space = paste.search(/[' ']/g);
   const tab = paste.search(/[\t]/g);
+  const back = paste.search(/[\n]/g);
   const emails = [];
 
   if (comma !== -1 && isEmail(paste.substring(0, comma))) {
@@ -25,6 +26,13 @@ function checkTextArea(paste) {
   }
   else if (space !== -1 && isEmail(paste.substring(0, space))) {
     paste.split(' ').filter(item => {
+      if (isEmail(item.trim()))
+        return emails.push(item.trim())
+    });
+    return emails;
+  }
+  else if (back !== -1 && isEmail(paste.substring(0, back))) {
+    paste.split('\n').filter(item => {
       if (isEmail(item.trim()))
         return emails.push(item.trim())
     });

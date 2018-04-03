@@ -1,3 +1,5 @@
+import {showMoveAppModal} from "./teamModalActions";
+
 var api = require('../utils/api');
 var post_api = require('../utils/post_api');
 import {dashboardAppRemovedAction, deleteAppAction, fetchApp} from "./dashboardActions";
@@ -646,6 +648,32 @@ export function deleteTeamCard({team_id, team_card_id}) {
   }
 }
 
+export function teamCardMovedAction({team_card}){
+  return (dispatch, getState) => {
+    const store = getState();
+    const apps = store.dashboard.apps;
+    const old_channel_id = store.team_apps[team_card.id].channel_id;
+    Object.keys(apps).map(app_id => {
+      const app = apps[app_id];
+      if (app.team_card_id === team_card.id)
+        dispatch(dashboardAppRemovedAction({
+          app_id: app.id
+        }));
+    });
+    dispatch({
+      type: 'TEAM_CARD_MOVED',
+      payload: {
+        team_card: team_card,
+        old_channel_id: old_channel_id
+      }
+    });
+    const team = store.teams[team_card.team_id];
+    const meReceiver = team_card.receivers.find(receiver => (receiver.team_user_id === team.my_team_user_id));
+    if (!!meReceiver)
+      dispatch(fetchApp({app_id: meReceiver.app_id}));
+  }
+}
+
 export function teamCardCreatedAction({team_card}){
   return (dispatch, getState) => {
     dispatch({
@@ -753,6 +781,21 @@ export function teamCardReceiverRemovedAction({team_id, team_card_id, team_user_
         team_user_id: team_user_id
       }
     });
+  }
+}
+
+export function teamMoveCard({team_id, team_card_id, channel_id}) {
+  return (dispatch, getState) => {
+    return post_api.teamApps.moveTeamCard({
+      team_id: team_id,
+      team_card_id: team_card_id,
+      channel_id: channel_id,
+      ws_id: getState().common.ws_id
+    }).then(team_card => {
+      dispatch(showMoveAppModal({active: false}));
+      dispatch(teamCardMovedAction({team_card}));
+      return team_card;
+    })
   }
 }
 

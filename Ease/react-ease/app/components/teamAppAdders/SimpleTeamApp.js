@@ -35,6 +35,7 @@ import {addNotification} from "../../actions/notificationBoxActions";
 import {connect} from "react-redux";
 import {testCredentials} from "../../actions/catalogActions";
 import * as api from "../../utils/api";
+import {resetTeamCard} from "../../actions/teamCardActions";
 
 const TeamAppCredentialInput = ({item, onChange, disabled, readOnly, testConnection}) => {
   return (
@@ -75,6 +76,8 @@ const TeamSimpleAppButtonSet = ({app, me, dispatch, editMode, selfJoin, requestA
                              onClick={isAdmin(me.role) ? selfJoin : asked ? null : requestApp}
                              icon="pointing up"
                              disabled={asked}/>}
+        {isAdmin(me.role) &&
+        <TeamAppActionButton text='Move App' icon='share' onClick={e => {dispatch(modalActions.showMoveAppModal({active: true, app_id: app.id}))}}/>}
         {(isAdmin(me.role) || app.team_user_sender_id === me.id) &&
         <TeamAppActionButton text='Edit App' icon='pencil' onClick={editMode}/>}
         {(isAdmin(me.role) || app.team_user_sender_id === me.id) &&
@@ -195,6 +198,12 @@ class SimpleTeamApp extends Component {
     }
   }
   handleInput = handleSemanticInput.bind(this);
+  componentDidMount() {
+    if (this.props.app.id === this.props.teamCard.edit) {
+      this.props.dispatch(resetTeamCard());
+      this.setEdit(this.state);
+    }
+  }
   toggleCanSeeInformation = (id) => {
     let users = this.state.users.map(item => {
       return {

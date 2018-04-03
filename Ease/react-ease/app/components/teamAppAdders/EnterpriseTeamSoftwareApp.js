@@ -33,6 +33,7 @@ import {connect} from "react-redux";
 import {addNotification} from "../../actions/notificationBoxActions";
 import * as api from "../../utils/api";
 import {passwordCopied} from "../../actions/dashboardActions";
+import {resetTeamCard} from "../../actions/teamCardActions";
 
 const TeamEnterpriseAppButtonSet = ({app, me, dispatch, editMode, selfJoin, requestApp}) => {
   const meReceiver = app.receivers.find(receiver => (receiver.team_user_id === me.id));
@@ -45,6 +46,8 @@ const TeamEnterpriseAppButtonSet = ({app, me, dispatch, editMode, selfJoin, requ
                              onClick={isAdmin(me.role) ? selfJoin : asked ? null : requestApp}
                              icon="pointing up"
                              disabled={asked}/>}
+        {isAdmin(me.role) &&
+        <TeamAppActionButton text='Move App' icon='share' onClick={e => {dispatch(modalActions.showMoveAppModal({active: true, app_id: app.id}))}}/>}
         {(isAdmin(me.role) || !!meReceiver) &&
         <TeamAppActionButton text='Edit App' icon='pencil' onClick={editMode}/>}
         {isAdmin(me.role) &&
@@ -320,6 +323,12 @@ class EnterpriseTeamSoftwareApp extends Component {
     }
   }
   handleInput = handleSemanticInput.bind(this);
+  componentDidMount() {
+    if (this.props.app.id === this.props.teamCard.edit) {
+      this.props.dispatch(resetTeamCard());
+      this.setEdit(this.state);
+    }
+  }
   setShowMore = (state) => {
     this.setState({show_more: state});
   };
