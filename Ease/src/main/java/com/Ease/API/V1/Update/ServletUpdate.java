@@ -76,8 +76,9 @@ public class ServletUpdate extends HttpServlet {
             Set<String> informationNameSet = new HashSet<>();
             for (Object object : account_information.keySet()) {
                 String key = (String) object;
-                if (account_information.getString(key).length() > 117)
-                    throw new HttpServletException(HttpStatus.BadRequest, "Cannot encrypt this kink of password");
+                String value = account_information.optString(key);
+                if (value.length() > 117)
+                    throw new HttpServletException(HttpStatus.BadRequest, "Cannot encrypt this kind of password");
                 informationNameSet.add(key);
             }
             Website website = catalog.getPublicWebsiteWithUrl(url, informationNameSet, hibernateQuery);
@@ -132,6 +133,7 @@ public class ServletUpdate extends HttpServlet {
             populateResponse(res, user, account_information, website, url, hibernateQuery, sm, updates);
             sm.setSuccess(res);
         } catch (Exception e) {
+            e.printStackTrace();
             sm.setError(e);
         }
         sm.sendResponse();

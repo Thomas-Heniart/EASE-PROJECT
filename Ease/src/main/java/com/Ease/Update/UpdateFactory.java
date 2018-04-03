@@ -26,7 +26,9 @@ public class UpdateFactory {
         String publicKey = user.getUserKeys().getPublicKey();
         for (Object o : account_information.keySet()) {
             String key = (String) o;
-            String value = account_information.getString(key);
+            String value = account_information.optString(key);
+            if (value.isEmpty())
+                continue;
             updateAccount.addUpdateAccountInformation(new UpdateAccountInformation(key, RSA.Encrypt(value, publicKey), updateAccount, value));
         }
         update.setUpdateAccount(updateAccount);
