@@ -1,6 +1,6 @@
 import React, {Component} from "react";
 import classnames from "classnames";
-import {Button, Container, Dropdown, Header, Icon, Input, Label, Popup, Segment} from 'semantic-ui-react';
+import {Button,TextArea, Container, Dropdown, Header, Icon, Input, Label, Popup, Segment} from 'semantic-ui-react';
 import * as modalActions from "../../actions/teamModalActions";
 import {
   EmptyCredentialsSimpleAppIndicator,
@@ -39,30 +39,30 @@ import {resetTeamCard} from "../../actions/teamCardActions";
 
 const TeamAppCredentialInput = ({item, onChange, disabled, readOnly, testConnection}) => {
   return (
-    <div className='credentials_single_card'>
-      <Input size="mini"
-             class="team-app-input"
-             required={item.name !== 'password'}
-             readOnly={readOnly}
-             disabled={disabled}
-             name={item.name}
-             onChange={onChange}
-             labelPosition="left"
-             label={<Label><Icon name={credentialIconType[item.name]}/></Label>}
-             placeholder={item.name === 'password' ? '••••••••' : item.placeholder}
-             value={item.name === 'password' && readOnly ? 'abcdabcd' : item.value}
-             type={item.type}/>
-      {(item.name === 'password' && !readOnly) &&
-      <Popup
-        inverted
-        trigger={
-          <p
-            className='underline_hover test_connection'
-            onClick={e => testConnection()}>
-            <Icon name='magic'/>Test this password
-          </p>}
-        content='We will open a new tab to test if the password works or not.'/>}
-    </div>);
+      <div className='credentials_single_card'>
+        <Input size="mini"
+               class="team-app-input"
+               required={item.name !== 'password'}
+               readOnly={readOnly}
+               disabled={disabled}
+               name={item.name}
+               onChange={onChange}
+               labelPosition="left"
+               label={<Label><Icon name={credentialIconType[item.name]}/></Label>}
+               placeholder={item.name === 'password' ? '••••••••' : item.placeholder}
+               value={item.name === 'password' && readOnly ? 'abcdabcd' : item.value}
+               type={item.type}/>
+        {(item.name === 'password' && !readOnly) &&
+        <Popup
+            inverted
+            trigger={
+              <p
+                  className='underline_hover test_connection'
+                  onClick={e => testConnection()}>
+                <Icon name='magic'/>Test this password
+              </p>}
+            content='We will open a new tab to test if the password works or not.'/>}
+      </div>);
 };
 
 const TeamSimpleAppButtonSet = ({app, me, dispatch, editMode, selfJoin, requestApp}) => {
@@ -394,8 +394,8 @@ class SimpleTeamApp extends Component {
                          required/>}
               {app.requests.length > 0 && isAdmin(me.role) &&
               <SharingRequestButton
-                requestNumber={app.requests.length}
-                onClick={e => {this.props.dispatch(modalActions.showTeamManageAppRequestModal({active: true, team_card_id: app.id}))}}/>}
+                  requestNumber={app.requests.length}
+                  onClick={e => {this.props.dispatch(modalActions.showTeamManageAppRequestModal({active: true, team_card_id: app.id}))}}/>}
             </Header>
             {!this.state.edit &&
             <TeamSimpleAppButtonSet app={app}
@@ -449,18 +449,20 @@ class SimpleTeamApp extends Component {
                           placeholder="Tag your team members here..."/>}
                 </div>
                 {(this.state.description || app.description || this.state.edit) &&
-                <div>
-                  <Input size="mini"
-                         fluid
-                         class="team-app-input"
-                         onChange={this.handleInput}
-                         name="description"
-                         readOnly={!this.state.edit}
-                         value={this.state.edit ? this.state.description : app.description}
-                         placeholder="You can add a comment here"
-                         type="text"
-                         label={<Label><Icon name="sticky note"/></Label>}
-                         labelPosition="left"/>
+                <div class="ui form description display_flex">
+                  <div class="label">
+                    <Icon name="sticky note" fitted/>
+                  </div>
+                  <TextArea size="mini"
+                            fluid
+                            class="team-app-input"
+                            onChange={this.handleInput}
+                            name="description"
+                            rows={1}
+                            readOnly={!this.state.edit}
+                            value={this.state.edit ? this.state.description : app.description}
+                            placeholder="You can add a comment here"
+                            type="text"/>
                 </div>}
               </div>
             </div>
