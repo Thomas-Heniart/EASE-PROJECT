@@ -1,6 +1,6 @@
 import React, {Component} from "react";
 import classnames from "classnames";
-import {Button, Container, Dropdown, Header, Icon, Input, Label, Popup, Segment} from 'semantic-ui-react';
+import {Button, Container, Dropdown, Header, Icon, Input, Label, Popup, Segment, TextArea} from 'semantic-ui-react';
 import * as modalActions from "../../actions/teamModalActions";
 import {
   EmptyCredentialsSimpleAppIndicator,
@@ -392,18 +392,20 @@ class SimpleTeamSoftwareApp extends Component {
                     placeholder="Tag your team members here..."/>}
               </div>
               {(this.state.description || app.description || this.state.edit) &&
-              <div>
-                <Input size="mini"
-                       fluid
-                       class="team-app-input"
-                       onChange={this.handleInput}
-                       name="description"
-                       readOnly={!this.state.edit}
-                       value={this.state.edit ? this.state.description : app.description}
-                       placeholder="You can add a comment here"
-                       type="text"
-                       label={<Label><Icon name="sticky note"/></Label>}
-                       labelPosition="left"/>
+              <div class="ui form description display_flex">
+                <div class="label">
+                  <Icon name="sticky note" fitted/>
+                </div>
+                <TextArea size="mini"
+                          fluid
+                          class="team-app-input"
+                          onChange={this.handleInput}
+                          name="description"
+                          rows={1}
+                          readOnly={!this.state.edit}
+                          value={this.state.edit ? this.state.description : app.description}
+                          placeholder="You can add a comment here"
+                          type="text"/>
               </div>}
             </div>
           </div>

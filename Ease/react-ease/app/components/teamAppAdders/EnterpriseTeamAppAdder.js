@@ -10,7 +10,10 @@ import {cardAdded, requestWebsite} from "../../actions/teamModalActions";
 import {teamCreateEnterpriseCard, teamCreateAnyEnterpriseCard, teamCreateSoftwareEnterpriseCard} from "../../actions/appsActions";
 import {connect} from "react-redux";
 import {setUserDropdownText, PasswordChangeDropdownEnterprise} from "./common";
-import { Header, Label, Container, Icon, Transition, Segment, Input, Dropdown, Button, Popup } from 'semantic-ui-react';
+import {
+  Header, Label, Container, Icon, Transition, Segment, Input, Dropdown, Button, Popup,
+  TextArea
+} from 'semantic-ui-react';
 import {reduxActionBinder} from "../../actions/index";
 import {deleteUpdate, testCredentials} from "../../actions/catalogActions";
 import {updateAccepted} from "../../actions/dashboardActions";
@@ -492,17 +495,19 @@ class EnterpriseTeamAppAdder extends Component {
                           noResultsMessage='No more results found'
                           placeholder="Tag your team members here..."/>}
                     </div>
-                    <div>
-                      <Input size="mini"
-                             fluid
-                             class="team-app-input"
-                             onChange={this.handleInput}
-                             name="description"
-                             value={this.state.description}
-                             placeholder="You can add a comment here"
-                             type="text"
-                             label={<Label><Icon name="sticky note"/></Label>}
-                             labelPosition="left"/>
+                    <div class="ui form description display_flex">
+                      <div class="label">
+                        <Icon name="sticky note" fitted/>
+                      </div>
+                      <TextArea size="mini"
+                                fluid
+                                class="team-app-input"
+                                onChange={this.handleInput}
+                                name="description"
+                                rows={1}
+                                value={this.state.description}
+                                placeholder="You can add a comment here"
+                                type="text"/>
                     </div>
                   </div>
                 </div>
