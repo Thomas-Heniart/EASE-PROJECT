@@ -128,12 +128,12 @@ class AddMemberToRoomDiv extends React.Component {
                       placeholder="Tag users here..."/>
                 </Form.Field>
                 <Form.Checkbox
-                  toggle
-                  name='check'
-                  className='check_tag_user flex_panel'
-                  onChange={this.handleInput}
-                  checked={this.state.check}
-                  label="Add user(s) in all apps of this room"/>
+                    toggle
+                    name='check'
+                    className='check_tag_user flex_panel'
+                    onChange={this.handleInput}
+                    checked={this.state.check}
+                    label="Add user(s) in all apps of this room"/>
                 <Form.Field>
                   <Button basic size="mini" type="button" onClick={this.setModifying.bind(null, false)}>Cancel</Button>
                   <Button primary size="mini" loading={this.state.loading}>Save</Button>
@@ -361,9 +361,11 @@ class TeamChannelFlexTab extends React.Component{
   }
   render() {
     const {me, team, channel} = this.props;
+    const meAdmin = isAdmin(me.role);
     const channel_users = channel.team_user_ids.map(id => {
       return team.team_users[id];
-    });
+    }).sort((a,b) => (a.id === me.id ? -1000 : b.id === me.id ? 1000 : a.username.localeCompare(b.username)));
+
     return (
         <div className="flex_contents_panel active" id="team_tab">
           <div className="tab_heading">
@@ -400,22 +402,22 @@ class TeamChannelFlexTab extends React.Component{
               <Grid.Row>
                 <Grid.Column class="users">
                   <Header as="h5">
-                    {isAdmin(me.role) && channel.join_requests.length > 0 ?
+                    {meAdmin && channel.join_requests.length > 0 ?
                         <Label circular color="red" size="mini">{channel.join_requests.length}</Label>: null}
                     Members :
                   </Header>
                   <div style={{marginBottom: 10}}>
-                    {isAdmin(me.role) && !channel.default &&
+                    {meAdmin && !channel.default &&
                     <AddMemberToRoomDiv
-                      team={team}
-                      room={channel}/>}
+                        team={team}
+                        room={channel}/>}
                   </div>
                   {channel_users.map(user => {
                     return (
                         <Label size="mini" key={user.id}>
                           <Icon name="user"/>
                           {user.username}
-                          {isAdmin(me.role) && !channel.default &&
+                          {meAdmin && !channel.default &&
                           <Icon
                               name="delete"
                               link
@@ -636,32 +638,32 @@ class FirstLastNameSection extends React.Component {
     return (
         <Grid.Column>
           {/*{!this.state.edit &&*/}
-              <h4>
-                {user.first_name} {user.last_name}
-                {/*{isSuperiorOrMe(user, me) &&
+            <h4>
+            {user.first_name} {user.last_name}
+            {/*{isSuperiorOrMe(user, me) &&
                 <Icon link name="pencil" class="mrgnLeft5" onClick={this.setEdit.bind(null, true)}/>}*/}
-              </h4>
+            </h4>
           {/*}*/}
-            {/*:*/}
-              {/*<Form onSubmit={this.confirm} error={!!this.state.errorMessage.length}>*/}
-                {/*<Form.Input*/}
-                    {/*size="mini"*/}
-                    {/*placeholder="First name"*/}
-                    {/*type="text" name="first_name" fluid*/}
-                    {/*value={this.state.first_name}*/}
-                    {/*onChange={this.handleInput}/>*/}
-                {/*<Form.Input*/}
-                    {/*size="mini"*/}
-                    {/*placeholder="Last name"*/}
-                    {/*type="text" name="last_name" fluid*/}
-                    {/*value={this.state.last_name}*/}
-                    {/*onChange={this.handleInput}/>*/}
-                {/*<Message error size="mini" content={this.state.errorMessage}/>*/}
-                {/*<Form.Field>*/}
-                  {/*<Button type="button" basic size="mini" onClick={this.setEdit.bind(null, false)}>Cancel</Button>*/}
-                  {/*<Button primary size="mini" loading={this.state.loading}>Save</Button>*/}
-                {/*</Form.Field>*/}
-              {/*</Form>*/}
+          {/*:*/}
+          {/*<Form onSubmit={this.confirm} error={!!this.state.errorMessage.length}>*/}
+          {/*<Form.Input*/}
+          {/*size="mini"*/}
+          {/*placeholder="First name"*/}
+          {/*type="text" name="first_name" fluid*/}
+          {/*value={this.state.first_name}*/}
+          {/*onChange={this.handleInput}/>*/}
+          {/*<Form.Input*/}
+          {/*size="mini"*/}
+          {/*placeholder="Last name"*/}
+          {/*type="text" name="last_name" fluid*/}
+          {/*value={this.state.last_name}*/}
+          {/*onChange={this.handleInput}/>*/}
+          {/*<Message error size="mini" content={this.state.errorMessage}/>*/}
+          {/*<Form.Field>*/}
+          {/*<Button type="button" basic size="mini" onClick={this.setEdit.bind(null, false)}>Cancel</Button>*/}
+          {/*<Button primary size="mini" loading={this.state.loading}>Save</Button>*/}
+          {/*</Form.Field>*/}
+          {/*</Form>*/}
         </Grid.Column>
     )
   }
@@ -872,6 +874,40 @@ class ArrivalDateSection extends Component {
   }
 }
 
+class TeamUserRoomsSection extends Component {
+  constructor(props){
+    super(props);
+  }
+  render(){
+    const {team, user, me} = this.props;
+    const meAdmin = isAdmin(me.role);
+    const rooms = user.room_ids.map(room_id => team.rooms[room_id])
+        .sort((a,b) => (a.name.localeCompare(b.name)));
+
+    return (
+        <Grid.Column class="rooms">
+          <Header as="h5">Rooms:</Header>
+          {rooms.map(room => {
+            return (
+                <Label size="mini" key={room.id}>
+                  <Icon name="hashtag"/>
+                  {room.name}
+                  {meAdmin && !room.default &&
+                  <Icon name="delete" link
+                        onClick={e => {this.props.dispatch(showTeamDeleteUserFromChannelModal({
+                          active: true,
+                          team_id: team.id,
+                          room_id: room.id,
+                          team_user_id: user.id
+                        }))}}/>}
+                </Label>
+            )
+          })}
+        </Grid.Column>
+    )
+  }
+}
+
 class TeamUserFlexTab extends React.Component{
   constructor(props){
     super(props);
@@ -932,26 +968,11 @@ class TeamUserFlexTab extends React.Component{
                     me={me}/>
               </Grid.Row>
               <Grid.Row>
-                <Grid.Column class="rooms">
-                  <Header as="h5">Rooms:</Header>
-                  {user.room_ids.map(id => {
-                    const room = team.rooms[id];
-                    return (
-                        <Label size="mini" key={id}>
-                          <Icon name="hashtag"/>
-                          {room.name}
-                          {isAdmin(me.role) && !room.default &&
-                          <Icon name="delete" link
-                                onClick={e => {this.props.dispatch(showTeamDeleteUserFromChannelModal({
-                                  active: true,
-                                  team_id: team.id,
-                                  room_id: room.id,
-                                  team_user_id: user.id
-                                }))}}/>}
-                        </Label>
-                    )
-                  }, this)}
-                </Grid.Column>
+                <TeamUserRoomsSection
+                    dispatch={this.props.dispatch}
+                    team={team}
+                    user={user}
+                    me={me}/>
               </Grid.Row>
               {isSuperior(user,me) &&
               <Grid.Row>
