@@ -208,9 +208,10 @@ const StaticReceivers = ({receivers, me, expanded, password_reminder_interval, d
                                     name={item.name}
                                     label={<Label><Icon name={credentialIconType[item.name] ? credentialIconType[item.name] : 'wait'}/></Label>}
                                     labelPosition="left"
-                                    placeholder={item.placeholder}
-                                    value={(item.name === 'password' && !receiver.receiver.empty) ? 'abcdabcd' : item.value}
-                                    type={item.information_type}/>;                })}
+                                    placeholder={item.name === 'password' ? '(Password encrypted)' : item.placeholder}
+                                    value={item.value}
+                                    type={item.information_type}/>;
+                    })}
                 {receiver.user.id === me.id && !receiver.receiver.empty &&
                 <CopyPasswordButton app_id={receiver.receiver.app_id}/>}
               </div>
@@ -225,7 +226,7 @@ const TeamAppCredentialInput = ({item, onChange, receiver, myId}) => {
   const label = <Label><Icon name={credentialIconType[item.name] ? credentialIconType[item.name] : 'wait'}/></Label>;
   let placeholder = item.placeholder;
   if (item.name === 'password' && !receiver.empty)
-    placeholder = '••••••••';
+    placeholder = '(Password encrypted)';
   if (receiver.user.id !== myId && receiver.empty)
     placeholder = `${placeholder} (Optional)`;
 
@@ -484,7 +485,7 @@ class EnterpriseTeamSoftwareApp extends Component {
     const app = this.props.app;
     const me = this.props.me;
     const team = this.props.teams[app.team_id];
-    const meReceiver = getReceiverInList(app.receivers, me.id);
+//    const meReceiver = getReceiverInList(app.receivers, me.id);
     const website = app.software;
     const users = this.getUsers();
     const room_manager = this.props.teams[this.props.team_id].team_users[selectItemFromListById(this.props.channels, app.channel_id).room_manager_id];
