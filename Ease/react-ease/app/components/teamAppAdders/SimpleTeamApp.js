@@ -49,8 +49,8 @@ const TeamAppCredentialInput = ({item, onChange, disabled, readOnly, testConnect
                onChange={onChange}
                labelPosition="left"
                label={<Label><Icon name={credentialIconType[item.name]}/></Label>}
-               placeholder={item.name === 'password' ? '••••••••' : item.placeholder}
-               value={item.name === 'password' && readOnly ? 'abcdabcd' : item.value}
+               placeholder={item.name === 'password' ? '(Password encrypted)' : item.placeholder}
+               value={item.value}
                type={item.type}/>
         {(item.name === 'password' && !readOnly) &&
         <Popup
@@ -459,6 +459,7 @@ class SimpleTeamApp extends Component {
                             onChange={this.handleInput}
                             name="description"
                             rows={1}
+                            autoHeight={true}
                             readOnly={!this.state.edit}
                             value={this.state.edit ? this.state.description : app.description}
                             placeholder="You can add a comment here"
