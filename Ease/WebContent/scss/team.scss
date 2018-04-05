@@ -763,6 +763,12 @@ i.icon.pin_button {
 }
 
 .team-app {
+  input[type=password][readonly]{
+    @include placeholder-color(rgba(41,41,41,.95));
+    &:focus {
+      @include placeholder-color(rgba(41,41,41,.95));
+    }
+  }
   .description {
     font-size: .8em;
     .label {
@@ -774,7 +780,6 @@ i.icon.pin_button {
       background-color: #e0e1e2;
     }
     textarea {
-
       border-top-left-radius: 0;
       border-bottom-left-radius: 0;
       border-left-color: transparent;

@@ -46,8 +46,8 @@ const TeamAppCredentialInput = ({item, onChange, disabled, readOnly}) => {
                 onChange={onChange}
                 label={<Label><Icon name={credentialIconType[item.name] ? credentialIconType[item.name] : 'wait'}/></Label>}
                 labelPosition="left"
-                placeholder={item.name === 'password' ? '••••••••' : item.placeholder}
-                value={item.name === 'password' && readOnly ? 'abcdabcd' : item.value}
+                placeholder={item.name === 'password' ? '(Password encrypted)' : item.placeholder}
+                value={item.value}
                 type={item.type}>
   </Input>
 };
