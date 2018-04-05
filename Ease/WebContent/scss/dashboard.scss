@@ -38,8 +38,6 @@
 }
 
 #dashboard {
-  margin-top: -60px;
-  padding-top: 60px;
   height: 100%;
   @include display-flex();
   @include flex-direction(column);

@@ -2304,7 +2304,6 @@ button.action_text_button {
   transform: translateY(0);
   @include display-flex();
   @include flex(1);
-  @include flex-direction(column);
   overflow: hidden;
   input,textarea {
     @include simple-box-shadow(none);
@@ -3693,7 +3692,6 @@ button.big-button {
 }
 
 #team_header_apps_search {
-  margin-right: 50px;
   width: 250px;
   .input input {
     border-radius: 5px;

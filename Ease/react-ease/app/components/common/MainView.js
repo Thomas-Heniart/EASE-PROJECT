@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, {Component, Fragment} from 'react';
 import EaseHeader from './EaseHeader';
 import TeamsPreview from '../teams/TeamsPreview';
 import Catalog from '../catalog/Catalog';
@@ -12,6 +12,7 @@ import NotificationBoxContainer from "../common/NotificationBoxContainer";
 var NewSimpleTeamCreationView = require('../onBoarding/NewSimpleTeamCreationView');
 import {connect} from "react-redux";
 import {showExtensionDownloadModal, showConnectionDurationChooserModal} from "../../actions/modalActions";
+import HeaderSidebar from "./HeaderSidebar";
 
 @connect(store => ({
   common: store.common
@@ -36,18 +37,22 @@ class MainView extends Component {
   }
   render() {
     return (
-        <div class="display-flex flex_direction_column full_flex" style={{flexFlow: 'column-reverse'}}>
-          <Switch>
-            <Route path='/main/teamsPreview' component={TeamsPreview}/>
-            <Route path='/main/simpleTeamCreation' component={NewSimpleTeamCreationView}/>
-            <Route path='/main/catalog' component={Catalog}/>
-            <Route path='/main/settings' component={Settings}/>
-            <Route path='/main/dashboard' component={Dashboard}/>
-          </Switch>
+        <div class="display_flex">
           {this.props.location.pathname.split("/")[2] !== "simpleTeamCreation" &&
-          <EaseHeader history={this.props.history}/>}
-          <CustomDragLayer/>
-          <NotificationBoxContainer/>
+          <HeaderSidebar/>}
+          <div class="display-flex full_flex" style={{flexFlow: 'column-reverse', overflowX:'hidden'}}>
+            <Switch>
+              <Route path='/main/teamsPreview' component={TeamsPreview}/>
+              <Route path='/main/simpleTeamCreation' component={NewSimpleTeamCreationView}/>
+              <Route path='/main/catalog' component={Catalog}/>
+              <Route path='/main/settings' component={Settings}/>
+              <Route path='/main/dashboard' component={Dashboard}/>
+            </Switch>
+            {/*this.props.location.pathname.split("/")[2] !== "simpleTeamCreation" &&
+            <EaseHeader history={this.props.history}/>*/}
+            <CustomDragLayer/>
+            <NotificationBoxContainer/>
+          </div>
         </div>
     )
   }

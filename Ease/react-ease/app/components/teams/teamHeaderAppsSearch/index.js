@@ -196,6 +196,7 @@ class TeamAppsHeaderSearch extends Component {
           <Search loading={loading}
                   placeholder="Search for an app"
                   size="mini"
+                  aligned="right"
                   fluid
                   noResultsMessage={loading ? 'Searching...' : <span>No app found! Add it from <NavLink to={'/main/catalog/website'}>the catalogue</NavLink>.</span>}
                   onResultSelect={this.onResultSelect}
