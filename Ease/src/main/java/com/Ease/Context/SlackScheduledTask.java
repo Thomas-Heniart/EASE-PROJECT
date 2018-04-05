@@ -15,7 +15,7 @@ import java.util.stream.Collectors;
 
 public class SlackScheduledTask extends TimerTask {
 
-    private final static String DBBOT_CHANNEL = "C9P9UL1MM";
+    private static final String DBBOT_CHANNEL = "C9P9UL1MM";
 
     @Override
     public void run() {
@@ -188,7 +188,7 @@ public class SlackScheduledTask extends TimerTask {
             while (calendar.get(Calendar.YEAR) < eYear)
                 calendar.add(Calendar.DAY_OF_YEAR, 1);
             calendar.add(Calendar.DAY_OF_YEAR, -1);
-            hibernateQuery.queryString("SELECT c.user_id FROM ConnectionMetric c WHERE c.connected IS true AND ((c.year = :sYear AND c.day_of_year BETWEEN :sDay AND :iDay) OR (c.year = :eYear AND c.day_of_year BETWWEN :jDay AND :eDay))");
+            hibernateQuery.queryString("SELECT c.user_id FROM ConnectionMetric c WHERE c.connected IS true AND ((c.year = :sYear AND c.day_of_year BETWEEN :sDay AND :iDay) OR (c.year = :eYear AND c.day_of_year BETWEEN :jDay AND :eDay))");
             hibernateQuery.setParameter("sYear", sYear);
             hibernateQuery.setParameter("sDay", sDay);
             hibernateQuery.setParameter("iDay", calendar.get(Calendar.DAY_OF_YEAR));
@@ -214,7 +214,7 @@ public class SlackScheduledTask extends TimerTask {
     private List<User> getUsersWhoLostPasswordsThreeDaysAgo(HibernateQuery hibernateQuery) throws Exception {
         Calendar calendar = Calendar.getInstance();
         calendar.add(Calendar.DAY_OF_YEAR, 3);
-        hibernateQuery.queryString("SELECT u FROM User u WHERE u.db_id IN (SELECT p.user_id FROM PasswordLost p WHERE DATE(p.dateOfRequest) = (:date))");
+        hibernateQuery.queryString("SELECT u FROM User u WHERE u.db_id IN (SELECT p.user_id FROM PasswordLost p WHERE DATE(p.request_date) = (:date))");
         hibernateQuery.setDate("date", calendar);
         return hibernateQuery.list();
     }
@@ -232,7 +232,7 @@ public class SlackScheduledTask extends TimerTask {
         hibernateQuery.setParameter("day_of_year", calendar.get(Calendar.DAY_OF_YEAR));
         List<Integer> todayIds = hibernateQuery.list();
         tenDaysAgoIds.retainAll(todayIds);
-        hibernateQuery.queryString("SELECT c.user_id FROM Connection c WHERE c.connected IS true AND AND ((c.year = :sYear AND c.day_of_year BETWEEN :sDay AND :iDay) OR (c.year = :eYear AND c.day_of_year BETWWEN :jDay AND :eDay))");
+        hibernateQuery.queryString("SELECT c.user_id FROM ConnectionMetric c WHERE c.connected IS true AND ((c.year = :sYear AND c.day_of_year BETWEEN :sDay AND :iDay) OR (c.year = :eYear AND c.day_of_year BETWEEN :jDay AND :eDay))");
         calendar.add(Calendar.DAY_OF_YEAR, -9);
         int sYear = calendar.get(Calendar.YEAR);
         int sDay = calendar.get(Calendar.DAY_OF_YEAR);
@@ -243,7 +243,7 @@ public class SlackScheduledTask extends TimerTask {
             while (calendar.get(Calendar.YEAR) < eYear)
                 calendar.add(Calendar.DAY_OF_YEAR, 1);
             calendar.add(Calendar.DAY_OF_YEAR, -1);
-            hibernateQuery.queryString("SELECT c.user_id FROM ConnectionMetric c WHERE c.connected IS true AND ((c.year = :sYear AND c.day_of_year BETWEEN :sDay AND :iDay) OR (c.year = :eYear AND c.day_of_year BETWWEN :jDay AND :eDay))");
+            hibernateQuery.queryString("SELECT c.user_id FROM ConnectionMetric c WHERE c.connected IS true AND ((c.year = :sYear AND c.day_of_year BETWEEN :sDay AND :iDay) OR (c.year = :eYear AND c.day_of_year BETWEEN :jDay AND :eDay))");
             hibernateQuery.setParameter("sYear", sYear);
             hibernateQuery.setParameter("sDay", sDay);
             hibernateQuery.setParameter("iDay", calendar.get(Calendar.DAY_OF_YEAR));
