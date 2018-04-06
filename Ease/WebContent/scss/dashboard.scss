@@ -44,10 +44,9 @@
   & > .ui.container {
     padding: 10px;
     overflow: auto;
-    @include justify-content(center);
     & > .column {
       transition: all .3s ease;
-      padding: 0 5px;
+      padding-right: 10px;
       width: 310px;
       &.fitted {
         transition: all .3s ease;
@@ -537,6 +536,7 @@
 
 .footerMainContainer {
   position: fixed;
+  z-index: 3;
   bottom: 0px;
   width: 100%;
 }

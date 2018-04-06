@@ -6,7 +6,6 @@ import Tutorial from "./Tutorial";
 import DashboardColumn from "./DashboardColumn";
 import {connect} from "react-redux";
 import withScrolling from 'react-dnd-scrollzone';
-import Footer from "./Footer";
 const ScrollingComponent = withScrolling('div');
 import ReactGA from 'react-ga';
 
@@ -76,7 +75,7 @@ class Dashboard extends Component {
   render(){
     const {columns} = this.props.dashboard;
     return (
-        <div id="dashboard" class={classnames(this.props.background_picture ? 'ease-background' : null, this.state.scrolling ? 'scrolling': null, 'lite_scrollbar')}>
+        <div id="dashboard" class={classnames(this.props.background_picture ? 'ease-background' : null, this.state.scrolling ? 'scrolling': null)}>
           <ScrollingComponent onScroll={this.onScroll} class="ui container fluid full_flex display_flex">
             {columns.map((column,idx) => {
               return (
@@ -86,7 +85,6 @@ class Dashboard extends Component {
             {this.state.tutorial &&
             <Tutorial/>}
           </ScrollingComponent>
-          <Footer/>
         </div>
     )
   }

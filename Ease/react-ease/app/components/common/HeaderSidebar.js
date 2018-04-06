@@ -7,6 +7,7 @@ import {processLogout, setGeneralLogoutModal} from "../../actions/commonActions"
 import {NavLink, withRouter} from "react-router-dom";
 import {fetchNotifications, validateNotification} from "../../actions/notificationsActions";
 import {checkForNewNotifications} from "../../utils/helperFunctions";
+import {setDashboardFooterState} from "../../actions/dashboardActions";
 
 const HeaderButtonPopup = ({trigger, content}) => {
   return (
@@ -184,15 +185,15 @@ class TeamsList extends Component {
               );
             else if (me.disabled || (team.onboarding_step !== 5 && me.role !== 3))
               return (
-                <HeaderButtonPopup
-                    key={team.id}
-                    trigger={
-                      <NavLink class="header_button team_button">
-                        {buttonText}
-                      </NavLink>
-                    }
-                    content='You need to wait until an admin accepts you.'
-                />
+                  <HeaderButtonPopup
+                      key={team.id}
+                      trigger={
+                        <NavLink class="header_button team_button">
+                          {buttonText}
+                        </NavLink>
+                      }
+                      content='You need to wait until an admin accepts you.'
+                  />
               );
             return (
                 <HeaderButtonPopup
@@ -214,16 +215,23 @@ class TeamsList extends Component {
   }
 }
 
+@connect()
 class HeaderSidebar extends Component {
   constructor(props){
     super(props);
   }
+  openFooter = () => {
+    this.props.dispatch(setDashboardFooterState(({
+      active: true
+    })));
+  };
   render(){
     return (
         <div id="header_sidebar">
           <div style={{marginBottom: '10px'}}>
             <NotificationList history={this.props.history}/>
-            <NavLink to={'/main/catalog/website'} class="header_button">
+            <NavLink to={'/main/catalog'}
+                     class="header_button">
               <HeaderButtonPopup
                   trigger={
                     <Icon name="plus" fitted/>
@@ -231,7 +239,8 @@ class HeaderSidebar extends Component {
                   content="Add new app"
               />
             </NavLink>
-            <NavLink to={'/main/dashboard'} class="header_button">
+            <NavLink to={'/main/dashboard'}
+                     class="header_button">
               <HeaderButtonPopup
                   trigger={
                     <Icon name="grid layout" fitted/>
@@ -245,12 +254,12 @@ class HeaderSidebar extends Component {
           </div>
           <div>
             <SettingsButton/>
-            <LogoutButton/>
-            <a class="header_button">
+            <LogoutButton history={this.props.history}
+                          dispatch={this.props.dispatch}/>
+            <a class="header_button" onClick={this.openFooter}>
               <HeaderButtonPopup
                   trigger={<img style={{height:25, width:25}} src="/resources/icons/ease_logo_blue.svg"/>}
-                  content="Our links"
-              />
+                  content="Our links"/>
             </a>
           </div>
         </div>

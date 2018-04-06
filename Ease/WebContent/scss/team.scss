@@ -145,6 +145,8 @@ button.only-text-button {
 
 #personal_settings {
   height: 100%;
+  overflow-y: auto;
+  overflow-x: hidden;
   .grid {
     height: 0;
     padding: 50px;
@@ -1564,6 +1566,7 @@ button.action_text_button {
 }
 
 #teamsPreview {
+  height: 100%;
   overflow: auto;
   @include flex-grow(1);
   padding: 25px 0 90px 0;
@@ -1662,7 +1665,7 @@ button.action_text_button {
       top: 55px;
       z-index: 100;
       margin-top: 0;
-      left: 10px;
+      left: 70px;
       color: $themeDarkGrayTextColor;
       padding: 20px 0;
       width: 260px;
@@ -1676,9 +1679,12 @@ button.action_text_button {
       .section.user {
         padding-top: 15px;
       }
-      .section.team {
+      .section.new_team {
         border-top: solid 1px #d8d8d8;
         padding-bottom: 0;
+      }
+      .section.team {
+        border-top: solid 1px #d8d8d8;
       }
       .username {
         padding-bottom: 20px;

@@ -11,6 +11,7 @@ import CustomDragLayer from "../dashboard/CustomDragLayer";
 import NotificationBoxContainer from "../common/NotificationBoxContainer";
 var NewSimpleTeamCreationView = require('../onBoarding/NewSimpleTeamCreationView');
 import {connect} from "react-redux";
+import Footer from "./Footer";
 import {showExtensionDownloadModal, showConnectionDurationChooserModal} from "../../actions/modalActions";
 import HeaderSidebar from "./HeaderSidebar";
 
@@ -40,7 +41,7 @@ class MainView extends Component {
         <div class="display_flex">
           {this.props.location.pathname.split("/")[2] !== "simpleTeamCreation" &&
           <HeaderSidebar/>}
-          <div class="display-flex full_flex" style={{flexFlow: 'column-reverse', overflowX:'hidden'}}>
+          <div class="display-flex full_flex lite_scrollbar" style={{flexFlow: 'column-reverse', overflowX:'hidden'}}>
             <Switch>
               <Route path='/main/teamsPreview' component={TeamsPreview}/>
               <Route path='/main/simpleTeamCreation' component={NewSimpleTeamCreationView}/>
@@ -48,11 +49,10 @@ class MainView extends Component {
               <Route path='/main/settings' component={Settings}/>
               <Route path='/main/dashboard' component={Dashboard}/>
             </Switch>
-            {/*this.props.location.pathname.split("/")[2] !== "simpleTeamCreation" &&
-            <EaseHeader history={this.props.history}/>*/}
             <CustomDragLayer/>
             <NotificationBoxContainer/>
           </div>
+          <Footer/>
         </div>
     )
   }

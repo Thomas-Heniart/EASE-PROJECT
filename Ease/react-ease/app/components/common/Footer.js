@@ -82,8 +82,8 @@ class Footer extends Component {
             </div>
             }
           </ReactCSSTransitionGroup>
-          <div onMouseEnter={this.showFooter} class="showFooter">
-          </div>
+          {/*<div onMouseEnter={this.showFooter} class="showFooter">
+          </div>*/}
         </div>
     )
   }

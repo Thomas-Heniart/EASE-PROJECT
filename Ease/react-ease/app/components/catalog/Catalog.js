@@ -48,6 +48,8 @@ class Catalog extends Component {
   render() {
     if (this.state.query.length > 0 && this.props.location.pathname === '/main/catalog/website/addWebsite')
       window.location.href = '/#/main/catalog/website';
+    const isMainView = /website/.test(this.props.location.pathname) || this.props.location.pathname === '/main/catalog';
+
     return (
         <div id="catalog" class="bordered_scrollbar">
           <header>
@@ -64,7 +66,7 @@ class Catalog extends Component {
               </div>
             </div>
           </header>
-          {/website/.test(this.props.location.pathname) &&
+          {isMainView &&
           <div className='container' style={{marginBottom:'30px'}}>
             <Input fluid
                    autoFocus
@@ -79,7 +81,7 @@ class Catalog extends Component {
             <div className="container">
               <Grid>
                 <Grid.Column width={3} style={{paddingTop:'45px',paddingLeft:'0'}}>
-                  {/website/.test(this.props.location.pathname) &&
+                  {isMainView &&
                   <div id="catalog-nav">
                     <Categories resetQuery={this.resetQuery}/>
                   </div>}
@@ -87,6 +89,8 @@ class Catalog extends Component {
                 <Grid.Column width={10}>
                   {(this.state.mounted && this.state.updatesFetched) &&
                     <Switch>
+                      <Route exact path={`${this.props.match.path}`}
+                            render={(props) => <WebsitesContainer resetQuery={this.resetQuery} {...props} query={this.state.query}/>}/>
                       <Route path={`${this.props.match.path}/importations`} component={Importations}/>
                       <Route path={`${this.props.match.path}/onBoardingImportation`} component={OnBoardingImportation}/>
                       <Route path={`${this.props.match.path}/softwareCredentials`} component={AddSoftwareCredentials}/>

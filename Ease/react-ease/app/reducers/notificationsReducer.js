@@ -42,6 +42,12 @@ export default function reducer(state={
         notifications: n
       }
     }
+    case 'LOGOUT_FULFILLED': {
+      return {
+        notifications: [],
+        fetching: false
+      }
+    }
   }
   return state;
 }

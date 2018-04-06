@@ -34,6 +34,7 @@ var api = require('../utils/api');
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 import NotificationBoxContainer from "./common/NotificationBoxContainer";
 import HeaderSidebar from "./common/HeaderSidebar";
+import Footer from "./common/Footer";
 
 @connect((store)=>({
   teams: store.teams,
@@ -248,6 +249,7 @@ class TeamView extends React.Component {
             </Switch>}
           </div>}
           <NotificationBoxContainer/>
+          <Footer/>
         </div>
     )
   }

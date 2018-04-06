@@ -29,6 +29,7 @@
 	background-color: #f4f5f7;
 	padding: 20px 10px;
 	width: 60px;
+	max-height: 100%;
 	.dropdown {
 		& > .menu {
 			left: calc(100% + 20px);
