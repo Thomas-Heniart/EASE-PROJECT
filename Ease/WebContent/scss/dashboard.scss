@@ -97,6 +97,13 @@
       display: block;
     }
   }
+  .app_group_type_indicator {
+    color: $themeBlue2Color;
+    font-size: 10px;
+    position: absolute;
+    left:.4rem;
+    top:.2rem;
+  }
   .move_button {
     color: $themeBlue2Color;
     display: none;
@@ -106,6 +113,7 @@
   }
   .app_group_name {
     margin-bottom: 5px;
+    text-align: center;
     .input.ui {
       width: 100%;
       input {

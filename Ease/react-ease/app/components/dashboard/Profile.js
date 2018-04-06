@@ -49,11 +49,15 @@ class Profile extends Component {
           {connectDragSource(
               <div>
                 <Icon name="move"
+                      title="Move"
                       link
                       fitted
                       class="move_button"/>
               </div>
           )}
+          <div class="app_group_type_indicator">
+            <Icon name="user" fitted/>
+          </div>
           <div class="app_group_name">
             <Input
                 placeholder="name"
@@ -77,7 +81,10 @@ class Profile extends Component {
 const appTarget = {
   hover(props, monitor, component) {
     const draggedAppProps = monitor.getItem();
+    const app = draggedAppProps.app;
 
+    if (!!app.team_id)
+      return;
     props.dispatch(insertAppInProfile({
       app_id: draggedAppProps.app.id,
       profile_id: props.profile.id

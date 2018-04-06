@@ -13,29 +13,11 @@ import {connect} from "react-redux";
 class TeamProfile extends Component {
   constructor(props){
     super(props);
-    this.state = {
-      name: this.props.profile.name
-    }
   }
-  handleInput = handleSemanticInput.bind(this);
-  onNameBlur = () => {
-    if (this.state.name === this.props.profile.name)
-      return;
-    if (!this.state.name.length)
-      this.setState({name: this.props.profile.name});
-    else {
-      this.props.dispatch(editProfile({
-        name: this.state.name,
-        profile_id: this.props.profile.id
-      })).then(profile => {
-        this.setState({name:profile.name});
-      }).catch(err => {
-        this.setState({name: this.props.profile.name});
-      });
-    }
-  };
   render(){
     const {profile,
+      teams_number,
+      team_name,
       dashboard,
       connectAppDropTarget,
       connectDropTarget,
@@ -49,19 +31,19 @@ class TeamProfile extends Component {
           {connectDragSource(
               <div>
                 <Icon name="move"
+                      title="Move"
                       link
                       fitted
                       class="move_button"/>
               </div>
           )}
+          {teams_number > 1 &&
+          <div class="app_group_type_indicator">
+            <Icon name="users"/>
+            {team_name}
+          </div>}
           <div class="app_group_name">
-            <Input
-                placeholder="name"
-                name="name"
-                type="text"
-                onBlur={this.onNameBlur}
-                onChange={this.handleInput}
-                value={this.state.name}/>
+            #{profile.name}
           </div>
           <div class="apps_container">
             {profile.app_ids.map(id => {
@@ -77,7 +59,11 @@ class TeamProfile extends Component {
 const appTarget = {
   hover(props, monitor, component) {
     const draggedAppProps = monitor.getItem();
+    const app = draggedAppProps.app;
+    const profile = props.profile;
 
+    if (app.profile_id !== profile.id)
+      return;
     props.dispatch(insertAppInProfile({
       app_id: draggedAppProps.app.id,
       profile_id: props.profile.id
@@ -137,8 +123,9 @@ export default flow(
     DropTarget(ItemTypes.PROFILE, profileTarget, connect => ({
       connectDropTarget: connect.dropTarget()
     })),
-    connect(store => ({
+    connect((store, ownProps) => ({
       dashboard: store.dashboard,
-      dashboard_dnd: store.dashboard_dnd
+      dashboard_dnd: store.dashboard_dnd,
+      team_name: store.teams[ownProps.profile.team_id].name
     }))
 )(TeamProfile);
