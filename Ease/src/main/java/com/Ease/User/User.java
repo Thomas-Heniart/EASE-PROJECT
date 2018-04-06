@@ -502,13 +502,17 @@ public class User {
     }
 
     public void finalizeRegistration(String password, String access_code, String first_name, String last_name, String phone_number) throws HttpServletException {
-        this.getUserKeys().setHashed_password(Hashing.hash(password));
-        this.getUserKeys().setKeyUser(AES.encryptUserKey(this.getUserKeys().getDecipheredKeyUser(access_code), password, this.getUserKeys().getSaltPerso()));
-        this.getUserKeys().setAccess_code_hash(null);
-        this.getUserStatus().setRegistered(true);
-        this.getUserStatus().setOnboardingStep(1);
+        this.finalizeRegistration(password, access_code);
         this.getPersonalInformation().setFirst_name(first_name);
         this.getPersonalInformation().setLast_name(last_name);
         this.getPersonalInformation().setPhone_number(phone_number);
+    }
+
+    public void finalizeRegistration(String password, String accessCode) throws HttpServletException {
+        this.getUserKeys().setHashed_password(Hashing.hash(password));
+        this.getUserKeys().setKeyUser(AES.encryptUserKey(this.getUserKeys().getDecipheredKeyUser(accessCode), password, this.getUserKeys().getSaltPerso()));
+        this.getUserKeys().setAccess_code_hash(null);
+        this.getUserStatus().setRegistered(true);
+        this.getUserStatus().setOnboardingStep(1);
     }
 }

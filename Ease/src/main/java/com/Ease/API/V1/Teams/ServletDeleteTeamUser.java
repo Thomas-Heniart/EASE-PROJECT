@@ -56,7 +56,7 @@ public class ServletDeleteTeamUser extends HttpServlet {
             }
             List<Channel> channelList = new LinkedList<>();
             for (Channel channel : team.getChannelsForTeamUser(teamUser_to_delete)) {
-                if (channel.getRoom_manager() == teamUser_to_delete)
+                if (channel.getRoom_manager().equals(teamUser_to_delete))
                     channelList.add(channel);
             }
             if (!channelList.isEmpty()) {

@@ -344,6 +344,10 @@ public class Team {
         return teamUser;
     }
 
+    public TeamUser getTeamUserByEmail(String email) {
+        return this.getTeamUsers().values().stream().filter(teamUser -> teamUser.getEmail().equals(email)).findFirst().orElse(null);
+    }
+
     public void addTeamUser(TeamUser teamUser) {
         this.getTeamUsers().put(teamUser.getDb_id(), teamUser);
     }
