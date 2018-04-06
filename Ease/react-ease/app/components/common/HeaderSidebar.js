@@ -1,6 +1,7 @@
 import React, {Component, Fragment} from "react";
 import {Dropdown, Icon, Menu, Popup} from 'semantic-ui-react';
 import {connect} from "react-redux";
+import classnames from "classnames";
 import {teamUserDepartureDatePassed} from "../../utils/utils";
 import extension from "../../utils/extension_api";
 import {processLogout, setGeneralLogoutModal} from "../../actions/commonActions";
@@ -215,7 +216,9 @@ class TeamsList extends Component {
   }
 }
 
-@connect()
+@connect(store => ({
+  background_picture: store.common.user.background_picture
+}))
 class HeaderSidebar extends Component {
   constructor(props){
     super(props);
@@ -227,7 +230,7 @@ class HeaderSidebar extends Component {
   };
   render(){
     return (
-        <div id="header_sidebar">
+        <div id="header_sidebar" class={(this.props.background_picture && window.location.hash.includes('dashboard')) ? 'background_picture' : null}>
           <div style={{marginBottom: '10px'}}>
             <NotificationList history={this.props.history}/>
             <NavLink to={'/main/catalog'}
