@@ -102,5 +102,6 @@
         <mapping class="com.Ease.Update.Update"/>
         <mapping class="com.Ease.Update.UpdateAccount"/>
         <mapping class="com.Ease.Update.UpdateAccountInformation"/>
+        <mapping class="com.Ease.onboarding.OnboardingCustomerInformation"/>
     </session-factory>
 </hibernate-configuration>

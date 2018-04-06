@@ -1,4 +1,4 @@
-package com.Ease.API.V1.Teams;
+package com.Ease.API.V1.Teams.onboarding;
 
 import com.Ease.User.User;
 import com.Ease.Mail.MailJetBuilder;
@@ -25,8 +25,9 @@ public class ServletAskTeamCreation extends HttpServlet {
         try {
             sm.needToBeConnected();
             User user = sm.getUser();
-            String email = sm.getStringParam("email", true, true);
-            if (email == null || email.equals("") || !Regex.isEmail(email))
+            String email = sm.getStringParam("email", true, false);
+            email = email.toLowerCase();
+            if (email.equals("") || !Regex.isEmail(email))
                 throw new HttpServletException(HttpStatus.BadRequest, "Invalid email.");
             DataBaseConnection db = sm.getDB();
             int transaction = db.startTransaction();

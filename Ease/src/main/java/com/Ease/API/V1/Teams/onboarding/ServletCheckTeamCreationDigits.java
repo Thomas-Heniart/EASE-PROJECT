@@ -1,4 +1,4 @@
-package com.Ease.API.V1.Teams;
+package com.Ease.API.V1.Teams.onboarding;
 
 import com.Ease.Utils.*;
 import com.Ease.Utils.Servlets.PostServletManager;

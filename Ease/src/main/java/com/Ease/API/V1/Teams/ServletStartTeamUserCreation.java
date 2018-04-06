@@ -49,6 +49,10 @@ public class ServletStartTeamUserCreation extends HttpServlet {
                 throw new HttpServletException(HttpStatus.BadRequest, "That doesn't look like a valid email address!");
             if (username.equals("") || team.hasTeamUserWithUsername(username)) {
                 username = email.substring(0, email.indexOf("@"));
+                if (username.length() > 22)
+                    username = username.substring(0, 21);
+                while (username.length() < 3)
+                    username += "_";
                 username = username.replaceAll("[\\W]", "_");
                 if (team.hasTeamUserWithUsername(username)) {
                     int suffixe = 1;
@@ -72,8 +76,7 @@ public class ServletStartTeamUserCreation extends HttpServlet {
             if (!team.isValidFreemium()) {
                 arrival_date = null;
                 departure_date = null;
-            }
-            else if (arrival_date != null && arrival_date <= sm.getTimestamp().getTime())
+            } else if (arrival_date != null && arrival_date <= sm.getTimestamp().getTime())
                 throw new HttpServletException(HttpStatus.BadRequest, "Arrival date cannot be past.");
             else if (departure_date != null && departure_date <= sm.getTimestamp().getTime())
                 throw new HttpServletException(HttpStatus.BadRequest, "Departure date cannot be past.");

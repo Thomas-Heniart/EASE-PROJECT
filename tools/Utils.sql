@@ -231,4 +231,10 @@ FROM (SELECT
       FROM METRIC_CONNECTION
       WHERE connected = 1
       ORDER BY user_id ASC, date DESC) AS t
-GROUP BY user_id
+GROUP BY user_id;
+
+SELECT COUNT(*)
+FROM teamUsers
+  JOIN users ON teamUsers.user_id = users.id
+  JOIN status ON users.status_id = status.id
+WHERE status.registered = 1
