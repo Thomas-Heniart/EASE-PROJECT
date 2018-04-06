@@ -2,6 +2,7 @@ import React, {Component} from "react";
 import {showSimpleAppSettingsModal} from "../../actions/modalActions";
 import {insertProfileIntoColumn} from "../../actions/dashboardActions";
 import Profile from "./Profile";
+import TeamProfile from "./TeamProfile";
 import ProfileAdder from "./ProfileAdder";
 import classnames from "classnames";
 import {connect} from "react-redux";
@@ -33,6 +34,11 @@ class DashboardColumn extends Component {
     return connectDropTarget(
         <div class={classnames("column display_flex flex_direction_column", isFitted ? 'fitted': null)}>
           {profilesSort.map(id => {
+            const profile = profiles[id];
+            if (profile.team_id !== -1)
+              return (
+                  <TeamProfile profile={profiles[id]} key={id}/>
+              );
             return (
                 <Profile profile={profiles[id]} key={id}/>
             )
