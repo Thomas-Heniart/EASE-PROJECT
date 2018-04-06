@@ -11,13 +11,14 @@ import {AppSettingsMenu, ShareSection, RemoveSection, LabeledInput} from "./util
 import {addNotification} from "../../actions/notificationBoxActions";
 
 @connect(store => ({
-  app: store.modals.linkAppSettings.app
+  app: store.modals.linkAppSettings.app,
+  remove: store.modals.linkAppSettings.remove
 }))
 class LinkAppSettingsModal extends Component {
   constructor(props){
     super(props);
     this.state = {
-      view: 'Account',
+      view: this.props.remove ? 'Remove' : 'Account',
       url: this.props.app.url,
       appName: this.props.app.name,
       logo: this.props.app.logo,

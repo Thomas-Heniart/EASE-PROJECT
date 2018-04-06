@@ -15,13 +15,14 @@ import {addNotification} from "../../actions/notificationBoxActions";
 @connect(store => ({
   app: store.modals.teamLinkAppSettings.app,
   teams: store.teams,
-  team_apps: store.team_apps
+  team_apps: store.team_apps,
+  remove: store.modals.teamLinkAppSettings.remove
 }))
 class TeamLinkAppSettingsModal extends Component {
   constructor(props){
     super(props);
     this.state = {
-      view: 'Account',
+      view: this.props.remove ? 'Remove' : 'Account',
       url: this.props.app.url,
       appName: this.props.app.name,
       logo: '',

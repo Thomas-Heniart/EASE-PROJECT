@@ -16,14 +16,15 @@ import {addNotification} from "../../actions/notificationBoxActions";
 @connect(store => ({
   teams: store.teams,
   team_apps: store.team_apps,
-  app: store.modals.teamSoftwareEnterpriseAppSettings.app
+  app: store.modals.teamSoftwareEnterpriseAppSettings.app,
+  remove: store.modals.teamSoftwareEnterpriseAppSettings.remove
 }))
 class TeamSoftwareEnterpriseAppSettingsModal extends Component {
   constructor(props){
     super(props);
     this.state = {
       appName: this.props.app.name,
-      view: 'Account',
+      view: this.props.remove ? 'Remove' : 'Account',
       credentials: [],
       team_app: this.props.team_apps[this.props.app.team_card_id],
       isEmpty: false,
