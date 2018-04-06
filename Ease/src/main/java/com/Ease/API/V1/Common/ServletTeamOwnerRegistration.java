@@ -58,12 +58,15 @@ public class ServletTeamOwnerRegistration extends HttpServlet {
                     throw new HttpServletException(HttpStatus.BadRequest, "This link is no longer valid");
                 newUser.finalizeRegistration(password, accessCode);
                 teamUser.setState(2);
+                teamUser.getPendingNotificationSet().clear();
+                sm.saveOrUpdate(teamUser);
             } else
                 throw new HttpServletException(HttpStatus.BadRequest, "You shouldn't be there.");
             sm.saveOrUpdate(newUser);
             UserEmail userEmail = new UserEmail(email, true, newUser);
             sm.saveOrUpdate(userEmail);
             newUser.addUserEmail(userEmail);
+            teamUser.lastRegistrationStep(sm.getUserWebSocketManager(newUser.getDb_id()), hibernateQuery);
             sm.setUser(newUser);
             String keyUser = newUser.getUserKeys().getDecipheredKeyUser(password);
             String privateKey = newUser.getUserKeys().getDecipheredPrivateKey(keyUser);

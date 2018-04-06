@@ -434,7 +434,8 @@ public class TeamUser {
     }
 
     public void lastRegistrationStep(WebSocketManager userWebSocketManager, HibernateQuery hibernateQuery) throws HttpServletException {
-        NotificationFactory.getInstance().createTeamUserRegisteredNotification(this, this.getTeam().getTeamUserWithId(this.getAdmin_id()), userWebSocketManager, hibernateQuery);
+        if (this.getAdmin_id() != null)
+            NotificationFactory.getInstance().createTeamUserRegisteredNotification(this, this.getTeam().getTeamUserWithId(this.getAdmin_id()), userWebSocketManager, hibernateQuery);
         if (this.getTeamCardReceivers().isEmpty())
             return;
         //Profile profile = this.getOrCreateProfile(hibernateQuery);
