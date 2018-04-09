@@ -1,6 +1,6 @@
 import React, {Component} from "react";
 import {connect} from "react-redux";
-import {EmptyAppIndicator, NewAppLabel, LoadingAppIndicator, SettingsMenu} from "./utils";
+import {EmptyAppIndicator, NewAppLabel, LoadingAppIndicator, SettingsMenu, getPosition} from "./utils";
 import {showLogWithAppSettingsModal} from "../../actions/modalActions";
 import {AppConnection} from "../../actions/dashboardActions";
 import * as api from "../../utils/api";
@@ -14,7 +14,8 @@ class LogWithApp extends Component {
     this.state = {
       loading: false,
       menuActive: false,
-      hover: false
+      hover: false,
+      position: 'left'
     }
   }
   componentDidMount() {
@@ -44,7 +45,7 @@ class LogWithApp extends Component {
     const {app} = this.props;
     const isEmpty = app.logWithApp_id === -1;
     if (!isEmpty) {
-      this.setState({hover: true});
+      this.setState({hover: true, position: getPosition(app.id)});
       if (this.password === '')
         api.dashboard.getAppPassword({
           app_id: this.props.app.id
@@ -77,6 +78,7 @@ class LogWithApp extends Component {
             <SettingsMenu
               app={appModified}
               remove={this.remove}
+              position={this.state.position}
               clickOnSettings={e => dispatch(showLogWithAppSettingsModal({active: true, app: app}))}/>
             <div class="logo_handler">
               <img class="logo" src={app.logo} onClick={this.connect}/>

@@ -8,7 +8,7 @@ import {validateApp, clickOnAppMetric, passwordCopied} from '../../actions/dashb
 import {showTeamSoftwareSingleAppSettingsModal, showLockedTeamAppModal} from "../../actions/modalActions";
 import {
   DepartureDatePassedIndicator, UpdatePasswordLabel, EmptyTeamAppIndicator, NewAppLabel,
-  DisabledAppIndicator, WaitingTeamApproveIndicator, LoadingAppIndicator, SettingsMenu
+  DisabledAppIndicator, WaitingTeamApproveIndicator, LoadingAppIndicator, SettingsMenu, getPosition
 } from "./utils";
 import {
   teamUserDepartureDatePassed, needPasswordUpdate,
@@ -29,7 +29,8 @@ class TeamSoftwareSingleApp extends Component {
       copiedPassword: null,
       copiedOther: null,
       menuActive: false,
-      hover: false
+      hover: false,
+      position: 'left'
     };
     this.password = '';
   }
@@ -75,7 +76,7 @@ class TeamSoftwareSingleApp extends Component {
     const team = teams[team_app.team_id];
     const me = team.team_users[team.my_team_user_id];
     if (!me.disabled && !team_app.empty && team_app.team_user_filler_id !== me.id && !teamUserDepartureDatePassed(me.departure_date)) {
-      this.setState({hover: true});
+      this.setState({hover: true, position: getPosition(app.id)});
       if (this.password === '')
         api.dashboard.getAppPassword({
           app_id: this.props.app.id
@@ -173,6 +174,7 @@ class TeamSoftwareSingleApp extends Component {
                         buttons={buttons}
                         remove={this.remove}
                         teams={this.props.teams}
+                        position={this.state.position}
                         clickOnSettings={this.clickOnSettings}/>
           <div className="logo_handler">
             <img className="logo" src={team_app.logo}/>

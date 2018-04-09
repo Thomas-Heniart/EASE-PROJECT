@@ -1,5 +1,5 @@
 import React, {Component} from "react";
-import {LoadingAppIndicator, EmptyAppIndicator, NewAppLabel, SettingsMenu} from "./utils";
+import {LoadingAppIndicator, EmptyAppIndicator, NewAppLabel, SettingsMenu, getPosition} from "./utils";
 import {showClassicAppSettingsModal} from "../../actions/modalActions";
 import {AppConnection, clickOnAppMetric, passwordCopied} from "../../actions/dashboardActions";
 import {copyTextToClipboard, transformWebsiteInfoIntoListAndSetValues} from "../../utils/utils";
@@ -14,7 +14,8 @@ class ClassicApp extends Component {
       copiedPassword: null,
       copiedOther: null,
       menuActive: false,
-      hover: false
+      hover: false,
+      position: 'left'
     };
     this.password = '';
   }
@@ -33,7 +34,7 @@ class ClassicApp extends Component {
     e.preventDefault();
     const {app} = this.props;
     if (!app.empty) {
-      this.setState({hover: true});
+      this.setState({hover: true, position: getPosition(app.id)});
       if (this.password === '')
         api.dashboard.getAppPassword({
           app_id: this.props.app.id
@@ -132,6 +133,7 @@ class ClassicApp extends Component {
                 app={app}
                 buttons={buttons}
                 remove={this.remove}
+                position={this.state.position}
                 clickOnSettings={this.clickOnSettings}/>
             <div class="logo_handler">
               <img class="logo" src={app.logo} onClick={this.connect}/>

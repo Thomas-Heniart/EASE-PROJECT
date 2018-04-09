@@ -1,7 +1,7 @@
 import React, {Component} from "react";
 import {
   DepartureDatePassedIndicator, UpdatePasswordLabel, EmptyTeamAppIndicator, NewAppLabel,
-  WaitingTeamApproveIndicator, LoadingAppIndicator, SettingsMenu
+  WaitingTeamApproveIndicator, LoadingAppIndicator, SettingsMenu, getPosition
 } from "./utils";
 import {showLockedTeamAppModal, showTeamSoftwareEnterpriseAppSettingsModal} from "../../actions/modalActions";
 import {Icon} from 'semantic-ui-react';
@@ -26,7 +26,8 @@ class TeamSoftwareEnterpriseApp extends Component {
       copiedPassword: null,
       copiedOther: null,
       menuActive: false,
-      hover: false
+      hover: false,
+      position: 'left'
     };
     this.password = '';
   }
@@ -64,7 +65,7 @@ class TeamSoftwareEnterpriseApp extends Component {
     const me = team.team_users[team.my_team_user_id];
     const meReceiver = team_app.receivers.find(item => (item.team_user_id === me.id));
     if (!teamUserDepartureDatePassed(me.departure_date) && !me.disabled && !meReceiver.empty) {
-      this.setState({hover: true});
+      this.setState({hover: true, position: getPosition(app.id)});
       if (this.password === '')
         api.dashboard.getAppPassword({
           app_id: this.props.app.id
@@ -168,6 +169,7 @@ class TeamSoftwareEnterpriseApp extends Component {
                         buttons={buttons}
                         remove={this.remove}
                         teams={this.props.teams}
+                        position={this.state.position}
                         clickOnSettings={this.clickOnSettings}/>
           <div className="logo_handler">
             <img className="logo" src={team_app.logo}/>

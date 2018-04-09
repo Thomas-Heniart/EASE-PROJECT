@@ -1,7 +1,7 @@
 import React, {Component} from "react";
 import {Icon} from "semantic-ui-react"
 import {copyTextToClipboard, transformWebsiteInfoIntoListAndSetValues} from "../../utils/utils";
-import {LoadingAppIndicator, EmptyAppIndicator, NewAppLabel, SettingsMenu} from "./utils";
+import {LoadingAppIndicator, EmptyAppIndicator, NewAppLabel, SettingsMenu, getPosition} from "./utils";
 import {showSoftwareAppSettingsModal} from "../../actions/modalActions";
 import {validateApp, clickOnAppMetric, passwordCopied} from '../../actions/dashboardActions';
 import api from "../../utils/api";
@@ -19,7 +19,8 @@ class SoftwareApp extends Component {
       copiedPassword: null,
       copiedOther: null,
       menuActive: false,
-      hover: false
+      hover: false,
+      position: 'left'
     };
     this.password = '';
   }
@@ -53,7 +54,7 @@ class SoftwareApp extends Component {
     e.preventDefault();
     const {app} = this.props;
     if (!app.empty) {
-      this.setState({hover: true});
+      this.setState({hover: true, position: getPosition(app.id)});
       if (this.password === '')
         api.dashboard.getAppPassword({
           app_id: this.props.app.id
@@ -140,6 +141,7 @@ class SoftwareApp extends Component {
             app={app}
             buttons={buttons}
             remove={this.remove}
+            position={this.state.position}
             clickOnSettings={this.clickOnSettings}/>
           <div className="logo_handler">
             <img className="logo" src={app.logo}/>

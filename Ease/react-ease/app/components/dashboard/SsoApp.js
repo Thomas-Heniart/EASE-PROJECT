@@ -1,11 +1,11 @@
 import React, {Component} from "react";
-import {Icon} from "semantic-ui-react"
-import {EmptyAppIndicator, NewAppLabel, LoadingAppIndicator, SettingsMenu} from "./utils";
-import {showSsoAppSettingsModal} from "../../actions/modalActions";
-import {AppConnection, passwordCopied} from "../../actions/dashboardActions";
 import {connect} from "react-redux";
 import * as api from "../../utils/api";
+import {Icon} from "semantic-ui-react";
+import {showSsoAppSettingsModal} from "../../actions/modalActions";
+import {AppConnection, passwordCopied} from "../../actions/dashboardActions";
 import {copyTextToClipboard, transformWebsiteInfoIntoListAndSetValues} from "../../utils/utils";
+import {EmptyAppIndicator, NewAppLabel, LoadingAppIndicator, SettingsMenu, getPosition} from "./utils";
 
 @connect(store => ({
   sso_groups: store.dashboard.sso_groups
@@ -16,7 +16,8 @@ class SsoApp extends Component {
     this.state = {
       loading: false,
       menuActive: false,
-      hover: false
+      hover: false,
+      position: 'left'
     };
     this.password = '';
   };
@@ -47,7 +48,7 @@ class SsoApp extends Component {
     const {app} = this.props;
     const sso_group = this.props.sso_groups[app.sso_group_id];
     if (!sso_group.empty) {
-      this.setState({hover: true});
+      this.setState({hover: true, position: getPosition(app.id)});
       if (this.password === '')
         api.dashboard.getAppPassword({
           app_id: this.props.app.id
@@ -122,15 +123,14 @@ class SsoApp extends Component {
             {this.state.loading &&
             <LoadingAppIndicator/>}
             {sso_group.empty &&
-            <EmptyAppIndicator onClick={e => {
-              dispatch(showSsoAppSettingsModal({active: true, app: app}))
-            }}/>}
+            <EmptyAppIndicator onClick={e => {dispatch(showSsoAppSettingsModal({active: true, app: app}))}}/>}
             {app.new &&
             <NewAppLabel/>}
             <SettingsMenu
               app={app}
               buttons={buttons}
               remove={this.remove}
+              position={this.state.position}
               clickOnSettings={e => dispatch(showSsoAppSettingsModal({active: true, app: app}))}/>
             <div class="logo_handler">
               <img class="logo" src={app.logo} onClick={this.connect}/>

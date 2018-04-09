@@ -1,5 +1,11 @@
 import React, {Component} from "react";
-import {DepartureDatePassedIndicator, NewAppLabel, SettingsMenu, WaitingTeamApproveIndicator} from "./utils";
+import {
+  DepartureDatePassedIndicator,
+  getPosition,
+  NewAppLabel,
+  SettingsMenu,
+  WaitingTeamApproveIndicator
+} from "./utils";
 import {showTeamLinkAppSettingsModal, showLockedTeamAppModal} from "../../actions/modalActions";
 import {teamUserDepartureDatePassed} from "../../utils/utils";
 import {connect} from "react-redux";
@@ -16,7 +22,8 @@ class TeamLinkApp extends Component {
     super(props);
     this.state = {
       menuActive: false,
-      hover: false
+      hover: false,
+      position: 'left'
     }
   }
   componentDidMount() {
@@ -50,7 +57,7 @@ class TeamLinkApp extends Component {
     window.open(team_app.url, '_blank');
   };
   activateMenu = () => {
-    this.setState({hover: true});
+    this.setState({hover: true, position: getPosition(this.props.app.id)});
   };
   deactivateMenu = () => {
     this.setState({menuActive: false, hover: false});
@@ -77,6 +84,7 @@ class TeamLinkApp extends Component {
             <SettingsMenu app={app}
                           teams={this.props.teams}
                           remove={this.remove}
+                          position={this.state.position}
                           clickOnSettings={this.clickOnSettings}/>
             <div class="logo_handler">
               <img class="logo" src={team_app.logo} onClick={this.process}/>

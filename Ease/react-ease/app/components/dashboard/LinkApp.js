@@ -1,5 +1,5 @@
 import React, {Component} from "react";
-import {NewAppLabel, SettingsMenu} from "./utils";
+import {getPosition, NewAppLabel, SettingsMenu} from "./utils";
 import {showLinkAppSettingsModal} from "../../actions/modalActions";
 import {validateApp, clickOnAppMetric} from "../../actions/dashboardActions";
 
@@ -8,7 +8,8 @@ class LinkApp extends Component {
     super(props);
     this.state = {
       menuActive: false,
-      hover: false
+      hover: false,
+      position: 'left'
     }
   }
   componentDidMount() {
@@ -23,7 +24,7 @@ class LinkApp extends Component {
       this.setState({ menuActive: true });
   };
   activateMenu = () => {
-    this.setState({hover: true});
+    this.setState({hover: true, position: getPosition(this.props.app.id)});
   };
   deactivateMenu = () => {
     this.setState({menuActive: false, hover: false});
@@ -49,6 +50,7 @@ class LinkApp extends Component {
             <SettingsMenu
               app={app}
               remove={this.remove}
+              position={this.state.position}
               clickOnSettings={e => dispatch(showLinkAppSettingsModal({active: true, app: this.props.app}))}/>
             <div class="logo_handler">
               <img class="logo" src={app.logo} onClick={this.process}/>

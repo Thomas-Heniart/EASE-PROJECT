@@ -4,7 +4,7 @@ import {Icon} from "semantic-ui-react";
 import * as api from "../../utils/api";
 import extension from "../../utils/extension_api";
 import {showAnyAppSettingsModal} from "../../actions/modalActions";
-import {LoadingAppIndicator, EmptyAppIndicator, NewAppLabel, SettingsMenu} from "./utils";
+import {LoadingAppIndicator, EmptyAppIndicator, NewAppLabel, SettingsMenu, getPosition} from "./utils";
 import {clickOnAppMetric, passwordCopied, validateApp} from '../../actions/dashboardActions';
 import {copyTextToClipboard, transformWebsiteInfoIntoListAndSetValues} from "../../utils/utils";
 
@@ -20,7 +20,8 @@ class AnyApp extends Component {
       copiedPassword: null,
       copiedOther: null,
       menuActive: false,
-      hover: false
+      hover: false,
+      position: 'left'
     };
     this.password = '';
   }
@@ -39,7 +40,7 @@ class AnyApp extends Component {
     e.preventDefault();
     const {app} = this.props;
     if (!app.empty) {
-      this.setState({hover: true});
+      this.setState({hover: true, position: getPosition(app.id)});
       if (this.password === '')
         api.dashboard.getAppPassword({
           app_id: this.props.app.id
@@ -122,7 +123,7 @@ class AnyApp extends Component {
     });
     return (
       <div className='app'>
-        <div id={app.id} className={app.empty ? 'logo_area' : this.state.menuActive ? 'logo_area active' : 'logo_area not_active'}
+        <div className={app.empty ? 'logo_area' : this.state.menuActive ? 'logo_area active' : 'logo_area not_active'}
              onMouseEnter={this.activateMenu} onMouseLeave={this.deactivateMenu}>
           {this.state.loading &&
           <LoadingAppIndicator/>}
@@ -134,6 +135,7 @@ class AnyApp extends Component {
               app={app}
               buttons={buttons}
               remove={this.remove}
+              position={this.state.position}
               clickOnSettings={this.clickOnSettings}/>
           <div className="logo_handler">
             <img className="logo" src={app.logo} onClick={this.connect}/>

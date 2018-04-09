@@ -1,7 +1,7 @@
 import React, {Component} from "react";
 import {
   DepartureDatePassedIndicator, UpdatePasswordLabel, EmptyTeamAppIndicator, NewAppLabel,
-  WaitingTeamApproveIndicator, LoadingAppIndicator, SettingsMenu
+  WaitingTeamApproveIndicator, LoadingAppIndicator, SettingsMenu, getPosition
 } from "./utils";
 import {
   showTeamEnterpriseAppSettingsModal,
@@ -32,7 +32,8 @@ class TeamEnterpriseApp extends Component {
       copiedPassword: null,
       copiedOther: null,
       menuActive: false,
-      hover: false
+      hover: false,
+      position: 'left'
     };
     this.password = '';
   }
@@ -76,7 +77,7 @@ class TeamEnterpriseApp extends Component {
     const me = team.team_users[team.my_team_user_id];
     const meReceiver = team_app.receivers.find(item => (item.team_user_id === me.id));
     if (!teamUserDepartureDatePassed(me.departure_date) && !me.disabled && !meReceiver.empty) {
-      this.setState({hover: true});
+      this.setState({hover: true, position: getPosition(app.id)});
       if (this.password === '')
         api.dashboard.getAppPassword({
           app_id: this.props.app.id
@@ -175,6 +176,7 @@ class TeamEnterpriseApp extends Component {
                           teams={this.props.teams}
                           buttons={buttons}
                           remove={this.remove}
+                          position={this.state.position}
                           clickOnSettings={this.clickOnSettings}/>
             <div class="logo_handler">
               <img class="logo" src={team_app.logo} onClick={password_update ? this.connectWithPasswordUpdate : this.connect}/>

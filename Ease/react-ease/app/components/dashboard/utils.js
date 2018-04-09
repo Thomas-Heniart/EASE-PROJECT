@@ -112,11 +112,20 @@ export const UpdatePasswordLabel = (props)=> {
   )
 };
 
-export const SettingsMenu = ({app, clickOnSettings, remove, buttons, teams}) => {
+export const getPosition = (app_id) => {
+  const el = document.getElementById(`app_${app_id}`);
+  const window = document.getElementById('dashboard');
+  let position = 'left';
+  if (el)
+    position = el.getBoundingClientRect().x + 245 > window.offsetWidth ? 'right' : 'left';
+  return position;
+};
+
+export const SettingsMenu = ({app, clickOnSettings, remove, buttons, teams, position}) => {
   const team = app.team_id ? teams[app.team_id] : null;
   const role = team ? team.team_users[team.my_team_user_id].role : null;
   return (
-    <div className='settings_buttons'>
+    <div id={`app_${app.id}_menu`} className={`settings_buttons ${position ? position : 'left'}`}>
       {app.type === 'logWithApp' &&
       <button className="settings_button" onClick={clickOnSettings}>
         <Icon name={`${app.logWith_website.name.toLowerCase()} square`}/> {app.login}
