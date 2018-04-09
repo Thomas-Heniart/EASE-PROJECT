@@ -42,7 +42,6 @@ class TeamLinkApp extends Component {
     const {app} = this.props;
     const team_app = this.props.team_apps[app.team_card_id];
     this.setState({isOpen: false});
-    // this.props.dispatch(showTeamLinkAppSettingsModal({active: true, app: app}));
     this.props.dispatch(moveTeamCard({card_id: Number(team_app.id)}));
     this.props.history.push(`/teams/${app.team_id}/${team_app.channel_id}?app_id=${team_app.id}`);
   };

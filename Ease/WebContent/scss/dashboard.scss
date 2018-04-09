@@ -45,7 +45,8 @@
   @include flex-direction(column);
   & > .ui.container {
     padding: 10px;
-    overflow: auto;
+    overflow-y: auto;
+    overflow-x: hidden;
     @include justify-content(center);
     & > .column {
       transition: all .3s ease;
@@ -177,17 +178,21 @@
           }
           &.not_active:hover {
             .settings_buttons.left {
+              //display: block;
+              width: 180px;
+              visibility: visible;
               opacity: 1;
               padding-left: 10px;
-              visibility: visible;
               transform: translateX(50px);
               -webkit-transform: translateX(50px);
               transition: opacity .4s ease 1s;
             }
             .settings_buttons.right {
+              //display: block;
+              width: 180px;
+              visibility: visible;
               opacity: 1;
               padding-right: 10px;
-              visibility: visible;
               transform: translateX(-180px);
               -webkit-transform: translateX(-180px);
               transition: opacity .4s ease 1s;
@@ -198,17 +203,21 @@
           }
           &.active:hover {
             .settings_buttons.left {
+              //display: block;
+              width: 180px;
+              visibility: visible;
               opacity: 1;
               padding-left: 10px;
-              visibility: visible;
               transform: translateX(50px);
               -webkit-transform: translateX(50px);
               transition: none;
             }
             .settings_buttons.right {
+              //display: block;
+              width: 180px;
+              visibility: visible;
               opacity: 1;
               padding-right: 10px;
-              visibility: visible;
               transform: translateX(-180px);
               -webkit-transform: translateX(-180px);
               transition: none;
@@ -250,11 +259,11 @@
                 }
               }
             }
-            position: absolute;
-            display: block;
-            width: 180px;
-            opacity: 0;
             visibility: hidden;
+            position: absolute;
+            //display: none;
+            width: 55px;
+            opacity: 0;
             top: 0;
             left: 0;
             right: 0;
