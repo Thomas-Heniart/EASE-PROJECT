@@ -81,7 +81,7 @@ const transferOwnerShipListener = (jElem, elem) => {
       ajaxHandler.post(emailContentForm.attr("action"), {
         onboardingId: elem.id,
         teamId: elem.teamId,
-        emailContent: emailContentField.val()
+        emailContent: emailContentField.val().replace(/\r?\n/g, '<br />')
       }, () => {
       }, () => {
         formButton.removeClass("loading");
