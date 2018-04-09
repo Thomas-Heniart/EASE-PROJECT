@@ -6,7 +6,6 @@ import Tutorial from "./Tutorial";
 import DashboardColumn from "./DashboardColumn";
 import {connect} from "react-redux";
 import withScrolling from 'react-dnd-scrollzone';
-import Footer from "./Footer";
 const ScrollingComponent = withScrolling('div');
 import ReactGA from 'react-ga';
 
@@ -21,7 +20,8 @@ class Dashboard extends Component {
     super(props);
     this.state = {
       scrolling: false,
-      tutorial: false
+      tutorial: false,
+      ctrlOn: false
     }
   }
   onScroll = (e) => {
@@ -69,14 +69,31 @@ class Dashboard extends Component {
     if (!this.props.tutorial_done)
       this.setState({tutorial: true});
   }
+  ctrlDownListener = (e) => {
+    if (e.keyCode === 17 || e.keyCode === 91) {
+      this.setState({ctrlOn: true});
+    }
+  };
+  ctrlUpListener = (e) => {
+    if (e.keyCode === 17 || e.keyCode === 91) {
+      this.setState({ctrlOn: false});
+    }
+  };
   componentWillMount() {
     document.title = "Ease.space";
     ReactGA.pageview("main/dashboard");
+
+    document.addEventListener('keydown', this.ctrlDownListener, true);
+    document.addEventListener('keyup', this.ctrlUpListener, true);
+  }
+  componentWillUnmout(){
+    document.removeEventListener('keydown', this.ctrlDownListener, true);
+    document.removeEventListener('keyup', this.ctrlUpListener, true);
   }
   render(){
     const {columns} = this.props.dashboard;
     return (
-        <div id="dashboard" class={classnames(this.props.background_picture ? 'ease-background' : null, this.state.scrolling ? 'scrolling': null, 'lite_scrollbar')}>
+        <div id="dashboard" class={classnames(this.props.background_picture ? 'ease-background' : null, this.state.scrolling ? 'scrolling': null)}>
           <ScrollingComponent onScroll={this.onScroll} class="ui container fluid full_flex display_flex">
             {columns.map((column,idx) => {
               return (
@@ -86,7 +103,10 @@ class Dashboard extends Component {
             {this.state.tutorial &&
             <Tutorial/>}
           </ScrollingComponent>
-          <Footer/>
+          {this.state.ctrlOn &&
+            <div id="ctrl_dashboard_info">
+              Hold <strong>Cmd</strong> or <strong>Ctrl</strong> to login to multiple apps
+            </div>}
         </div>
     )
   }

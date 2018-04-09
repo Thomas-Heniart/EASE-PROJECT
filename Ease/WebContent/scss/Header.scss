@@ -14,6 +14,76 @@
 .ui.menu .item > i.icon {
 	margin:0;
 }
+
+#header_button_popup {
+	transform: translateX(10px);
+	background-color: #414141;
+	&:before {
+		display: none;
+	}
+}
+
+#header_sidebar {
+	@include display-flex();
+	@include flex-direction(column);
+	background-color: #f4f5f7;
+	padding: 20px 10px;
+	width: 60px;
+	max-height: 100%;
+	&.background_picture {
+		background-color: rgba(white, .8);
+	}
+	.dropdown {
+		& > .menu {
+			left: calc(100% + 20px);
+			top: 0;
+			& > .item {
+				font-size: .7em;
+				.icon {
+					margin-right: .75em;
+				}
+			}
+		}
+	}
+	.teams_list_section {
+		margin-bottom: 10px;
+		overflow-y: auto;
+		&::-webkit-scrollbar {
+			display: none;
+		}
+	}
+	.header_button {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		border-radius: 100%;
+		width: 40px;
+		height: 40px;
+		color: $themeBlue2Color;
+		margin-bottom: 10px;
+		&.team_button {
+			font-weight: bold;
+			font-size: 21px;
+		}
+		&:last-child {
+			margin-bottom: 0;
+		}
+		&:hover {
+			background-color: #edeeef;
+		}
+		&.active {
+			color: $themeColor;
+			background-color: darken(#edeeef, .2);
+		}
+		& > .icon {
+			@include display-flex();
+			@include align-items(center);
+			@include justify-content(center);
+			font-size: 1.3rem;
+		}
+	}
+}
+
 #main_navbar {
 	font-size: .7rem;
 	margin: auto;
@@ -59,33 +129,37 @@
 			}
 		}
 	}
-	#notifications_menu {
-		& > .icons .red.circle{
-			transform: scale(1.8);
-			right: 3px;
-			text-shadow:  none;
+}
+
+#notifications_menu {
+	& > .icons .red.circle{
+		transform: scale(1.8);
+		right: 3px;
+		text-shadow:  none;
+	}
+	.menu {
+		& > .item {
+			font-size: .7em;
 		}
-		.menu {
-			& > * {
-				white-space: normal;
-				line-height: 1.3;
-			}
-			width: 320px !important;
-			max-width: 320px;
-          z-index: 100;
-			.notification-card {
-				display: flex;
-				&.new {
-					background-color: $themeGreyLightColor !important;
-					&:before {
-						content: "\f111";
-						left: 6px;
-						font-size: 8px;
-						color:$themeRedColor;
-						top: 35%;
-						position: absolute;
-						font-family: FontAwesome;
-					}
+		& > * {
+			white-space: normal;
+			line-height: 1.3;
+		}
+		width: 320px !important;
+		max-width: 320px;
+		z-index: 100;
+		.notification-card {
+			display: flex;
+			&.new {
+				background-color: $themeGreyLightColor !important;
+				&:before {
+					content: "\f111";
+					left: 6px;
+					font-size: 8px;
+					color:$themeRedColor;
+					top: 35%;
+					position: absolute;
+					font-family: FontAwesome;
 				}
 			}
 		}

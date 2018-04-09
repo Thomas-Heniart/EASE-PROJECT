@@ -54,6 +54,11 @@ class TeamMenu extends React.Component {
                     Team settings
                   </NavLink>}
               </div>}
+              <div class="dropdown_row flex_direction_column section new_team">
+                <NavLink to={`/main/teamsPreview`} onClick={e => {this.hideIt()}} class="selectable">
+                  Create a new team
+                </NavLink>
+              </div>
             </div>
           </div>
         </div>

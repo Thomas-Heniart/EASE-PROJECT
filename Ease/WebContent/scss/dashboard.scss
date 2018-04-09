@@ -37,19 +37,31 @@
   }
 }
 
+#ctrl_dashboard_info {
+  width: 200px;
+  z-index: 1;
+  pointer-events: none;
+  padding: 10px;
+  color: white;
+  font-size: 12px;
+  box-shadow: -5px 5px 10px 0 rgba(0, 0, 0, 0.15);
+  border-radius: 2px;
+  background-color: $themeLightGreyTextColor;
+  position: fixed;
+  left: 73px;
+  bottom: 40px;
+}
+
 #dashboard {
-  margin-top: -60px;
-  padding-top: 60px;
   height: 100%;
   @include display-flex();
   @include flex-direction(column);
   & > .ui.container {
     padding: 10px;
     overflow: auto;
-    @include justify-content(center);
     & > .column {
       transition: all .3s ease;
-      padding: 0 5px;
+      padding-right: 10px;
       width: 310px;
       &.fitted {
         transition: all .3s ease;
@@ -539,6 +551,7 @@
 
 .footerMainContainer {
   position: fixed;
+  z-index: 3;
   bottom: 0px;
   width: 100%;
 }

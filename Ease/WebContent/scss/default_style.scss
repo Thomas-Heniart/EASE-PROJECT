@@ -499,6 +499,7 @@ button, input, optgroup, select, textarea {
   @include display-flex();
   @include flex-direction(column);
   @include flex-grow(1);
+  width: 100%;
   font-family: $defaultFont;
   font-size:1rem;
 }
