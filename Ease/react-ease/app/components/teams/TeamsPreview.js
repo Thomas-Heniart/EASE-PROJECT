@@ -196,7 +196,7 @@ function Step2(props){
       <div class="content display-flex flex_direction_column marginAuto step2">
         <h1 class="text-center" style={{margin: '0 0 10px 0'}}>Before creating your team, please choose a plan.</h1>
         <span class="sub-title">Monthly billing, cancellable anytime</span>
-        <div class="display-flex" style={{margin: '55px 0 37px 0'}}>
+        <div class="display-flex justify_content_center" style={{margin: '55px 0 37px 0'}}>
           <TeamBasicPlan/>
           <TeamProPlan/>
           <TeamEnterprisePlan/>
@@ -215,6 +215,9 @@ class TeamsPreview extends React.Component {
   }
   setPassed(state){
     this.setState({passed: state});
+  }
+  componentWillMount(){
+    document.title = "Team plans";
   }
   render(){
     return(

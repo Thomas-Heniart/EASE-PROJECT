@@ -64,7 +64,7 @@ class Tutorial extends Component {
     steps.push({
       title: 'Here is where you access your Team(s).',
       isFixed: true,
-      selector:"#teams_list",
+      selector:".teams_list_section",
       position: 'bottom',
       style: {
         beacon: {

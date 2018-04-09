@@ -101,7 +101,6 @@ function TeamHeader(props){
                   }));
               }}
           />}
-          <EaseMainNavbar/>
         </div>
       </header>
   )

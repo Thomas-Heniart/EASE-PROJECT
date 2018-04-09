@@ -1,7 +1,6 @@
 import {goToOnBoarding} from "../actions/onBoardingActions";
 import ReactGA from "react-ga";
 import BannerTeams from "./teams/BannerTeams";
-
 var React = require('react');
 var classnames = require('classnames');
 var ReactRouter = require('react-router-dom');
@@ -34,6 +33,8 @@ var EaseHeader = require('./common/EaseHeader');
 var api = require('../utils/api');
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 import NotificationBoxContainer from "./common/NotificationBoxContainer";
+import HeaderSidebar from "./common/HeaderSidebar";
+import Footer from "./common/Footer";
 
 @connect((store)=>({
   teams: store.teams,
@@ -187,6 +188,7 @@ class TeamView extends React.Component {
     const me = !!team ? team.team_users[team.my_team_user_id] : null;
     return (
         <div id="teamsHandler">
+          <HeaderSidebar/>
           {!!team &&
           <div className="team_view" id="team_view">
             {!this.state.loadingInfo && team.payment_required &&
@@ -247,6 +249,7 @@ class TeamView extends React.Component {
             </Switch>}
           </div>}
           <NotificationBoxContainer/>
+          <Footer/>
         </div>
     )
   }
