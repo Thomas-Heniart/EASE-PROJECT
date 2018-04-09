@@ -62,6 +62,7 @@ public class ServletTeamOwnerRegistration extends HttpServlet {
                 sm.saveOrUpdate(teamUser);
             } else
                 throw new HttpServletException(HttpStatus.BadRequest, "You shouldn't be there.");
+            newUser.getUserStatus().setTutoDone(true);
             sm.saveOrUpdate(newUser);
             UserEmail userEmail = new UserEmail(email, true, newUser);
             sm.saveOrUpdate(userEmail);
