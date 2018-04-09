@@ -60,6 +60,13 @@ class LogWithApp extends Component {
   remove = () => {
     this.props.dispatch(showLogWithAppSettingsModal({active: true, app: this.props.app, remove: true}));
   };
+  checkAndConnect = () => {
+    const {app} = this.props;
+
+    if (this.state.loading || app.logWithApp_id === -1)
+      return;
+    this.connect();
+  };
   render(){
     const {app, dispatch} = this.props;
     const isEmpty = app.logWithApp_id === -1;
@@ -84,7 +91,8 @@ class LogWithApp extends Component {
               <img class="logo" src={app.logo} onClick={this.connect}/>
             </div>
           </div>
-          <span class="app_name overflow-ellipsis">{app.name}</span>
+          <span class="app_name overflow-ellipsis"
+              onClick={this.checkAndConnect}>{app.name}</span>
         </div>
     )
   }

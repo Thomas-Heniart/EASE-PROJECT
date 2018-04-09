@@ -64,6 +64,19 @@ class TeamLinkApp extends Component {
   remove = () => {
     this.props.dispatch(showTeamLinkAppSettingsModal({active: true, app: this.props.app, remove: true}));
   };
+  checkAndConnect = (e) => {
+    const {app, teams, dispatch} = this.props;
+    const team_app = this.props.team_apps[app.team_card_id];
+    const team = teams[team_app.team_id];
+    const me = team.team_users[team.my_team_user_id];
+
+    if (teamUserDepartureDatePassed(me.departure_date))
+      return;
+    else if (me.disabled && !teamUserDepartureDatePassed(me.departure_date))
+      dispatch(showLockedTeamAppModal({active: true, team_user_id: me.id}));
+    else
+      this.process(e);
+  };
   render(){
     const {app, teams, dispatch} = this.props;
     const team_app = this.props.team_apps[app.team_card_id];
@@ -72,7 +85,7 @@ class TeamLinkApp extends Component {
     return (
         <div class='app'>
           <div className={(me.disabled || teamUserDepartureDatePassed(me.departure_date)) ? 'logo_area'
-            : this.state.menuActive ? 'logo_area active' : 'logo_area not_active'}
+              : this.state.menuActive ? 'logo_area active' : 'logo_area not_active'}
                onMouseLeave={this.deactivateMenu} onMouseEnter={this.activateMenu}>
             {app.new &&
             <NewAppLabel/>}
@@ -89,7 +102,8 @@ class TeamLinkApp extends Component {
               <img class="logo" src={team_app.logo} onClick={this.process}/>
             </div>
           </div>
-          <span class="app_name overflow-ellipsis">{app.name}</span>
+          <span class="app_name overflow-ellipsis"
+                onClick={this.checkAndConnect}>{app.name}</span>
         </div>
     )
   }

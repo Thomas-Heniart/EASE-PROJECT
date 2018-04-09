@@ -119,6 +119,23 @@ class TeamEnterpriseApp extends Component {
   remove = () => {
     this.props.dispatch(showTeamEnterpriseAppSettingsModal({active: true, app: this.props.app, remove: true}));
   };
+  checkAndConnect = (e) => {
+    const {app, teams, dispatch} = this.props;
+    const team_app = this.props.team_apps[app.team_card_id];
+    const team = teams[team_app.team_id];
+    const me = team.team_users[team.my_team_user_id];
+    const meReceiver = team_app.receivers.find(item => (item.team_user_id === me.id));
+    const password_update = !meReceiver.empty && !!team_app.password_reminder_interval && needPasswordUpdate(meReceiver.last_update_date, team_app.password_reminder_interval);
+
+    if (this.state.loading || teamUserDepartureDatePassed(me.departure_date))
+      return;
+    else if (me.disabled && !teamUserDepartureDatePassed(me.departure_date))
+      return;
+    else if (!me.disabled && meReceiver.empty && !teamUserDepartureDatePassed(me.departure_date))
+      dispatch(showTeamEnterpriseAppSettingsModal({active: true, app: app}));
+    else
+      password_update ? this.connectWithPasswordUpdate() : this.connect(e);
+  };
   render(){
     const {app, teams, dispatch} = this.props;
     const team_app = this.props.team_apps[app.team_card_id];
@@ -131,34 +148,34 @@ class TeamEnterpriseApp extends Component {
       if (this.state.copiedPassword !== item.priority && this.state.copiedOther !== item.priority) {
         if (item.name === 'password')
           return (
-            <button
-              className="settings_button"
-              onClick={e => this.copyPassword(item)}
-              key={idx}>
-              <Icon name='copy'/> • • • • • • • •
-            </button>
+              <button
+                  className="settings_button"
+                  onClick={e => this.copyPassword(item)}
+                  key={idx}>
+                <Icon name='copy'/> • • • • • • • •
+              </button>
           );
         return (
-          <button
-            key={idx}
-            className="settings_button"
-            onClick={e => this.copy(item)}>
-            <Icon name='copy'/> {item.value}
-          </button>
+            <button
+                key={idx}
+                className="settings_button"
+                onClick={e => this.copy(item)}>
+              <Icon name='copy'/> {item.value}
+            </button>
         )
       }
       return (
-        <button
-          key={idx}
-          className="settings_button">
-          Copied!
-        </button>
+          <button
+              key={idx}
+              className="settings_button">
+            Copied!
+          </button>
       )
     });
     return (
         <div class='app'>
           <div className={(teamUserDepartureDatePassed(me.departure_date) || me.disabled || meReceiver.empty) ? 'logo_area'
-            : this.state.menuActive ? 'logo_area active' : 'logo_area not_active'}
+              : this.state.menuActive ? 'logo_area active' : 'logo_area not_active'}
                onMouseEnter={this.activateMenu} onMouseLeave={this.deactivateMenu}>
             {this.state.loading &&
             <LoadingAppIndicator/>}
@@ -182,7 +199,8 @@ class TeamEnterpriseApp extends Component {
               <img class="logo" src={team_app.logo} onClick={password_update ? this.connectWithPasswordUpdate : this.connect}/>
             </div>
           </div>
-          <span class="app_name overflow-ellipsis">{app.name}</span>
+          <span class="app_name overflow-ellipsis"
+                onClick={this.checkAndConnect}>{app.name}</span>
         </div>
     )
   }

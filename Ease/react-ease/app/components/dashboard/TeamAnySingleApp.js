@@ -120,6 +120,23 @@ class TeamAnySingleApp extends Component {
   remove = () => {
     this.props.dispatch(showTeamAnySingleAppSettingsModal({active: true, app: this.props.app, remove: true}));
   };
+  checkAndConnect = (e) => {
+    const {app, teams, dispatch} = this.props;
+    const team_app = this.props.team_apps[app.team_card_id];
+    const team = teams[team_app.team_id];
+    const me = team.team_users[team.my_team_user_id];
+
+    if (!me.disabled && teamUserDepartureDatePassed(me.departure_date))
+      return;
+    if (!me.disabled && team_app.empty && team_app.team_user_filler_id !== me.id && !teamUserDepartureDatePassed(me.departure_date))
+      return;
+    if (me.disabled)
+      dispatch(showLockedTeamAppModal({active: true, team_user_id: me.id}));
+    else if (!me.disabled && team_app.empty && team_app.team_user_filler_id === me.id && !teamUserDepartureDatePassed(me.departure_date))
+      this.clickOnSettings();
+    else
+      this.connect(e);
+  };
   render() {
     const {app, teams, dispatch} = this.props;
     const team_app = this.props.team_apps[app.team_card_id];
@@ -132,64 +149,65 @@ class TeamAnySingleApp extends Component {
       if (this.state.copiedPassword !== item.priority && this.state.copiedOther !== item.priority) {
         if (item.name === 'password')
           return (
-            <button
-              className="settings_button"
-              onClick={e => this.copyPassword(item)}
-              key={idx}>
-              <Icon name='copy'/> • • • • • • • •
-            </button>
+              <button
+                  className="settings_button"
+                  onClick={e => this.copyPassword(item)}
+                  key={idx}>
+                <Icon name='copy'/> • • • • • • • •
+              </button>
           );
         return (
-          <button
-            key={idx}
-            className="settings_button"
-            onClick={e => this.copy(item)}>
-            <Icon name='copy'/> {item.value}
-          </button>
+            <button
+                key={idx}
+                className="settings_button"
+                onClick={e => this.copy(item)}>
+              <Icon name='copy'/> {item.value}
+            </button>
         )
       }
       return (
-        <button
-          key={idx}
-          className="settings_button">
-          Copied!
-        </button>
+          <button
+              key={idx}
+              className="settings_button">
+            Copied!
+          </button>
       )
     });
     return (
-      <div className='app'>
-        <div className={(me.disabled || team_app.empty || team_app.team_user_filler_id === me.id || teamUserDepartureDatePassed(me.departure_date)) ? 'logo_area'
-          : this.state.menuActive ? 'logo_area active' : 'logo_area not_active'}
-             onMouseEnter={this.activateMenu} onMouseLeave={this.deactivateMenu}>
-          {this.state.loading &&
-          <LoadingAppIndicator/>}
-          {app.new &&
-          <NewAppLabel/>}
-          {password_update &&
-          <UpdatePasswordLabel/>}
-          {!me.disabled && teamUserDepartureDatePassed(me.departure_date) &&
-          <DepartureDatePassedIndicator team_name={team.name} departure_date={me.departure_date}/>}
-          {me.disabled &&
-          <WaitingTeamApproveIndicator onClick={e => {
-            dispatch(showLockedTeamAppModal({active: true, team_user_id: me.id}))
-          }}/>}
-          {!me.disabled && team_app.empty && team_app.team_user_filler_id === me.id && !teamUserDepartureDatePassed(me.departure_date) &&
-          <EmptyTeamAppIndicator onClick={this.clickOnSettings}/>}
-          {!me.disabled && team_app.empty && team_app.team_user_filler_id !== me.id && !teamUserDepartureDatePassed(me.departure_date) &&
-          <DisabledAppIndicator filler_name={!!filler ? filler.username : 'Someone'} team_card_id={team_app.id}
-                                magic_link={!team_app.magic_link || team_app.magic_link === ''}/>}
+        <div className='app'>
+          <div className={(me.disabled || team_app.empty || team_app.team_user_filler_id === me.id || teamUserDepartureDatePassed(me.departure_date)) ? 'logo_area'
+              : this.state.menuActive ? 'logo_area active' : 'logo_area not_active'}
+               onMouseEnter={this.activateMenu} onMouseLeave={this.deactivateMenu}>
+            {this.state.loading &&
+            <LoadingAppIndicator/>}
+            {app.new &&
+            <NewAppLabel/>}
+            {password_update &&
+            <UpdatePasswordLabel/>}
+            {!me.disabled && teamUserDepartureDatePassed(me.departure_date) &&
+            <DepartureDatePassedIndicator team_name={team.name} departure_date={me.departure_date}/>}
+            {me.disabled &&
+            <WaitingTeamApproveIndicator onClick={e => {
+              dispatch(showLockedTeamAppModal({active: true, team_user_id: me.id}))
+            }}/>}
+            {!me.disabled && team_app.empty && team_app.team_user_filler_id === me.id && !teamUserDepartureDatePassed(me.departure_date) &&
+            <EmptyTeamAppIndicator onClick={this.clickOnSettings}/>}
+            {!me.disabled && team_app.empty && team_app.team_user_filler_id !== me.id && !teamUserDepartureDatePassed(me.departure_date) &&
+            <DisabledAppIndicator filler_name={!!filler ? filler.username : 'Someone'} team_card_id={team_app.id}
+                                  magic_link={!team_app.magic_link || team_app.magic_link === ''}/>}
             <SettingsMenu app={app}
                           teams={this.props.teams}
                           buttons={buttons}
                           remove={this.remove}
                           position={this.state.position}
                           clickOnSettings={this.clickOnSettings}/>
-          <div className="logo_handler">
-            <img className="logo" src={team_app.logo} onClick={this.connect}/>
+            <div className="logo_handler">
+              <img className="logo" src={team_app.logo} onClick={this.connect}/>
+            </div>
           </div>
+          <span className="app_name overflow-ellipsis"
+                onClick={this.checkAndConnect}>{app.name}</span>
         </div>
-        <span className="app_name overflow-ellipsis">{app.name}</span>
-      </div>
     )
   }
 }

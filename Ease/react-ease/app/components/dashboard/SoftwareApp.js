@@ -95,7 +95,6 @@ class SoftwareApp extends Component {
   remove = () => {
     this.props.dispatch(showSoftwareAppSettingsModal({active: true, app: this.props.app, remove: true}));
   };
-
   render() {
     const {app} = this.props;
     const credentials = transformWebsiteInfoIntoListAndSetValues(app.software.connection_information, app.account_information);
@@ -103,52 +102,52 @@ class SoftwareApp extends Component {
       if (this.state.copiedPassword !== item.priority && this.state.copiedOther !== item.priority) {
         if (item.name === 'password')
           return (
-            <button
-              className="settings_button"
-              onClick={e => this.copyPassword(item)}
-              key={idx}>
-              <Icon name='copy'/> • • • • • • • •
-            </button>
+              <button
+                  className="settings_button"
+                  onClick={e => this.copyPassword(item)}
+                  key={idx}>
+                <Icon name='copy'/> • • • • • • • •
+              </button>
           );
         return (
-          <button
-            key={idx}
-            className="settings_button"
-            onClick={e => this.copy(item)}>
-            <Icon name='copy'/> {item.value}
-          </button>
+            <button
+                key={idx}
+                className="settings_button"
+                onClick={e => this.copy(item)}>
+              <Icon name='copy'/> {item.value}
+            </button>
         )
       }
       return (
-        <button
-          key={idx}
-          className="settings_button">
-          Copied!
-        </button>
+          <button
+              key={idx}
+              className="settings_button">
+            Copied!
+          </button>
       )
     });
     return (
-      <div className='app'>
-        <div className={app.empty ? 'logo_area' : this.state.menuActive ? 'logo_area active' : 'logo_area not_active'}
-             onMouseEnter={this.activateMenu} onMouseLeave={this.deactivateMenu}>
-          {this.state.loading &&
-          <LoadingAppIndicator/>}
-          {app.empty &&
-          <EmptyAppIndicator onClick={this.clickOnSettings}/>}
-          {app.new &&
-          <NewAppLabel/>}
-          <SettingsMenu
-            app={app}
-            buttons={buttons}
-            remove={this.remove}
-            position={this.state.position}
-            clickOnSettings={this.clickOnSettings}/>
-          <div className="logo_handler">
-            <img className="logo" src={app.logo}/>
+        <div className='app'>
+          <div className={app.empty ? 'logo_area' : this.state.menuActive ? 'logo_area active' : 'logo_area not_active'}
+               onMouseEnter={this.activateMenu} onMouseLeave={this.deactivateMenu}>
+            {this.state.loading &&
+            <LoadingAppIndicator/>}
+            {app.empty &&
+            <EmptyAppIndicator onClick={this.clickOnSettings}/>}
+            {app.new &&
+            <NewAppLabel/>}
+            <SettingsMenu
+                app={app}
+                buttons={buttons}
+                remove={this.remove}
+                position={this.state.position}
+                clickOnSettings={this.clickOnSettings}/>
+            <div className="logo_handler">
+              <img className="logo" src={app.logo}/>
+            </div>
           </div>
+          <span className="app_name overflow-ellipsis">{app.name}</span>
         </div>
-        <span className="app_name overflow-ellipsis">{app.name}</span>
-      </div>
     )
   }
 }

@@ -56,7 +56,7 @@ class LinkApp extends Component {
               <img class="logo" src={app.logo} onClick={this.process}/>
             </div>
           </div>
-          <span class="app_name overflow-ellipsis">{app.name}</span>
+          <span class="app_name overflow-ellipsis" onClick={this.process}>{app.name}</span>
         </div>
     )
   }
