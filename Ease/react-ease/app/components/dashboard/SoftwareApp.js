@@ -1,7 +1,7 @@
 import React, {Component} from "react";
-import {Popup, Input, Icon, Label, Segment} from "semantic-ui-react"
+import {Icon} from "semantic-ui-react"
 import {copyTextToClipboard, transformWebsiteInfoIntoListAndSetValues} from "../../utils/utils";
-import {LoadingAppIndicator, EmptyAppIndicator, NewAppLabel} from "./utils";
+import {LoadingAppIndicator, EmptyAppIndicator, NewAppLabel, SettingsMenu, getPosition} from "./utils";
 import {showSoftwareAppSettingsModal} from "../../actions/modalActions";
 import {validateApp, clickOnAppMetric, passwordCopied} from '../../actions/dashboardActions';
 import api from "../../utils/api";
@@ -11,16 +11,30 @@ import {connect} from "react-redux";
   active: store.modals.softwareAppSettings.active
 }))
 class SoftwareApp extends Component {
-  constructor(props){
+  constructor(props) {
     super(props);
     this.state = {
       loading: false,
       isOpen: false,
       copiedPassword: null,
-      copiedOther: null
+      copiedOther: null,
+      menuActive: false,
+      hover: false,
+      position: 'left'
     };
     this.password = '';
   }
+  componentDidMount() {
+    document.addEventListener('contextmenu', this._handleContextMenu);
+  };
+  componentWillUnmount() {
+    document.removeEventListener('contextmenu', this._handleContextMenu);
+  }
+  _handleContextMenu = (event) => {
+    event.preventDefault();
+    if (this.state.hover)
+      this.setState({ menuActive: true });
+  };
   handleOpenClose = () => {
     if (!this.props.active) {
       if (this.state.isOpen === false) {
@@ -35,6 +49,22 @@ class SoftwareApp extends Component {
       }
       this.setState({isOpen: !this.state.isOpen});
     }
+  };
+  activateMenu = (e) => {
+    e.preventDefault();
+    const {app} = this.props;
+    if (!app.empty) {
+      this.setState({hover: true, position: getPosition(app.id)});
+      if (this.password === '')
+        api.dashboard.getAppPassword({
+          app_id: this.props.app.id
+        }).then(response => {
+          this.password = response.password;
+        });
+    }
+  };
+  deactivateMenu = () => {
+    this.setState({menuActive: false, hover: false});
   };
   clickOnSettings = (e) => {
     e.stopPropagation();
@@ -62,79 +92,63 @@ class SoftwareApp extends Component {
       this.setState({copiedOther: null});
     }, 1000);
   };
-  render(){
+  remove = () => {
+    this.props.dispatch(showSoftwareAppSettingsModal({active: true, app: this.props.app, remove: true}));
+  };
+
+  render() {
     const {app} = this.props;
     const credentials = transformWebsiteInfoIntoListAndSetValues(app.software.connection_information, app.account_information);
-    const inputs = credentials.map((item,idx) => {
+    const buttons = credentials.map((item, idx) => {
       if (this.state.copiedPassword !== item.priority && this.state.copiedOther !== item.priority) {
         if (item.name === 'password')
           return (
-            <Input
-              key={idx}
-              size='mini'
-              type='password'
-              disabled
-              name={item.name}
-              placeholder='Password'
-              value={'********'}
-              label={
-                <Label style={{backgroundColor: '#373b60', color: 'white', fontWeight: '300'}}
-                       onClick={e => this.copyPassword(item)}>
-                  Copy <Icon name='copy'/>
-                </Label>}/>
+            <button
+              className="settings_button"
+              onClick={e => this.copyPassword(item)}
+              key={idx}>
+              <Icon name='copy'/> • • • • • • • •
+            </button>
           );
         return (
-          <Input
+          <button
             key={idx}
-            size='mini'
-            disabled
-            type={item.type}
-            name={item.name}
-            placeholder={item.placeholder}
-            value={item.value}
-            label={
-              <Label style={{backgroundColor: '#373b60', color: 'white', fontWeight: '300'}}
-                     onClick={e => this.copy(item)}>
-                Copy <Icon name='copy'/>
-              </Label>}/>
+            className="settings_button"
+            onClick={e => this.copy(item)}>
+            <Icon name='copy'/> {item.value}
+          </button>
         )
       }
       return (
-        <Segment
+        <button
           key={idx}
-          size='mini'
-          content={'Copied!'}/>
+          className="settings_button">
+          Copied!
+        </button>
       )
     });
     return (
-      <Popup
-        size="tiny"
-        className='dashboard_popup_soft_and_any'
-        position="top center"
-        on='click'
-        open={(this.props.active || app.empty) ? false : this.state.isOpen}
-        onClose={this.handleOpenClose}
-        onOpen={this.handleOpenClose}
-        hideOnScroll
-        trigger={
-          <div className='app'>
-            <div className="logo_area">
-              {this.state.loading &&
-              <LoadingAppIndicator/>}
-              {app.empty &&
-              <EmptyAppIndicator onClick={this.clickOnSettings}/>}
-              {app.new &&
-              <NewAppLabel/>}
-              <div className="logo_handler">
-                <img className="logo" src={app.logo}/>
-                <button className="settings_button" onClick={this.clickOnSettings}>
-                  Settings
-                </button>
-              </div>
-            </div>
-            <span className="app_name overflow-ellipsis">{app.name}</span>
-          </div>}
-        content={inputs}/>
+      <div className='app'>
+        <div className={app.empty ? 'logo_area' : this.state.menuActive ? 'logo_area active' : 'logo_area not_active'}
+             onMouseEnter={this.activateMenu} onMouseLeave={this.deactivateMenu}>
+          {this.state.loading &&
+          <LoadingAppIndicator/>}
+          {app.empty &&
+          <EmptyAppIndicator onClick={this.clickOnSettings}/>}
+          {app.new &&
+          <NewAppLabel/>}
+          <SettingsMenu
+            app={app}
+            buttons={buttons}
+            remove={this.remove}
+            position={this.state.position}
+            clickOnSettings={this.clickOnSettings}/>
+          <div className="logo_handler">
+            <img className="logo" src={app.logo}/>
+          </div>
+        </div>
+        <span className="app_name overflow-ellipsis">{app.name}</span>
+      </div>
     )
   }
 }

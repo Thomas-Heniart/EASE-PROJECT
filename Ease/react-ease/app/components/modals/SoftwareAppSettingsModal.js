@@ -12,14 +12,15 @@ import {connect} from "react-redux";
 import {addNotification} from "../../actions/notificationBoxActions";
 
 @connect(store => ({
-  app: store.modals.softwareAppSettings.app
+  app: store.modals.softwareAppSettings.app,
+  remove: store.modals.softwareAppSettings.remove
 }))
 class SoftwareAppSettingsModal extends Component {
   constructor(props){
     super(props);
     this.state = {
       appName: this.props.app.name,
-      view: 'Account',
+      view: this.props.remove ? 'Remove' : 'Account',
       credentials: [],
       isEmpty: this.props.app.empty,
       loading: false,
