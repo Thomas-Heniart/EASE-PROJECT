@@ -29,6 +29,10 @@ public class ServletStartTeamCreation extends HttpServlet {
             String email = sm.getStringParam("email", true, false);
             email = email.toLowerCase();
             Integer planId = sm.getIntParam("plan_id", true, false);
+            if (planId == 1)
+                planId = 2;
+            if (planId != 0 && planId != 2)
+                throw new HttpServletException(HttpStatus.BadRequest, "This plan does not exist");
             Integer teamSize = sm.getIntParam("team_size", true, false);
             String firstName = sm.getStringParam("first_name", true, false);
             String lastName = sm.getStringParam("last_name", true, false);

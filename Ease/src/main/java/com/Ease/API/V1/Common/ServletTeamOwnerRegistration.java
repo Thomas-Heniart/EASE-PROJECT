@@ -1,6 +1,7 @@
 package com.Ease.API.V1.Common;
 
 import com.Ease.Hibernate.HibernateQuery;
+import com.Ease.Team.Team;
 import com.Ease.Team.TeamUser;
 import com.Ease.User.JsonWebTokenFactory;
 import com.Ease.User.User;
@@ -22,6 +23,7 @@ import java.io.IOException;
 import java.security.Key;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Map;
 
 @WebServlet("/api/v1/common/TeamOwnerRegistration")
@@ -50,8 +52,6 @@ public class ServletTeamOwnerRegistration extends HttpServlet {
             if (teamUser == null)
                 throw new HttpServletException(HttpStatus.BadRequest, "No invitation for this email.");
             sm.initializeTeamWithContext(teamUser.getTeam());
-            if (teamUser.getArrival_date() != null && teamUser.getArrival_date().getTime() > new Date().getTime())
-                throw new HttpServletException(HttpStatus.BadRequest, "This is not the moment of your registration");
             newUser = teamUser.getUser();
             if (newUser != null) {
                 if (!newUser.getUserKeys().isGoodAccessCode(accessCode))
@@ -76,6 +76,15 @@ public class ServletTeamOwnerRegistration extends HttpServlet {
             Key secret = (Key) sm.getContextAttr("secret");
             newUser.setJsonWebToken(JsonWebTokenFactory.getInstance().createJsonWebToken(newUser.getDb_id(), newUser.getOptions().getConnection_lifetime(), keyUser, secret));
             sm.saveOrUpdate(newUser.getJsonWebToken());
+            Team team = teamUser.getTeam();
+            sm.initializeTeamWithContext(team);
+            if (team.getPlan_id() > 1) {
+                Map<String, Object> params = new HashMap<>();
+                params.put("trial_period_days", 30);
+                team.getSubscription().update(params);
+                team.setSubscription_date(new Date());
+                sm.saveOrUpdate(team);
+            }
             String jwt = newUser.getJsonWebToken().getJwt(keyUser);
             Cookie cookie = new Cookie("JWT", jwt);
             Calendar calendar = Calendar.getInstance();

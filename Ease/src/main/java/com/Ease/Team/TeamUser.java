@@ -438,7 +438,6 @@ public class TeamUser {
             NotificationFactory.getInstance().createTeamUserRegisteredNotification(this, this.getTeam().getTeamUserWithId(this.getAdmin_id()), userWebSocketManager, hibernateQuery);
         if (this.getTeamCardReceivers().isEmpty())
             return;
-        //Profile profile = this.getOrCreateProfile(hibernateQuery);
         for (TeamCardReceiver teamCardReceiver : this.getTeamCardReceivers()) {
             Channel channel = teamCardReceiver.getTeamCard().getChannel();
             Profile profile = this.getOrCreateProfile(channel, hibernateQuery);
