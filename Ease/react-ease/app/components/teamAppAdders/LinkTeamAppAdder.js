@@ -4,7 +4,7 @@ import {handleSemanticInput} from "../../utils/utils";
 import {newSelectUserFromListById} from "../../utils/helperFunctions";
 import {teamCreateLinkCard} from "../../actions/appsActions";
 import {connect} from "react-redux";
-import { Label, Container, Icon, Segment, Input, Button, Dropdown } from 'semantic-ui-react';
+import {Label, Container, Icon, Segment, Input, Button, Dropdown, TextArea} from 'semantic-ui-react';
 import {reduxActionBinder} from "../../actions/index";
 import { setUserDropdownText, renderLinkAppAddUserLabel} from "./common";
 import {cardAdded} from "../../actions/teamModalActions";
@@ -159,18 +159,20 @@ class LinkTeamAppAdder extends React.Component {
                         noResultsMessage='No more results found'
                         placeholder="Tag your team members here..."/>
                     </div>
-                      <div>
-                          <Input size="mini"
-                                 fluid
-                                 class="team-app-input"
-                                 onChange={this.handleComment}
-                                 name="comment"
-                                 value={this.state.comment}
-                                 placeholder="What is this about? Any comment?"
-                                 type="text"
-                                 label={<Label><Icon name="sticky note"/></Label>}
-                                 labelPosition="left"/>
+                    <div class="ui form description display_flex">
+                      <div class="label">
+                        <Icon name="sticky note" fitted/>
                       </div>
+                      <TextArea size="mini"
+                                fluid
+                                class="team-app-input"
+                                onChange={this.handleInput}
+                                name="description"
+                                rows={1}
+                                value={this.state.description}
+                                placeholder="You can add a comment here"
+                                type="text"/>
+                    </div>
                   </div>
               </div>
           </Segment>

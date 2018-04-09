@@ -25,6 +25,7 @@ public class ServletAskRegistration extends HttpServlet {
         PostServletManager sm = new PostServletManager(this.getClass().getName(), request, response, true);
         try {
             String email = sm.getStringParam("email", true, false);
+            email = email.toLowerCase();
             if (!Regex.isEmail(email))
                 throw new HttpServletException(HttpStatus.BadRequest, "That doesn't look like a valid email address!");
             Boolean newsletter = sm.getBooleanParam("newsletter", true, false);

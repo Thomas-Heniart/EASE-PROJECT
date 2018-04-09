@@ -2,7 +2,7 @@ import React, {Component} from "react";
 import {connect} from "react-redux";
 import classnames from "classnames";
 import {getClearbitLogo} from '../../utils/api';
-import {Button, Container, Header, Icon, Input, Label, Popup, Segment, Dropdown} from 'semantic-ui-react';
+import {Button, Container, Header, Icon, Input, Label, Popup, Segment, Dropdown, TextArea} from 'semantic-ui-react';
 import {renderLinkAppAddUserLabel, setUserDropdownText, TeamAppActionButton} from "./common";
 import * as modalActions from "../../actions/teamModalActions";
 import {teamEditLinkCard, teamShareLinkCard, removeTeamCardReceiver} from "../../actions/appsActions";
@@ -281,19 +281,21 @@ class LinkTeamApp extends Component {
                             noResultsMessage='No more results found'
                             placeholder="Tag your team members here..."/>}
                       {(this.state.description || app.description || this.state.edit) &&
-                        <div>
-                            <Input size="mini"
-                                   fluid
-                                   class="team-app-input"
-                                   onChange={this.handleInput}
-                                   name="description"
-                                   readOnly={!this.state.edit}
-                                   value={this.state.edit ? this.state.description : app.description}
-                                   placeholder="What is this about? Any comment?"
-                                   type="text"
-                                   label={<Label><Icon name="sticky note"/></Label>}
-                                   labelPosition="left"/>
-                        </div>}
+                      <div class="ui form description display_flex">
+                        <div class="label">
+                          <Icon name="sticky note" fitted/>
+                        </div>
+                        <TextArea size="mini"
+                                  fluid
+                                  class="team-app-input"
+                                  onChange={this.handleInput}
+                                  name="description"
+                                  rows={1}
+                                  readOnly={!this.state.edit}
+                                  value={this.state.edit ? this.state.description : app.description}
+                                  placeholder="You can add a comment here"
+                                  type="text"/>
+                      </div>}
                     </div>
                 </div>
             </Segment>

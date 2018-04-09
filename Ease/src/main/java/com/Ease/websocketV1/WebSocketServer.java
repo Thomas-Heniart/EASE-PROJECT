@@ -35,19 +35,13 @@ public class WebSocketServer {
                 hibernateQuery.commit();
                 return;
             }
-            Integer user_id = (Integer) httpSession.getAttribute("user_id");
+            Integer userId = (Integer) httpSession.getAttribute("user_id");
             ServletContext servletContext = httpSession.getServletContext();
             System.out.println("connection opened by websocket. id = " + session.getId());
             System.out.println("is secure ? " + session.isSecure());
-            /* if (!session.isSecure()) {
-                session.close();
-                System.out.println("webSocketSession closed");
-                hibernateQuery.commit();
-                return;
-            } */
             session.getBasicRemote().sendText(new WebSocketMessage("CONNECTION_ID", session.getId()).toJSONObject().toString());
             WebSocketSession webSocketSession = new WebSocketSession(session);
-            if (user_id == null) {
+            if (userId == null) {
                 WebSocketManager sessionWebSocketManager = (WebSocketManager) httpSession.getAttribute("webSocketManager");
                 if (sessionWebSocketManager == null) {
                     sessionWebSocketManager = new WebSocketManager();
@@ -57,15 +51,15 @@ public class WebSocketServer {
                 hibernateQuery.commit();
                 return;
             }
-            User user = (User) hibernateQuery.get(User.class, user_id);
+            User user = (User) hibernateQuery.get(User.class, userId);
             hibernateQuery.commit();
             if (user == null)
                 return;
             Map<Integer, Map<String, Object>> userIdMap = (Map<Integer, Map<String, Object>>) servletContext.getAttribute("userIdMap");
-            Map<String, Object> userProperties = userIdMap.get(user_id);
+            Map<String, Object> userProperties = userIdMap.get(userId);
             if (userProperties == null) {
                 userProperties = new ConcurrentHashMap<>();
-                userIdMap.put(user_id, userProperties);
+                userIdMap.put(userId, userProperties);
             }
             WebSocketManager webSocketManager = (WebSocketManager) userProperties.get("webSocketManager");
             if (webSocketManager == null) {

@@ -45,7 +45,7 @@ public class UserStatus {
     private String emailRequested;
 
     @Column(name = "new_feature_seen")
-    private boolean newFeatureSeen = false;
+    private boolean newFeatureSeen = true;
 
     @Column(name = "onboarding_step")
     private Integer onboardingStep = 0;

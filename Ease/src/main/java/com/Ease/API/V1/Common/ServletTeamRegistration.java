@@ -39,6 +39,7 @@ public class ServletTeamRegistration extends HttpServlet {
                 sm.setUser(null);
             String access_code = sm.getStringParam("access_code", true, false);
             String email = sm.getStringParam("email", true, false);
+            email = email.toLowerCase();
             String password = sm.getStringParam("password", false, false);
             String code = sm.getStringParam("code", false, false);
             String phone_number = sm.getStringParam("phone_number", true, false);

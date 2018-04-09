@@ -761,6 +761,42 @@ i.icon.pin_button {
   }
 }
 
+.team-app {
+  input[type=password][readonly]{
+    @include placeholder-color(rgba(41,41,41,.95));
+    &:focus {
+      @include placeholder-color(rgba(41,41,41,.95));
+    }
+  }
+  .description {
+    font-size: .8em;
+    .label {
+      padding: .78571429em 0.833em;
+      color: white;
+      border-radius: .28571429rem;
+      border-top-right-radius: 0;
+      border-bottom-right-radius: 0;
+      background-color: #e0e1e2;
+    }
+    textarea {
+      border-top-left-radius: 0;
+      border-bottom-left-radius: 0;
+      border-left-color: transparent;
+      &:focus {
+        border-top-left-radius: 0;
+        border-bottom-left-radius: 0;
+      }
+      &[readonly] {
+        background-color: transparent;
+        &:focus {
+          border-color: rgba(34,36,38,.15);
+          border-left-color: transparent;
+        }
+      }
+    }
+  }
+}
+
 .team-app.simple-team-app {
   .copy_pwd_button {
     margin-right: .5rem;

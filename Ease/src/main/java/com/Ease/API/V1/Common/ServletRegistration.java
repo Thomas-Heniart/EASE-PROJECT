@@ -39,6 +39,7 @@ public class ServletRegistration extends HttpServlet {
             String username = sm.getStringParam("username", true, false);
             username = username.toLowerCase();
             String email = sm.getStringParam("email", true, false);
+            email = email.toLowerCase();
             String password = sm.getStringParam("password", false, false);
             String digits = sm.getStringParam("digits", false, false);
             String phone_number = sm.getStringParam("phone_number", true, false);
@@ -87,6 +88,9 @@ public class ServletRegistration extends HttpServlet {
             Key secret = (Key) sm.getContextAttr("secret");
             newUser.setJsonWebToken(JsonWebTokenFactory.getInstance().createJsonWebToken(newUser.getDb_id(), newUser.getOptions().getConnection_lifetime(), keyUser, secret));
             sm.saveOrUpdate(newUser.getJsonWebToken());
+            hibernateQuery.querySQLString("DELETE FROM userPendingRegistrations WHERE email LIKE :email");
+            hibernateQuery.setParameter("email", email);
+            hibernateQuery.executeUpdate();
             String jwt = newUser.getJsonWebToken().getJwt(keyUser);
             Cookie cookie = new Cookie("JWT", jwt);
             Calendar calendar = Calendar.getInstance();
