@@ -47,6 +47,7 @@ public class ServletCreateTeam extends HttpServlet {
             owner.setUser(user);
             sm.saveOrUpdate(team);
             onboardingCustomerInformation.setCreated(true);
+            onboardingCustomerInformation.setTeamId(team.getDb_id());
             sm.saveOrUpdate(onboardingCustomerInformation);
             sm.getTeamProperties(team.getDb_id()).put("teamKey", teamKey);
             owner.getTeamUserStatus().setInvitation_sent(true);
@@ -68,7 +69,7 @@ public class ServletCreateTeam extends HttpServlet {
                     item.put("plan", Team.plansMap.get(onboardingCustomerInformation.getPlanId()));
                     break;
 
-                case 1:
+                case 2:
                     item.put("plan", Team.plansMap.get(onboardingCustomerInformation.getPlanId()));
                     params.put("trial_period_days", 30);
                     params.put("tax_percent", 20.0);
@@ -119,8 +120,9 @@ public class ServletCreateTeam extends HttpServlet {
             sm.saveOrUpdate(team.getDefaultChannel());
             /*========== True owner creation ===========*/
             sm.initializeTeamWithContext(team);
-            hibernateQuery.commit();
-            sm.setRedirectUrl("/#/teams/" + team.getDb_id());
+            /* hibernateQuery.commit();
+            sm.setRedirectUrl("/#/teams/" + team.getDb_id()); */
+            sm.setSuccess(team.getJson());
         } catch (Exception e) {
             sm.setError(e);
         }

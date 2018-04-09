@@ -13,4 +13,17 @@
     </thead>
     <tbody id="onboardingCustomersTableBody"></tbody>
 </table>
+<div class="ui modal" id="onboardingCustomerEmailModal">
+    <i class="close icon"></i>
+    <div class="header">Email to: </div>
+    <div class="content">
+        <form action="/api/v1/admin/onboarding/transfer-ownership" class="ui form">
+            <div class="field">
+                <label>Email content: </label>
+                <textarea></textarea>
+            </div>
+            <button class="ui button primary">Submit</button>
+        </form>
+    </div>
+</div>
 <script src="js/backOffice/onboardingCustomers.js?v=3" async></script>

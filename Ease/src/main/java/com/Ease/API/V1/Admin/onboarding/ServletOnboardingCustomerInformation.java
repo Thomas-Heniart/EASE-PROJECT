@@ -1,6 +1,8 @@
 package com.Ease.API.V1.Admin.onboarding;
 
 import com.Ease.Hibernate.HibernateQuery;
+import com.Ease.Utils.HttpServletException;
+import com.Ease.Utils.HttpStatus;
 import com.Ease.Utils.Servlets.GetServletManager;
 import com.Ease.onboarding.OnboardingCustomerInformation;
 import org.json.JSONArray;
@@ -20,12 +22,20 @@ public class ServletOnboardingCustomerInformation extends HttpServlet {
         GetServletManager sm = new GetServletManager(this.getClass().getName(), request, response, true);
         try {
             sm.needToBeEaseAdmin();
+            Long id = sm.getLongParam("id", true, true);
             HibernateQuery hibernateQuery = sm.getHibernateQuery();
-            hibernateQuery.queryString("SELECT o FROM OnboardingCustomerInformation o ORDER BY o.creationDate");
-            List<OnboardingCustomerInformation> onboardingCustomerInformationList = hibernateQuery.list();
-            JSONArray res = new JSONArray();
-            onboardingCustomerInformationList.forEach(onboardingCustomerInformation -> res.put(onboardingCustomerInformation.getJson()));
-            sm.setSuccess(res);
+            if (id == null) {
+                hibernateQuery.queryString("SELECT o FROM OnboardingCustomerInformation o ORDER BY o.creationDate");
+                List<OnboardingCustomerInformation> onboardingCustomerInformationList = hibernateQuery.list();
+                JSONArray res = new JSONArray();
+                onboardingCustomerInformationList.forEach(onboardingCustomerInformation -> res.put(onboardingCustomerInformation.getJson()));
+                sm.setSuccess(res);
+            } else {
+                OnboardingCustomerInformation onboardingCustomerInformation = (OnboardingCustomerInformation) hibernateQuery.get(OnboardingCustomerInformation.class, id);
+                if (onboardingCustomerInformation == null)
+                    throw new HttpServletException(HttpStatus.BadRequest, "OnboardingCustomerInformation not found");
+                sm.setSuccess(onboardingCustomerInformation.getJson());
+            }
         } catch (Exception e) {
             sm.setError(e);
         }

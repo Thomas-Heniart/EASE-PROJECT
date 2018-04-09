@@ -1,12 +1,16 @@
 let anchor;
 let segment;
 let tabBody;
+let emailContentModal;
+let emailContentForm;
 const dataTarget = "#onboardingCustomers";
 
 $(document).ready(() => {
   anchor = $("a.item[data-target='" + dataTarget + "']");
   segment = $(dataTarget);
   tabBody = $("#onboardingCustomersTableBody");
+  emailContentModal = $("#onboardingCustomerEmailModal");
+  emailContentForm = $("form", emailContentModal);
   anchor.click(() => {
     segment.removeClass("loading");
     tabBody.addClass("loading");
@@ -16,7 +20,13 @@ $(document).ready(() => {
     }, (data) => {
       data.forEach(processElem);
     })
-  })
+  });
+  emailContentModal
+    .modal({
+      onHide: function () {
+        emailContentForm.off("submit");
+      }
+    })
 });
 
 const processElem = (elem, index) => {
@@ -32,15 +42,24 @@ const processElem = (elem, index) => {
     "</tr>");
   tabBody.append(jElem);
   $(".creationLink", jElem).click((e) => {
+    e.preventDefault();
     let target = $(e.target);
-    let newElem = $("<button class='ui primary button transfer'>Finalize</button>");
-    let td = $(target.parent());
-    let tr = $(td.parent());
-    target.remove();
-    td.append(newElem);
-    tr.removeClass("warning");
-    tr.addClass("positive");
-    transferOwnerShipListener(td, elem);
+    target.addClass("loading");
+    ajaxHandler.get(elem.teamCreationLink, null, () => {
+
+    }, (team) => {
+      target.removeClass("loadgin");
+      elem.teamId = team.id;
+      let newElem = $("<button class='ui primary button transfer'>Finalize</button>");
+      let td = $(target.parent());
+      let tr = $(td.parent());
+      target.remove();
+      td.append(newElem);
+      tr.removeClass("warning");
+      tr.addClass("positive");
+      transferOwnerShipListener(td, elem);
+      window.location = location.origin + "/#/teams/" + team.id;
+    })
   });
   transferOwnerShipListener(jElem, elem)
 };
@@ -48,16 +67,29 @@ const processElem = (elem, index) => {
 const transferOwnerShipListener = (jElem, elem) => {
   $(".transfer", jElem).click((e) => {
     e.preventDefault();
-    let button = $(e.target);
-    button.addClass("loading");
-    ajaxHandler.post("/api/v1/admin/onboarding/transfer-ownership", {
-      onboardingId: elem.id,
-      teamId: elem.teamId,
-      emailContent: "lala"
-    }, () => {
-      button.removeClass("loading");
-    }, () => {
-      jElem.remove()
+    let header = $(".header", emailContentModal);
+    header.text("Email to: " +
+      elem.firstName + " " + elem.lastName +
+      " (" + elem.email + ") from: " + elem.teamName);
+    let emailContentField = $("textarea", emailContentForm);
+    emailContentModal.modal("show");
+    emailContentForm.submit((e) => {
+      e.preventDefault();
+      let formButton = $("button", emailContentForm);
+      formButton.addClass("loading");
+      formButton.addClass("disabled");
+      ajaxHandler.post(emailContentForm.attr("action"), {
+        onboardingId: elem.id,
+        teamId: elem.teamId,
+        emailContent: emailContentField.val()
+      }, () => {
+      }, () => {
+        formButton.removeClass("loading");
+        formButton.removeClass("disabled");
+        emailContentModal.modal("hide");
+        emailContentField.val("");
+        jElem.remove()
+      })
     })
   })
 };
