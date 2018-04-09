@@ -72,6 +72,7 @@ const transferOwnerShipListener = (jElem, elem) => {
       elem.firstName + " " + elem.lastName +
       " (" + elem.email + ") from: " + elem.teamName);
     let emailContentField = $("textarea", emailContentForm);
+    let emailContentLinkName = $("input[name='linkName']", emailContentForm);
     emailContentModal.modal("show");
     emailContentForm.submit((e) => {
       e.preventDefault();
@@ -81,13 +82,15 @@ const transferOwnerShipListener = (jElem, elem) => {
       ajaxHandler.post(emailContentForm.attr("action"), {
         onboardingId: elem.id,
         teamId: elem.teamId,
-        emailContent: emailContentField.val()
+        emailContent: emailContentField.val().replace(/\r?\n/g, '<br />'),
+        linkName: emailContentLinkName.val()
       }, () => {
       }, () => {
         formButton.removeClass("loading");
         formButton.removeClass("disabled");
         emailContentModal.modal("hide");
         emailContentField.val("");
+        emailContentLinkName.val("");
         jElem.remove()
       })
     })

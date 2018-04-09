@@ -20,7 +20,11 @@
         <form action="/api/v1/admin/onboarding/transfer-ownership" class="ui form">
             <div class="field">
                 <label>Email content: </label>
-                <textarea></textarea>
+                <textarea placeholder="Type your email content here..."></textarea>
+            </div>
+            <div class="field">
+                <label>Link appearance</label>
+                <input type="text" name="linkName" placeholder="Ex: Click here to register...">
             </div>
             <button class="ui button primary">Submit</button>
         </form>
