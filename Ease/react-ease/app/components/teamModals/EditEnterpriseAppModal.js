@@ -21,13 +21,13 @@ const CredentialInput = ({item, onChange}) => {
                class="modalInput team-app-input"
                required
                autoComplete='on'
-               name={item.name}
+               name={item.name ? item.name : item.information_name}
                onChange={onChange}
                label={<Label><Icon name={credentialIconType[item.name]}/></Label>}
                labelPosition="left"
                placeholder={item.placeholder}
                value={item.value}
-               type={item.type}/>
+               type={item.type ? item.type : item.information_type}/>
       </Form.Field>
   )
 };

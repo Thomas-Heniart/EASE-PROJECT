@@ -2,20 +2,20 @@ import React, {Component} from "react";
 import {showTeamJoinEnterpriseAppModal} from '../../actions/teamModalActions';
 import {teamShareEnterpriseCard} from "../../actions/appsActions";
 import SimpleModalTemplate from "../common/SimpleModalTemplate";
-import { Header, Label,List, Search,SearchResult, Container, Divider, Icon, Transition, TextArea, Segment, Checkbox, Form, Input, Select, Dropdown, Button, Message } from 'semantic-ui-react';
+import { Form, Input, Button, Message } from 'semantic-ui-react';
 import {transformWebsiteInfoIntoList, transformCredentialsListIntoObject} from "../../utils/utils";
 import {connect} from "react-redux";
 
 const CredentialInput = ({item, onChange}) => {
   return <Input
       class="team-app-input"
-      name={item.name}
+      name={item.name ? item.name : item.information_name}
       autoFocus={item.autoFocus}
       onChange={onChange}
       placeholder={item.placeholder}
       value={item.value}
       required
-      type={item.type}/>;
+      type={item.type ? item.type : item.information_type}/>;
 };
 
 @connect(store => ({
@@ -30,8 +30,10 @@ class JoinEnterpriseAppModal extends Component {
       errorMessage: '',
       team_card: this.props.team_card,
       my_id: this.props.teams[this.props.team_card.team_id].my_team_user_id,
-      credentials: transformWebsiteInfoIntoList(this.props.team_card.website.information),
-    }
+      credentials: [],
+    };
+    const team_card = this.props.team_card;
+    this.state.credentials = transformWebsiteInfoIntoList(!!team_card.website ? team_card.website.information : team_card.software.connection_information);
   };
   handleCredentialInput = (e, {name, value}) => {
     const credentials = this.state.credentials.map(item => {
@@ -67,7 +69,7 @@ class JoinEnterpriseAppModal extends Component {
           <Form class="container" onSubmit={this.confirm} error={!!this.state.errorMessage.length}>
             <Form.Field class="display-flex align_items_center" style={{marginBottom: '35px'}}>
               <div class="squared_image_handler">
-                <img src={team_card.website.logo} alt="Website logo"/>
+                <img src={!!team_card.website ? team_card.website.logo : team_card.software.logo} alt="Website logo"/>
               </div>
               <span style={{fontSize: "1.3rem"}}>{team_card.name}</span>
             </Form.Field>
