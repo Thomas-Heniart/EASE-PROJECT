@@ -37,6 +37,21 @@
   }
 }
 
+#ctrl_dashboard_info {
+  width: 200px;
+  z-index: 1;
+  pointer-events: none;
+  padding: 10px;
+  color: white;
+  font-size: 12px;
+  box-shadow: -5px 5px 10px 0 rgba(0, 0, 0, 0.15);
+  border-radius: 2px;
+  background-color: $themeLightGreyTextColor;
+  position: fixed;
+  left: 73px;
+  bottom: 40px;
+}
+
 #dashboard {
   height: 100%;
   @include display-flex();

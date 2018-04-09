@@ -20,7 +20,8 @@ class Dashboard extends Component {
     super(props);
     this.state = {
       scrolling: false,
-      tutorial: false
+      tutorial: false,
+      ctrlOn: false
     }
   }
   onScroll = (e) => {
@@ -68,9 +69,26 @@ class Dashboard extends Component {
     if (!this.props.tutorial_done)
       this.setState({tutorial: true});
   }
+  ctrlDownListener = (e) => {
+    if (e.keyCode === 17 || e.keyCode === 91) {
+      this.setState({ctrlOn: true});
+    }
+  };
+  ctrlUpListener = (e) => {
+    if (e.keyCode === 17 || e.keyCode === 91) {
+      this.setState({ctrlOn: false});
+    }
+  };
   componentWillMount() {
     document.title = "Ease.space";
     ReactGA.pageview("main/dashboard");
+
+    document.addEventListener('keydown', this.ctrlDownListener, true);
+    document.addEventListener('keyup', this.ctrlUpListener, true);
+  }
+  componentWillUnmout(){
+    document.removeEventListener('keydown', this.ctrlDownListener, true);
+    document.removeEventListener('keyup', this.ctrlUpListener, true);
   }
   render(){
     const {columns} = this.props.dashboard;
@@ -85,6 +103,10 @@ class Dashboard extends Component {
             {this.state.tutorial &&
             <Tutorial/>}
           </ScrollingComponent>
+          {this.state.ctrlOn &&
+            <div id="ctrl_dashboard_info">
+              Hold <strong>Cmd</strong> or <strong>Ctrl</strong> to login to multiple apps
+            </div>}
         </div>
     )
   }

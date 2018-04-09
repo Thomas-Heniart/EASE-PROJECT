@@ -234,6 +234,7 @@ class HeaderSidebar extends Component {
           <div style={{marginBottom: '10px'}}>
             <NotificationList history={this.props.history}/>
             <NavLink to={'/main/catalog'}
+                     id="catalog_button"
                      class="header_button">
               <HeaderButtonPopup
                   trigger={
