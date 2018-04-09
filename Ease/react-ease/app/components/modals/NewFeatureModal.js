@@ -93,7 +93,7 @@ const CarouselContent = createReactClass({
           // autoplay={true}
             wrapAround={true}
             decorators={decorators}>
-          <img src="/resources/images/newFeatureMagicLink.png" onLoad={() => {window.dispatchEvent(new Event('resize'));}}/>
+          <img src="/resources/images/newFeatureSettings.png" onLoad={() => {window.dispatchEvent(new Event('resize'));}}/>
           <img src="/resources/images/extension_popup.jpg"/>
           <img src="/resources/images/google_accounts.jpg"/>
         </Carousel>
