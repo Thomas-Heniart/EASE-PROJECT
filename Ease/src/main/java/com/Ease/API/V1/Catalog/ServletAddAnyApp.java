@@ -19,6 +19,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
 
 @WebServlet("/api/v1/catalog/AddAnyApp")
 public class ServletAddAnyApp extends HttpServlet {
@@ -33,7 +35,7 @@ public class ServletAddAnyApp extends HttpServlet {
             Profile profile = sm.getUser().getProfile(profile_id);
             Catalog catalog = (Catalog) sm.getContextAttr("catalog");
             JSONObject connection_information = sm.getJsonParam("connection_information", false, false);
-            Website website = catalog.getWebsiteWithUrl(url, connection_information, sm.getHibernateQuery());
+            Website website = catalog.getPublicCatalogWebsiteWithUrl(url, connection_information.keySet(), sm.getHibernateQuery());
             App app;
             String symmetric_key = sm.getKeyUser();
             JSONObject account_information = sm.getJsonParam("account_information", false, false);
@@ -41,13 +43,15 @@ public class ServletAddAnyApp extends HttpServlet {
             String name = sm.getStringParam("name", true, false);
             if (name.equals("") || name.length() > 255)
                 throw new HttpServletException(HttpStatus.BadRequest, "Invalid parameter name");
-            if (website != null && website.getWebsiteAttributes().isIntegrated())
+            if (website != null && website.getWebsiteAttributes().isIntegrated()) {
+                this.populateAccountInformation(website, url, account_information);
                 app = AppFactory.getInstance().createClassicApp(name, website, symmetric_key, account_information, 0, sm.getHibernateQuery());
-            else {
+            } else {
                 if (website == null) {
                     String img_url = sm.getStringParam("img_url", false, true);
                     website = WebsiteFactory.getInstance().createWebsiteAndLogo(sm.getUser().getEmail(), url, name, img_url, connection_information, sm.getHibernateQuery());
                 }
+                this.populateAccountInformation(website, url, account_information);
                 app = AppFactory.getInstance().createAnyApp(name, website, symmetric_key, account_information, sm.getHibernateQuery());
             }
             Boolean credentials_provided = sm.getBooleanParam("credentials_provided", true, false);
@@ -68,6 +72,29 @@ public class ServletAddAnyApp extends HttpServlet {
             sm.setError(e);
         }
         sm.sendResponse();
+    }
+
+    private void populateAccountInformation(Website website, String url, JSONObject account_information) throws HttpServletException {
+        try {
+            URL aUrl = new URL(url);
+            String[] url_parsed = aUrl.getHost().split("\\.");
+            String subdomain = "";
+            if (url_parsed.length < 2)
+                throw new HttpServletException(HttpStatus.BadRequest, "This is not a valid URL");
+            else {
+                for (int i = 0; i < url_parsed.length - 2; i++)
+                    subdomain += url_parsed[i];
+                if (subdomain.equals("www"))
+                    subdomain = "";
+            }
+            for (WebsiteInformation websiteInformation : website.getWebsiteInformationList()) {
+                if (websiteInformation.getInformation_name().equals("login") || websiteInformation.getInformation_name().equals("password"))
+                    continue;
+                account_information.put(websiteInformation.getInformation_name(), subdomain);
+            }
+        } catch (MalformedURLException e) {
+            throw new HttpServletException(HttpStatus.BadRequest, "This is not a valid URL");
+        }
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {

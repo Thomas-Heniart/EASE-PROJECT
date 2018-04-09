@@ -213,6 +213,52 @@ public class Catalog {
                     }
                 }
             }
+            System.out.println("Website name: " + last_website.getName());
+            return last_website;
+        } catch (MalformedURLException e) {
+            throw new HttpServletException(HttpStatus.BadRequest, "This is not a valid url");
+        }
+    }
+
+    public Website getPublicCatalogWebsiteWithUrl(String url, Set<String> information_names, HibernateQuery hibernateQuery) throws HttpServletException {
+        try {
+            URL aUrl = new URL(url);
+            String[] url_parsed = aUrl.getHost().split("\\.");
+            String subdomain = "";
+            String domain = "";
+            String path = aUrl.getPath();
+            if (path.equals("/"))
+                path = "";
+            if (url_parsed.length < 2)
+                return null;
+            if (url_parsed.length == 2)
+                domain += url_parsed[0] + "." + url_parsed[1];
+            else {
+                domain += url_parsed[url_parsed.length - 2] + "." + url_parsed[url_parsed.length - 1];
+                for (int i = 0; i < url_parsed.length - 2; i++)
+                    subdomain += url_parsed[i];
+                if (subdomain.equals("www"))
+                    subdomain = "";
+            }
+            hibernateQuery.queryString("SELECT w FROM Website w LEFT JOIN w.websiteAlternativeUrlSet wau WHERE (w.login_url LIKE :domain OR wau IS NOT NULL AND wau.url LIKE :domain) AND w.websiteAttributes.integrated IS true ORDER BY w.db_id ASC");
+            hibernateQuery.setParameter("domain", "%" + domain + "%");
+            hibernateQuery.cacheQuery();
+            List<Website> websites = hibernateQuery.list();
+            int last_value = 0;
+            Website last_website = null;
+            for (Website website : websites) {
+                int match_value = website.matchUrl(subdomain, domain, path);
+                if (match_value == 4) {
+                    if (website.matchInformationSet(information_names))
+                        return website;
+                } else if (match_value > 0 && match_value > last_value) {
+                    if (website.matchInformationSet(information_names)) {
+                        last_value = match_value;
+                        last_website = website;
+                    }
+                }
+            }
+            System.out.println("Website name: " + last_website.getName());
             return last_website;
         } catch (MalformedURLException e) {
             throw new HttpServletException(HttpStatus.BadRequest, "This is not a valid url");

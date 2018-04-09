@@ -3,6 +3,7 @@ package com.Ease.API.V1.Teams.TeamCards.TeamEnterpriseCard;
 import com.Ease.Catalog.Catalog;
 import com.Ease.Catalog.Website;
 import com.Ease.Catalog.WebsiteFactory;
+import com.Ease.Catalog.WebsiteInformation;
 import com.Ease.NewDashboard.*;
 import com.Ease.Team.Channel;
 import com.Ease.Team.Team;
@@ -28,6 +29,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
 
 @WebServlet("/api/v1/teams/CreateTeamAnyEnterpriseCard")
 public class CreateTeamAnyEnterpriseCard extends HttpServlet {
@@ -53,7 +56,7 @@ public class CreateTeamAnyEnterpriseCard extends HttpServlet {
             if (description != null && description.length() > 255)
                 throw new HttpServletException(HttpStatus.BadRequest, "Description size must be under 255 characters");
             JSONObject connection_information = sm.getJsonParam("connection_information", false, false);
-            Website website = catalog.getWebsiteWithUrl(url, connection_information, sm.getHibernateQuery());
+            Website website = catalog.getPublicCatalogWebsiteWithUrl(url, connection_information.keySet(), sm.getHibernateQuery());
             if (website == null) {
                 String img_url = sm.getStringParam("img_url", false, true);
                 website = WebsiteFactory.getInstance().createWebsiteAndLogo(sm.getUser().getEmail(), url, name, img_url, connection_information, sm.getHibernateQuery());
@@ -70,6 +73,7 @@ public class CreateTeamAnyEnterpriseCard extends HttpServlet {
                 JSONObject value = receivers.getJSONObject(key);
                 Integer teamUser_id = Integer.valueOf(key);
                 JSONObject account_information = value.getJSONObject("account_information");
+                this.populateAccountInformation(website, url, account_information);
                 TeamUser teamUser = team.getTeamUserWithId(teamUser_id);
                 if (!channel.getTeamUsers().contains(teamUser))
                     throw new HttpServletException(HttpStatus.BadRequest, "All receivers must belong to the channel");
@@ -105,6 +109,29 @@ public class CreateTeamAnyEnterpriseCard extends HttpServlet {
             sm.setError(e);
         }
         sm.sendResponse();
+    }
+
+    private void populateAccountInformation(Website website, String url, JSONObject account_information) throws HttpServletException {
+        try {
+            URL aUrl = new URL(url);
+            String[] url_parsed = aUrl.getHost().split("\\.");
+            String subdomain = "";
+            if (url_parsed.length < 2)
+                throw new HttpServletException(HttpStatus.BadRequest, "This is not a valid URL");
+            else {
+                for (int i = 0; i < url_parsed.length - 2; i++)
+                    subdomain += url_parsed[i];
+                if (subdomain.equals("www"))
+                    subdomain = "";
+            }
+            for (WebsiteInformation websiteInformation : website.getWebsiteInformationList()) {
+                if (websiteInformation.getInformation_name().equals("login") || websiteInformation.getInformation_name().equals("password"))
+                    continue;
+                account_information.put(websiteInformation.getInformation_name(), subdomain);
+            }
+        } catch (MalformedURLException e) {
+            throw new HttpServletException(HttpStatus.BadRequest, "This is not a valid URL");
+        }
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
