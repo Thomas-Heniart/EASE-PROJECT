@@ -62,7 +62,8 @@ public class ServletTransferOwnership extends HttpServlet {
             owner.getTeamUserStatus().setInvitation_sent(true);
             owner.getTeamUserRole().setRole(TeamUserRole.Role.OWNER);
             sm.saveOrUpdate(owner);
-            String emailContent = sm.getStringParam("emailContent", true, false);
+            String emailFirstPart = sm.getStringParam("emailFirstPart", true, false);
+            String emailLastPart = sm.getStringParam("emailLastPart", true, false);
             String linkName = sm.getStringParam("linkName", true, false);
             /* Handle stripe free trial */
             User easeAdmin = sm.getUser();
@@ -75,7 +76,8 @@ public class ServletTransferOwnership extends HttpServlet {
             mailJetBuilder.setFrom(easeAdmin.getEmail(), easeAdmin.getPersonalInformation().getFirst_name() + " " + easeAdmin.getPersonalInformation().getLast_name());
             mailJetBuilder.addTo(owner.getEmail());
             mailJetBuilder.setTemplateId(MAIL_ID);
-            mailJetBuilder.addVariable("emailContent", emailContent);
+            mailJetBuilder.addVariable("emailFirstPart", emailFirstPart);
+            mailJetBuilder.addVariable("emailLastPart", emailLastPart);
             mailJetBuilder.addVariable("linkName", linkName);
             /* @TODO change url when front done */
             mailJetBuilder.addVariable("url", Variables.URL_PATH + "#/teamJoin/" + owner.getInvitation_code() + "/" + accessCode + "?email=" + owner.getEmail());

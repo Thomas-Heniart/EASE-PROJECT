@@ -19,12 +19,16 @@
     <div class="content">
         <form action="/api/v1/admin/onboarding/transfer-ownership" class="ui form">
             <div class="field">
-                <label>Email content: </label>
-                <textarea placeholder="Type your email content here..."></textarea>
+                <label>Email first part: </label>
+                <textarea name="firstPart" placeholder="Type beginning of your email here..."></textarea>
             </div>
             <div class="field">
                 <label>Link appearance</label>
                 <input type="text" name="linkName" placeholder="Ex: Click here to register...">
+            </div>
+            <div class="field">
+                <label>Email last part: </label>
+                <textarea name="lastPart" placeholder="Type end of your email here..."></textarea>
             </div>
             <button class="ui button primary">Submit</button>
         </form>

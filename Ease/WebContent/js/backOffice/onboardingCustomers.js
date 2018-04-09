@@ -71,7 +71,8 @@ const transferOwnerShipListener = (jElem, elem) => {
     header.text("Email to: " +
       elem.firstName + " " + elem.lastName +
       " (" + elem.email + ") from: " + elem.teamName);
-    let emailContentField = $("textarea", emailContentForm);
+    let emailStartContentField = $("textarea[name='firstPart']", emailContentForm);
+    let emailEndContentField = $("textarea[name='lastPart']", emailContentForm);
     let emailContentLinkName = $("input[name='linkName']", emailContentForm);
     emailContentModal.modal("show");
     emailContentForm.submit((e) => {
@@ -82,14 +83,16 @@ const transferOwnerShipListener = (jElem, elem) => {
       ajaxHandler.post(emailContentForm.attr("action"), {
         onboardingId: elem.id,
         teamId: elem.teamId,
-        emailContent: emailContentField.val().replace(/\r?\n/g, '<br />'),
+        emailFirstPart: emailStartContentField.val().replace(/\r?\n/g, '<br />'),
+        emailLastPart: emailEndContentField.val().replace(/\r?\n/g, '<br />'),
         linkName: emailContentLinkName.val()
       }, () => {
       }, () => {
         formButton.removeClass("loading");
         formButton.removeClass("disabled");
         emailContentModal.modal("hide");
-        emailContentField.val("");
+        emailStartContentField.val("");
+        emailEndContentField.val("");
         emailContentLinkName.val("");
         jElem.remove()
       })
