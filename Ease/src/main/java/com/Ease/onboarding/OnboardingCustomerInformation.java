@@ -1,6 +1,9 @@
 package com.Ease.onboarding;
 
 import com.Ease.Context.Variables;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
+import org.json.JSONObject;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -36,16 +39,21 @@ public class OnboardingCustomerInformation {
     @Column(name = "teamCreationLink")
     private String teamCreationLink;
 
-    @Column(name = "transferOwnershipLink")
-    private String transferOwnershipLink;
+    @Column(name = "created")
+    private boolean created = false;
+
+    @Column(name = "teamId")
+    private Integer teamId;
 
     @Column(name = "creationDate")
     @Temporal(TemporalType.TIMESTAMP)
-    private Date creationDate = new Date();
+    @CreationTimestamp
+    private Date creationDate;
 
     @Column(name = "lastUpdateDate")
     @Temporal(TemporalType.TIMESTAMP)
-    private Date lastUpdateDate = new Date();
+    @UpdateTimestamp
+    private Date lastUpdateDate;
 
     public OnboardingCustomerInformation() {
     }
@@ -132,12 +140,20 @@ public class OnboardingCustomerInformation {
         this.teamCreationLink = teamCreationLink;
     }
 
-    public String getTransferOwnershipLink() {
-        return transferOwnershipLink;
+    public boolean isCreated() {
+        return created;
     }
 
-    public void setTransferOwnershipLink(String transferOwnershipLink) {
-        this.transferOwnershipLink = transferOwnershipLink;
+    public void setCreated(boolean created) {
+        this.created = created;
+    }
+
+    public Integer getTeamId() {
+        return teamId;
+    }
+
+    public void setTeamId(Integer teamId) {
+        this.teamId = teamId;
     }
 
     public Date getCreationDate() {
@@ -173,5 +189,21 @@ public class OnboardingCustomerInformation {
 
     public void generateTeamCreationLink() {
         this.setTeamCreationLink(Variables.URL_PATH + "api/v1/admin/onboarding/create-team?id=" + this.getId());
+    }
+
+    public JSONObject getJson() {
+        JSONObject res = new JSONObject();
+        res.put("id", this.getId());
+        res.put("teamName", this.getTeamName());
+        res.put("teamSize", this.getTeamSize());
+        res.put("email", this.getEmail());
+        res.put("firstName", this.getFirstName());
+        res.put("lastName", this.getLastName());
+        res.put("phoneNumber", this.getPhoneNumber());
+        res.put("teamCreationLink", this.getTeamCreationLink());
+        res.put("created", this.isCreated());
+        res.put("creationDate", this.getCreationDate().getTime());
+        res.put("teamId", this.getTeamId() == null ? -1 : this.getTeamId());
+        return res;
     }
 }

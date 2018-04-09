@@ -49,11 +49,11 @@ public class ServletTransferOwnership extends HttpServlet {
         PostServletManager sm = new PostServletManager(this.getClass().getName(), request, response, true);
         try {
             sm.needToBeEaseAdmin();
-            Integer teamId = sm.getIntParam("team_id", true, false);
+            Integer teamId = sm.getIntParam("teamId", true, false);
             Team team = sm.getTeam(teamId);
             TeamUser teamUserConnected = sm.getTeamUser(team);
             Integer teamUserId = teamUserConnected.getDb_id();
-            Long onboardingId = sm.getLongParam("onboarding_id", true, false);
+            Long onboardingId = sm.getLongParam("onboardingId", true, false);
             HibernateQuery hibernateQuery = sm.getHibernateQuery();
             OnboardingCustomerInformation onboardingCustomerInformation = (OnboardingCustomerInformation) hibernateQuery.get(OnboardingCustomerInformation.class, onboardingId);
             if (onboardingCustomerInformation == null)
@@ -62,7 +62,7 @@ public class ServletTransferOwnership extends HttpServlet {
             owner.getTeamUserStatus().setInvitation_sent(true);
             owner.getTeamUserRole().setRole(TeamUserRole.Role.OWNER);
             sm.saveOrUpdate(owner);
-            String emailContent = sm.getStringParam("email_content", true, false);
+            String emailContent = sm.getStringParam("emailContent", true, false);
 
             /* Handle stripe free trial */
             User easeAdmin = sm.getUser();

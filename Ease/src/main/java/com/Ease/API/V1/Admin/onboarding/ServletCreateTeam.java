@@ -46,6 +46,8 @@ public class ServletCreateTeam extends HttpServlet {
             owner.getTeamUserStatus().setInvitation_sent(true);
             owner.setUser(user);
             sm.saveOrUpdate(team);
+            onboardingCustomerInformation.setCreated(true);
+            sm.saveOrUpdate(onboardingCustomerInformation);
             sm.getTeamProperties(team.getDb_id()).put("teamKey", teamKey);
             owner.getTeamUserStatus().setInvitation_sent(true);
             sm.saveOrUpdate(owner);

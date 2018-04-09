@@ -37,9 +37,10 @@
     <title>Ease.space admin</title>
     <link rel="icon" type="image/png" href="resources/icons/APPEASE.png"/>
     <link rel="manifest" href="manifest.json">
-    <script src="jsMinified/jquery-3.1.0.js?jsv=2"></script>
-    <script src="js/ajaxHandler.js"></script>
-    <script src="js/backOffice/admin.js?9"></script>
+    <script type="application/javascript" src="jsMinified/jquery-3.1.0.js?jsv=2"></script>
+    <script type="application/javascript" src="js/ajaxHandler.js"></script>
+    <script type="application/javascript" src="js/backOffice/admin.js?9"></script>
+    <script type="application/javascript" src="js/thirdParty/moment.min.js"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/semantic-ui/2.2.10/semantic.min.css">
     <script src="https://cdn.jsdelivr.net/semantic-ui/2.2.10/semantic.min.js"></script>
     <script src="https://semantic-ui.com/javascript/library/tablesort.js"></script>
@@ -84,6 +85,7 @@
             <a class="item" data-target="#onboarding-rooms-segment">Onboarding rooms</a>
             <a class="item" data-target="#teams-deleted-segment">Teams deleted</a>
             <a class="item" data-target="#statistics">Statistics</a>
+            <a class="item" data-target="#onboardingCustomers">Onboarding TODO</a>
         </div>
     </div>
     <div class="twelve wide stretched column tabs">
@@ -113,6 +115,9 @@
         </div>
         <div id="statistics" class="ui segment loading backOffice_part" style="display: none">
             <%@include file="templates/backofficeAdmin/Statistics.jsp" %>
+        </div>
+        <div id="onboardingCustomers" class="ui segment loading backOffice_part" style="display: none">
+            <%@include file="templates/backofficeAdmin/OnboardingCustomers.jsp" %>
         </div>
     </div>
 </div>
