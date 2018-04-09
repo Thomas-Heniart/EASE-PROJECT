@@ -5,7 +5,7 @@
 			<div class="left-part left">
 				<div class="left-menu ui row menu-column">
 					<div class="links">
-						<a href="/product">
+						<a href="/discover">
 							<fmt:message key="landing.footer.section-product.title"/>
 						</a>
 						<a href="/security">

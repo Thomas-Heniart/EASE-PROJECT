@@ -115,7 +115,7 @@ class NewFeatureModal extends React.Component {
           <div className="popover_mask"/>
           <div className="ease_popup ease_new_feature_popup">
             <Header as="h3" attached="top" style={{padding: '20px'}}>
-              <p>New feature: securely receive passwords from third parties</p>
+              <p>👋 Some new features to ease your navigation</p>
             </Header>
             <div className='popup_content'>
               <CarouselContent/>
