@@ -60,7 +60,6 @@
     padding: 10px;
     overflow-y: auto;
     overflow-x: hidden;
-    @include justify-content(center);
     & > .column {
       transition: all .3s ease;
       padding-right: 10px;
