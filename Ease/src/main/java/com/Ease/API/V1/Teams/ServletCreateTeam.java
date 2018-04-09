@@ -50,6 +50,8 @@ public class ServletCreateTeam extends HttpServlet {
             String username = sm.getStringParam("username", true, false);
             username = username.toLowerCase();
             Integer plan_id = sm.getIntParam("plan_id", true, false);
+            if (plan_id == 1)
+                plan_id = 2;
             Integer company_size = sm.getIntParam("company_size", true, false);
             if (teamName.equals(""))
                 throw new HttpServletException(HttpStatus.BadRequest, "teamName is needed.");
@@ -100,7 +102,7 @@ public class ServletCreateTeam extends HttpServlet {
                     item.put("plan", Team.plansMap.get(plan_id));
                     break;
 
-                case 1:
+                case 2:
                     item.put("plan", Team.plansMap.get(plan_id));
                     params.put("trial_period_days", 30);
                     params.put("tax_percent", 20.0);
