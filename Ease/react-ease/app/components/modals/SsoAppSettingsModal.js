@@ -16,14 +16,15 @@ import * as api from "../../utils/api";
 @connect(store => ({
   app: store.modals.ssoAppSettings.app,
   sso_groups: store.dashboard.sso_groups,
-  apps: store.dashboard.apps
+  apps: store.dashboard.apps,
+  remove: store.modals.ssoAppSettings.remove
 }))
 class SsoAppSettingsModal extends Component{
   constructor(props){
     super(props);
     this.state = {
       appName: this.props.app.name,
-      view: 'Account',
+      view: this.props.remove ? 'Remove' : 'Account',
       sso_group: this.props.sso_groups[this.props.app.sso_group_id],
       isEmpty: this.props.sso_groups[this.props.app.sso_group_id].empty,
       other_apps: [],

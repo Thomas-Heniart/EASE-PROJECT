@@ -11,13 +11,14 @@ import {addNotification} from "../../actions/notificationBoxActions";
 
 @connect(store => ({
   app: store.modals.logWithAppSettings.app,
-  apps: store.dashboard.apps
+  apps: store.dashboard.apps,
+  remove: store.modals.logWithAppSettings.remove
 }))
 class LogWithAppSettings extends Component {
   constructor(props){
     super(props);
     this.state = {
-      view: 'Account',
+      view: this.props.remove ? 'Remove' : 'Account',
       appName: this.props.app.name,
       lw_app_id: this.props.app.logWithApp_id,
       lw_apps: [],
