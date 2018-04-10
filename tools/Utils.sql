@@ -238,6 +238,8 @@ SELECT
   day_of_year,
   COUNT(*) AS clicks
 FROM ease_tracking.EASE_EVENT
-WHERE name LIKE 'PasswordUsed' OR name LIKE 'PasswordUser'
+WHERE name LIKE 'PasswordUsed' OR name LIKE 'PasswordUser' AND user_id IN (SELECT user_id
+                                                                           FROM ease.teamUsers
+                                                                           WHERE team_id = 5)
 GROUP BY year, day_of_year
 ORDER BY YEAR, day_of_year;

@@ -69,6 +69,7 @@ public class ServletGetTeamClickChartData extends HttpServlet {
                     calendar.add(Calendar.DAY_OF_YEAR, 1);
                 }
                 ((JSONArray) click_average.get("data")).put(count.doubleValue() / userIds.size());
+                labels.put(++days);
             }
             /* while (calendar.get(Calendar.YEAR) < current.get(Calendar.YEAR)) {
                 JSONArray tmp = team.getAverageOfClick(calendar.get(Calendar.YEAR), calendar.get(Calendar.WEEK_OF_YEAR), sm.getHibernateQuery());
