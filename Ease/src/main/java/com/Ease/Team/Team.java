@@ -661,7 +661,7 @@ public class Team {
         return res;
     }
 
-    private List<Integer> getUserIds() {
+    public List<Integer> getUserIds() {
         return this.getTeamUsers().values().stream().filter(TeamUser::isRegistered).map(teamUser -> teamUser.getUser().getDb_id()).collect(Collectors.toList());
     }
 

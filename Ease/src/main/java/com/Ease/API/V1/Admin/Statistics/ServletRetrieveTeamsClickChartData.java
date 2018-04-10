@@ -1,5 +1,6 @@
 package com.Ease.API.V1.Admin.Statistics;
 
+import com.Ease.Hibernate.HibernateQuery;
 import com.Ease.Team.Team;
 import com.Ease.Team.TeamManager;
 import com.Ease.Utils.Servlets.PostServletManager;
@@ -13,10 +14,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
+import java.math.BigInteger;
+import java.util.*;
 
 @WebServlet("/api/v1/admin/RetrieveTeamsClickChartData")
 public class ServletRetrieveTeamsClickChartData extends HttpServlet {
@@ -47,9 +46,36 @@ public class ServletRetrieveTeamsClickChartData extends HttpServlet {
             Set<Team> teamSet = new HashSet<>();
             for (int i = 0; i < team_ids.length(); i++)
                 teamSet.add(teamManager.getTeam(team_ids.getInt(i), sm.getHibernateQuery()));
+            Set<Integer> userIds = new HashSet<>();
+            teamSet.forEach(team -> userIds.addAll(team.getUserIds()));
             Date start_date = new Date(teamSet.stream().mapToLong(team -> team.getSubscription_date().getTime()).min().getAsLong());
             calendar.setTime(start_date);
-            while (calendar.get(Calendar.YEAR) < current.get(Calendar.YEAR)) {
+            HibernateQuery hibernateQuery = sm.getTrackingHibernateQuery();
+            hibernateQuery.querySQLString("SELECT\n" +
+                    "  year,\n" +
+                    "  day_of_year,\n" +
+                    "  COUNT(*) AS clicks\n" +
+                    "FROM EASE_EVENT\n" +
+                    "WHERE name LIKE 'PasswordUsed' OR name LIKE 'PasswordUser' AND creation_date BETWEEN :startDate AND :endDate AND user_id IN :userIds\n" +
+                    "GROUP BY year, day_of_year\n" +
+                    "ORDER BY YEAR, day_of_year;");
+            hibernateQuery.setDate("startDate", calendar);
+            hibernateQuery.setDate("endDate", current);
+            hibernateQuery.setParameter("userIds", userIds);
+            List<Object> raws = hibernateQuery.list();
+            for (Object object : raws) {
+                Object[] raw = (Object[]) object;
+                Long count = ((BigInteger) raw[2]).longValueExact();
+                int year = (Integer) raw[0];
+                int dayOfYear = ((Short) raw[1]).intValue();
+                while (calendar.get(Calendar.YEAR) < year || (calendar.get(Calendar.YEAR) == year && calendar.get(Calendar.DAY_OF_YEAR) < dayOfYear)) {
+                    ((JSONArray) click_average.get("data")).put(0);
+                    labels.put(++days);
+                    calendar.add(Calendar.DAY_OF_YEAR, 1);
+                }
+                ((JSONArray) click_average.get("data")).put(count.doubleValue() / userIds.size());
+            }
+            /* while (calendar.get(Calendar.YEAR) < current.get(Calendar.YEAR)) {
                 double avgs[] = {0., 0., 0., 0., 0., 0., 0.};
                 for (Team team : teamSet) {
                     JSONArray tmp = team.getAverageOfClick(calendar.get(Calendar.YEAR), calendar.get(Calendar.WEEK_OF_YEAR), sm.getHibernateQuery());
@@ -72,7 +98,7 @@ public class ServletRetrieveTeamsClickChartData extends HttpServlet {
                 for (int i = 1; i <= 7; i++)
                     labels.put(++days);
                 calendar.add(Calendar.WEEK_OF_YEAR, 1);
-            }
+            } */
             data.put("labels", labels);
             data.put("datasets", datasets);
             res.put("data", data);
