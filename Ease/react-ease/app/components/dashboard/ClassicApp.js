@@ -86,6 +86,13 @@ class ClassicApp extends Component {
   remove = () => {
     this.props.dispatch(showClassicAppSettingsModal({active: true, app: this.props.app, remove: true}));
   };
+  checkAndConnect = (e) => {
+    const {app} = this.props;
+
+    if (this.state.loading || app.empty)
+      return;
+    this.connect(e);
+  };
   render(){
     const {app, dispatch} = this.props;
     const credentials = transformWebsiteInfoIntoListAndSetValues(app.website.information, app.account_information);
@@ -139,7 +146,8 @@ class ClassicApp extends Component {
               <img class="logo" src={app.logo} onClick={this.connect}/>
             </div>
           </div>
-          <span class="app_name overflow-ellipsis">{app.name}</span>
+          <span class="app_name overflow-ellipsis"
+                onClick={this.checkAndConnect}>{app.name}</span>
         </div>
     )
   }

@@ -84,6 +84,14 @@ class SsoApp extends Component {
   remove = () => {
     this.props.dispatch(showSsoAppSettingsModal({active: true, app: this.props.app, remove: true}));
   };
+  checkAndConnect = (e) => {
+    const {app} = this.props;
+    const sso_group = this.props.sso_groups[app.sso_group_id];
+
+    if (this.state.loading || sso_group.empty)
+      return;
+    this.connect(e);
+  };
   render(){
     const {app, dispatch} = this.props;
     const sso_group = this.props.sso_groups[app.sso_group_id];
@@ -92,28 +100,28 @@ class SsoApp extends Component {
       if (this.state.copiedPassword !== item.priority && this.state.copiedOther !== item.priority) {
         if (item.name === 'password')
           return (
-            <button
-              className="settings_button"
-              onClick={e => this.copyPassword(item)}
-              key={idx}>
-              <Icon name='copy'/> • • • • • • • •
-            </button>
+              <button
+                  className="settings_button"
+                  onClick={e => this.copyPassword(item)}
+                  key={idx}>
+                <Icon name='copy'/> • • • • • • • •
+              </button>
           );
         return (
-          <button
-            key={idx}
-            className="settings_button"
-            onClick={e => this.copy(item)}>
-            <Icon name='copy'/> {item.value}
-          </button>
+            <button
+                key={idx}
+                className="settings_button"
+                onClick={e => this.copy(item)}>
+              <Icon name='copy'/> {item.value}
+            </button>
         )
       }
       return (
-        <button
-          key={idx}
-          className="settings_button">
-          Copied!
-        </button>
+          <button
+              key={idx}
+              className="settings_button">
+            Copied!
+          </button>
       )
     });
     return (
@@ -127,16 +135,17 @@ class SsoApp extends Component {
             {app.new &&
             <NewAppLabel/>}
             <SettingsMenu
-              app={app}
-              buttons={buttons}
-              remove={this.remove}
-              position={this.state.position}
-              clickOnSettings={e => dispatch(showSsoAppSettingsModal({active: true, app: app}))}/>
+                app={app}
+                buttons={buttons}
+                remove={this.remove}
+                position={this.state.position}
+                clickOnSettings={e => dispatch(showSsoAppSettingsModal({active: true, app: app}))}/>
             <div class="logo_handler">
               <img class="logo" src={app.logo} onClick={this.connect}/>
             </div>
           </div>
-          <span class="app_name overflow-ellipsis">{app.name}</span>
+          <span class="app_name overflow-ellipsis"
+                onClick={this.checkAndConnect}>{app.name}</span>
         </div>
     )
   }
