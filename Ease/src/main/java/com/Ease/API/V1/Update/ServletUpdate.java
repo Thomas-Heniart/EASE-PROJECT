@@ -80,7 +80,7 @@ public class ServletUpdate extends HttpServlet {
                     throw new HttpServletException(HttpStatus.BadRequest, "Cannot encrypt this kink of password");
                 informationNameSet.add(key);
             }
-            Website website = catalog.getPublicWebsiteWithUrl(url, informationNameSet, hibernateQuery);
+            Website website = catalog.getPublicCatalogWebsiteWithUrl(url, informationNameSet, hibernateQuery);
             if (website != null) {
                 /* Hack for websites with more than 2 fields */
                 populateAccountInformation(website, url, account_information);
