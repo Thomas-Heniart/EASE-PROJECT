@@ -8,8 +8,8 @@ import PasteStep from "./PasteStep";
 import DisplayAccounts from "./DisplayAccounts";
 import ErrorAccounts from "./ErrorAccounts";
 import {
-  catalogAddAnyApp, catalogAddBookmark, catalogAddClassicApp,
-  getImportedAccounts
+  catalogAddAnyApp, catalogAddBookmark,
+  catalogAddClassicApp, getImportedAccounts
 } from "../../../actions/catalogActions";
 import {importAccount, modifyImportedAccount, deleteImportedAccount} from "../../../actions/catalogActions";
 import {handleSemanticInput, isEmail, reflect} from "../../../utils/utils";
