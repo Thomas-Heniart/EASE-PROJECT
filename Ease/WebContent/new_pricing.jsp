@@ -37,13 +37,13 @@
     <link rel="icon" type="image/png" href="resources/icons/APPEASE.png" />
     <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Raleway:500,700" />
     <link rel="stylesheet" href="semantic/dist/semantic.min.css">
-    <link rel="stylesheet" type="text/css" href="/css/lib/fonts/museo-font.css?cssv=5"/>
-    <link rel="stylesheet" href="/css/default_style.css?cssv=5"/>
-    <link rel="stylesheet" href="/css/bootstrap.css?cssv=5"/>
-    <link rel="stylesheet" href="/css/landingPage.css?cssv=5"/>
-    <link rel="stylesheet" href="/css/lib/fonts/font-awesome-4.2.0/css/font-awesome.min.css?cssv=5"/>
-    <link rel="stylesheet" href="/css/team.css?cssv=5"/>
-    <link rel="stylesheet" href="/css/pricingPage.css?cssv=5"/>
+    <link rel="stylesheet" type="text/css" href="/css/lib/fonts/museo-font.css?cssv=6"/>
+    <link rel="stylesheet" href="/css/default_style.css?cssv=6"/>
+    <link rel="stylesheet" href="/css/bootstrap.css?cssv=6"/>
+    <link rel="stylesheet" href="/css/landingPage.css?cssv=6"/>
+    <link rel="stylesheet" href="/css/lib/fonts/font-awesome-4.2.0/css/font-awesome.min.css?cssv=6"/>
+    <link rel="stylesheet" href="/css/team.css?cssv=6"/>
+    <link rel="stylesheet" href="/css/pricingPage.css?cssv=6"/>
 
 
     <!-- Global site tag (gtag.js) - Google Analytics -->
