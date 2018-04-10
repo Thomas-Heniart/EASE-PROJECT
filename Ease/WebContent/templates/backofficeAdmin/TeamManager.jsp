@@ -12,7 +12,7 @@
         <th>Plan</th>
         <th>CC</th>
         <th class="number_data">App w. tags</th>
-        <th class="number_data">P. joined</th>
+        <th class="number_data">P. added</th>
         <th class="number_data">P. w. apps</th>
         <th class="number_data">P. click 1</th>
         <th class="number_data">P. click 3</th>
@@ -31,7 +31,7 @@
                     <h2>People data</h2>
                     <p>People invited: <span id="people_invited"></span> <a href="#" id="people_invited_emails">(see
                         emails)</a></p>
-                    <p>People who joined: <span id="people_joined"></span> <a href="#" id="people_joined_emails">(see
+                    <p>People added: <span id="people_joined"></span> <a href="#" id="people_joined_emails">(see
                         emails)</a></p>
                     <p>People with company apps: <span id="people_with_cards"></span> <a href="#"
                                                                                          id="people_with_cards_emails">(see
