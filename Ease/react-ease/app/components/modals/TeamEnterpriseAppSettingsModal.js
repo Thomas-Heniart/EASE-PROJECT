@@ -18,14 +18,15 @@ import * as api from "../../utils/api";
 @connect(store => ({
   teams: store.teams,
   team_apps: store.team_apps,
-  app: store.modals.teamEnterpriseAppSettings.app
+  app: store.modals.teamEnterpriseAppSettings.app,
+  remove: store.modals.teamEnterpriseAppSettings.remove
 }))
 class TeamEnterpriseAppSettingsModal extends Component {
   constructor(props){
     super(props);
     this.state = {
       appName: this.props.app.name,
-      view: 'Account',
+      view: this.props.remove ? 'Remove' : 'Account',
       credentials: [],
       team_app: this.props.team_apps[this.props.app.team_card_id],
       isEmpty: false,

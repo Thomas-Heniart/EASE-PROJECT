@@ -1,15 +1,17 @@
 import React, {Component} from "react";
 import {
   DepartureDatePassedIndicator, UpdatePasswordLabel, EmptyTeamAppIndicator, NewAppLabel,
-  DisabledAppIndicator, WaitingTeamApproveIndicator, LoadingAppIndicator
+  DisabledAppIndicator, WaitingTeamApproveIndicator, LoadingAppIndicator, SettingsMenu, getPosition
 } from "./utils";
 import {showTeamAnySingleAppSettingsModal, showLockedTeamAppModal} from "../../actions/modalActions";
-import {Popup, Input, Label, Icon, Segment} from 'semantic-ui-react';
+import {Icon} from 'semantic-ui-react';
 import {teamUserDepartureDatePassed, needPasswordUpdate, copyTextToClipboard, transformWebsiteInfoIntoListAndSetValues} from "../../utils/utils";
 import {validateApp, clickOnAppMetric, passwordCopied} from '../../actions/dashboardActions';
 import extension from "../../utils/extension_api";
 import {connect} from "react-redux";
 import api from "../../utils/api";
+import {moveTeamCard} from "../../actions/teamCardActions";
+import {withRouter} from "react-router-dom";
 
 @connect(store => ({
   teams: store.teams,
@@ -17,16 +19,30 @@ import api from "../../utils/api";
   active: store.modals.teamAnySingleAppSettings.active
 }))
 class TeamAnySingleApp extends Component {
-  constructor(props){
+  constructor(props) {
     super(props);
     this.state = {
       loading: false,
       isOpen: false,
       copiedPassword: null,
-      copiedOther: null
+      copiedOther: null,
+      menuActive: false,
+      hover: false,
+      position: 'left'
     };
     this.password = '';
   }
+  componentDidMount() {
+    document.addEventListener('contextmenu', this._handleContextMenu);
+  };
+  componentWillUnmount() {
+    document.removeEventListener('contextmenu', this._handleContextMenu);
+  }
+  _handleContextMenu = (event) => {
+    event.preventDefault();
+    if (this.state.hover)
+      this.setState({ menuActive: true });
+  };
   connect = () => {
     const {app} = this.props;
     const team_app = this.props.team_apps[app.team_card_id];
@@ -52,10 +68,33 @@ class TeamAnySingleApp extends Component {
       this.setState({isOpen: !this.state.isOpen});
     }
   };
+  activateMenu = (e) => {
+    e.preventDefault();
+    const {app, teams} = this.props;
+    const team_app = this.props.team_apps[app.team_card_id];
+    const team = teams[team_app.team_id];
+    const me = team.team_users[team.my_team_user_id];
+    if (!me.disabled && !team_app.empty && team_app.team_user_filler_id !== me.id && !teamUserDepartureDatePassed(me.departure_date)) {
+      this.setState({hover: true, position: getPosition(app.id)});
+      if (this.password === '')
+        api.dashboard.getAppPassword({
+          app_id: this.props.app.id
+        }).then(response => {
+          this.password = response.password;
+        });
+    }
+  };
+  deactivateMenu = () => {
+    this.setState({menuActive: false, hover: false});
+  };
   clickOnSettings = (e) => {
     e.stopPropagation();
+    const {app} = this.props;
+    const team_app = this.props.team_apps[app.team_card_id];
     this.setState({isOpen: false});
-    this.props.dispatch(showTeamAnySingleAppSettingsModal({active: true, app: this.props.app}));
+    // this.props.dispatch(showTeamAnySingleAppSettingsModal({active: true, app: this.props.app}));
+    this.props.dispatch(moveTeamCard({card_id: Number(team_app.id)}));
+    this.props.history.push(`/teams/${app.team_id}/${team_app.channel_id}?app_id=${team_app.id}`);
   };
   copyPassword = (item) => {
     copyTextToClipboard(this.password);
@@ -78,7 +117,27 @@ class TeamAnySingleApp extends Component {
       this.setState({copiedOther: null});
     }, 1000);
   };
-  render(){
+  remove = () => {
+    this.props.dispatch(showTeamAnySingleAppSettingsModal({active: true, app: this.props.app, remove: true}));
+  };
+  checkAndConnect = (e) => {
+    const {app, teams, dispatch} = this.props;
+    const team_app = this.props.team_apps[app.team_card_id];
+    const team = teams[team_app.team_id];
+    const me = team.team_users[team.my_team_user_id];
+
+    if (!me.disabled && teamUserDepartureDatePassed(me.departure_date))
+      return;
+    if (!me.disabled && team_app.empty && team_app.team_user_filler_id !== me.id && !teamUserDepartureDatePassed(me.departure_date))
+      return;
+    if (me.disabled)
+      dispatch(showLockedTeamAppModal({active: true, team_user_id: me.id}));
+    else if (!me.disabled && team_app.empty && team_app.team_user_filler_id === me.id && !teamUserDepartureDatePassed(me.departure_date))
+      this.clickOnSettings();
+    else
+      this.connect(e);
+  };
+  render() {
     const {app, teams, dispatch} = this.props;
     const team_app = this.props.team_apps[app.team_card_id];
     const team = teams[team_app.team_id];
@@ -86,103 +145,71 @@ class TeamAnySingleApp extends Component {
     const filler = team.team_users[team_app.team_user_filler_id];
     const password_update = !!filler && filler.id === me.id && !team_app.empty && !!team_app.password_reminder_interval && needPasswordUpdate(team_app.last_update_date, team_app.password_reminder_interval);
     const credentials = transformWebsiteInfoIntoListAndSetValues(team_app.website.information, team_app.account_information);
-/*    const inputs = credentials.map((item,idx) => {
+    const buttons = credentials.map((item,idx) => {
       if (this.state.copiedPassword !== item.priority && this.state.copiedOther !== item.priority) {
         if (item.name === 'password')
           return (
-            <Input
-              key={idx}
-              disabled
-              size='mini'
-              type='password'
-              name={item.name}
-              placeholder='Password'
-              value={'********'}
-              label={
-                <Label style={{backgroundColor: '#373b60', color: 'white', fontWeight: '300'}}
-                       onClick={e => this.copyPassword(item)}>
-                  Copy <Icon name='copy'/>
-                </Label>}/>
+              <button
+                  className="settings_button"
+                  onClick={e => this.copyPassword(item)}
+                  key={idx}>
+                <Icon name='copy'/> • • • • • • • •
+              </button>
           );
         return (
-          <Input
-            key={idx}
-            disabled
-            size='mini'
-            type={item.type}
-            name={item.name}
-            placeholder={item.placeholder}
-            value={item.value}
-            label={
-              <Label style={{backgroundColor: '#373b60', color: 'white', fontWeight: '300'}}
-                     onClick={e => this.copy(item)}>
-                Copy <Icon name='copy'/>
-              </Label>}/>
+            <button
+                key={idx}
+                className="settings_button"
+                onClick={e => this.copy(item)}>
+              <Icon name='copy'/> {item.value}
+            </button>
         )
       }
       return (
-        <Segment
-          key={idx}
-          size='mini'
-          content={'Copied!'}/>
+          <button
+              key={idx}
+              className="settings_button">
+            Copied!
+          </button>
       )
-    });*/
+    });
     return (
-/*      <Popup
-        size="tiny"
-        className='dashboard_popup_soft_and_any'
-        position="top center"
-        on='click'
-        open={this.props.active || teamUserDepartureDatePassed(me.departure_date) ? false : this.state.isOpen}
-        onClose={this.handleOpenClose}
-        onOpen={!teamUserDepartureDatePassed(me.departure_date) ? this.handleOpenClose : null}
-        hideOnScroll
-        trigger={*/
-          <div className='app'>
-            <div className="logo_area">
-              {this.state.loading &&
-              <LoadingAppIndicator/>}
-              {app.new &&
-              <NewAppLabel/>}
-              {password_update &&
-              <UpdatePasswordLabel/>}
-              {!me.disabled && teamUserDepartureDatePassed(me.departure_date) &&
-              <DepartureDatePassedIndicator team_name={team.name} departure_date={me.departure_date}/>}
-              {me.disabled &&
-              <WaitingTeamApproveIndicator onClick={e => {
-                dispatch(showLockedTeamAppModal({active: true, team_user_id: me.id}))
-              }}/>}
-              {!me.disabled && team_app.empty && team_app.team_user_filler_id === me.id && !teamUserDepartureDatePassed(me.departure_date) &&
-              <EmptyTeamAppIndicator onClick={this.clickOnSettings}/>}
-              {!me.disabled && team_app.empty && team_app.team_user_filler_id !== me.id && !teamUserDepartureDatePassed(me.departure_date) &&
-              <DisabledAppIndicator filler_name={!!filler ? filler.username : 'Someone'} team_card_id={team_app.id} magic_link={!team_app.magic_link || team_app.magic_link === ''}/>}
-              <div className="logo_handler">
-                <img className="logo" src={team_app.logo} onClick={this.connect}/>
-                <button className="settings_button" onClick={this.clickOnSettings}>
-                  Settings
-                </button>
-              </div>
+        <div className='app'>
+          <div className={(me.disabled || team_app.empty || team_app.team_user_filler_id === me.id || teamUserDepartureDatePassed(me.departure_date)) ? 'logo_area'
+              : this.state.menuActive ? 'logo_area active' : 'logo_area not_active'}
+               onMouseEnter={this.activateMenu} onMouseLeave={this.deactivateMenu}>
+            {this.state.loading &&
+            <LoadingAppIndicator/>}
+            {app.new &&
+            <NewAppLabel/>}
+            {password_update &&
+            <UpdatePasswordLabel/>}
+            {!me.disabled && teamUserDepartureDatePassed(me.departure_date) &&
+            <DepartureDatePassedIndicator team_name={team.name} departure_date={me.departure_date}/>}
+            {me.disabled &&
+            <WaitingTeamApproveIndicator onClick={e => {
+              dispatch(showLockedTeamAppModal({active: true, team_user_id: me.id}))
+            }}/>}
+            {!me.disabled && team_app.empty && team_app.team_user_filler_id === me.id && !teamUserDepartureDatePassed(me.departure_date) &&
+            <EmptyTeamAppIndicator onClick={this.clickOnSettings}/>}
+            {!me.disabled && team_app.empty && team_app.team_user_filler_id !== me.id && !teamUserDepartureDatePassed(me.departure_date) &&
+            <DisabledAppIndicator filler_name={!!filler ? filler.username : 'Someone'} team_card_id={team_app.id}
+                                  magic_link={!team_app.magic_link || team_app.magic_link === ''}/>}
+            <SettingsMenu app={app}
+                          teams={this.props.teams}
+                          buttons={buttons}
+                          remove={this.remove}
+                          position={this.state.position}
+                          clickOnSettings={this.clickOnSettings}/>
+            <div className="logo_handler">
+              <img className="logo" src={team_app.logo} onClick={this.connect}/>
             </div>
-            <span className="app_name overflow-ellipsis">{app.name}</span>
           </div>
-        /*}
-        content={
-          <div>
-            {inputs}
-            <Input
-              size='mini'
-              placeholder='URL'
-              disabled
-              value={team_app.website.landing_url}
-              label={
-                <Label style={{backgroundColor:'#373b60',color:'white',fontWeight:'300'}}
-                       onClick={e => window.open(team_app.website.landing_url)}>
-                  Go to <Icon name='external'/>
-                </Label>}/>
-          </div>
-        }/>*/
+          <span className="app_name overflow-ellipsis"
+                onClick={this.checkAndConnect}>{app.name}</span>
+        </div>
     )
   }
 }
 
-export default TeamAnySingleApp;
+export default withRouter(TeamAnySingleApp);
