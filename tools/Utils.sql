@@ -231,4 +231,13 @@ FROM (SELECT
       FROM METRIC_CONNECTION
       WHERE connected = 1
       ORDER BY user_id ASC, date DESC) AS t
-GROUP BY user_id
+GROUP BY user_id;
+
+SELECT
+  year,
+  day_of_year,
+  COUNT(*) AS clicks
+FROM ease_tracking.EASE_EVENT
+WHERE name LIKE 'PasswordUsed' OR name LIKE 'PasswordUser'
+GROUP BY year, day_of_year
+ORDER BY YEAR, day_of_year;

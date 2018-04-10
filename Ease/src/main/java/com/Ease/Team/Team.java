@@ -22,6 +22,7 @@ import javax.persistence.*;
 import java.io.IOException;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /**
@@ -658,6 +659,10 @@ public class Team {
             res.put(day_seven / teamUsers_size);
         }
         return res;
+    }
+
+    private List<Integer> getUserIds() {
+        return this.getTeamUsers().values().stream().filter(TeamUser::isRegistered).map(teamUser -> teamUser.getUser().getDb_id()).collect(Collectors.toList());
     }
 
     public int getExtraMembersCount() {
