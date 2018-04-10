@@ -102,9 +102,4 @@ public class ClassicApp extends WebsiteApp {
         website.put("website_name", this.getWebsite().getName());
         return res;
     }
-
-    @Override
-    public boolean isEmpty() {
-        return this.getAccount() == null || !this.getAccount().satisfyWebsite(this.getWebsite());
-    }
 }

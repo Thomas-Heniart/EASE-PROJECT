@@ -77,4 +77,9 @@ public abstract class WebsiteApp extends App {
         res.put(website);
         return res;
     }
+
+    @Override
+    public boolean isEmpty() {
+        return this.getAccount() == null || !this.getAccount().satisfyWebsite(this.getWebsite());
+    }
 }

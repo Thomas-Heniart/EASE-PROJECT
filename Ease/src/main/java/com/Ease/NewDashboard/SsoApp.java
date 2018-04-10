@@ -91,9 +91,4 @@ public class SsoApp extends WebsiteApp {
         res.put("account_information", this.getAccount().getJson());
         return res;
     }
-
-    @Override
-    public boolean isEmpty() {
-        return this.getAccount() == null || !this.getAccount().satisfyWebsite(this.getWebsite());
-    }
 }
