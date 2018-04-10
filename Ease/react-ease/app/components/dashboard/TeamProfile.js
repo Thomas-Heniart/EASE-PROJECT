@@ -37,13 +37,13 @@ class TeamProfile extends Component {
                       class="move_button"/>
               </div>
           )}
-          {teams_number > 1 &&
           <div class="app_group_type_indicator">
             <Icon name="users"/>
-            {team_name}
-          </div>}
+            {teams_number > 1 &&
+            team_name}
+          </div>
           <div class="app_group_name">
-            #{profile.name}
+            <strong>#</strong> {profile.name}
           </div>
           <div class="apps_container">
             {profile.app_ids.map(id => {
