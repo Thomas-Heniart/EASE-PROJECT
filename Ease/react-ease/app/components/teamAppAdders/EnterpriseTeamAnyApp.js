@@ -196,8 +196,8 @@ const StaticReceivers = ({receivers, me, expanded, password_reminder_interval, d
                                 name={item.name}
                                 label={<Label><Icon name={credentialIconType[item.name]}/></Label>}
                                 labelPosition="left"
-                                placeholder={item.placeholder}
-                                value={(item.name === 'password' && !receiver.receiver.empty) ? 'abcdabcd' : item.value}
+                                placeholder={item.name === 'password' ? '(Password encrypted)' : item.placeholder}
+                                value={item.value}
                                 type={item.type}/>;
                 })}
             {receiver.user.id === me.id && !receiver.receiver.empty &&
@@ -214,7 +214,7 @@ const TeamAppCredentialInput = ({item, onChange, receiver, myId}) => {
   const label = <Label><Icon name={credentialIconType[item.name] ? credentialIconType[item.name] : 'wait'}/></Label>;
   let placeholder = item.placeholder;
   if (item.name === 'password' && !receiver.empty)
-    placeholder = '••••••••';
+    placeholder = '(Password encrypted)';
   if (receiver.user.id !== myId && receiver.empty)
     placeholder = `${placeholder} (Optional)`;
 

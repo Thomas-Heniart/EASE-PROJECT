@@ -88,28 +88,28 @@
 
 @mixin placeholder-color($color, $size:"", $fontStyle:normal) {
   &::placeholder {
-    color: $color;
+    color: $color !important;
     font-style: $fontStyle;
     @if $size != "" {
       font-size: $size;
     }
   }
   &::-webkit-input-placeholder {
-    color: $color;
+    color: $color !important;
     font-style: $fontStyle;
     @if $size != "" {
       font-size: $size;
     }
   }
   &:-moz-placeholder {
-    color: $color;
+    color: $color !important;
     font-style: $fontStyle;
     @if $size != "" {
       font-size: $size;
     }
   }
   &:-ms-input-placeholder {
-    color: $color;
+    color: $color !important;
     font-style: $fontStyle;
     @if $size != "" {
       font-size: $size;
