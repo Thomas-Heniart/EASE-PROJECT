@@ -1,5 +1,6 @@
 package com.Ease.API.V1.Common;
 
+import com.Ease.Metrics.MagicAppsSurvey;
 import com.Ease.User.User;
 import com.Ease.Utils.Servlets.PostServletManager;
 
@@ -21,6 +22,7 @@ public class ServletPopupMagicLinkSeen extends HttpServlet {
             User user = sm.getUser();
             user.getUserStatus().setPopupChooseMagicAppsSeen(true);
             sm.saveOrUpdate(user.getUserStatus());
+            sm.saveOrUpdate(new MagicAppsSurvey(user.getDb_id(), res));
             sm.setSuccess(user.getJson());
         } catch (Exception e) {
             sm.setError(e);
