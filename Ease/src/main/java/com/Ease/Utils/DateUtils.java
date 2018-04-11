@@ -12,8 +12,8 @@ public class DateUtils {
         return ourInstance;
     }
 
-    public final static long millisecondsInDay = 86400000;
-    public final static Long millisecondsInMonth = new Long("2629746000");
+    public static final long MILLISECONDS_IN_DAY = 86400000;
+    public static final Long MILLISECONDS_IN_MONTH = new Long("2629746000");
 
     private DateUtils() {
 
@@ -21,21 +21,21 @@ public class DateUtils {
 
     public static boolean isOutdated(Date date, int numberOfDays) {
         long now = new Date().getTime();
-        return (now - date.getTime()) > (numberOfDays * millisecondsInDay);
+        return (now - date.getTime()) > (numberOfDays * MILLISECONDS_IN_DAY);
     }
 
     public static boolean isOutdated(Date date, int numberOfMonth, int numberOfDays) {
         long now = new Date().getTime();
-        return (now - date.getTime()) > (numberOfMonth * millisecondsInMonth + numberOfDays * millisecondsInDay);
+        return (now - date.getTime()) > (numberOfMonth * MILLISECONDS_IN_MONTH + numberOfDays * MILLISECONDS_IN_DAY);
     }
 
     public static boolean isInDays(Date date, int numberOfDays) {
         long time = date.getTime() - new Date().getTime();
-        return time <= (numberOfDays + 1) * millisecondsInDay && time >= ((numberOfDays - 1) * millisecondsInDay);
+        return time <= (numberOfDays + 1) * MILLISECONDS_IN_DAY && time >= ((numberOfDays - 1) * MILLISECONDS_IN_DAY);
     }
 
     public static boolean wasDaysAgo(Date date, int numberOfDays) {
         long time = new Date().getTime() - date.getTime();
-        return (numberOfDays - 1) * millisecondsInDay <= time && time <= (numberOfDays + 1) * millisecondsInDay;
+        return (numberOfDays - 1) * MILLISECONDS_IN_DAY <= time && time <= (numberOfDays + 1) * MILLISECONDS_IN_DAY;
     }
 }

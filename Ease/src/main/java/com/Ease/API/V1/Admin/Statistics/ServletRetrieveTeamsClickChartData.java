@@ -56,7 +56,7 @@ public class ServletRetrieveTeamsClickChartData extends HttpServlet {
                     "  day_of_year,\n" +
                     "  COUNT(*) AS clicks\n" +
                     "FROM EASE_EVENT\n" +
-                    "WHERE name LIKE 'PasswordUsed' OR name LIKE 'PasswordUser' AND creation_date BETWEEN :startDate AND :endDate AND user_id IN :userIds\n" +
+                    "WHERE (name LIKE 'PasswordUsed' OR name LIKE 'PasswordUser') AND creation_date BETWEEN :startDate AND :endDate AND user_id IN :userIds\n" +
                     "GROUP BY year, day_of_year\n" +
                     "ORDER BY YEAR, day_of_year;");
             hibernateQuery.setDate("startDate", calendar);
