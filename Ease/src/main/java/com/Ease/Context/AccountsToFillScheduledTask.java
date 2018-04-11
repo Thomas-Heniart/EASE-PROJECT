@@ -2,6 +2,7 @@ package com.Ease.Context;
 
 import com.Ease.Hibernate.HibernateQuery;
 import com.Ease.Mail.MailjetMessageWrapper;
+import com.Ease.Metrics.ConnectionMetric;
 import com.Ease.Team.Team;
 import com.Ease.Team.TeamCardReceiver.TeamCardReceiver;
 import com.Ease.Team.TeamUser;
@@ -29,19 +30,27 @@ public class AccountsToFillScheduledTask extends TimerTask {
         HibernateQuery hibernateQuery = new HibernateQuery();
         Long now = new Date().getTime();
         try {
-            hibernateQuery.queryString("SELECT tcr FROM TeamCardReceiver tcr WHERE tcr.sharing_date >= :date");
+            hibernateQuery.queryString("SELECT tcr FROM TeamCardReceiver tcr INNER JOIN tcr.teamUser.user AS u WHERE tcr.sharing_date >= :date AND u.userStatus.registered IS TRUE");
             hibernateQuery.setTimestamp("date", calendar.getTime());
             List<TeamCardReceiver> teamCardReceivers = hibernateQuery.list();
+            hibernateQuery.queryString("SELECT c FROM ConnectionMetric c ");
             Map<TeamUser, Set<TeamCardReceiver>> teamUserSetMap = new HashMap<>();
             for (TeamCardReceiver teamCardReceiver : teamCardReceivers) {
                 TeamUser teamUser = teamCardReceiver.getTeamUser();
-                if (!teamUser.isRegistered())
-                    continue;
                 Set<TeamCardReceiver> teamCardReceiverSet = teamUserSetMap.get(teamUser);
                 if (teamCardReceiverSet == null)
                     teamCardReceiverSet = new HashSet<>();
                 teamCardReceiverSet.add(teamCardReceiver);
                 teamUserSetMap.put(teamUser, teamCardReceiverSet);
+            }
+            Set<TeamUser> teamUserSet = teamUserSetMap.keySet();
+            for (TeamUser teamUser : teamUserSet) {
+                Team team = teamUser.getTeam();
+                if (!team.isActive())
+                    teamUserSetMap.remove(teamUser);
+                ConnectionMetric metric = ConnectionMetric.getMetricOrNull(teamUser.getUser().getDb_id(), calendar.get(Calendar.YEAR), calendar.get(Calendar.DAY_OF_YEAR), hibernateQuery);
+                if (metric != null && metric.isConnected())
+                    teamUserSetMap.remove(teamUser);
             }
             for (Map.Entry<TeamUser, Set<TeamCardReceiver>> entry : teamUserSetMap.entrySet()) {
                 TeamUser teamUser = entry.getKey();
