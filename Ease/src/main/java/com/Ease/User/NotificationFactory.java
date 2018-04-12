@@ -237,7 +237,7 @@ public class NotificationFactory {
 
     public void createPasswordNotUpToDateReminder(TeamUser teamUserSender, TeamUser teamUserReceiver, TeamCard teamCard, WebSocketManager userWebSocketManager, HibernateQuery hibernateQuery) {
         String url = "#/teams/" + teamCard.getTeam().getDb_id() + "/" + teamCard.getChannel().getDb_id() + "?app_id=" + teamCard.getDb_id();
-        Notification notification = this.createNotification(teamUserReceiver.getUser(), "The password of " + teamUserReceiver.getUsername() + " for " + teamCard.getName() + " is not up to date for the last 7 days", teamCard.getLogo(), url);
+        Notification notification = this.createNotification(teamUserReceiver.getUser(), teamUserSender.getUsername() + " reminds you to change your password for " + teamCard.getName(), teamCard.getLogo(), url);
         hibernateQuery.saveOrUpdateObject(notification);
         userWebSocketManager.sendObject(WebSocketMessageFactory.createNotificationMessage(notification));
     }
