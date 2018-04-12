@@ -266,7 +266,7 @@ public abstract class ServletManager {
         this.team = team;
         this.timestamp = this.getCurrentTime();
         for (TeamUser teamUser : this.getUser().getTeamUsers()) {
-            if (teamUser.getTeam().equals(team) && !team.isBlocked() && !teamUser.isDisabled() && teamUser.isVerified() && (teamUser.getDepartureDate() == null || this.timestamp.getTime() < teamUser.getDepartureDate().getTime()))
+            if (teamUser.getTeam().equals(team) && !team.isBlocked() && !teamUser.isDisabled() && teamUser.isVerified() && !teamUser.departureExpired())
                 return;
         }
         throw new HttpServletException(HttpStatus.Forbidden);
@@ -277,7 +277,7 @@ public abstract class ServletManager {
         this.team = team;
         this.timestamp = this.getCurrentTime();
         for (TeamUser teamUser : this.getUser().getTeamUsers()) {
-            if (teamUser.getTeam().equals(team) && !team.isBlocked() && teamUser.isTeamAdmin() && !teamUser.isDisabled() && teamUser.isVerified() && (teamUser.getDepartureDate() == null || this.timestamp.getTime() < teamUser.getDepartureDate().getTime()))
+            if (teamUser.getTeam().equals(team) && !team.isBlocked() && teamUser.isTeamAdmin() && !teamUser.isDisabled() && teamUser.isVerified() && !teamUser.departureExpired())
                 return;
         }
         throw new HttpServletException(HttpStatus.Forbidden);
@@ -288,7 +288,7 @@ public abstract class ServletManager {
         this.team = team;
         for (TeamUser teamUser : this.getUser().getTeamUsers()) {
             this.timestamp = this.getCurrentTime();
-            if (teamUser.getTeam().equals(team) && !team.isBlocked() && teamUser.isTeamOwner() && !teamUser.isDisabled() && teamUser.isVerified() && (teamUser.getDepartureDate() == null || this.timestamp.getTime() < teamUser.getDepartureDate().getTime()))
+            if (teamUser.getTeam().equals(team) && !team.isBlocked() && teamUser.isTeamOwner() && !teamUser.isDisabled() && teamUser.isVerified() && !teamUser.departureExpired())
                 return;
         }
         throw new HttpServletException(HttpStatus.Forbidden);

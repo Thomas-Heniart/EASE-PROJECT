@@ -45,14 +45,14 @@ public class ServletGetConnection extends HttpServlet {
                     if (websiteApp != null) {
                         if (websiteApp.getTeamCardReceiver() != null) {
                             Team team = websiteApp.getTeamCardReceiver().getTeamCard().getTeam();
-                            if (!sm.getTeamUser(team).isDisabled())
+                            if (!sm.getTeamUser(team).isDisabled() && !sm.getTeamUser(team).departureExpired())
                                 team_key = (String) sm.getTeamProperties(team.getDb_id()).get("teamKey");
                         }
                     }
                 }
             }
             app.decipher(symmetric_key, team_key);
-            if (app.getTeamCardReceiver() != null && app.getTeamCardReceiver().getTeamUser().isDisabled())
+            if (app.getTeamCardReceiver() != null && (app.getTeamCardReceiver().getTeamUser().isDisabled() || app.getTeamCardReceiver().getTeamUser().departureExpired()))
                 throw new HttpServletException(HttpStatus.Forbidden);
             String public_key = (String) sm.getContextAttr("publicKey");
             Calendar calendar = Calendar.getInstance();
