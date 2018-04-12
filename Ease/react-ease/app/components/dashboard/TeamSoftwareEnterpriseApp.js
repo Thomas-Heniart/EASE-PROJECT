@@ -23,7 +23,6 @@ class TeamSoftwareEnterpriseApp extends Component {
     super(props);
     this.state = {
       loading: false,
-      isOpen: false,
       copiedPassword: null,
       copiedOther: null,
       menuActive: false,
@@ -42,21 +41,6 @@ class TeamSoftwareEnterpriseApp extends Component {
     event.preventDefault();
     if (this.state.hover)
       this.setState({ menuActive: true });
-  };
-  handleOpenClose = () => {
-    if (!this.props.active && !this.props.team_apps[this.props.app.team_card_id].empty) {
-      if (this.state.isOpen === false) {
-        if (this.props.app.new)
-          this.props.dispatch(validateApp({app_id: this.props.app.id}));
-        this.props.dispatch(clickOnAppMetric({app: this.props.app}));
-        api.dashboard.getAppPassword({
-          app_id: this.props.app.id
-        }).then(response => {
-          this.password = response.password;
-        });
-      }
-      this.setState({isOpen: !this.state.isOpen});
-    }
   };
   activateMenu = (e) => {
     e.preventDefault();
@@ -82,8 +66,6 @@ class TeamSoftwareEnterpriseApp extends Component {
     e.stopPropagation();
     const {app} = this.props;
     const team_app = this.props.team_apps[app.team_card_id];
-    this.setState({isOpen: false});
-    // this.props.dispatch(showTeamSoftwareEnterpriseAppSettingsModal({active: true, app: this.props.app}));
     this.props.dispatch(moveTeamCard({card_id: Number(team_app.id)}));
     this.props.history.push(`/teams/${app.team_id}/${team_app.channel_id}?app_id=${team_app.id}`);
   };

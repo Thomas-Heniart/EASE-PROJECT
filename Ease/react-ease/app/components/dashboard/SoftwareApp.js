@@ -16,7 +16,6 @@ class SoftwareApp extends Component {
     super(props);
     this.state = {
       loading: false,
-      isOpen: false,
       copiedPassword: null,
       copiedOther: null,
       menuActive: false,
@@ -36,21 +35,6 @@ class SoftwareApp extends Component {
     if (this.state.hover)
       this.setState({ menuActive: true });
   };
-  handleOpenClose = () => {
-    if (!this.props.active) {
-      if (this.state.isOpen === false) {
-        if (this.props.app.new)
-          this.props.dispatch(validateApp({app_id: this.props.app.id}));
-        this.props.dispatch(clickOnAppMetric({app: this.props.app}));
-        api.dashboard.getAppPassword({
-          app_id: this.props.app.id
-        }).then(response => {
-          this.password = response.password;
-        });
-      }
-      this.setState({isOpen: !this.state.isOpen});
-    }
-  };
   activateMenu = (e) => {
     e.preventDefault();
     const {app} = this.props;
@@ -69,7 +53,6 @@ class SoftwareApp extends Component {
   };
   clickOnSettings = (e) => {
     e.stopPropagation();
-    this.setState({isOpen: false});
     this.props.dispatch(showSoftwareAppSettingsModal({active: true, app: this.props.app}));
   };
   copyPassword = (item) => {

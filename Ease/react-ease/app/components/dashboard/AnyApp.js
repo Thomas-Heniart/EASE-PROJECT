@@ -17,7 +17,6 @@ class AnyApp extends Component {
     super(props);
     this.state = {
       loading: false,
-      isOpen: false,
       copiedPassword: null,
       copiedOther: null,
       menuActive: false,
@@ -64,7 +63,6 @@ class AnyApp extends Component {
   };
   clickOnSettings = (e) => {
     e.stopPropagation();
-    this.setState({isOpen: false});
     this.props.dispatch(showAnyAppSettingsModal({active: true, app: this.props.app}));
   };
   copyPassword = (item) => {
