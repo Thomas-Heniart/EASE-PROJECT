@@ -70,8 +70,7 @@ function ChannelList(props){
   )
 }
 
-function UserList(props){
-  const {team, me} = props;
+function UserList({team, me, dispatch, match}){
   const user_list = Object.keys(team.team_users).map(user_id => {
     return team.team_users[user_id];
   }).sort((a, b) => {
@@ -81,22 +80,32 @@ function UserList(props){
       return b.invitation_sent - a.invitation_sent;
     return a.username.localeCompare(b.username);
   });
+  const maxSeats = 10 + team.extra_members;
+  const invitedUsers = Object.keys(team.team_users).reduce((stack, team_user_id) => {
+    if (team.team_users[team_user_id].invitation_sent)
+      return ++stack;
+    return stack;
+  }, 0);
+  const meAdmin = isAdmin(me.role);
+  const freeTeam = team.plan_id === 0;
+  const userLimitReached = maxSeats <= invitedUsers;
+
   return (
       <div className="section-holder display-flex flex_direction_column" id="team_users">
-        {isAdmin(me.role) &&
+        {meAdmin &&
         <Popup size="mini"
                position="right center"
                inverted
                trigger={
                  <button className="heading-button button-unstyle"
                          id="new_member_button"
-                         onClick={e => {props.dispatch(teamModalsActions.showAddTeamUserModal({active: true, team_id: team.id}))}}>
+                         onClick={e => {dispatch(teamModalsActions.showAddTeamUserModal({active: true, team_id: team.id}))}}>
                    <i className="ease-icon fa fa-plus-circle"/>
                  </button>
                }
                content={'Invite new user'}/>
         }
-        <NavLink to={`/teams/${props.match.params.teamId}/${props.match.params.itemId}/members`} className="section-header">
+        <NavLink to={`/teams/${match.params.teamId}/${match.params.itemId}/members`} className="section-header">
           <Popup size="mini"
                  position="right center"
                  inverted
@@ -113,34 +122,57 @@ function UserList(props){
         <div className="section-list">
           {
             user_list.map(function(user, idx){
-              if (user.state >= 1)
-                return (
-                    <NavLink to={`/teams/${team.id}/@${user.id}`} className="section-list-item channel" key={user.id}>
-                      <div className="primary_action channel_name">
-                        <i className="fa fa-user prefix"/>
-                        <span className="overflow-ellipsis">{user.username}</span>
-                      </div>
-                    </NavLink>
-                );
-              if (user.state === 0) {
-                const maxSeats = 10 + team.extra_members;
-                const invitedUsers = Object.keys(team.team_users).reduce((stack, team_user_id) => {
-                  if (team.team_users[team_user_id].invitation_sent)
-                    return ++stack;
-                  return stack;
-                }, 0);
-                return (
-                  <NavLink to={`/teams/${team.id}/@${user.id}`} className="section-list-item channel" key={user.id}>
-                    <div
-                      style={{color: (isAdmin(me.role) && team.plan_id === 0 && !user.invitation_sent && maxSeats <= invitedUsers) ? 'red' : null}}
-                      className="primary_action channel_name">
-                      <i className="fa fa-user-o prefix"/>
-                      <span className="overflow-ellipsis userNotAccepted">{user.username}</span>
-                    </div>
-                  </NavLink>
-                );
+              if (!meAdmin){
+                if (user.state >= 1)
+                  return (
+                      <NavLink to={`/teams/${team.id}/@${user.id}`} className="section-list-item channel" key={user.id}>
+                        <div className="primary_action channel_name">
+                          <i className="fa fa-user prefix"/>
+                          <span className="overflow-ellipsis">{user.username}</span>
+                        </div>
+                      </NavLink>
+                  );
+                else
+                  return (
+                      <NavLink to={`/teams/${team.id}/@${user.id}`} className="section-list-item channel" key={user.id}>
+                        <div className="primary_action channel_name userNotAccepted">
+                          <i className="fa fa-user-o prefix"/>
+                          <span className="overflow-ellipsis">{user.username}</span>
+                        </div>
+                      </NavLink>
+                  );
+              } else {
+                if (user.state >= 1)
+                  return (
+                      <NavLink to={`/teams/${team.id}/@${user.id}`} className="section-list-item channel" key={user.id}>
+                        <div className="primary_action channel_name">
+                          <i className="fa fa-user prefix"/>
+                          <span className="overflow-ellipsis">{user.username}</span>
+                        </div>
+                      </NavLink>
+                  );
+                else if (user.invitation_sent || !!user.arrival_date)
+                  return (
+                      <NavLink to={`/teams/${team.id}/@${user.id}`} className="section-list-item channel" key={user.id}>
+                        <div className="primary_action channel_name userNotAccepted">
+                          <i className="fa fa-clock-o prefix"/>
+                          <span className="overflow-ellipsis">{user.username}</span>
+                        </div>
+                      </NavLink>
+                  );
+                else
+                  return (
+                      <NavLink to={`/teams/${team.id}/@${user.id}`} className="section-list-item channel" key={user.id}>
+                        <div
+                            style={{color: (freeTeam && userLimitReached) ? '#eb555c' : null}}
+                            className="primary_action channel_name userNotAccepted">
+                          <i className="fa fa-paper-plane prefix"/>
+                          <span className="overflow-ellipsis">{user.username}</span>
+                        </div>
+                      </NavLink>
+                  )
               }
-          })}
+            })}
         </div>
       </div>
   )
