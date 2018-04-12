@@ -12,6 +12,7 @@ import {connect} from "react-redux";
 import {validateApp,clickOnAppMetric} from "../../actions/dashboardActions";
 import {moveTeamCard} from "../../actions/teamCardActions";
 import {withRouter} from "react-router-dom";
+import ReactCSSTransitionGroup from "react-addons-css-transition-group";
 
 @connect(store => ({
   teams: store.teams,
@@ -93,11 +94,19 @@ class TeamLinkApp extends Component {
             <DepartureDatePassedIndicator team_name={team.name} departure_date={me.departure_date}/>}
             {me.disabled && !teamUserDepartureDatePassed(me.departure_date) &&
             <WaitingTeamApproveIndicator onClick={e => {dispatch(showLockedTeamAppModal({active: true, team_user_id: me.id}))}}/>}
-            <SettingsMenu app={app}
-                          teams={this.props.teams}
-                          remove={this.remove}
-                          position={this.state.position}
-                          clickOnSettings={this.clickOnSettings}/>
+            <ReactCSSTransitionGroup
+              transitionName="settingsAnim"
+              transitionEnter={true}
+              transitionLeave={true}
+              transitionEnterTimeout={1300}
+              transitionLeaveTimeout={300}>
+              {this.state.hover &&
+                <SettingsMenu app={app}
+                              teams={this.props.teams}
+                              remove={this.remove}
+                              position={this.state.position}
+                              clickOnSettings={this.clickOnSettings}/>}
+            </ReactCSSTransitionGroup>
             <div class="logo_handler">
               <img class="logo" src={team_app.logo} onClick={this.process}/>
             </div>

@@ -11,6 +11,7 @@ import api from "../../utils/api";
 import {connect} from "react-redux";
 import {moveTeamCard} from "../../actions/teamCardActions";
 import {withRouter} from "react-router-dom";
+import ReactCSSTransitionGroup from "react-addons-css-transition-group";
 
 @connect(store => ({
   teams: store.teams,
@@ -165,12 +166,20 @@ class TeamSoftwareEnterpriseApp extends Component {
           }}/>}
           {!me.disabled && meReceiver.empty && !teamUserDepartureDatePassed(me.departure_date) &&
           <EmptyTeamAppIndicator onClick={this.clickOnSettings}/>}
+          <ReactCSSTransitionGroup
+            transitionName="settingsAnim"
+            transitionEnter={true}
+            transitionLeave={true}
+            transitionEnterTimeout={1300}
+            transitionLeaveTimeout={300}>
+            {this.state.hover &&
           <SettingsMenu app={app}
                         buttons={buttons}
                         remove={this.remove}
                         teams={this.props.teams}
                         position={this.state.position}
-                        clickOnSettings={this.clickOnSettings}/>
+                        clickOnSettings={this.clickOnSettings}/>}
+          </ReactCSSTransitionGroup>
           <div className="logo_handler">
             <img className="logo" src={team_app.logo}/>
           </div>

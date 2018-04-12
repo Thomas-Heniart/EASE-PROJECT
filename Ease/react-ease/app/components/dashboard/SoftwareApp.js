@@ -6,6 +6,7 @@ import {showSoftwareAppSettingsModal} from "../../actions/modalActions";
 import {validateApp, clickOnAppMetric, passwordCopied} from '../../actions/dashboardActions';
 import api from "../../utils/api";
 import {connect} from "react-redux";
+import ReactCSSTransitionGroup from "react-addons-css-transition-group";
 
 @connect(store => ({
   active: store.modals.softwareAppSettings.active
@@ -136,12 +137,20 @@ class SoftwareApp extends Component {
             <EmptyAppIndicator onClick={this.clickOnSettings}/>}
             {app.new &&
             <NewAppLabel/>}
+            <ReactCSSTransitionGroup
+              transitionName="settingsAnim"
+              transitionEnter={true}
+              transitionLeave={true}
+              transitionEnterTimeout={1300}
+              transitionLeaveTimeout={300}>
+              {this.state.hover &&
             <SettingsMenu
                 app={app}
                 buttons={buttons}
                 remove={this.remove}
                 position={this.state.position}
-                clickOnSettings={this.clickOnSettings}/>
+                clickOnSettings={this.clickOnSettings}/>}
+            </ReactCSSTransitionGroup>
             <div className="logo_handler">
               <img className="logo" src={app.logo}/>
             </div>

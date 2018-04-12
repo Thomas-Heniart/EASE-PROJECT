@@ -19,6 +19,7 @@ import {AppConnection, clickOnAppMetric, passwordCopied} from "../../actions/das
 import api from "../../utils/api";
 import {moveTeamCard} from "../../actions/teamCardActions";
 import {withRouter} from "react-router-dom";
+import ReactCSSTransitionGroup from "react-addons-css-transition-group";
 
 @connect(store => ({
   teams: store.teams,
@@ -189,12 +190,20 @@ class TeamEnterpriseApp extends Component {
             <WaitingTeamApproveIndicator onClick={e => {dispatch(showLockedTeamAppModal({active: true, team_user_id: me.id}))}}/>}
             {!me.disabled && meReceiver.empty && !teamUserDepartureDatePassed(me.departure_date) &&
             <EmptyTeamAppIndicator onClick={e => {dispatch(showTeamEnterpriseAppSettingsModal({active: true, app: app}))}}/>}
+            <ReactCSSTransitionGroup
+              transitionName="settingsAnim"
+              transitionEnter={true}
+              transitionLeave={true}
+              transitionEnterTimeout={1300}
+              transitionLeaveTimeout={300}>
+              {this.state.hover &&
             <SettingsMenu app={app}
                           teams={this.props.teams}
                           buttons={buttons}
                           remove={this.remove}
                           position={this.state.position}
-                          clickOnSettings={this.clickOnSettings}/>
+                          clickOnSettings={this.clickOnSettings}/>}
+            </ReactCSSTransitionGroup>
             <div class="logo_handler">
               <img class="logo" src={team_app.logo} onClick={password_update ? this.connectWithPasswordUpdate : this.connect}/>
             </div>

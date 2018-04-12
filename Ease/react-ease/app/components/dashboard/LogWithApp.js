@@ -4,6 +4,7 @@ import {EmptyAppIndicator, NewAppLabel, LoadingAppIndicator, SettingsMenu, getPo
 import {showLogWithAppSettingsModal} from "../../actions/modalActions";
 import {AppConnection} from "../../actions/dashboardActions";
 import * as api from "../../utils/api";
+import ReactCSSTransitionGroup from "react-addons-css-transition-group";
 
 @connect(store => ({
   apps: store.dashboard.apps
@@ -82,11 +83,19 @@ class LogWithApp extends Component {
             <NewAppLabel/>}
             {isEmpty &&
             <EmptyAppIndicator onClick={e => {dispatch(showLogWithAppSettingsModal({active: true, app: app}))}}/>}
+            <ReactCSSTransitionGroup
+              transitionName="settingsAnim"
+              transitionEnter={true}
+              transitionLeave={true}
+              transitionEnterTimeout={1300}
+              transitionLeaveTimeout={300}>
+              {this.state.hover &&
             <SettingsMenu
               app={appModified}
               remove={this.remove}
               position={this.state.position}
-              clickOnSettings={e => dispatch(showLogWithAppSettingsModal({active: true, app: app}))}/>
+              clickOnSettings={e => dispatch(showLogWithAppSettingsModal({active: true, app: app}))}/>}
+            </ReactCSSTransitionGroup>
             <div class="logo_handler">
               <img class="logo" src={app.logo} onClick={this.connect}/>
             </div>

@@ -18,6 +18,7 @@ import {AppConnection, clickOnAppMetric, passwordCopied} from "../../actions/das
 import api from "../../utils/api";
 import {moveTeamCard} from "../../actions/teamCardActions";
 import {withRouter} from "react-router-dom";
+import ReactCSSTransitionGroup from "react-addons-css-transition-group";
 
 @connect(store => ({
   teams: store.teams,
@@ -191,12 +192,20 @@ class TeamSingleApp extends Component {
             <EmptyTeamAppIndicator onClick={e => {dispatch(showTeamSingleAppSettingsModal({active: true, app: app}))}}/>}
             {!me.disabled && team_app.empty && team_app.team_user_filler_id !== me.id && !teamUserDepartureDatePassed(me.departure_date) &&
             <DisabledAppIndicator filler_name={!!filler ? filler.username : 'Someone'} team_card_id={team_app.id} magic_link={!team_app.magic_link || team_app.magic_link === ''}/>}
+            <ReactCSSTransitionGroup
+              transitionName="settingsAnim"
+              transitionEnter={true}
+              transitionLeave={true}
+              transitionEnterTimeout={1300}
+              transitionLeaveTimeout={300}>
+              {this.state.hover &&
             <SettingsMenu app={app}
                           buttons={buttons}
                           teams={this.props.teams}
                           remove={this.remove}
                           position={this.state.position}
-                          clickOnSettings={this.clickOnSettings}/>
+                          clickOnSettings={this.clickOnSettings}/>}
+            </ReactCSSTransitionGroup>
             <div class="logo_handler">
               <img class="logo" src={team_app.logo} onClick={this.connect}/>
             </div>

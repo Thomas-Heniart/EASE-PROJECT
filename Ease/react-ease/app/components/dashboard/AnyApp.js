@@ -7,6 +7,7 @@ import {showAnyAppSettingsModal} from "../../actions/modalActions";
 import {LoadingAppIndicator, EmptyAppIndicator, NewAppLabel, SettingsMenu, getPosition} from "./utils";
 import {clickOnAppMetric, passwordCopied, validateApp} from '../../actions/dashboardActions';
 import {copyTextToClipboard, transformWebsiteInfoIntoListAndSetValues} from "../../utils/utils";
+import ReactCSSTransitionGroup from "react-addons-css-transition-group";
 
 @connect(store => ({
   active: store.modals.anyAppSettings.active
@@ -131,12 +132,20 @@ class AnyApp extends Component {
           <EmptyAppIndicator onClick={this.clickOnSettings}/>}
           {app.new &&
           <NewAppLabel/>}
+          <ReactCSSTransitionGroup
+            transitionName="settingsAnim"
+            transitionEnter={true}
+            transitionLeave={true}
+            transitionEnterTimeout={1300}
+            transitionLeaveTimeout={300}>
+            {this.state.hover &&
             <SettingsMenu
               app={app}
               buttons={buttons}
               remove={this.remove}
               position={this.state.position}
-              clickOnSettings={this.clickOnSettings}/>
+              clickOnSettings={this.clickOnSettings}/>}
+          </ReactCSSTransitionGroup>
           <div className="logo_handler">
             <img className="logo" src={app.logo} onClick={this.connect}/>
           </div>

@@ -5,6 +5,7 @@ import {AppConnection, clickOnAppMetric, passwordCopied} from "../../actions/das
 import {copyTextToClipboard, transformWebsiteInfoIntoListAndSetValues} from "../../utils/utils";
 import {Icon} from 'semantic-ui-react';
 import * as api from "../../utils/api";
+import ReactCSSTransitionGroup from "react-addons-css-transition-group";
 
 class ClassicApp extends Component {
   constructor(props){
@@ -136,12 +137,20 @@ class ClassicApp extends Component {
             }}/>}
             {app.new &&
             <NewAppLabel/>}
+            <ReactCSSTransitionGroup
+              transitionName="settingsAnim"
+              transitionEnter={true}
+              transitionLeave={true}
+              transitionEnterTimeout={1300}
+              transitionLeaveTimeout={300}>
+              {this.state.hover &&
               <SettingsMenu
                 app={app}
                 buttons={buttons}
                 remove={this.remove}
                 position={this.state.position}
-                clickOnSettings={this.clickOnSettings}/>
+                clickOnSettings={this.clickOnSettings}/>}
+            </ReactCSSTransitionGroup>
             <div class="logo_handler">
               <img class="logo" src={app.logo} onClick={this.connect}/>
             </div>

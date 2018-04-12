@@ -2,6 +2,7 @@ import React, {Component} from "react";
 import {getPosition, NewAppLabel, SettingsMenu} from "./utils";
 import {showLinkAppSettingsModal} from "../../actions/modalActions";
 import {validateApp, clickOnAppMetric} from "../../actions/dashboardActions";
+import ReactCSSTransitionGroup from "react-addons-css-transition-group";
 
 class LinkApp extends Component {
   constructor(props){
@@ -47,11 +48,19 @@ class LinkApp extends Component {
                onMouseEnter={this.activateMenu} onMouseLeave={this.deactivateMenu}>
             {app.new &&
             <NewAppLabel/>}
-            <SettingsMenu
-              app={app}
-              remove={this.remove}
-              position={this.state.position}
-              clickOnSettings={e => dispatch(showLinkAppSettingsModal({active: true, app: this.props.app}))}/>
+            <ReactCSSTransitionGroup
+              transitionName="settingsAnim"
+              transitionEnter={true}
+              transitionLeave={true}
+              transitionEnterTimeout={1300}
+              transitionLeaveTimeout={300}>
+              {this.state.hover &&
+                <SettingsMenu
+                  app={app}
+                  remove={this.remove}
+                  position={this.state.position}
+                  clickOnSettings={e => dispatch(showLinkAppSettingsModal({active: true, app: this.props.app}))}/>}
+            </ReactCSSTransitionGroup>
             <div class="logo_handler">
               <img class="logo" src={app.logo} onClick={this.process}/>
             </div>

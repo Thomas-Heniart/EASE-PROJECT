@@ -14,6 +14,7 @@ import {
   teamUserDepartureDatePassed, needPasswordUpdate,
   copyTextToClipboard, transformWebsiteInfoIntoListAndSetValues
 } from "../../utils/utils";
+import ReactCSSTransitionGroup from "react-addons-css-transition-group";
 
 @connect(store => ({
   teams: store.teams,
@@ -170,12 +171,20 @@ class TeamSoftwareSingleApp extends Component {
           {!me.disabled && team_app.empty && team_app.team_user_filler_id !== me.id && !teamUserDepartureDatePassed(me.departure_date) &&
           <DisabledAppIndicator filler_name={!!filler ? filler.username : 'Someone'} team_card_id={team_app.id}
                                 magic_link={!team_app.magic_link || team_app.magic_link === ''}/>}
+          <ReactCSSTransitionGroup
+            transitionName="settingsAnim"
+            transitionEnter={true}
+            transitionLeave={true}
+            transitionEnterTimeout={1300}
+            transitionLeaveTimeout={300}>
+            {this.state.hover &&
           <SettingsMenu app={app}
                         buttons={buttons}
                         remove={this.remove}
                         teams={this.props.teams}
                         position={this.state.position}
-                        clickOnSettings={this.clickOnSettings}/>
+                        clickOnSettings={this.clickOnSettings}/>}
+          </ReactCSSTransitionGroup>
           <div className="logo_handler">
             <img className="logo" src={team_app.logo}/>
           </div>

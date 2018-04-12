@@ -6,6 +6,7 @@ import {showSsoAppSettingsModal} from "../../actions/modalActions";
 import {AppConnection, passwordCopied} from "../../actions/dashboardActions";
 import {copyTextToClipboard, transformWebsiteInfoIntoListAndSetValues} from "../../utils/utils";
 import {EmptyAppIndicator, NewAppLabel, LoadingAppIndicator, SettingsMenu, getPosition} from "./utils";
+import ReactCSSTransitionGroup from "react-addons-css-transition-group";
 
 @connect(store => ({
   sso_groups: store.dashboard.sso_groups
@@ -134,12 +135,20 @@ class SsoApp extends Component {
             <EmptyAppIndicator onClick={e => {dispatch(showSsoAppSettingsModal({active: true, app: app}))}}/>}
             {app.new &&
             <NewAppLabel/>}
+            <ReactCSSTransitionGroup
+              transitionName="settingsAnim"
+              transitionEnter={true}
+              transitionLeave={true}
+              transitionEnterTimeout={1300}
+              transitionLeaveTimeout={300}>
+              {this.state.hover &&
             <SettingsMenu
                 app={app}
                 buttons={buttons}
                 remove={this.remove}
                 position={this.state.position}
-                clickOnSettings={e => dispatch(showSsoAppSettingsModal({active: true, app: app}))}/>
+                clickOnSettings={e => dispatch(showSsoAppSettingsModal({active: true, app: app}))}/>}
+            </ReactCSSTransitionGroup>
             <div class="logo_handler">
               <img class="logo" src={app.logo} onClick={this.connect}/>
             </div>
