@@ -124,6 +124,15 @@ export default function reducer(state=initialState, action) {
         }
       })
     }
+    case 'MAGIC_LINK_RESPONSE': {
+      return update(state, {
+        user: {
+          status: {
+            popup_choose_magic_apps_seen: {$set: true}
+          }
+        }
+      })
+    }
   }
   return state;
 }
