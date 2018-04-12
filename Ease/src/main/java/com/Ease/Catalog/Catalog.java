@@ -240,10 +240,11 @@ public class Catalog {
                 if (subdomain.equals("www"))
                     subdomain = "";
             }
-            hibernateQuery.queryString("SELECT w FROM Website w LEFT JOIN w.websiteAlternativeUrlSet wau WHERE (w.login_url LIKE :domain OR wau IS NOT NULL AND wau.url LIKE :domain) AND w.websiteAttributes.integrated IS true ORDER BY w.db_id ASC");
+            hibernateQuery.queryString("SELECT w FROM Website w LEFT JOIN w.websiteAlternativeUrlSet wau WHERE (w.login_url LIKE :domain OR wau IS NOT NULL AND wau.url LIKE :domain) AND w.websiteAttributes.integrated IS true AND w.websiteAttributes.public_website IS true ORDER BY w.db_id ASC");
             hibernateQuery.setParameter("domain", "%" + domain + "%");
             hibernateQuery.cacheQuery();
             List<Website> websites = hibernateQuery.list();
+            websites = websites.stream().filter(website -> website.getWebsiteAttributes().isPublic_website()).collect(Collectors.toList());
             int last_value = 0;
             Website last_website = null;
             for (Website website : websites) {
