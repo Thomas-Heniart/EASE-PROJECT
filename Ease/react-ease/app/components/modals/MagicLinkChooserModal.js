@@ -39,7 +39,9 @@ class MagicLinkChooserModal extends Component {
     return (
         <SimpleModalTemplate
             id="ask_magic_link_modal"
-            headerContent="Important question">
+            headerContent={
+              <span>Important question <i class="em-svg em-warning"/><i class="em-svg em-blue_heart"/></span>
+            }>
           <Form
               class="container"
               onSubmit={this.process}
@@ -47,15 +49,15 @@ class MagicLinkChooserModal extends Component {
             <Form.Field>
               <strong>Here is the situation</strong>
               <span>
-                One main feature on Ease.space is the automatique connection (when click on an app from the dashboard, we log you into the website automatically). The thing is, there are regular bugs, it doesn’t work on all websites, and each time a websites changes, the automatic connection doesn’t work anymore and we have to fix it.
+                Our automatic connection (a click on an app from the dashboard logs you automatically on the website) has regular bugs. It doesn’t work on all websites and each time a website changes, it doesn’t work anymore.
               </span>
             </Form.Field>
             <Form.Field>
               <strong>Will you keep using Ease.space if:</strong>
               <span>
                 - we stop connecting you automatically<br/>
-                - we keep the dashboard as a homepage that helps you go to your websites<br/>
-                - when you are logged out on a website, you can find your account password already filled in.
+                - the apps on the dashboard open the websites<br/>
+                - if you are logged out of a website, you will find the password already fill in by our extension.
               </span>
             </Form.Field>
             <Form.Field class="radio_chose_field">
@@ -67,9 +69,6 @@ class MagicLinkChooserModal extends Component {
                      value={1}
                      onClick={this.handleInput}
                      checked={this.state.response === 1}/>
-            </Form.Field>
-            <Form.Field style={{color: '#949eb7'}}>
-              You won’t be able to change your mind.
             </Form.Field>
             <Message error content={this.state.errorMessage}/>
             <Button
