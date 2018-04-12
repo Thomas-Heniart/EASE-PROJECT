@@ -14,6 +14,8 @@ import com.Ease.websocketV1.WebSocketManager;
 import com.stripe.exception.StripeException;
 import com.stripe.model.Customer;
 import com.stripe.model.Subscription;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jwts;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -154,11 +156,7 @@ public abstract class ServletManager {
         Cookie cookies[] = this.request.getCookies();
         if (cookies != null) {
             for (Cookie cookie : cookies) {
-                if ((cookie.getName()).compareTo("sId") == 0) {
-                    cookie.setValue("");
-                    cookie.setMaxAge(0);
-                    this.response.addCookie(cookie);
-                } else if ((cookie.getName()).compareTo("sTk") == 0) {
+                if (cookie.getName().compareTo("sId") == 0 || cookie.getName().compareTo("sTk") == 0) {
                     cookie.setValue("");
                     cookie.setMaxAge(0);
                     this.response.addCookie(cookie);
@@ -177,56 +175,77 @@ public abstract class ServletManager {
                 if (jwt == null)
                     throw new HttpServletException(HttpStatus.AccessDenied, "You must be logged in");
                 Key secret = (Key) this.getContextAttr("secret");
-                this.user = UserFactory.getInstance().loadUserFromJwt(jwt, secret, this.getHibernateQuery());
+                Claims claims;
+                try {
+                    claims = Jwts.parser().setSigningKey(secret).parseClaimsJws(jwt).getBody();
+                } catch (Exception e) {
+                    throw new HttpServletException(HttpStatus.AccessDenied, "You must be logged in");
+                }
+                this.user = UserFactory.getInstance().loadUserFromJwt(claims, this.getHibernateQuery());
                 if (this.user == null)
                     throw new HttpServletException(HttpStatus.AccessDenied, "You must be logged in");
-                keyUser = this.user.getJsonWebToken().getKeyUser(jwt, secret);
+                keyUser = this.user.getJsonWebToken().getKeyUser(claims);
                 Map<String, Object> userProperties = this.getUserProperties(this.user.getDb_id());
                 userProperties.put("keyUser", keyUser);
+                this.getUserProperties(user.getDb_id()).put("privateKey", user.getUserKeys().getDecipheredPrivateKey(keyUser));
             }
-            String private_key = user.getUserKeys().getDecipheredPrivateKey(keyUser);
-            if (private_key == null) {
-                UserKeys userKeys = user.getUserKeys();
-                private_key = userKeys.generatePublicAndPrivateKey(keyUser);
-                this.saveOrUpdate(userKeys);
+            String privateKey = (String) this.getUserProperties(user.getDb_id()).get("privateKey");
+            if (privateKey == null) {
+                privateKey = user.getUserKeys().getDecipheredPrivateKey(keyUser);
+                if (privateKey == null) {
+                    UserKeys userKeys = user.getUserKeys();
+                    privateKey = userKeys.generatePublicAndPrivateKey(keyUser);
+                    this.saveOrUpdate(userKeys);
+                }
+                this.getUserProperties(user.getDb_id()).put("privateKey", privateKey);
             }
-            this.getUserProperties(user.getDb_id()).put("privateKey", private_key);
-            this.getSession().setAttribute("user_id", user.getDb_id());
             this.getSession().setAttribute("is_admin", user.isAdmin());
         } else {
             Key secret = (Key) this.getContextAttr("secret");
-            this.user = UserFactory.getInstance().loadUserFromJwt(jwt, secret, this.getHibernateQuery());
+            Claims claims;
+            try {
+                claims = Jwts.parser().setSigningKey(secret).parseClaimsJws(jwt).getBody();
+            } catch (Exception e) {
+                throw new HttpServletException(HttpStatus.AccessDenied, "You must be logged in");
+            }
+            this.user = UserFactory.getInstance().loadUserFromJwt(claims, this.getHibernateQuery());
             if (this.user == null)
                 throw new HttpServletException(HttpStatus.AccessDenied, "You must be logged in");
-            String keyUser = this.user.getJsonWebToken().getKeyUser(jwt, secret);
             Map<String, Object> userProperties = this.getUserProperties(this.user.getDb_id());
-            userProperties.put("keyUser", keyUser);
-            String private_key = user.getUserKeys().getDecipheredPrivateKey(keyUser);
-            if (private_key == null) {
-                UserKeys userKeys = user.getUserKeys();
-                private_key = userKeys.generatePublicAndPrivateKey(keyUser);
-                this.saveOrUpdate(userKeys);
+            String keyUser = (String) userProperties.get("keyUser");
+            if (keyUser == null) {
+                keyUser = this.user.getJsonWebToken().getKeyUser(claims);
+                userProperties.put("keyUser", keyUser);
+                String privateKey = user.getUserKeys().getDecipheredPrivateKey(keyUser);
+                if (privateKey == null) {
+                    UserKeys userKeys = user.getUserKeys();
+                    privateKey = userKeys.generatePublicAndPrivateKey(keyUser);
+                    this.saveOrUpdate(userKeys);
+                }
+                userProperties.put("privateKey", privateKey);
             }
-            userProperties.put("privateKey", private_key);
+            String privateKey = (String) userProperties.get("privateKey");
+            if (privateKey == null) {
+                privateKey = user.getUserKeys().getDecipheredPrivateKey(keyUser);
+                if (privateKey == null) {
+                    UserKeys userKeys = user.getUserKeys();
+                    privateKey = userKeys.generatePublicAndPrivateKey(keyUser);
+                    this.saveOrUpdate(userKeys);
+                }
+                userProperties.put("privateKey", privateKey);
+            }
             this.getSession().setAttribute("user_id", user.getDb_id());
             this.getSession().setAttribute("is_admin", user.isAdmin());
             user.trackConnection(this.getHibernateQuery());
         }
         String keyUser = (String) this.getUserProperties(this.user.getDb_id()).get("keyUser");
         for (TeamUser teamUser : user.getTeamUsers()) {
-            Team team = teamUser.getTeam();
-            if (!team.isActive())
+            Team teamUserTeam = teamUser.getTeam();
+            if (!teamUserTeam.isActive() || teamUser.isDisabled())
                 continue;
-            this.initializeTeamWithContext(teamUser.getTeam());
-            /* if (teamUser.isVerified() && teamUser.isDisabled() && teamUser.getTeamKey() != null) {
-                teamUser.setTeamKey(AES.encrypt(RSA.Decrypt(teamUser.getTeamKey(), user.getUserKeys().getDecipheredPrivateKey(keyUser)), keyUser));
-                teamUser.setDisabled(false);
-                this.saveOrUpdate(teamUser);
-            } */
-            if (teamUser.isDisabled())
-                continue;
-            Map<String, Object> teamProperties = this.getTeamProperties(team.getDb_id());
-            String teamKey = this.getTeamKey(team);
+            this.initializeTeamWithContext(teamUserTeam);
+            Map<String, Object> teamProperties = this.getTeamProperties(teamUserTeam.getDb_id());
+            String teamKey = this.getTeamKey(teamUserTeam);
             if (teamKey == null && teamUser.isVerified() && !teamUser.isDisabled())
                 teamProperties.put("teamKey", teamUser.getDecipheredTeamKey(keyUser));
         }

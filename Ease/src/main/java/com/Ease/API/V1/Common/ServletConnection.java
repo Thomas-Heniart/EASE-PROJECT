@@ -72,11 +72,11 @@ public class ServletConnection extends HttpServlet {
             sm.getUserProperties(user.getDb_id()).put("privateKey", user.getUserKeys().getDecipheredPrivateKey(keyUser));
             Key secret = (Key) sm.getContextAttr("secret");
             if (user.getJsonWebToken() == null) {
-                user.setJsonWebToken(JsonWebTokenFactory.getInstance().createJsonWebToken(user.getDb_id(), user.getOptions().getConnection_lifetime(), keyUser, secret));
+                user.setJsonWebToken(JsonWebTokenFactory.getInstance().createJsonWebToken(user, keyUser, secret));
                 sm.saveOrUpdate(user.getJsonWebToken());
             } else {
                 if (user.getJsonWebToken().getExpiration_date() < new Date().getTime()) {
-                    user.getJsonWebToken().renew(keyUser, user.getDb_id(), secret, user.getOptions().getConnection_lifetime());
+                    user.getJsonWebToken().renew(keyUser, user, secret, user.getOptions().getConnection_lifetime());
                     sm.saveOrUpdate(user.getJsonWebToken());
                 }
             }

@@ -5,12 +5,8 @@ import com.Ease.Utils.Crypto.AES;
 import com.Ease.Utils.Crypto.Hashing;
 import com.Ease.Utils.Crypto.RSA;
 import com.Ease.Utils.HttpServletException;
-import com.Ease.Utils.HttpStatus;
 import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.MalformedJwtException;
 
-import java.security.Key;
 import java.util.Map;
 
 public class UserFactory {
@@ -47,26 +43,20 @@ public class UserFactory {
         String saltPerso = AES.generateSalt();
         String keyUser = AES.keyGenerator();
         UserKeys userKeys = new UserKeys(Hashing.hash(access_code), saltPerso, AES.encryptUserKey(keyUser, access_code, saltPerso), publicAndPrivateKey.getKey(), AES.encrypt(publicAndPrivateKey.getValue(), keyUser));
-        User user = new User(username, email, userKeys, new Options(), new UserStatus());
-        return user;
+        return new User(username, email, userKeys, new Options(), new UserStatus());
     }
 
-    public User loadUserFromJwt(String jwt, Key secretKey, HibernateQuery hibernateQuery) throws HttpServletException {
-        Claims claims;
-        try {
-            claims = Jwts.parser().setSigningKey(secretKey).parseClaimsJws(jwt).getBody();
-        } catch (MalformedJwtException e) {
-            return null;
-        }
-        String connection_token = (String) claims.get("tok");
-        Long expiration_date = (Long) claims.get("exp");
-        Integer user_id = (Integer) claims.get("id");
-        User user = this.loadUser(user_id, hibernateQuery);
+    public User loadUserFromJwt(Claims claims, HibernateQuery hibernateQuery) throws HttpServletException {
+        String connectionToken = (String) claims.get("tok");
+        Long expirationDate = (Long) claims.get("exp");
+        Integer userId = (Integer) claims.get("id");
+        User user = this.loadUser(userId, hibernateQuery);
         if (user == null)
             return null;
-        JsonWebToken jsonWebToken = user.getJsonWebToken();
-        if (jsonWebToken == null || expiration_date > jsonWebToken.getExpiration_date() || !jsonWebToken.isGoodConnectionToken(connection_token))
-            throw new HttpServletException(HttpStatus.AccessDenied, "Invalid JWT");
+        /* This block of code seems to be useless */
+        /* JsonWebToken jsonWebToken = user.getJsonWebToken();
+        if (jsonWebToken == null || expirationDate > jsonWebToken.getExpiration_date() || !jsonWebToken.isGoodConnectionToken(connectionToken))
+            throw new HttpServletException(HttpStatus.AccessDenied, "Invalid JWT"); */
         return user;
     }
 
