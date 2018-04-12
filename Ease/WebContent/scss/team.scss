@@ -2255,6 +2255,18 @@ button.action_text_button {
   }
 }
 
+#ask_magic_link_modal {
+  .form {
+    .field {
+      strong {
+        display: block;
+      }
+      font-size: 16px;
+      line-height: 1.75;
+    }
+  }
+}
+
 .team_app_actions_holder {
   @include display-flex();
   z-index: 1;

@@ -59,6 +59,7 @@ import NewAccountUpdateLocationModal from "../catalog/Updates/NewAccountUpdateLo
 import ManageMagicLinkModal from "../teamModals/ManageMagicLinkModal";
 import TagUserInAllAppsModal from "../teamModals/TagUserInAllAppsModal";
 import ConnectionDurationChooserModal from "../modals/ConnectionDurationChooserModal";
+import MagicLinkChooserModal from "../modals/MagicLinkChooserModal";
 import MoveAppModal from "../teamModals/MoveAppModal";
 
 @connect(store => ({
@@ -228,6 +229,8 @@ class ModalsContainer extends Component{
           <MoveAppModal/>}
           {this.props.modals.connectionDurationChooser.active &&
           <ConnectionDurationChooserModal/>}
+          {this.props.modals.magicLinkChooser.active &&
+          <MagicLinkChooserModal/>}
         </div>
     )
   }
