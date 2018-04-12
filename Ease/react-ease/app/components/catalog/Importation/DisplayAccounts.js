@@ -1,21 +1,51 @@
-import React from 'react';
-import Joyride from "react-joyride";
+import React, {Component} from 'react';
+import {connect} from 'react-redux';
 import {logoLetter} from "../../../utils/utils";
-import {setTipSeen} from "../../../actions/commonActions";
 import {testCredentials} from "../../../actions/catalogActions";
-import {Segment, Button, Icon, Dropdown, Message, Input, Grid, Loader, Popup} from 'semantic-ui-react';
+import {Icon, Dropdown, Grid, Popup, Table, Checkbox} from 'semantic-ui-react';
+import {teamEditEnterpriseCardReceiver, teamEditSingleCardCredentials} from "../../../actions/appsActions";
+import {appAdded, editAppCredentials, updateAccepted} from "../../../actions/dashboardActions";
 
-class DisplayAccounts extends React.Component {
+@connect(store => ({
+  teams: store.teams,
+  apps: store.dashboard.apps,
+  team_apps: store.team_apps,
+  profiles: store.dashboard.profiles
+}))
+class DisplayAccounts extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      accountsNumber: 0,
+      view: 2,
+      checkImport: {},
+      checkPro: {},
+      emptyApps: {},
       seePassword: {},
+      accountsNumber: 0,
       dropdownOpened: false
     }
   }
   componentWillMount(){
-    this.setState(this.props.getLogo());
+    const emptyApps = {};
+    const checkImport = {};
+    const checkPro = {};
+    Object.keys(this.props.importedAccounts).map(account_id => {
+      const account = this.props.importedAccounts[account_id];
+      const emptyApp = this.props.apps[Object.keys(this.props.apps).find(app_id => {
+        const app = this.props.apps[app_id];
+        return app.website && app.empty && (app.website.id === account.website_id || app.website.login_url === account.url)
+      })];
+      checkImport[account_id] = true;
+      checkPro[account_id] = true;
+      console.log('[EMPTY_APPS]: ', emptyApp);
+      if (emptyApp) {
+        emptyApps[account_id] = account;
+        emptyApps[account_id].update = true;
+        emptyApps[account_id].app = emptyApp;
+        emptyApps[account_id].team_card = emptyApp.team_id ? this.props.team_apps[emptyApp.team_card_id] : null;
+      }
+    });
+    this.setState({emptyApps: emptyApps, checkImport: checkImport, checkPro: checkPro}, this.props.getLogo());
   }
   componentDidMount(){
     const seePassword = {};
@@ -24,21 +54,25 @@ class DisplayAccounts extends React.Component {
     });
     this.setState({accountsNumber: Object.keys(this.props.importedAccounts).length, seePassword: seePassword});
   }
-  openDropdown = () => {
-    if (this.props.loadingSending)
-      return;
-    if(!this.props.user.status.tip_importation_seen) {
-      this.props.dispatch(setTipSeen({
-        name: 'tip_importation_seen'
-      }));
-    }
-    this.setState({dropdownOpened: !this.state.dropdownOpened});
+  checkAll = (e, {name, checked}) => {
+    const check = {};
+    Object.keys(this.state[name]).map(account_id => {
+      check[account_id] = checked;
+    });
+    this.setState({[name]: check});
   };
-  closeOnBlur = () => {
-    this.setState({dropdownOpened: false});
+  check = (id, name, checked) => {
+    const check = {...this.state[name]};
+    check[id] = checked;
+    // this.state[name][id] = checked;
+    this.setState({[name]: check});
   };
-  seePassword = (id) => {
-    const seePassword = this.state.seePassword;
+  changeUpdate = (id) => {
+    this.state.emptyApps[id].update = !this.state.emptyApps[id].update;
+  };
+  seePasswordOptions = (e, id) => {
+    e.stopPropagation();
+    const seePassword = {...this.state.seePassword};
     if (seePassword[id] === 'password')
       seePassword[id] = 'text';
     else
@@ -51,204 +85,228 @@ class DisplayAccounts extends React.Component {
       website_id: item.website_id
     }));
   };
+
+
+  updateApp = () => {
+    this.setState({loading: true});
+    Object.keys(this.state.emptyApps).map(account_id => {
+      const account = this.state.emptyApps[account_id];
+      if (account.update) {
+        let acc_info = {};
+        acc_info.login = account.login;
+        acc_info.password = account.password;
+        if (account.team_card !== null) {
+          if (account.app.type === 'teamEnterpriseApp') {
+            this.props.dispatch(teamEditEnterpriseCardReceiver({
+              team_id: account.app.team_id,
+              team_card_id: account.app.team_card_id,
+              team_card_receiver_id: this.props.team_apps[account.app.team_card_id].receivers.find(receiver => (
+                this.props.teams[account.app.team_id].my_team_user_id === receiver.team_user_id
+              )).id,
+              account_information: acc_info
+            })).then(response => {
+              this.finish();
+            });
+          }
+          else {
+            this.props.dispatch(teamEditSingleCardCredentials({
+              team_card: account.team_card,
+              account_information: acc_info
+            })).then(response => {
+              this.finish();
+            });
+          }
+        }
+        else {
+          this.props.dispatch(editAppCredentials({
+            app: account.app,
+            account_information: acc_info
+          })).then(() => {
+            this.finish();
+          });
+        }
+        this.props.dispatch(appAdded({
+          app: account.app
+        }));
+      }
+    });
+  };
+
+
   render() {
     const {
       error,
-      fields,
-      roomName,
       toPending,
-      roomAdded,
-      createRoom,
       selectRoom,
       loadingLogo,
       selectedRoom,
       cancelPending,
-      onChangeField,
-      deleteAccount,
       selectProfile,
       loadingSending,
       importAccounts,
       accountsPending,
       selectedProfile,
       importedAccounts,
-      onChangeRoomName
     } = this.props;
-    const order = [
-      {text: 'Name', value: 'name'},
-      {text: 'URL', value: 'url'},
-      {text: 'User ID', value: 'login'},
-      {text: 'Password', value: 'password'}];
-    const profiles =
-      <Dropdown.Item as="a"
-                     class="display_flex"
-                     active={selectedProfile > -1}
-                     onClick={selectProfile}>
-        <strong className="overflow-ellipsis"><Icon name='user'/>Personal Apps</strong>
-        &nbsp;&nbsp;
-      </Dropdown.Item>;
-        const teamsList = Object.keys(this.props.teamsInState).map(team_id => {
-          const team = this.props.teamsInState[team_id];
-          return <React.Fragment key={team.id}>
-            <Dropdown.Header><Icon name='users'/>{team.name}</Dropdown.Header>
-            {Object.keys(team.rooms).map(room_id => {
-              const room = team.rooms[room_id];
-              if (room.team_user_ids && room.team_user_ids.filter(id => (id === team.my_team_user_id)).length > 0) {
-                return <Dropdown.Item
-                  as="a"
-                  class="display_flex"
-                  active={selectedRoom === room.id}
-                  onClick={e => selectRoom(team.id, room.id, room.name)}
-                  key={room.id}>
-                  <strong className='overflow-ellipsis'># {room.name}</strong>
-                  &nbsp;&nbsp;
-                </Dropdown.Item>
-              }
-            })}
-            {(roomAdded[team.id] === false && team.team_users[team.my_team_user_id].role > 1) &&
-            <Dropdown.Item>
-              <form style={{marginBottom: 0}} onSubmit={e => createRoom(team.id)}>
-                <Input
-                  style={{fontSize: '14px'}}
-                  name="roomName"
-                  required
-                  transparent
-                  value={roomName[team.id]}
-                  onChange={e => onChangeRoomName(e, team.id)}
-                  class="create_profile_input"
-                  icon={<Icon name="plus square" link onClick={e => createRoom(team.id)}/>}
-                  placeholder='New Room'/>
-              </form>
-            </Dropdown.Item>}
-          </React.Fragment>
-        });
-    const accounts = Object.keys(importedAccounts).map(item_id => {
-      const item = importedAccounts[item_id];
-      return <div key={item.id} className='account'>
-        <Loader active={loadingLogo[item.id]} inline='centered' size='tiny'/>
-        {!loadingLogo[item.id] &&
-        <React.Fragment>
-          <Icon name='remove circle' onClick={e => deleteAccount(item.id)}/>
-          {(item.logo && item.logo.length > 0) && <img src={item.logo}/>}
-          {(!item.logo || item.logo.length < 1) &&
+    const accountSettingOptions = [
+      {text: 'Shared account with my team', value: 0},
+      {text: 'Professional nominative account', value: 1}
+    ];
+    const sendInOptions = [];
+    let emptyApps = null;
+    let accounts = null;
+
+
+    if (this.state.view === 1)
+      emptyApps = Object.keys(this.state.emptyApps).map(account_id => {
+      const account = this.state.emptyApps[account_id];
+      const app = account.app;
+      const team_card = account.team_card;
+      const password = <span>{account.login} | {this.state.seePassword[account_id] === 'text' ? account.password : '• • • • • • • •'} <Icon onClick={e => this.seePasswordOptions(e, account_id)} name={this.state.seePassword[account_id] === 'text' ? 'eye' : 'hide'}/></span>;
+      const options = [
+        {text: password, value: 1},
+        {text: 'It’s another account - I’ll setup later', value: 0}
+      ];
+      return <Table.Row key={account_id}>
+        <Table.Cell className='app_indication'>
+          {(app.website.logo && app.website.logo.length > 0) && <img src={app.website.logo}/>}
+          {(!app.website.logo || app.website.logo.length < 1) &&
           <div className='logo_letter'>
-            <p style={{margin: 'auto'}}>{logoLetter(item.name)}</p>
+            <p>{logoLetter(team_card ? team_card.name : app.name)}</p>
           </div>}
-          {Object.keys(fields).map(field => (
-            <div key={field}>
-              <Input idapp={item.id}
-                     key={fields[field]}
-                     size='mini'
-                     name={fields[field]}
-                     error={this.props.fieldProblem.id === item.id && this.props.fieldProblem.name === fields[field]}
-                     value={item[fields[field]]}
-                     onChange={this.props.handleAppInfo}
-                     disabled={fields[field] === 'url' && item.website_id !== -1}
-                     icon={fields[field] === 'password' &&
-                     <Icon name='eye' link onClick={e => this.seePassword(item.id)}/>}
-                     type={fields[field] === 'password' ? this.state.seePassword[item.id] : 'text'}/>
-              {(fields[field] === 'password') &&
-              <Popup
-                inverted
-                trigger={
-                  <p
-                    className={item.website_id !== -1 ? 'underline_hover test_connection' : 'underline_hover test_connection disabled'}
-                    onClick={item.website_id !== -1 ? e => this.testConnection(item) : null}>
-                    <Icon name='magic'/>Test this password
-                  </p>}
-                content={item.website_id !== -1 ? 'We will open a new tab to test if the password works or not.'
-                  : 'Testing this password is not available for this website'}/>}
+          <div className='name'>
+            <span>{team_card ? team_card.name : app.name}</span>
+            {team_card &&
+            <span>#{this.props.teams[app.team_id].rooms[team_card.channel_id].name}</span>}
+            {!team_card &&
+            <span>#{this.props.profiles[app.profile_id].name}</span>}
+          </div>
+        </Table.Cell>
+        <Table.Cell>
+          {(team_card && team_card.type === "teamEnterpriseCard") &&
+          <span><strong><u>My nominative</u></strong> account: </span>}
+          {(team_card && team_card.type === "teamSingleCard") &&
+          <span><strong><u>Shared</u></strong> account: </span>}
+          {!team_card &&
+          <span><strong><u>Personal</u></strong> account: </span>}
+        </Table.Cell>
+        <Table.Cell>
+          <Dropdown options={options} selection defaultValue={1} onChange={e => this.changeUpdate(account_id)}/>
+        </Table.Cell>
+      </Table.Row>
+    });
+
+    if (this.state.view === 2) {
+      Object.keys(this.props.teams).map(team_id => {
+        const team = this.props.teams[team_id];
+        {Object.keys(team.rooms).map(room_id => {
+          const room = team.rooms[room_id];
+          sendInOptions.push({text: `#${room.name} (${team.name})`, value: room.id})})
+        }
+      });
+      accounts = Object.keys(importedAccounts).map(account_id => {
+        const account = importedAccounts[account_id];
+        return <Table.Row key={account_id}>
+          <Table.Cell>
+            <Checkbox toggle name='checkImport' checked={this.state.checkImport[account_id]}
+                      onChange={(e, {name, checked}) => this.check(account_id, name, checked)}/>
+          </Table.Cell>
+          <Table.Cell className='app_indication'>
+            {(account.logo && account.logo.length > 0) && <img src={account.logo}/>}
+            {(!account.logo || account.logo.length < 1) &&
+            <div className='logo_letter'>
+              <p>{logoLetter(account.name)}</p>
+            </div>}
+            <div className='name'>
+              <span>{account.name}</span>
+              <span>{account.login}</span>
+              <span>{this.state.seePassword[account_id] === 'text' ? account.password : '• • • • • • • •'} <Icon
+                onClick={e => this.seePasswordOptions(e, account_id)}
+                name={this.state.seePassword[account_id] === 'text' ? 'eye' : 'hide'}/></span>
             </div>
-          ))}
-          <Icon name='arrow circle right' size='large' onClick={e => toPending(item.id)}/>
-        </React.Fragment>}
-      </div>
-    });
-    const listPending = Object.keys(accountsPending).map(item_id => {
-      const item = accountsPending[item_id];
-      return <div key={item.id} className='div_account'>
-        <Icon name='arrow circle left' onClick={e => cancelPending(item.id)}/>
-        {(item.logo && item.logo.length > 0) && <img src={item.logo}/>}
-        {(!item.logo || item.logo.length < 1) &&
-        <div className='logo_letter pending'>
-          <p>{logoLetter(item.name)}</p>
-        </div>}
-        <p>{item.name} - {item.login && item.password ? item.login : 'Add as a bookmark'}</p>
-      </div>
-    });
+          </Table.Cell>
+          <Table.Cell>
+            {this.state.checkImport[account_id] &&
+            <Checkbox toggle name='checkPro' checked={this.state.checkPro[account_id]}
+                      onChange={(e, {name, checked}) => this.check(account_id, name, checked)}/>}
+          </Table.Cell>
+          {(this.state.checkImport[account_id] && this.state.checkPro[account_id]) &&
+          <React.Fragment>
+            <Table.Cell>
+              <Dropdown selection options={accountSettingOptions}/>
+            </Table.Cell>
+            <Table.Cell>
+              <Dropdown selection options={sendInOptions}/>
+            </Table.Cell>
+          </React.Fragment>}
+          {!this.state.checkImport[account_id] &&
+          <Table.Cell>
+            <span>This account will be deleted once importation is completed</span>
+          </Table.Cell>}
+          {(this.state.checkImport[account_id] && !this.state.checkPro[account_id]) &&
+          <Table.Cell>
+            <span>This account is not related to your company or your team in any way</span>
+          </Table.Cell>}
+        </Table.Row>
+      });
+    }
+
+
     return (
       <React.Fragment>
-        <p style={{marginBottom: '50px', marginLeft: '70px', marginTop: '10px'}}>
+        <p style={{marginBottom: '20px', marginLeft: '70px', marginTop: '10px'}}>
           <span style={{color:'#45c997',fontWeight:'bold'}}>{this.state.accountsNumber} accounts detected! </span>
           Make sure your data are put in the right columns, then import.
         </p>
         <Grid id='accounts'>
-          <Grid.Column width={10}>
-            <div className='dropdown_fields'>
-              <p className='import'>Logo</p>
-              <Dropdown pointing value={fields.field1} options={order} name='field1' onChange={onChangeField}/>
-              <Dropdown pointing value={fields.field2} options={order} name='field2' onChange={onChangeField}/>
-              <Dropdown pointing value={fields.field3} options={order} name='field3' onChange={onChangeField}/>
-              <Dropdown pointing value={fields.field4} options={order} name='field4' onChange={onChangeField}/>
-            </div>
-            {accounts}
+          <Grid.Column width={11}>
+
+            {this.state.view === 1 &&
+            <Table singleLine>
+              <Table.Header>
+                <Table.Row>
+                  <Table.HeaderCell>YOUR EMPTY APPS</Table.HeaderCell>
+                  <Table.HeaderCell />
+                  <Table.HeaderCell>IMPORTED ACCOUNTS CORRESPONDING</Table.HeaderCell>
+                </Table.Row>
+              </Table.Header>
+              <Table.Body>
+                {emptyApps}
+              </Table.Body>
+            </Table>}
+
+            {this.state.view === 2 &&
+            <Table singleLine>
+              <Table.Header>
+                <Table.Row>
+                  <Table.HeaderCell>
+                    IMPORT
+                    <div><Checkbox toggle name='checkImport' defaultChecked onChange={this.checkAll}/></div>
+                  </Table.HeaderCell>
+                  <Table.HeaderCell>ACCOUNTS</Table.HeaderCell>
+                  <Table.HeaderCell>
+                    ACCOUNT
+                    <div>Perso <Checkbox toggle name='checkPro' defaultChecked onChange={this.checkAll}/> Pro</div>
+                  </Table.HeaderCell>
+                  <Table.HeaderCell>ACCOUNT SETTING <Popup
+                    inverted
+                    trigger={<Icon name='help circle'/>}
+                    content={
+                      <span><strong><u>Shared account</u></strong>: the login and password of the account are shared between team members.
+                      <strong><u>Professional nominative account</u></strong>: Each user has his own login and password for this tool.</span>
+                    }/>
+                  </Table.HeaderCell>
+                  <Table.HeaderCell>SEND IN...</Table.HeaderCell>
+                </Table.Row>
+              </Table.Header>
+              <Table.Body>
+                {accounts}
+              </Table.Body>
+            </Table>}
+
+
           </Grid.Column>
-          <Grid.Column width={6}>
-            <Segment className='segment_pending'>
-              <div className="display_flex align_items_center" style={{justifyContent: 'space-between'}}>
-                <p className='import'>Import selection to:</p>
-                <Dropdown open={this.state.dropdownOpened}
-                          floating item name='location'
-                          onOpen={this.openDropdown}
-                          onClose={this.openDropdown}
-                          onBlur={this.closeOnBlur}
-                          text={this.props.location}
-                          error={error !== ''}
-                          id="importation_dropdown">
-                  <Dropdown.Menu>
-                    {teamsList}
-                    <Dropdown.Divider />
-                    {profiles}
-                  </Dropdown.Menu>
-                </Dropdown>
-                {!this.props.user.status.tip_importation_seen &&
-                <Joyride
-                  steps={[{
-                    title: 'Organize your apps by sending them where you want to!',
-                    isFixed: true,
-                    selector:"#importation_dropdown",
-                    position: 'bottom',
-                    style: {
-                      beacon: {
-                        inner: '#45C997',
-                        outer: '#45C997'
-                      }
-                    }
-                  }]}
-                  locale={{ back: 'Back', close: 'Got it!', last: 'Got it!', next: 'Next', skip: 'Skip the tips' }}
-                  disableOverlay={true}
-                  run={true}
-                  allowClicksThruHole={true}
-                  callback={(action) => {
-                    if (action.type === 'finished')
-                      this.props.dispatch(setTipSeen({
-                        name: 'tip_importation_seen'
-                      }));
-                  }}
-                />}
-              </div>
-              <div className='div_accounts'>
-                <Message error hidden={error === ''} content={error} size='mini'/>
-                {listPending}
-              </div>
-              <Button
-                id="import_button"
-                positive
-                loading={loadingSending}
-                disabled={accountsPending.length < 1 || (selectedProfile === -1 && selectedRoom === -1) || loadingSending}
-                content={this.props.location ? `Import to ${this.props.location}` : "Import and encrypt"}
-                onClick={importAccounts}/>
-            </Segment>
-          </Grid.Column>
+          <Grid.Column width={5}/>
         </Grid>
       </React.Fragment>
     )
