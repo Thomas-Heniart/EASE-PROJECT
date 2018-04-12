@@ -1,10 +1,6 @@
 import React, {Component} from "react";
 import {
-  DepartureDatePassedIndicator,
-  getPosition,
-  NewAppLabel,
-  SettingsMenu,
-  WaitingTeamApproveIndicator
+  DepartureDatePassedIndicator, getPosition, NewAppLabel, SettingsMenu, WaitingTeamApproveIndicator
 } from "./utils";
 import {showTeamLinkAppSettingsModal, showLockedTeamAppModal} from "../../actions/modalActions";
 import {teamUserDepartureDatePassed} from "../../utils/utils";
@@ -16,7 +12,8 @@ import ReactCSSTransitionGroup from "react-addons-css-transition-group";
 
 @connect(store => ({
   teams: store.teams,
-  team_apps: store.team_apps
+  team_apps: store.team_apps,
+  dnd: store.dashboard_dnd.dragging_app_id !== -1
 }))
 class TeamLinkApp extends Component {
   constructor(props){
@@ -42,7 +39,6 @@ class TeamLinkApp extends Component {
     e.stopPropagation();
     const {app} = this.props;
     const team_app = this.props.team_apps[app.team_card_id];
-    this.setState({isOpen: false});
     this.props.dispatch(moveTeamCard({card_id: Number(team_app.id)}));
     this.props.history.push(`/teams/${app.team_id}/${team_app.channel_id}?app_id=${team_app.id}`);
   };
@@ -57,7 +53,8 @@ class TeamLinkApp extends Component {
     window.open(team_app.url, '_blank');
   };
   activateMenu = () => {
-    this.setState({hover: true, position: getPosition(this.props.app.id)});
+    if (!this.props.dnd)
+      this.setState({hover: true, position: getPosition(this.props.app.id)});
   };
   deactivateMenu = () => {
     this.setState({menuActive: false, hover: false});
@@ -87,7 +84,7 @@ class TeamLinkApp extends Component {
         <div class='app'>
           <div className={(me.disabled || teamUserDepartureDatePassed(me.departure_date)) ? 'logo_area'
               : this.state.menuActive ? 'logo_area active' : 'logo_area not_active'}
-               onMouseLeave={this.deactivateMenu} onMouseEnter={this.activateMenu}>
+               onMouseEnter={!this.props.dnd ? this.activateMenu : null} onMouseLeave={!this.props.dnd ? this.deactivateMenu : null}>
             {app.new &&
             <NewAppLabel/>}
             {teamUserDepartureDatePassed(me.departure_date) &&

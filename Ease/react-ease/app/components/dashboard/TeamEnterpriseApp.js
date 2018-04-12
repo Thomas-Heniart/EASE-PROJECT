@@ -23,7 +23,8 @@ import ReactCSSTransitionGroup from "react-addons-css-transition-group";
 
 @connect(store => ({
   teams: store.teams,
-  team_apps: store.team_apps
+  team_apps: store.team_apps,
+  dnd: store.dashboard_dnd.dragging_app_id !== -1
 }))
 class TeamEnterpriseApp extends Component {
   constructor(props){
@@ -65,8 +66,6 @@ class TeamEnterpriseApp extends Component {
     e.stopPropagation();
     const {app} = this.props;
     const team_app = this.props.team_apps[app.team_card_id];
-    this.setState({isOpen: false});
-    // this.props.dispatch(showTeamEnterpriseAppSettingsModal({active: true, app: app}));
     this.props.dispatch(moveTeamCard({card_id: Number(team_app.id)}));
     this.props.history.push(`/teams/${app.team_id}/${team_app.channel_id}?app_id=${team_app.id}`);
   };
@@ -77,7 +76,7 @@ class TeamEnterpriseApp extends Component {
     const team = teams[team_app.team_id];
     const me = team.team_users[team.my_team_user_id];
     const meReceiver = team_app.receivers.find(item => (item.team_user_id === me.id));
-    if (!teamUserDepartureDatePassed(me.departure_date) && !me.disabled && !meReceiver.empty) {
+    if (!teamUserDepartureDatePassed(me.departure_date) && !me.disabled && !meReceiver.empty && !this.props.dnd) {
       this.setState({hover: true, position: getPosition(app.id)});
       if (this.password === '')
         api.dashboard.getAppPassword({
@@ -177,7 +176,7 @@ class TeamEnterpriseApp extends Component {
         <div class='app'>
           <div className={(teamUserDepartureDatePassed(me.departure_date) || me.disabled || meReceiver.empty) ? 'logo_area'
               : this.state.menuActive ? 'logo_area active' : 'logo_area not_active'}
-               onMouseEnter={this.activateMenu} onMouseLeave={this.deactivateMenu}>
+               onMouseEnter={!this.props.dnd ? this.activateMenu : null} onMouseLeave={!this.props.dnd ? this.deactivateMenu : null}>
             {this.state.loading &&
             <LoadingAppIndicator/>}
             {app.new &&

@@ -9,7 +9,8 @@ import {EmptyAppIndicator, NewAppLabel, LoadingAppIndicator, SettingsMenu, getPo
 import ReactCSSTransitionGroup from "react-addons-css-transition-group";
 
 @connect(store => ({
-  sso_groups: store.dashboard.sso_groups
+  sso_groups: store.dashboard.sso_groups,
+  dnd: store.dashboard_dnd.dragging_app_id !== -1
 }))
 class SsoApp extends Component {
   constructor(props){
@@ -48,7 +49,7 @@ class SsoApp extends Component {
     e.preventDefault();
     const {app} = this.props;
     const sso_group = this.props.sso_groups[app.sso_group_id];
-    if (!sso_group.empty) {
+    if (!sso_group.empty && !this.props.dnd) {
       this.setState({hover: true, position: getPosition(app.id)});
       if (this.password === '')
         api.dashboard.getAppPassword({
@@ -128,7 +129,7 @@ class SsoApp extends Component {
     return (
         <div class='app'>
           <div className={sso_group.empty ? 'logo_area' : this.state.menuActive ? 'logo_area active' : 'logo_area not_active'}
-               onMouseEnter={this.activateMenu} onMouseLeave={this.deactivateMenu}>
+               onMouseEnter={!this.props.dnd ? this.activateMenu : null} onMouseLeave={!this.props.dnd ? this.deactivateMenu : null}>
             {this.state.loading &&
             <LoadingAppIndicator/>}
             {sso_group.empty &&

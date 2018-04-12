@@ -9,7 +9,8 @@ import {connect} from "react-redux";
 import ReactCSSTransitionGroup from "react-addons-css-transition-group";
 
 @connect(store => ({
-  active: store.modals.softwareAppSettings.active
+  active: store.modals.softwareAppSettings.active,
+  dnd: store.dashboard_dnd.dragging_app_id !== -1
 }))
 class SoftwareApp extends Component {
   constructor(props) {
@@ -38,7 +39,7 @@ class SoftwareApp extends Component {
   activateMenu = (e) => {
     e.preventDefault();
     const {app} = this.props;
-    if (!app.empty) {
+    if (!app.empty && !this.props.dnd) {
       this.setState({hover: true, position: getPosition(app.id)});
       if (this.password === '')
         api.dashboard.getAppPassword({
@@ -113,7 +114,7 @@ class SoftwareApp extends Component {
     return (
         <div className='app'>
           <div className={app.empty ? 'logo_area' : this.state.menuActive ? 'logo_area active' : 'logo_area not_active'}
-               onMouseEnter={this.activateMenu} onMouseLeave={this.deactivateMenu}>
+               onMouseEnter={!this.props.dnd ? this.activateMenu : null} onMouseLeave={!this.props.dnd ? this.deactivateMenu : null}>
             {this.state.loading &&
             <LoadingAppIndicator/>}
             {app.empty &&

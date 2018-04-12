@@ -1,4 +1,5 @@
 import React, {Component} from "react";
+import {connect} from "react-redux";
 import {LoadingAppIndicator, EmptyAppIndicator, NewAppLabel, SettingsMenu, getPosition} from "./utils";
 import {showClassicAppSettingsModal} from "../../actions/modalActions";
 import {AppConnection, clickOnAppMetric, passwordCopied} from "../../actions/dashboardActions";
@@ -7,6 +8,9 @@ import {Icon} from 'semantic-ui-react';
 import * as api from "../../utils/api";
 import ReactCSSTransitionGroup from "react-addons-css-transition-group";
 
+@connect(store => ({
+  dnd: store.dashboard_dnd.dragging_app_id !== -1
+}))
 class ClassicApp extends Component {
   constructor(props){
     super(props);
@@ -34,7 +38,7 @@ class ClassicApp extends Component {
   activateMenu = (e) => {
     e.preventDefault();
     const {app} = this.props;
-    if (!app.empty) {
+    if (!app.empty && !this.props.dnd) {
       this.setState({hover: true, position: getPosition(app.id)});
       if (this.password === '')
         api.dashboard.getAppPassword({
@@ -128,7 +132,7 @@ class ClassicApp extends Component {
     return (
         <div class='app classic'>
           <div className={app.empty ? 'logo_area' : this.state.menuActive ? 'logo_area active' : 'logo_area not_active'}
-               onMouseEnter={this.activateMenu} onMouseLeave={this.deactivateMenu}>
+               onMouseEnter={!this.props.dnd ? this.activateMenu : null} onMouseLeave={!this.props.dnd ? this.deactivateMenu : null}>
             {this.state.loading &&
             <LoadingAppIndicator/>}
             {app.empty &&

@@ -22,7 +22,8 @@ import ReactCSSTransitionGroup from "react-addons-css-transition-group";
 
 @connect(store => ({
   teams: store.teams,
-  team_apps: store.team_apps
+  team_apps: store.team_apps,
+  dnd: store.dashboard_dnd.dragging_app_id !== -1
 }))
 class TeamSingleApp extends Component {
   constructor(props){
@@ -66,7 +67,8 @@ class TeamSingleApp extends Component {
     const team_app = this.props.team_apps[app.team_card_id];
     const team = teams[team_app.team_id];
     const me = team.team_users[team.my_team_user_id];
-    if (!me.disabled && !team_app.empty && team_app.team_user_filler_id !== me.id && !teamUserDepartureDatePassed(me.departure_date)) {
+    if (!me.disabled && !team_app.empty && team_app.team_user_filler_id !== me.id
+      && !teamUserDepartureDatePassed(me.departure_date) && !this.props.dnd) {
       this.setState({hover: true, position: getPosition(app.id)});
       if (this.password === '')
         api.dashboard.getAppPassword({
@@ -83,8 +85,6 @@ class TeamSingleApp extends Component {
     e.stopPropagation();
     const {app} = this.props;
     const team_app = this.props.team_apps[app.team_card_id];
-    this.setState({isOpen: false});
-    // this.props.dispatch(showTeamSingleAppSettingsModal({active: true, app: app}));
     this.props.dispatch(moveTeamCard({card_id: Number(team_app.id)}));
     this.props.history.push(`/teams/${app.team_id}/${team_app.channel_id}?app_id=${team_app.id}`);
   };
@@ -177,7 +177,7 @@ class TeamSingleApp extends Component {
         <div class='app classic'>
           <div className={(me.disabled || team_app.empty || team_app.team_user_filler_id === me.id || teamUserDepartureDatePassed(me.departure_date)) ? 'logo_area'
               : this.state.menuActive ? 'logo_area active' : 'logo_area not_active'}
-               onMouseEnter={this.activateMenu} onMouseLeave={this.deactivateMenu}>
+               onMouseEnter={!this.props.dnd ? this.activateMenu : null} onMouseLeave={!this.props.dnd ? this.deactivateMenu : null}>
             {this.state.loading &&
             <LoadingAppIndicator/>}
             {app.new &&

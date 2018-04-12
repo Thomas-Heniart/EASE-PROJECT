@@ -7,7 +7,8 @@ import * as api from "../../utils/api";
 import ReactCSSTransitionGroup from "react-addons-css-transition-group";
 
 @connect(store => ({
-  apps: store.dashboard.apps
+  apps: store.dashboard.apps,
+  dnd: store.dashboard_dnd.dragging_app_id !== -1
 }))
 class LogWithApp extends Component {
   constructor(props){
@@ -45,7 +46,7 @@ class LogWithApp extends Component {
     e.preventDefault();
     const {app} = this.props;
     const isEmpty = app.logWithApp_id === -1;
-    if (!isEmpty) {
+    if (!isEmpty && !this.props.dnd) {
       this.setState({hover: true, position: getPosition(app.id)});
       if (this.password === '')
         api.dashboard.getAppPassword({
@@ -76,7 +77,7 @@ class LogWithApp extends Component {
     return (
         <div class='app'>
           <div className={isEmpty ? 'logo_area' : this.state.menuActive ? 'logo_area active' : 'logo_area not_active'}
-               onMouseEnter={this.activateMenu} onMouseLeave={this.deactivateMenu}>
+               onMouseEnter={!this.props.dnd ? this.activateMenu : null} onMouseLeave={!this.props.dnd ? this.deactivateMenu : null}>
             {this.state.loading &&
             <LoadingAppIndicator/>}
             {app.new &&

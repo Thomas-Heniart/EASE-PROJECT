@@ -187,8 +187,9 @@
           &.not_active:hover {
             .settings_buttons.left {
               display: block;
-              width: 180px;
-              opacity: 1;
+              max-width: 180px;
+              width: auto;
+              //opacity: 1;
               padding-left: 10px;
               transform: translateX(50px);
               -webkit-transform: translateX(50px);
@@ -200,12 +201,13 @@
             }
             .settings_buttons.right {
               display: block;
-              width: 180px;
-              opacity: 1;
+              max-width: 180px;
+              width: auto;
+              //opacity: 1;
               padding-right: 10px;
               transform: translateX(-180px);
               -webkit-transform: translateX(-180px);
-              transition: opacity .4s ease 1s, transform ease 1.2s, -webkit-transform ease 1.2s, width ease 1.2s, display ease 1s;
+              transition: opacity .3s ease 1s, transform ease 1.2s, -webkit-transform ease 1.2s, width ease 1.2s, display ease 1s;
               .settings_button {
                 display: block;
                 width: fit-content;
@@ -216,9 +218,10 @@
           &.active:hover {
             .settings_buttons.left {
               display: block;
-              width: 180px;
+              max-width: 180px;
+              width: auto;
               visibility: visible;
-              opacity: 1;
+              //opacity: 1;
               padding-left: 10px;
               transform: translateX(50px);
               -webkit-transform: translateX(50px);
@@ -230,9 +233,9 @@
             }
             .settings_buttons.right {
               display: block;
-              width: 180px;
-              visibility: visible;
-              opacity: 1;
+              max-width: 180px;
+              width: auto;
+              //opacity: 1;
               padding-right: 10px;
               transform: translateX(-180px);
               -webkit-transform: translateX(-180px);
@@ -247,9 +250,9 @@
           .settings_buttons {
             .settings_button {
               width: 0;
-              display: none;
+              //display: none;
               //width: fit-content;
-              //display: block;
+              display: block;
               clear: both;
               max-width: 180px;
               text-overflow: ellipsis;
@@ -260,7 +263,7 @@
               padding-top: 5px;
               padding-bottom: 4px;
               color: white;
-              background-color: rgba(55, 59, 96, 0.8);
+              background-color: rgba(55, 59, 96, 0.9);
               border-radius: 3px;
               margin-bottom: 4px;
               -webkit-transition: -webkit-transform 85ms ease-in, width ease 1s;
@@ -281,7 +284,7 @@
             }
             //visibility: hidden;
             position: absolute;
-            display: none;
+            //display: none;
             width: 0;
             //opacity: 0;
             top: 0;
@@ -715,10 +718,14 @@
 
 
 .settingsAnim-enter {
-  opacity: 0;
+  opacity: 1;
 }
 .settingsAnim-enter.settingsAnim-enter-active {
   opacity: 1;
+  display: block;
+  max-width: 180px;
+  width: auto;
+  transition: opacity .3s ease 1s, transform ease 1.2s, -webkit-transform ease 1.2s, width ease 1.2s, display ease 1s;
   //transition: all 300ms ease-in 1s;
 }
 
