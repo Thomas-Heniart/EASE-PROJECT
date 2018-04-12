@@ -391,8 +391,8 @@
     &.step4 {
       height: 100%;
       position: fixed;
-      width: 100%;
-      left: 0;
+      width: 97%;
+      left: 60px;
       background-color: $themeWhiteColor2;
       //margin-left: -31.5%;
     }
@@ -481,7 +481,8 @@
     }
     .dropdown {
       font-size: 14px;
-      width: 16.7%;
+      //width: 16.7%;
+      width: 500px;
       color: #949eb7 !important;
       padding-top: 7px !important;
       padding-bottom: 7px !important;
@@ -536,6 +537,7 @@
     #accounts {
       overflow-y: scroll;
       height: 70%;
+      margin: 0;
       .dropdown_fields {
         display: flex;
         margin: 7px 0 7px 70px;
@@ -594,6 +596,35 @@
               text-decoration: underline;
               i {
                 text-decoration: none;
+              }
+            }
+          }
+        }
+      }
+      table {
+        border-color: white;
+        tr {
+          background-color: #F6F7F9;
+          &:hover {
+            background-color: white;
+          }
+          th {
+            background: white;
+            border-color: white;
+            color: #949eb7;
+          }
+          td {
+            border-color: white;
+            span {
+              font-size: 14px;
+              color: #949eb7;
+            }
+            &.app_indication {
+              display: flex;
+              .name {
+                display: grid;
+                font-size: 14px;
+                color: #949eb7;
               }
             }
           }
@@ -684,8 +715,8 @@
         color: white;
         &.pending {
           margin-right: 8px;
-          width: 30px;
-          height: 30px;
+          //width: 30px;
+          //height: 30px;
           p {
             margin: auto;
             width: auto !important;
@@ -705,10 +736,15 @@
       }
       i {
         cursor: pointer;
-        margin-right: 10px;
-        margin-top: 5px;
+        //margin-right: 10px;
+        width: auto;
+        margin-top: 2px;
+        &.hide {
+          display: inline-block !important;
+        }
         &.remove {
           color: #e8ecf1;
+          margin-right: 10px;
           margin-top: 10px;
         }
       }

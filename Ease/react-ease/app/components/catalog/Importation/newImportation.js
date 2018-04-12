@@ -2,7 +2,6 @@ import React from 'react';
 import {connect} from "react-redux";
 import PasteStep from "./PasteStep";
 import Explication from "./Explication";
-import ErrorAccounts from "./ErrorAccounts";
 import DisplayAccounts from "./DisplayAccounts";
 import ChromeFirstStep from "./ChromeFirstStep";
 import ChromeSecondStep from "./ChromeSecondStep";
@@ -12,12 +11,11 @@ import {getLogo} from "../../../utils/api";
 import {Loader, Message} from 'semantic-ui-react';
 import {appAdded, createProfile} from "../../../actions/dashboardActions";
 import {handleSemanticInput, isEmail, reflect} from "../../../utils/utils";
+import {importAccount, deleteImportedAccount} from "../../../actions/catalogActions";
 import {createTeamChannel, addTeamUserToChannel} from "../../../actions/channelActions";
-import {importAccount, modifyImportedAccount, deleteImportedAccount} from "../../../actions/catalogActions";
 import {teamCreateSingleApp, teamCreateAnySingleCard, teamCreateLinkCard} from "../../../actions/appsActions";
 import {
-  catalogAddAnyApp, catalogAddBookmark,
-  catalogAddClassicApp, getImportedAccounts
+  catalogAddAnyApp, catalogAddBookmark, catalogAddClassicApp, getImportedAccounts
 } from "../../../actions/catalogActions";
 
 function json(fields, separator, csv, dispatch) {
@@ -177,30 +175,10 @@ class Importations extends React.Component {
     this.setState({importedAccounts: importedAccounts});
   };
   handleInput = handleSemanticInput.bind(this);
-  handleRoomName = (e, team_id) => {
-    if (e.target.value.match(/[a-zA-Z0-9\s_\-]/g) !== null && e.target.value.length <= 21) {
-      const roomName = Object.assign({}, this.state.roomName);
-      roomName[team_id] = e.target.value.replace(" ", "_").toLowerCase();
-      this.setState({roomName: roomName});
-    }
-    else {
-      this.setState({error: 'Room names can’t contain uppercases, spaces, periods or most punctuation and must be shorter than 21 characters.'})
-    }
-  };
   handleAppInfo = (e, {name, value, idapp}) => {
     const importedAccounts = {...this.state.importedAccounts};
     importedAccounts[idapp].name = value;
     this.setState({importedAccounts: importedAccounts});
-  };
-  handleErrorAppInfo = (e, {name, value, idapp}) => {
-    const errorAccounts = this.state.errorAccounts.map(item => {
-      if (item.id === idapp && name !== 'thirdField')
-        item[name] = value;
-      else if (item.id === idapp && name === 'thirdField')
-        item.thirdField.value = value;
-      return item;
-    });
-    this.setState({errorAccounts: errorAccounts});
   };
   selectAccount = (account) => {
     api.dashboard.getAppPassword({
@@ -214,15 +192,6 @@ class Importations extends React.Component {
   };
   resetChromeCredentials = () => {
     this.setState({chromeLogin: '', chromePassword: ''});
-  };
-  createRoom = (id) => {
-    if (this.state.roomName[id].length === 0)
-      return;
-    let newTeams = {...this.state.teamsInState};
-    let roomAdded = Object.assign({}, this.state.roomAdded);
-    newTeams[id].rooms.newRoom = {id: 0, name: this.state.roomName[id], team_user_ids:[newTeams[id].my_team_user_id]};
-    roomAdded[id] = true;
-    this.setState({roomAdded: roomAdded, teamsInState: newTeams, selectedRoom: 0, selectedTeam: id, location: `#${this.state.roomName[id]}`});
   };
   toPending = (id) => {
     if (this.state.selectedProfile === -1 && this.state.selectedRoom === -1) {
@@ -279,30 +248,6 @@ class Importations extends React.Component {
         fields[item] = value;
     });
     this.setState({fields: fields});
-  };
-  changeOrderFieldStep4 = (e, {name, value}) => {
-    let fields = Object.assign({}, this.state.fields);
-    Object.keys(fields).map(item => {
-      if (fields[item] === value)
-        fields[item] = fields[name];
-    });
-    Object.keys(fields).map(item => {
-      if (item === name)
-        fields[item] = value;
-    });
-    const accounts = Object.keys(this.state.importedAccounts).map(item => {
-      const account = this.state.importedAccounts[item];
-      return {
-        [fields.field1]: account[this.state.fields.field1],
-        [fields.field2]: account[this.state.fields.field2],
-        [fields.field3]: account[this.state.fields.field3],
-        [fields.field4]: account[this.state.fields.field4],
-        id: account.id,
-        website_id: account.website_id,
-        logo: (account.logo && account.logo.length > 0) ? account.logo : ''
-      }
-    });
-    this.setState({fields: fields, importedAccounts: accounts});
   };
   eventListener = event => {
     if (event.detail.success === true && event.detail.msg.length > 0) {
@@ -403,29 +348,6 @@ class Importations extends React.Component {
     }
     else
       this.setState({view: this.state.view + 1, error: '', specialError: false, loading: false});
-  };
-  deleteAccount = (id) => {
-    if (!this.state.loadingDelete) {
-      this.setState({loadingDelete: true});
-      this.props.dispatch(deleteImportedAccount({id}))
-        .then(response => {
-          const accounts = {...this.state.importedAccounts};
-          delete accounts[id];
-          this.setState({importedAccounts: accounts, loadingDelete: false});
-          if (accounts.length < 1 && this.state.accountsPending.length < 1)
-            this.setState({
-              passwordManager: 0,
-              view: 1,
-              error: '',
-              specialError: false,
-              location: '',
-              selectedTeam: -1,
-              selectedRoom: -1,
-              selectedProfile: -1,
-              separator: ','
-            });
-        });
-    }
   };
   back = () => {
     if (this.state.passwordManager === 1)
@@ -940,24 +862,15 @@ class Importations extends React.Component {
           getLogo={this.getLogo}
           error={this.state.error}
           toPending={this.toPending}
-          fields={this.state.fields}
-          onChange={this.handleInput}
           selectRoom={this.selectRoom}
-          createRoom={this.createRoom}
           location={this.state.location}
-          roomName={this.state.roomName}
-          roomAdded={this.state.roomAdded}
           selectProfile={this.selectProfile}
           handleAppInfo={this.handleAppInfo}
           cancelPending={this.cancelPending}
-          deleteAccount={this.deleteAccount}
           importAccounts={this.importAccounts}
           loadingLogo={this.state.loadingLogo}
           profilesInState={this.state.profiles}
-          onChangeRoomName={this.handleRoomName}
           teamsInState={this.state.teamsInState}
-          fieldProblem={this.state.fieldProblem}
-          onChangeField={this.changeOrderFieldStep4}
           loadingSending={this.state.loadingSending}
           accountsPending={this.state.accountsPending}
           selectedProfile={this.state.selectedProfile}
