@@ -12,3 +12,6 @@ ALTER TABLE accounts
   ADD COLUMN account_strength_id INT(10) UNSIGNED;
 ALTER TABLE accounts
   ADD FOREIGN KEY (account_strength_id) REFERENCES ACCOUNT_STRENGTH (id);
+
+ALTER TABLE accounts
+  ADD COLUMN lastPasswordReminderDate DATETIME;

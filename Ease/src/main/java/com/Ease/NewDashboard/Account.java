@@ -49,6 +49,10 @@ public class Account {
     @Column(name = "adminNotified")
     private boolean admin_notified = false;
 
+    @Column(name = "lastPasswordReminderDate")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date lastPasswordReminderDate;
+
     @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @OneToMany(mappedBy = "account", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<AccountInformation> accountInformationSet = ConcurrentHashMap.newKeySet();
@@ -147,6 +151,14 @@ public class Account {
 
     public void setAdmin_notified(boolean admin_notified) {
         this.admin_notified = admin_notified;
+    }
+
+    public Date getLastPasswordReminderDate() {
+        return lastPasswordReminderDate;
+    }
+
+    public void setLastPasswordReminderDate(Date lastPasswordReminderDate) {
+        this.lastPasswordReminderDate = lastPasswordReminderDate;
     }
 
     /**
@@ -252,10 +264,10 @@ public class Account {
     }
 
     public boolean mustUpdatePassword() {
-        Calendar next_update = Calendar.getInstance();
-        next_update.setTime(this.getLast_update());
-        next_update.add(Calendar.MONTH, this.getReminder_interval());
-        return this.getReminder_interval() != 0 && new Date().getTime() >= next_update.getTimeInMillis();
+        Calendar nextUpdate = Calendar.getInstance();
+        nextUpdate.setTime(this.getLast_update());
+        nextUpdate.add(Calendar.MONTH, this.getReminder_interval());
+        return this.getReminder_interval() != 0 && new Date().getTime() >= nextUpdate.getTimeInMillis();
     }
 
     public boolean satisfyWebsite(Website website) {

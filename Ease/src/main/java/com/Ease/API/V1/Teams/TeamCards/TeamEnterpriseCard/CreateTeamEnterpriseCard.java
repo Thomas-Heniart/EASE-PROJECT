@@ -72,7 +72,8 @@ public class CreateTeamEnterpriseCard extends HttpServlet {
                         account_information = website.getAllCredentialsFromJson(account_information);
                     else
                         account_information = website.getPresentCredentialsFromJson(account_information);
-                    account = AccountFactory.getInstance().createAccountFromJson(account_information, teamKey, password_reminder_interval, sm.getHibernateQuery());
+                    if (account_information.length() != 0)
+                        account = AccountFactory.getInstance().createAccountFromJson(account_information, teamKey, password_reminder_interval, sm.getHibernateQuery());
                 }
                 App app;
                 if (account == null)

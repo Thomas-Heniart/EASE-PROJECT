@@ -235,6 +235,13 @@ public class NotificationFactory {
         userWebSocketManager.sendObject(WebSocketMessageFactory.createNotificationMessage(notification));
     }
 
+    public void createPasswordNotUpToDateReminder(TeamUser teamUserSender, TeamUser teamUserReceiver, TeamCard teamCard, WebSocketManager userWebSocketManager, HibernateQuery hibernateQuery) {
+        String url = "#/teams/" + teamCard.getTeam().getDb_id() + "/" + teamCard.getChannel().getDb_id() + "?app_id=" + teamCard.getDb_id();
+        Notification notification = this.createNotification(teamUserReceiver.getUser(), "The password of " + teamUserReceiver.getUsername() + " for " + teamCard.getName() + " is not up to date for the last 7 days", teamCard.getLogo(), url);
+        hibernateQuery.saveOrUpdateObject(notification);
+        userWebSocketManager.sendObject(WebSocketMessageFactory.createNotificationMessage(notification));
+    }
+
     public void createDepartureDateThreeDaysNotification(TeamUser teamUser, TeamUser teamUser_admin, String formattedDate, WebSocketManager userWebSocketManager, HibernateQuery hibernateQuery) {
         Notification notification = this.createNotification(teamUser_admin.getUser(), "the departure of " + teamUser.getUsername() + " is planned on next " + formattedDate + ".", "/resources/notifications/user_departure.png", teamUser, true);
         hibernateQuery.saveOrUpdateObject(notification);
