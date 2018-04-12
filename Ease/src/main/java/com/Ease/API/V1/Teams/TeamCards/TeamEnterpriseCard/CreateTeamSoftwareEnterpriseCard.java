@@ -77,10 +77,16 @@ public class CreateTeamSoftwareEnterpriseCard extends HttpServlet {
                 if (account_information != null && account_information.length() != 0) {
                     sm.decipher(account_information);
                     String teamKey = (String) sm.getTeamProperties(team_id).get("teamKey");
-                    account = AccountFactory.getInstance().createAccountFromJson(software.getPresentCredentialsFromJson(account_information), teamKey, password_reminder_interval, sm.getHibernateQuery());
+                    JSONObject accountInformationObj = software.getPresentCredentialsFromJson(account_information);
+                    if (accountInformationObj.length() != 0)
+                        account = AccountFactory.getInstance().createAccountFromJson(accountInformationObj, teamKey, password_reminder_interval, sm.getHibernateQuery());
                 }
-                AppInformation appInformation = new AppInformation(software.getName());
-                App app = new SoftwareApp(appInformation, software, account);
+                App app;
+                System.out.println(account == null);
+                if (account == null)
+                    app = AppFactory.getInstance().createSoftwareApp(name, software);
+                else
+                    app = AppFactory.getInstance().createSoftwareApp(name, software, account);
                 TeamCardReceiver teamCardReceiver = new TeamEnterpriseCardReceiver(app, teamEnterpriseSoftwareCard, teamUser);
                 if (teamUser.isVerified()) {
                     Profile profile = teamUser.getOrCreateProfile(teamEnterpriseSoftwareCard.getChannel(), sm.getHibernateQuery());

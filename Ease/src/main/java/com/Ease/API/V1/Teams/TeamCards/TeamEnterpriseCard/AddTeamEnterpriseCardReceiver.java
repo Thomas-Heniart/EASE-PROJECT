@@ -30,49 +30,54 @@ public class AddTeamEnterpriseCardReceiver extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         PostServletManager sm = new PostServletManager(this.getClass().getName(), request, response, true);
         try {
-            Integer team_id = sm.getIntParam("team_id", true, false);
-            Team team = sm.getTeam(team_id);
-            Integer teamUser_id = sm.getIntParam("team_user_id", true, false);
-            JSONObject account_information = sm.getJsonParam("account_information", true, true);
-            Integer team_card_id = sm.getIntParam("team_card_id", true, false);
-            TeamCard teamCard = team.getTeamCard(team_card_id);
+            Integer teamId = sm.getIntParam("team_id", true, false);
+            Team team = sm.getTeam(teamId);
+            Integer teamUserId = sm.getIntParam("team_user_id", true, false);
+            JSONObject accountInformation = sm.getJsonParam("account_information", true, true);
+            Integer teamCardId = sm.getIntParam("team_card_id", true, false);
+            TeamCard teamCard = team.getTeamCard(teamCardId);
             sm.needToBeTeamUserOfTeam(team);
-            TeamUser teamUser_connected = sm.getTeamUser(team);
-            if (!teamUser_connected.isTeamAdmin() && !teamUser_connected.equals(teamCard.getTeamUser_sender()))
+            TeamUser teamUserConnected = sm.getTeamUser(team);
+            if (!teamUserConnected.isTeamAdmin() && !teamUserConnected.equals(teamCard.getTeamUser_sender()))
                 throw new HttpServletException(HttpStatus.BadRequest, "You cannot edit this card");
             if (!teamCard.isTeamEnterpriseCard())
                 throw new HttpServletException(HttpStatus.Forbidden, "This is not a team enterprise card");
-            TeamUser teamUser_receiver = team.getTeamUserWithId(teamUser_id);
-            if (teamCard.containsTeamUser(teamUser_receiver))
+            TeamUser teamUserReceiver = team.getTeamUserWithId(teamUserId);
+            if (teamCard.containsTeamUser(teamUserReceiver))
                 throw new HttpServletException(HttpStatus.BadRequest, "This user is already a receiver of this card");
-            sm.decipher(account_information);
+            sm.decipher(accountInformation);
             Account account = null;
-            if (account_information != null && account_information.length() != 0) {
-                String teamKey = (String) sm.getTeamProperties(team_id).get("teamKey");
-                account = AccountFactory.getInstance().createAccountFromJson(account_information, teamKey, teamCard.getPassword_reminder_interval(), sm.getHibernateQuery());
+            if (accountInformation != null && accountInformation.length() != 0) {
+                String teamKey = (String) sm.getTeamProperties(teamId).get("teamKey");
+                account = AccountFactory.getInstance().createAccountFromJson(accountInformation, teamKey, teamCard.getPassword_reminder_interval(), sm.getHibernateQuery());
             }
-            AppInformation appInformation = new AppInformation(teamCard.getName());
             App app;
             if (teamCard.isTeamWebsiteCard()) {
                 TeamEnterpriseCard teamEnterpriseCard = (TeamEnterpriseCard) teamCard;
-                app = new ClassicApp(appInformation, teamEnterpriseCard.getWebsite(), account);
+                if (account == null)
+                    app = AppFactory.getInstance().createClassicApp(teamCard.getName(), teamEnterpriseCard.getWebsite());
+                else
+                    app = AppFactory.getInstance().createClassicApp(teamCard.getName(), teamEnterpriseCard.getWebsite(), account);
             } else {
                 TeamEnterpriseSoftwareCard teamEnterpriseSoftwareCard = (TeamEnterpriseSoftwareCard) teamCard;
-                app = new SoftwareApp(appInformation, teamEnterpriseSoftwareCard.getSoftware(), account);
+                if (account == null)
+                    app = AppFactory.getInstance().createSoftwareApp(teamCard.getName(), teamEnterpriseSoftwareCard.getSoftware());
+                else
+                    app = AppFactory.getInstance().createSoftwareApp(teamCard.getName(), teamEnterpriseSoftwareCard.getSoftware(), account);
             }
-            TeamCardReceiver teamCardReceiver = new TeamEnterpriseCardReceiver(app, teamCard, teamUser_receiver);
-            if (teamUser_receiver.isVerified()) {
-                Profile profile = teamUser_receiver.getOrCreateProfile(teamCard.getChannel(), sm.getHibernateQuery());
+            TeamCardReceiver teamCardReceiver = new TeamEnterpriseCardReceiver(app, teamCard, teamUserReceiver);
+            if (teamUserReceiver.isVerified()) {
+                Profile profile = teamUserReceiver.getOrCreateProfile(teamCard.getChannel(), sm.getHibernateQuery());
                 app.setProfile(profile);
                 app.setPosition(profile.getSize());
                 sm.saveOrUpdate(app);
                 profile.addApp(app);
             }
             sm.saveOrUpdate(teamCardReceiver);
-            if (!teamUser_receiver.equals(teamUser_connected))
-                NotificationFactory.getInstance().createAppSentNotification(teamUser_receiver, teamUser_connected, teamCardReceiver, sm.getUserIdMap(), sm.getHibernateQuery());
+            if (!teamUserReceiver.equals(teamUserConnected))
+                NotificationFactory.getInstance().createAppSentNotification(teamUserReceiver, teamUserConnected, teamCardReceiver, sm.getUserIdMap(), sm.getHibernateQuery());
             teamCard.addTeamCardReceiver(teamCardReceiver);
-            teamUser_receiver.addTeamCardReceiver(teamCardReceiver);
+            teamUserReceiver.addTeamCardReceiver(teamCardReceiver);
             sm.addWebSocketMessage(WebSocketMessageFactory.createWebSocketMessage(WebSocketMessageType.TEAM_CARD_RECEIVER, WebSocketMessageAction.CREATED, teamCardReceiver.getWebSocketJson()));
             sm.setSuccess(teamCardReceiver.getCardJson());
         } catch (Exception e) {

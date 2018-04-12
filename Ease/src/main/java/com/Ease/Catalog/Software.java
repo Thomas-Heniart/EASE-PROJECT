@@ -162,7 +162,13 @@ public class Software {
 
     public JSONObject getPresentCredentialsFromJson(JSONObject account_information) {
         JSONObject res = new JSONObject();
-        this.getSoftwareConnectionInformationSet().forEach(softwareConnectionInformation -> res.putOpt(softwareConnectionInformation.getInformation_name(), account_information.optString(softwareConnectionInformation.getInformation_name())));
+        for (SoftwareConnectionInformation softwareConnectionInformation : this.getSoftwareConnectionInformationSet()) {
+            String name = softwareConnectionInformation.getInformation_name();
+            String value = account_information.optString(name, null);
+            if (value == null || value.isEmpty())
+                continue;
+            res.put(name, value);
+        }
         return res;
     }
 
