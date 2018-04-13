@@ -1209,6 +1209,14 @@ i.icon.pin_button {
   }
 }
 
+.team-app-input {
+  .password_input_strength_indicator {
+    position: absolute;
+    right: 10px;
+    top:25%;
+  }
+}
+
 button.action_text_button {
   border-radius: 5px;
   padding: 0 5px;

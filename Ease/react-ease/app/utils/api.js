@@ -419,6 +419,15 @@ module.exports = {
       }).catch(err => {
         throw err.response.data;
       })
+    },
+    isPasswordInBreach: ({password}) => {
+      return new Promise((resolve, reject) => {
+        basic_get(`https://api.pwnedpasswords.com/pwnedpassword/${password}`).then(response => {
+          resolve(response);
+        }).catch(err => {
+          resolve(false);
+        });
+      });
     }
   },
   magicLink: {
