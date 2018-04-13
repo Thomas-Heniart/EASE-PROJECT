@@ -12,12 +12,18 @@ import NotificationBoxContainer from "../common/NotificationBoxContainer";
 var NewSimpleTeamCreationView = require('../onBoarding/NewSimpleTeamCreationView');
 import {connect} from "react-redux";
 import {showExtensionDownloadModal, showConnectionDurationChooserModal} from "../../actions/modalActions";
+import zxcvbn from "zxcvbn";
+import api from "../../utils/api";
 
 @connect(store => ({
   common: store.common
 }))
 class MainView extends Component {
   componentDidMount(){
+    console.log('check password:', zxcvbn('xaYsgG4-'));
+    api.common.isPasswordInBreach({
+      password: 'toto'
+    });
     setTimeout(() => {
       const user = this.props.common.user;
       const extensionInstalled = !!document.querySelector('#new_ease_extension');

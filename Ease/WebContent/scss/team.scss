@@ -1209,6 +1209,14 @@ i.icon.pin_button {
   }
 }
 
+.team-app-input {
+  .password_input_strength_indicator {
+    position: absolute;
+    right: 10px;
+    top:25%;
+  }
+}
+
 button.action_text_button {
   border-radius: 5px;
   padding: 0 5px;
@@ -2436,6 +2444,13 @@ button.action_text_button {
                     font-weight: bold;
                     color: white;
                   }
+                  &.userNotAccepted {
+                    font-style: italic;
+                    color: #a1a3b2;
+                    span {
+                      width: 100%;
+                    }
+                  }
                   &:hover {
                     cursor: pointer;
                     background-color: rgba(255,255,255, 0.2);
@@ -2447,11 +2462,6 @@ button.action_text_button {
                     margin-right: 5px;
                     font-size: .7em;
                     opacity: .8;
-                  }
-                  .userNotAccepted {
-                    font-style: italic;
-                    opacity: .6;
-                    width: 100%;
                   }
                 }
               }

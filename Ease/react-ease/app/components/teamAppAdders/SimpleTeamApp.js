@@ -1,4 +1,4 @@
-import React, {Component} from "react";
+import React, {Component, Fragment} from "react";
 import classnames from "classnames";
 import {Button,TextArea, Container, Dropdown, Header, Icon, Input, Label, Popup, Segment} from 'semantic-ui-react';
 import * as modalActions from "../../actions/teamModalActions";
@@ -37,9 +37,63 @@ import {testCredentials} from "../../actions/catalogActions";
 import * as api from "../../utils/api";
 import {resetTeamCard} from "../../actions/teamCardActions";
 
-const TeamAppCredentialInput = ({item, onChange, disabled, readOnly, testConnection}) => {
+const passwordStrengthDescription = {
+    '-1': "This password has previously appeared in a data breach and should never be used.",
+    0: "This password is really weak and shouldn’t be used.",
+    1: "This password is really weak and shouldn’t be used.",
+    2: "This password is really weak and shouldn’t be used.",
+    3: "This password is quite weak and shouldn’t be used."
+};
+
+const TeamCardPasswordInputStrengthIndicator = ({score}) => {
+  if (score > 3)
+    return null;
   return (
-      <div className='credentials_single_card'>
+      <Popup
+          size="mini"
+          position="bottom center"
+          inverted
+          hoverable
+          trigger={
+            <Icon name="warning sign"
+                  fitted
+                  class="password_input_strength_indicator"/>
+          }
+          content={
+            <Fragment>
+              <span>{passwordStrengthDescription[score]}</span>
+              <span><a>Change it to a strong one</a>💪<i class="em-svg em-muscle"/></span>
+            </Fragment>
+          }
+      />
+  )
+};
+
+const StaticTeamCardPasswordInput = ({item}) => {
+  return (
+      <div class='credentials_single_card'>
+        <Input
+            size="mini"
+            class="team-app-input"
+            placeholder='(Password encrypted)'
+            type="password"
+            readOnly
+            labelPosition="left">
+          <Label><Icon name={credentialIconType[item.name]}/></Label>
+          <input/>
+          <TeamCardPasswordInputStrengthIndicator score={-1}/>
+        </Input>
+      </div>
+  )
+};
+
+const TeamAppCredentialInput = ({item, onChange, disabled, readOnly, testConnection}) => {
+  if (readOnly && item.type === 'password')
+    return (
+        <StaticTeamCardPasswordInput item={item}/>
+    );
+  return (
+      <div class='credentials_single_card'>
         <Input size="mini"
                class="team-app-input"
                required={item.name !== 'password'}
