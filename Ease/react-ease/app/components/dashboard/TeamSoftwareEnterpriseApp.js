@@ -154,7 +154,7 @@ class TeamSoftwareEnterpriseApp extends Component {
             dispatch(showLockedTeamAppModal({active: true, team_user_id: me.id}))
           }}/>}
           {!me.disabled && meReceiver.empty && !teamUserDepartureDatePassed(me.departure_date) &&
-          <EmptyTeamAppIndicator onClick={this.clickOnSettings}/>}
+          <EmptyTeamAppIndicator onClick={e => {dispatch(showTeamSoftwareEnterpriseAppSettingsModal({active: true, app: this.props.app}))}}/>}
           <ReactCSSTransitionGroup
             transitionName="settingsAnim"
             transitionEnter={true}

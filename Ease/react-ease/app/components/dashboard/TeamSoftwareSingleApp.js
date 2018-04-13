@@ -157,7 +157,7 @@ class TeamSoftwareSingleApp extends Component {
             dispatch(showLockedTeamAppModal({active: true, team_user_id: me.id}))
           }}/>}
           {!me.disabled && team_app.empty && team_app.team_user_filler_id === me.id && !teamUserDepartureDatePassed(me.departure_date) &&
-          <EmptyTeamAppIndicator onClick={this.clickOnSettings}/>}
+          <EmptyTeamAppIndicator onClick={e => {dispatch(showTeamSoftwareSingleAppSettingsModal({active: true, app: this.props.app}))}}/>}
           {!me.disabled && team_app.empty && team_app.team_user_filler_id !== me.id && !teamUserDepartureDatePassed(me.departure_date) &&
           <DisabledAppIndicator filler_name={!!filler ? filler.username : 'Someone'} team_card_id={team_app.id}
                                 magic_link={!team_app.magic_link || team_app.magic_link === ''}/>}
