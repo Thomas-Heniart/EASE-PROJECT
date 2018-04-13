@@ -191,7 +191,7 @@
               padding-left: 10px;
               transform: translateX(50px);
               -webkit-transform: translateX(50px);
-              transition: opacity .3s ease 1s, transform ease 12s, -webkit-transform ease 12s, width ease 1.2s;
+              transition: opacity .3s ease 1s, transform ease 1.2s, -webkit-transform ease 1.2s, width ease 1.2s;
               .settings_button {
                 display: block;
                 width: fit-content;
@@ -203,7 +203,7 @@
               padding-right: 10px;
               transform: translateX(-55px);
               -webkit-transform: translateX(-55px);
-              transition: opacity .3s ease 1s, transform ease 12s, -webkit-transform ease 12s, width ease 1.2s;
+              transition: opacity .3s ease 1s, transform ease 1.2s, -webkit-transform ease 1.2s, width ease 1.2s;
               .container_button {
                 float: right;
                 .settings_button {
