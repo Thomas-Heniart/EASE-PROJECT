@@ -32,7 +32,8 @@ public class ServletEditConnectionLifetime extends HttpServlet {
             user.getOptions().setConnection_lifetime(connectionLifetime);
             sm.saveOrUpdate(user.getOptions());
             Key secret = (Key) sm.getContextAttr("secret");
-            user.getJsonWebToken().renew(sm.getKeyUser(), user, secret, user.getOptions().getConnection_lifetime());
+            if (user.getJsonWebToken() != null)
+                user.getJsonWebToken().renew(sm.getKeyUser(), user, secret, user.getOptions().getConnection_lifetime());
             sm.saveOrUpdate(user.getJsonWebToken());
             String jwt = user.getJsonWebToken().getJwt(sm.getKeyUser());
             Cookie cookie = new Cookie("JWT", jwt);
