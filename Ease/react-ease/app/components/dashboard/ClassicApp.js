@@ -105,28 +105,34 @@ class ClassicApp extends Component {
       if (this.state.copiedPassword !== item.priority && this.state.copiedOther !== item.priority) {
         if (item.name === 'password')
           return (
-            <button
-              className="settings_button"
-              onClick={e => this.copyPassword(item)}
-              key={idx}>
-              <Icon name='copy'/> • • • • • • • •
-            </button>
+            <div className='container_button'>
+              <button
+                className="settings_button"
+                onClick={e => this.copyPassword(item)}
+                key={idx}>
+                <Icon name='copy'/> • • • • • • • •
+              </button>
+            </div>
           );
         return (
-          <button
-            key={idx}
-            className="settings_button"
-            onClick={e => this.copy(item)}>
-            <Icon name='copy'/> {item.value}
-          </button>
+          <div className='container_button'>
+            <button
+              key={idx}
+              className="settings_button"
+              onClick={e => this.copy(item)}>
+              <Icon name='copy'/> {item.value}
+            </button>
+          </div>
         )
       }
       return (
-        <button
-          key={idx}
-          className="settings_button">
-          Copied!
-        </button>
+        <div className='container_button'>
+          <button
+            key={idx}
+            className="settings_button">
+            Copied!
+          </button>
+        </div>
       )
     });
     return (

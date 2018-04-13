@@ -137,28 +137,34 @@ class TeamAnyEnterpriseApp extends Component {
       if (this.state.copiedPassword !== item.priority && this.state.copiedOther !== item.priority) {
         if (item.name === 'password')
           return (
+            <div className='container_button'>
               <button
-                  className="settings_button"
-                  onClick={e => this.copyPassword(item)}
-                  key={idx}>
+                className="settings_button"
+                onClick={e => this.copyPassword(item)}
+                key={idx}>
                 <Icon name='copy'/> • • • • • • • •
               </button>
+            </div>
           );
         return (
+          <div className='container_button'>
             <button
-                key={idx}
-                className="settings_button"
-                onClick={e => this.copy(item)}>
+              key={idx}
+              className="settings_button"
+              onClick={e => this.copy(item)}>
               <Icon name='copy'/> {item.value}
             </button>
+          </div>
         )
       }
       return (
+        <div className='container_button'>
           <button
-              key={idx}
-              className="settings_button">
+            key={idx}
+            className="settings_button">
             Copied!
           </button>
+        </div>
       )
     });
     return (
