@@ -197,6 +197,13 @@
             <version>RELEASE</version>
         </dependency>
         <dependency>
+            <groupId>com.ease</groupId>
+            <artifactId>have-i-been-pwned</artifactId>
+            <version>1.0</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/src/resources/haveibeenpwned.jar</systemPath>
+        </dependency>
+        <dependency>
             <groupId>com.nulab-inc</groupId>
             <artifactId>zxcvbn</artifactId>
             <version>1.2.5</version>

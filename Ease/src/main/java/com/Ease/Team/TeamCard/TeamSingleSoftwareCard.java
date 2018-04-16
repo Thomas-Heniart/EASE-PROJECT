@@ -41,6 +41,9 @@ public class TeamSingleSoftwareCard extends TeamSoftwareCard {
     @Temporal(TemporalType.TIMESTAMP)
     private Date magicLinkExpirationDate;
 
+    @Column(name = "password_score")
+    private Integer passwordScore;
+
     public TeamSingleSoftwareCard() {
 
     }
@@ -102,6 +105,15 @@ public class TeamSingleSoftwareCard extends TeamSoftwareCard {
         this.magicLinkExpirationDate = magicLinkExpirationDate;
     }
 
+    public Integer getPasswordScore() {
+        return passwordScore;
+    }
+
+    @Override
+    public void setPasswordScore(Integer passwordScore) {
+        this.passwordScore = passwordScore;
+    }
+
     @Override
     public String getType() {
         return "teamSingleCard";
@@ -124,6 +136,7 @@ public class TeamSingleSoftwareCard extends TeamSoftwareCard {
         res.put("account_information", this.getAccount().getJsonWithoutPassword());
         res.put("magic_link", this.getMagicLink() == null ? "" : this.getMagicLink());
         res.put("magic_link_expiration_date", this.getMagicLinkExpirationDate() == null ? JSONObject.NULL : this.getMagicLinkExpirationDate().getTime());
+        res.put("password_score", this.getPasswordScore() == null ? JSONObject.NULL : this.getPasswordScore());
         return res;
     }
 

@@ -12,10 +12,8 @@ import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 import org.json.JSONObject;
 
-import javax.persistence.Cacheable;
-import javax.persistence.Entity;
-import javax.persistence.PrimaryKeyJoinColumn;
-import javax.persistence.Table;
+import javax.persistence.*;
+import java.security.NoSuchAlgorithmException;
 
 @Entity
 @Cacheable
@@ -25,6 +23,8 @@ import javax.persistence.Table;
 @OnDelete(action = OnDeleteAction.CASCADE)
 public class TeamEnterpriseCardReceiver extends TeamCardReceiver {
 
+    @Column(name = "password_score")
+    private Integer passwordScore;
 
     public TeamEnterpriseCardReceiver() {
 
@@ -32,6 +32,14 @@ public class TeamEnterpriseCardReceiver extends TeamCardReceiver {
 
     public TeamEnterpriseCardReceiver(App app, TeamCard teamCard, TeamUser teamUser) {
         super(app, teamCard, teamUser);
+    }
+
+    public Integer getPasswordScore() {
+        return passwordScore;
+    }
+
+    public void setPasswordScore(Integer passwordScore) {
+        this.passwordScore = passwordScore;
     }
 
     @Override
@@ -49,6 +57,7 @@ public class TeamEnterpriseCardReceiver extends TeamCardReceiver {
             return res;
         res.put("account_information", account.getJsonWithoutPassword());
         res.put("last_update_date", account.getLast_update().getTime());
+        res.put("password_score", this.getPasswordScore() == null ? JSONObject.NULL : this.getPasswordScore());
         return res;
     }
 
@@ -67,10 +76,16 @@ public class TeamEnterpriseCardReceiver extends TeamCardReceiver {
         return false;
     }
 
-    public void decipher(String deciphered_teamKey) throws HttpServletException {
+    public void decipher(String decipheredTeamKey) throws HttpServletException {
         App app = this.getApp();
         if (app.getAccount() == null || app.getAccount().getDeciphered_private_key() != null)
             return;
-        app.getAccount().decipher(deciphered_teamKey);
+        app.getAccount().decipher(decipheredTeamKey);
+    }
+
+    public void calculatePasswordScore() throws NoSuchAlgorithmException {
+        if (this.getApp() == null || this.getApp().getAccount() == null)
+            return;
+        this.setPasswordScore(this.getApp().getAccount().calculatePasswordScore());
     }
 }

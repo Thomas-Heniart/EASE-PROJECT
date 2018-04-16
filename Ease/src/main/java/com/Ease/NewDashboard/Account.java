@@ -8,10 +8,13 @@ import com.Ease.Hibernate.HibernateQuery;
 import com.Ease.Utils.Crypto.AES;
 import com.Ease.Utils.Crypto.RSA;
 import com.Ease.Utils.HttpServletException;
+import com.nulabinc.zxcvbn.Zxcvbn;
+import haveibeenpwned.api.RangeAPI;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.json.JSONObject;
 
 import javax.persistence.*;
+import java.security.NoSuchAlgorithmException;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Set;
@@ -328,5 +331,24 @@ public class Account {
         JSONObject res = new JSONObject();
         this.getAccountInformationSet().forEach(accountInformation -> res.put(accountInformation.getInformation_name(), accountInformation.getDeciphered_information_value()));
         return res;
+    }
+
+    public String getPassword() {
+        for (AccountInformation accountInformation : this.getAccountInformationSet()) {
+            if (!accountInformation.getInformation_name().equals("password"))
+                continue;
+            return accountInformation.getDeciphered_information_value();
+        }
+        return null;
+    }
+
+    public Integer calculatePasswordScore() throws NoSuchAlgorithmException {
+        String password = this.getPassword();
+        if (password == null)
+            return null;
+        if (new RangeAPI().isPwned(password))
+            return -1;
+        else
+            return new Zxcvbn().measure(password).getScore();
     }
 }
