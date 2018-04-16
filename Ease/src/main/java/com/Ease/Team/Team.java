@@ -83,6 +83,9 @@ public class Team {
     @Column(name = "invitations_sent")
     private boolean invitations_sent = false;
 
+    @Column(name = "passwordScoreInitialize")
+    private boolean passwordScoreInitialize = true;
+
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "onboarding_status_id")
     private OnboardingStatus onboardingStatus = new OnboardingStatus();
@@ -205,6 +208,14 @@ public class Team {
 
     public void setInvitations_sent(boolean invitations_sent) {
         this.invitations_sent = invitations_sent;
+    }
+
+    public boolean isPasswordScoreInitialize() {
+        return passwordScoreInitialize;
+    }
+
+    public void setPasswordScoreInitialize(boolean passwordScoreInitialize) {
+        this.passwordScoreInitialize = passwordScoreInitialize;
     }
 
     public synchronized Set<TeamCard> getTeamCardSet() {

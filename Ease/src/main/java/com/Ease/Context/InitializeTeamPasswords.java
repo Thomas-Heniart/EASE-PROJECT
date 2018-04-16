@@ -20,6 +20,10 @@ public class InitializeTeamPasswords implements Runnable {
     @Override
     public void run() {
         HibernateQuery hibernateQuery = new HibernateQuery();
+        if (this.team.isPasswordScoreInitialize())
+            return;
+        this.team.setPasswordScoreInitialize(true);
+        hibernateQuery.saveOrUpdateObject(team);
         for (TeamCard teamCard : team.getTeamCardSet()) {
             try {
                 teamCard.decipher(teamKey);
