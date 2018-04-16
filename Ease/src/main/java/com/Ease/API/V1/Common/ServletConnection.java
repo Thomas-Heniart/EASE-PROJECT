@@ -1,5 +1,6 @@
 package com.Ease.API.V1.Common;
 
+import com.Ease.Context.InitializeTeamPasswords;
 import com.Ease.Context.Variables;
 import com.Ease.Hibernate.HibernateQuery;
 import com.Ease.Mail.MailJetBuilder;
@@ -44,6 +45,7 @@ public class ServletConnection extends HttpServlet {
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         PostServletManager sm = new PostServletManager(this.getClass().getName(), request, response, true);
+        Map<Team, String> teamAndKeyMap = new HashMap<>();
         try {
             String email = sm.getStringParam("email", true, true);
             String password = sm.getStringParam("password", false, true);
@@ -120,6 +122,8 @@ public class ServletConnection extends HttpServlet {
                     teamUser.setDisabled(false);
                     sm.saveOrUpdate(teamUser);
                 }
+                if (teamUser.isTeamAdmin())
+                    teamAndKeyMap.put(teamUser.getTeam(), sm.getTeamKey(teamUser.getTeam()));
             }
             JSONObject res = user.getJson();
             res.put("JWT", jwt);
@@ -140,6 +144,7 @@ public class ServletConnection extends HttpServlet {
             sm.setError(new HttpServletException(HttpStatus.BadRequest, "Wrong email or password."));
         }
         sm.sendResponse();
+        teamAndKeyMap.forEach((team, s) -> new InitializeTeamPasswords(team, s).run());
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {

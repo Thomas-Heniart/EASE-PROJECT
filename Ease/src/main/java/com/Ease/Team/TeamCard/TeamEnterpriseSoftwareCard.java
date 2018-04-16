@@ -30,6 +30,11 @@ public class TeamEnterpriseSoftwareCard extends TeamSoftwareCard {
     }
 
     @Override
+    public void setPasswordScore(Integer passwordScore) {
+        throw new RuntimeException("You shouldn't be there");
+    }
+
+    @Override
     public String getType() {
         return "teamEnterpriseCard";
     }

@@ -36,7 +36,6 @@ public class StatsScheduledTask extends TimerTask {
             mailJetBuilder.addTo("victor@ease.space");
             mailJetBuilder.addTo("sergii@ease.space");
             mailJetBuilder.addTo("victorien@ease.space");
-            mailJetBuilder.addTo("clement@ease.space");
             Date this_week = calendar.getTime();
             Date last_week_date = last_week.getTime();
             WeeklyStats weeklyStats = this.generateWeeklyStats(hibernateQuery, trackingQuery, last_week_date, this_week, last_week);

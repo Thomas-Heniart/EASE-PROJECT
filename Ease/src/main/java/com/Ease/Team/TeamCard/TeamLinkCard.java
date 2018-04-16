@@ -50,6 +50,11 @@ public class TeamLinkCard extends TeamCard {
     }
 
     @Override
+    public void setPasswordScore(Integer passwordScore) {
+        throw new RuntimeException("You shouldn't be there");
+    }
+
+    @Override
     public String getLogo() {
         return this.getImg_url();
     }

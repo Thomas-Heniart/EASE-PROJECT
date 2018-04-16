@@ -85,6 +85,8 @@ public class EditTeamSoftwareSingleCard extends HttpServlet {
                 }
             }
             teamSingleSoftwareCard.decipher(sm.getTeamKey(team));
+            if (teamSingleSoftwareCard.getAccount() != null)
+                teamSingleSoftwareCard.calculatePasswordScore();
             sm.saveOrUpdate(teamSingleSoftwareCard);
             sm.addWebSocketMessage(WebSocketMessageFactory.createWebSocketMessage(WebSocketMessageType.TEAM_CARD, WebSocketMessageAction.CHANGED, teamSingleSoftwareCard.getWebSocketJson()));
             sm.setSuccess(teamSingleSoftwareCard.getJson());

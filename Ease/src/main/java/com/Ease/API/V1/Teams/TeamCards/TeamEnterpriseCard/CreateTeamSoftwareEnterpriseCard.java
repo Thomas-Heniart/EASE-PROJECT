@@ -95,6 +95,8 @@ public class CreateTeamSoftwareEnterpriseCard extends HttpServlet {
                     sm.saveOrUpdate(app);
                     profile.addApp(app);
                 }
+                if (account != null)
+                    ((TeamEnterpriseCardReceiver)teamCardReceiver).calculatePasswordScore();
                 sm.saveOrUpdate(teamCardReceiver);
                 if (!teamUser.equals(teamUser_connected))
                     NotificationFactory.getInstance().createAppSentNotification(teamUser, teamUser_connected, teamCardReceiver, sm.getUserIdMap(), sm.getHibernateQuery());
