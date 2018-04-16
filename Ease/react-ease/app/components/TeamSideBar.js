@@ -9,7 +9,9 @@ import * as teamModalsActions from "../actions/teamModalActions";
 import {isAdmin} from "../utils/helperFunctions";
 import { NavLink,withRouter} from 'react-router-dom';
 import {findDOMNode} from 'react-dom';
-import {Popup} from 'semantic-ui-react';
+import CircularProgressbar from 'react-circular-progressbar';
+import 'react-circular-progressbar/dist/styles.css';
+import {Popup, Icon} from 'semantic-ui-react';
 
 
 function ChannelList(props){
@@ -178,6 +180,38 @@ function UserList({team, me, dispatch, match}){
   )
 }
 
+class TeamPasswordsStrengthProgress extends Component {
+  constructor(props){
+    super(props);
+  }
+  render(){
+    const {totalPasswords, strongPasswords} = this.props;
+
+    return (
+        <Popup
+            size="mini"
+            inverted
+            position='right center'
+            trigger={
+              <div class="circular-progress">
+                <CircularProgressbar
+                    textForPercentage={totalPasswords < 10 ? null : (pct) => `${pct}%`}
+                    initialAnimation={true}
+                    percentage={100 / totalPasswords * strongPasswords} />
+                {totalPasswords < 10 &&
+                <Icon name="lock"/>}
+              </div>
+            }
+            content={
+              <span>
+                this is text of the popup
+              </span>
+            }
+        />
+    )
+  }
+}
+
 @connect()
 class TeamSideBar extends React.Component{
   constructor(props){
@@ -190,13 +224,18 @@ class TeamSideBar extends React.Component{
     return (
         <div class="client_channels_container">
           <div id="team_menu" onClick={this.props.openMenu}>
-            <div className="team_name_container">
-              {team.name}
+            <div class="full_flex" style={{overflow: 'hidden'}}>
+              <div className="team_name_container overflow-ellipsis">
+                {team.name}
+              </div>
+              <div className="team_client_user overflow-ellipsis">
+                <i className="fa fa-square icon_left"/>
+                {me.username}
+              </div>
             </div>
-            <div className="team_client_user">
-              <i className="fa fa-square icon_left"/>
-              {me.username}
-            </div>
+            <TeamPasswordsStrengthProgress
+                totalPasswords={100}
+                strongPasswords={25}/>
           </div>
           <div id="col_channels">
             <div id="col_channels_scroller">

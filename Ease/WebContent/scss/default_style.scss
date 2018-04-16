@@ -54,6 +54,16 @@
   font-size: .6em;
 }
 
+.simple_link {
+  color: inherit;
+  text-decoration: underline;
+  &:hover {
+    color: inherit;
+    text-decoration: underline;
+    opacity: .7;
+  }
+}
+
 @media screen and (min-width: 768px) {
   .container {
     width: 750px;

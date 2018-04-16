@@ -2,16 +2,168 @@ import { Header, Popup, Grid, Label,List, Search,SearchResult, Container, Divide
 import classnames from "classnames";
 import api from "../../utils/api";
 import {
+  credentialIconType
+} from "../../utils/utils";
+import {
   showTeamEditEnterpriseAppModal, showFillSimpleCardCredentialsModal, showUpgradeTeamPlanModal,
   showSimpleAppFillerChooserModal, showManageMagicLinkModal
 } from "../../actions/teamModalActions";
 import {passwordChangeOptions, passwordChangeValues, copyTextToClipboard} from "../../utils/utils";
-import React, {Component} from "react";
+import React, {Component, Fragment} from "react";
 import post_api from "../../utils/post_api";
 import {isAdmin} from "../../utils/helperFunctions";
 import {connect} from "react-redux";
 import {renewMagicLink} from "../../actions/magicLinkActions";
 import {passwordCopied} from "../../actions/dashboardActions";
+
+export const enterpriseCardPasswordStrengthSumDescription = {
+  1: 'Some passwords here have previously appeared in a data breach and thus shouldn’t be used.',
+  2: 'Some passwords here are quite (or even really) weak and thus shouldn’t be used.',
+  3: 'Some passwords here have previously appeared in a data breach or are too weak, and thus shouldn’t be used.',
+  4: 'Some passwords here are quite (or even really) weak and thus shouldn’t be used.',
+  5: 'Some passwords here have previously appeared in a data breach or are too weak, and thus shouldn’t be used.',
+  6: 'Some passwords here have previously appeared in a data breach and thus shouldn’t be used.',
+  7: 'Some passwords here have previously appeared in a data breach or are too weak, and thus shouldn’t be used.'
+};
+
+export class EnterpriseCardPasswordStrengthIndicator extends Component {
+  constructor(props){
+    super(props);
+  }
+  render(){
+    const {weaknessStatus, weakPasswordsCount} = this.props;
+
+    return (
+        <Popup
+            inverted
+            size="mini"
+            position='bottom center'
+            trigger={
+              <span class="password_strength_indicator">&nbsp;<Icon name="lock" fitted/> {weakPasswordsCount} Weak password{weakPasswordsCount > 1 ? 's' : null}</span>
+            }
+            content={
+              <span>{enterpriseCardPasswordStrengthSumDescription[weaknessStatus]}</span>
+            }
+        />
+    )
+  }
+};
+
+export const scanEnterpriseCardForWeakPasswords = (app) => {
+  let pwned = 0;
+  let weak = 0;
+  let reallyWeak = 0;
+  app.receivers.forEach(receiver => {
+    if (receiver.password_score === -1)
+      pwned++;
+    else if (receiver.password_score < 3)
+      reallyWeak++;
+    else if (receier.password_score === 3)
+      weak++;
+  });
+  return {
+    weakPasswordsCount: pwned + weak + reallyWeak,
+    weaknessStatus: !!pwned * 1 + !!reallyWeak * 2 + !!weak * 4
+  }
+};
+
+export const passwordStrengthDescription = {
+  '-1': "This password has previously appeared in a data breach and should never be used.",
+  0: "This password is really weak and shouldn’t be used.",
+  1: "This password is really weak and shouldn’t be used.",
+  2: "This password is really weak and shouldn’t be used.",
+  3: "This password is quite weak and shouldn’t be used."
+};
+
+export const EnterpriseTeamCardPasswordInputStrengthIndicator = ({score, myPassword}) => {
+  return (
+      <Popup
+          size="mini"
+          position="bottom center"
+          inverted
+          hoverable
+          trigger={
+            <Icon name="warning sign"
+                  fitted
+                  color={score < 3 ? 'red' : 'orange'}
+                  class="password_input_strength_indicator"/>
+          }
+          content={
+            <Fragment>
+              <span>{passwordStrengthDescription[score]}</span>
+              <br/>
+              {myPassword ?
+                  <span><a class="simple_link">Change it to a strong one</a>&nbsp;💪<i class="em-svg em-muscle"/></span>
+                  :
+                  <span><a class="simple_link">Require people to make their password stronger</a>&nbsp;💪<i class="em-svg em-muscle"/></span>
+              }
+            </Fragment>
+          }
+      />
+  )
+};
+
+export const StaticEnterpriseTeamCardPasswordInput = ({item, passwordScore, myPassword}) => {
+  return (
+      <Input size="mini"
+             class="team-app-input"
+             readOnly
+             name={item.name}
+             labelPosition="left"
+             placeholder={'(Password encrypted)'}
+             value={item.value}
+             type={'password'}>
+        <Label><Icon name={credentialIconType[item.name]}/></Label>
+        <input/>
+        {!!passwordScore && passwordScore < 4 &&
+        <EnterpriseTeamCardPasswordInputStrengthIndicator score={passwordScore}
+                                                          myPassword={myPassword}/>}
+      </Input>
+  )
+};
+
+const SimpleTeamCardPasswordInputStrengthIndicator = ({score}) => {
+  return (
+      <Popup
+          size="mini"
+          position="bottom center"
+          inverted
+          hoverable
+          trigger={
+            <Icon name="warning sign"
+                  fitted
+                  color={score < 3 ? 'red' : 'orange'}
+                  class="password_input_strength_indicator"/>
+          }
+          content={
+            <Fragment>
+              <span>{passwordStrengthDescription[score]}</span>
+              <br/>
+              <span><a class="simple_link">Change it to a strong one</a>&nbsp;💪<i class="em-svg em-muscle"/></span>
+            </Fragment>
+          }
+      />
+  )
+};
+
+export const StaticSimpleTeamCardPasswordInput = ({item, passwordScore}) => {
+  return (
+      <div class='credentials_single_card'>
+        <Input
+            size="mini"
+            class="team-app-input"
+            placeholder='(Password encrypted)'
+            type="password"
+            readOnly
+            labelPosition="left">
+          <Label><Icon name={credentialIconType[item.name]}/></Label>
+          <input/>
+          {!!passwordScore && passwordScore < 4 &&
+          <SimpleTeamCardPasswordInputStrengthIndicator score={passwordScore}/>}
+        </Input>
+      </div>
+  )
+};
 
 export class EmptyCredentialsSimpleAppIndicator extends Component {
   constructor(props){
