@@ -11,6 +11,7 @@ import javax.persistence.Cacheable;
 import javax.persistence.Entity;
 import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Table;
+import java.util.Date;
 
 @Entity
 @Cacheable
@@ -29,7 +30,17 @@ public class TeamEnterpriseCard extends TeamWebsiteCard {
     }
 
     @Override
+    public Integer getPasswordScore() {
+        throw new RuntimeException("You shouldn't be there");
+    }
+
+    @Override
     public void setPasswordScore(Integer passwordScore) {
+        throw new RuntimeException("You shouldn't be there");
+    }
+
+    @Override
+    public void setLastPasswordScoreAlertDate(Date date) {
         throw new RuntimeException("You shouldn't be there");
     }
 
