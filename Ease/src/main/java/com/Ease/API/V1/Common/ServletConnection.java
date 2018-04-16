@@ -1,6 +1,5 @@
 package com.Ease.API.V1.Common;
 
-import com.Ease.Context.InitializeTeamPasswords;
 import com.Ease.Context.Variables;
 import com.Ease.Hibernate.HibernateQuery;
 import com.Ease.Mail.MailJetBuilder;
@@ -144,7 +143,7 @@ public class ServletConnection extends HttpServlet {
             sm.setError(new HttpServletException(HttpStatus.BadRequest, "Wrong email or password."));
         }
         sm.sendResponse();
-        teamAndKeyMap.forEach((team, s) -> new InitializeTeamPasswords(team, s).run());
+        //teamAndKeyMap.forEach((team, s) -> new InitializeTeamPasswords(team, s).run());
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
