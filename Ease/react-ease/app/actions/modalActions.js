@@ -243,3 +243,12 @@ export function showConnectionDurationChooserModal({active}){
     }
   }
 }
+
+export function showMagicLinkChooserModal({active}) {
+  return {
+    type: 'SHOW_MAGIC_LINK_CHOOSER_MODAL',
+    payload: {
+      active: active
+    }
+  }
+}
