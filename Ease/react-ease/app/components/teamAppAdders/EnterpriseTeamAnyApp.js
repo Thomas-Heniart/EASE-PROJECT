@@ -2,8 +2,10 @@ import React, {Component} from "react";
 import classnames from "classnames";
 import {Button, Container, Dropdown, Header, Icon, Input, Label, Popup, Segment, TextArea} from 'semantic-ui-react';
 import {
-  EmptyCredentialsEnterpriseAppIndicator, PasswordChangeDropdownEnterprise, PasswordChangeHolderEnterprise,
-  setUserDropdownText, SharingRequestButton, TeamAppActionButton
+  EmptyCredentialsEnterpriseAppIndicator, EnterpriseCardPasswordStrengthIndicator, PasswordChangeDropdownEnterprise,
+  PasswordChangeHolderEnterprise,
+  scanEnterpriseCardForWeakPasswords,
+  setUserDropdownText, SharingRequestButton, StaticEnterpriseTeamCardPasswordInput, TeamAppActionButton
 } from "./common";
 import * as modalActions from "../../actions/teamModalActions";
 import {showUpgradeTeamPlanModal} from "../../actions/teamModalActions";
@@ -169,7 +171,7 @@ class CopyPasswordButton extends Component {
   }
 };
 
-const StaticReceivers = ({receivers, me, expanded, password_reminder_interval, dispatch}) => {
+const StaticReceivers = ({receivers, me, expanded, password_reminder_interval, dispatch, proPlan}) => {
   const meAdmin = isAdmin(me.role);
   return (
     <div class="receivers">
@@ -189,6 +191,11 @@ const StaticReceivers = ({receivers, me, expanded, password_reminder_interval, d
                     team_user={receiver.user}
                     meAdmin={meAdmin}/> :
                 receiver.credentials.map(item => {
+                  if (item.type === 'password')
+                    return <StaticEnterpriseTeamCardPasswordInput item={item}
+                                                                  myPassword={me.id === receiver.user.id}
+                                                                  passwordScore={(proPlan && (meAdmin || me.id === receiver.user.id)) ? receiver.receiver.password_score : null}
+                                                                  key={item.name}/>;
                   return <Input size="mini"
                                 key={item.name}
                                 class="team-app-input"
@@ -196,7 +203,7 @@ const StaticReceivers = ({receivers, me, expanded, password_reminder_interval, d
                                 name={item.name}
                                 label={<Label><Icon name={credentialIconType[item.name]}/></Label>}
                                 labelPosition="left"
-                                placeholder={item.name === 'password' ? '(Password encrypted)' : item.placeholder}
+                                placeholder={item.placeholder}
                                 value={item.value}
                                 type={item.type}/>;
                 })}
@@ -488,9 +495,15 @@ class EnterpriseTeamAnyApp extends Component {
     const app = this.props.app;
     const me = this.props.me;
     const team = this.props.teams[app.team_id];
+    let passwordWeakness = null;
     const website = app.website;
     const users = this.getUsers();
+    const proPlan = team.plan_id !== 0;
+    const meAdmin = isAdmin(me.role);
     const room_manager = this.props.teams[this.props.team_id].team_users[selectItemFromListById(this.props.channels, app.channel_id).room_manager_id];
+    if (proPlan && meAdmin)
+      passwordWeakness = scanEnterpriseCardForWeakPasswords(app);
+
     return (
       <Container fluid
                  id={`app_${app.id}`}
@@ -509,10 +522,15 @@ class EnterpriseTeamAnyApp extends Component {
                      placeholder="Card name..."
                      type="text"
                      required/>}
-            {app.requests.length > 0 && isAdmin(me.role) &&
+            {app.requests.length > 0 && meAdmin &&
             <SharingRequestButton
               requestNumber={app.requests.length}
               onClick={e => {this.props.dispatch(modalActions.showTeamManageAppRequestModal({active: true, team_card_id: app.id}))}}/>}
+            {!this.state.edit && !!passwordWeakness && !!passwordWeakness.weaknessStatus &&
+            <EnterpriseCardPasswordStrengthIndicator
+                weaknessStatus={passwordWeakness.weaknessStatus}
+                weakPasswordsCount={passwordWeakness.weakPasswordsCount}
+            />}
           </Header>
           {!this.state.edit &&
           <TeamEnterpriseAppButtonSet app={app}
@@ -562,6 +580,7 @@ class EnterpriseTeamAnyApp extends Component {
               <StaticReceivers receivers={users}
                                dispatch={this.props.dispatch}
                                password_reminder_interval={app.password_reminder_interval}
+                               proPlan={proPlan}
                                expanded={this.state.show_more}
                                me={me}/>}
               <div>
