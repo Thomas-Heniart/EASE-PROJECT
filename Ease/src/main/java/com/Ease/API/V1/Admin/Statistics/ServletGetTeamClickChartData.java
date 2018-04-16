@@ -1,5 +1,6 @@
 package com.Ease.API.V1.Admin.Statistics;
 
+import com.Ease.Hibernate.HibernateQuery;
 import com.Ease.Team.Team;
 import com.Ease.Utils.Servlets.GetServletManager;
 import org.json.JSONArray;
@@ -12,7 +13,9 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.math.BigInteger;
 import java.util.Calendar;
+import java.util.List;
 
 @WebServlet("/api/v1/teams/GetTeamClickChartData")
 public class ServletGetTeamClickChartData extends HttpServlet {
@@ -41,7 +44,34 @@ public class ServletGetTeamClickChartData extends HttpServlet {
             Calendar current = Calendar.getInstance();
             Calendar calendar = Calendar.getInstance();
             calendar.setTime(team.getSubscription_date());
-            while (calendar.get(Calendar.YEAR) < current.get(Calendar.YEAR)) {
+            List<Integer> userIds = team.getUserIds();
+            HibernateQuery hibernateQuery = sm.getTrackingHibernateQuery();
+            hibernateQuery.querySQLString("SELECT\n" +
+                    "  year,\n" +
+                    "  day_of_year,\n" +
+                    "  COUNT(*) AS clicks\n" +
+                    "FROM EASE_EVENT\n" +
+                    "WHERE (name LIKE 'PasswordUsed' OR name LIKE 'PasswordUser') AND creation_date BETWEEN :startDate AND :endDate AND user_id IN :userIds\n" +
+                    "GROUP BY year, day_of_year\n" +
+                    "ORDER BY YEAR, day_of_year;");
+            hibernateQuery.setDate("startDate", calendar);
+            hibernateQuery.setDate("endDate", current);
+            hibernateQuery.setParameter("userIds", userIds);
+            List<Object> raws = hibernateQuery.list();
+            for (Object object : raws) {
+                Object[] raw = (Object[]) object;
+                Long count = ((BigInteger) raw[2]).longValueExact();
+                int year = (Integer) raw[0];
+                int dayOfYear = ((Short) raw[1]).intValue();
+                while (calendar.get(Calendar.YEAR) < year || (calendar.get(Calendar.YEAR) == year && calendar.get(Calendar.DAY_OF_YEAR) < dayOfYear)) {
+                    ((JSONArray) click_average.get("data")).put(0);
+                    labels.put(++days);
+                    calendar.add(Calendar.DAY_OF_YEAR, 1);
+                }
+                ((JSONArray) click_average.get("data")).put(count.doubleValue() / userIds.size());
+                labels.put(++days);
+            }
+            /* while (calendar.get(Calendar.YEAR) < current.get(Calendar.YEAR)) {
                 JSONArray tmp = team.getAverageOfClick(calendar.get(Calendar.YEAR), calendar.get(Calendar.WEEK_OF_YEAR), sm.getHibernateQuery());
                 for (int i=0; i < tmp.length(); i++)
                     ((JSONArray) click_average.get("data")).put(tmp.opt(i));
@@ -56,21 +86,7 @@ public class ServletGetTeamClickChartData extends HttpServlet {
                 for (int i = 1; i <= 7; i++)
                     labels.put(++days);
                 calendar.add(Calendar.WEEK_OF_YEAR, 1);
-            }
-            /* if (calendar.get(Calendar.YEAR) > EASE_FIRST_YEAR) {
-                do {
-                    ((JSONArray) click_average.get("data")).put(team.getAverageOfClick(calendar.get(Calendar.YEAR), calendar.get(Calendar.WEEK_OF_YEAR), sm.getHibernateQuery()));
-                    for (int i = 1; i <= 7; i++)
-                        labels.put(++days);
-                    calendar.add(Calendar.WEEK_OF_YEAR, 1);
-                } while (calendar.get(Calendar.YEAR) < current.get(Calendar.YEAR));
-            }
-            do {
-                ((JSONArray) click_average.get("data")).put(team.getAverageOfClick(calendar.get(Calendar.YEAR), calendar.get(Calendar.WEEK_OF_YEAR), sm.getHibernateQuery()));
-                for (int i = 1; i <= 7; i++)
-                    labels.put(++days);
-                calendar.add(Calendar.WEEK_OF_YEAR, 1);
-            } while (calendar.get(Calendar.WEEK_OF_YEAR) <= Calendar.getInstance().get(Calendar.WEEK_OF_YEAR)); */
+            } */
             data.put("labels", labels);
             data.put("datasets", datasets);
             res.put("data", data);

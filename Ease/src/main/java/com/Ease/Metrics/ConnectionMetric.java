@@ -8,12 +8,17 @@ import javax.persistence.*;
 @Table(name = "METRIC_CONNECTION")
 public class ConnectionMetric {
 
-    public static ConnectionMetric getMetric(Integer user_id, Integer year, Integer day_of_year, HibernateQuery hibernateQuery) {
+    public static ConnectionMetric getMetricOrNull(Integer user_id, Integer year, Integer day_of_year, HibernateQuery hibernateQuery) {
         hibernateQuery.queryString("SELECT m FROM ConnectionMetric m WHERE m.user_id = :user_id AND m.year = :year AND m.day_of_year = :day_of_year");
         hibernateQuery.setParameter("user_id", user_id);
         hibernateQuery.setParameter("year", year);
         hibernateQuery.setParameter("day_of_year", day_of_year);
         ConnectionMetric metric = (ConnectionMetric) hibernateQuery.getSingleResult();
+        return metric;
+    }
+
+    public static ConnectionMetric getMetric(Integer user_id, Integer year, Integer day_of_year, HibernateQuery hibernateQuery) {
+        ConnectionMetric metric = getMetricOrNull(user_id, year, day_of_year, hibernateQuery);
         if (metric == null) {
             metric = new ConnectionMetric(user_id, year, day_of_year);
             hibernateQuery.saveOrUpdateObject(metric);

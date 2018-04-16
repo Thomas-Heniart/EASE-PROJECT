@@ -6,9 +6,11 @@ import {showSsoAppSettingsModal} from "../../actions/modalActions";
 import {AppConnection, passwordCopied} from "../../actions/dashboardActions";
 import {copyTextToClipboard, transformWebsiteInfoIntoListAndSetValues} from "../../utils/utils";
 import {EmptyAppIndicator, NewAppLabel, LoadingAppIndicator, SettingsMenu, getPosition} from "./utils";
+import ReactCSSTransitionGroup from "react-addons-css-transition-group";
 
 @connect(store => ({
-  sso_groups: store.dashboard.sso_groups
+  sso_groups: store.dashboard.sso_groups,
+  dnd: store.dashboard_dnd.dragging_app_id !== -1
 }))
 class SsoApp extends Component {
   constructor(props){
@@ -47,7 +49,7 @@ class SsoApp extends Component {
     e.preventDefault();
     const {app} = this.props;
     const sso_group = this.props.sso_groups[app.sso_group_id];
-    if (!sso_group.empty) {
+    if (!sso_group.empty && !this.props.dnd) {
       this.setState({hover: true, position: getPosition(app.id)});
       if (this.password === '')
         api.dashboard.getAppPassword({
@@ -84,6 +86,14 @@ class SsoApp extends Component {
   remove = () => {
     this.props.dispatch(showSsoAppSettingsModal({active: true, app: this.props.app, remove: true}));
   };
+  checkAndConnect = (e) => {
+    const {app} = this.props;
+    const sso_group = this.props.sso_groups[app.sso_group_id];
+
+    if (this.state.loading || sso_group.empty)
+      return;
+    this.connect(e);
+  };
   render(){
     const {app, dispatch} = this.props;
     const sso_group = this.props.sso_groups[app.sso_group_id];
@@ -92,51 +102,58 @@ class SsoApp extends Component {
       if (this.state.copiedPassword !== item.priority && this.state.copiedOther !== item.priority) {
         if (item.name === 'password')
           return (
-            <button
-              className="settings_button"
-              onClick={e => this.copyPassword(item)}
-              key={idx}>
-              <Icon name='copy'/> • • • • • • • •
-            </button>
+            <div className='container_button' key={idx}>
+              <button className="settings_button" onClick={e => this.copyPassword(item)}>
+                <Icon name='copy'/> • • • • • • • •
+              </button>
+            </div>
           );
         return (
-          <button
-            key={idx}
-            className="settings_button"
-            onClick={e => this.copy(item)}>
-            <Icon name='copy'/> {item.value}
-          </button>
+          <div className='container_button' key={idx}>
+            <button className="settings_button" onClick={e => this.copy(item)}>
+              <Icon name='copy'/> {item.value}
+            </button>
+          </div>
         )
       }
       return (
-        <button
-          key={idx}
-          className="settings_button">
-          Copied!
-        </button>
+        <div className='container_button' key={idx}>
+          <button className="settings_button">
+            Copied!
+          </button>
+        </div>
       )
     });
     return (
         <div class='app'>
           <div className={sso_group.empty ? 'logo_area' : this.state.menuActive ? 'logo_area active' : 'logo_area not_active'}
-               onMouseEnter={this.activateMenu} onMouseLeave={this.deactivateMenu}>
+               onMouseEnter={!this.props.dnd ? this.activateMenu : null} onMouseLeave={!this.props.dnd ? this.deactivateMenu : null}>
             {this.state.loading &&
             <LoadingAppIndicator/>}
             {sso_group.empty &&
             <EmptyAppIndicator onClick={e => {dispatch(showSsoAppSettingsModal({active: true, app: app}))}}/>}
             {app.new &&
             <NewAppLabel/>}
-            <SettingsMenu
-              app={app}
-              buttons={buttons}
-              remove={this.remove}
-              position={this.state.position}
-              clickOnSettings={e => dispatch(showSsoAppSettingsModal({active: true, app: app}))}/>
+            <ReactCSSTransitionGroup
+              transitionName="settingsAnim"
+              transitionEnter={true}
+              transitionLeave={true}
+              transitionEnterTimeout={1300}
+              transitionLeaveTimeout={1}>
+              {this.state.hover && !this.props.dnd &&
+              <SettingsMenu
+                app={app}
+                buttons={buttons}
+                remove={this.remove}
+                position={this.state.position}
+                clickOnSettings={e => dispatch(showSsoAppSettingsModal({active: true, app: app}))}/>}
+            </ReactCSSTransitionGroup>
             <div class="logo_handler">
               <img class="logo" src={app.logo} onClick={this.connect}/>
             </div>
           </div>
-          <span class="app_name overflow-ellipsis">{app.name}</span>
+          <span class="app_name overflow-ellipsis"
+                onClick={this.checkAndConnect}>{app.name}</span>
         </div>
     )
   }

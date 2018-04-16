@@ -34,6 +34,8 @@ public class RemoveTeamCardReceiver extends HttpServlet {
             Integer team_card_receiver_id = sm.getIntParam("team_card_receiver_id", true, false);
             HibernateQuery hibernateQuery = sm.getHibernateQuery();
             TeamCardReceiver teamCardReceiver = (TeamCardReceiver) hibernateQuery.get(TeamCardReceiver.class, team_card_receiver_id);
+            if (teamCardReceiver == null)
+                throw new HttpServletException(HttpStatus.BadRequest, "Receiver already removed");
             TeamCard teamCard = teamCardReceiver.getTeamCard();
             Team team = teamCard.getTeam();
             sm.initializeTeamWithContext(team);

@@ -22,6 +22,7 @@ import javax.persistence.*;
 import java.io.IOException;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /**
@@ -427,7 +428,7 @@ public class Team {
         res.put("plan_id", plan_id);
         res.put("onboarding_step", this.getOnboardingStatus().getStep());
         res.put("payment_required", this.isBlocked());
-        res.put("show_invite_people_popup", !this.isInvitations_sent() && this.getTeamCardSet().size() >= 8 && DateUtils.isOutdated(this.getSubscription_date(), 0, 1));
+        res.put("show_invite_people_popup", !this.isInvitations_sent() && this.getTeamCardSet().size() >= 8 && DateUtils.isOutdated(this.getSubscription_date(), 0, 4));
         res.put("extra_members", this.getDb_id().equals(RAIZERS_ID) ? 20 : (this.getDb_id().equals(SMARTB_ID) ? (5 + this.getInvitedFriendMap().size()) : this.getInvitedFriendMap().size()));
         return res;
     }
@@ -662,6 +663,10 @@ public class Team {
             res.put(day_seven / teamUsers_size);
         }
         return res;
+    }
+
+    public List<Integer> getUserIds() {
+        return this.getTeamUsers().values().stream().filter(TeamUser::isRegistered).map(teamUser -> teamUser.getUser().getDb_id()).collect(Collectors.toList());
     }
 
     public int getExtraMembersCount() {

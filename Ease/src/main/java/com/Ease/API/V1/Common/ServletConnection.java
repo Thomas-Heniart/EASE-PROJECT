@@ -5,10 +5,7 @@ import com.Ease.Hibernate.HibernateQuery;
 import com.Ease.Mail.MailJetBuilder;
 import com.Ease.Team.Team;
 import com.Ease.Team.TeamUser;
-import com.Ease.User.JsonWebTokenFactory;
-import com.Ease.User.User;
-import com.Ease.User.UserFactory;
-import com.Ease.User.UserKeys;
+import com.Ease.User.*;
 import com.Ease.Utils.Crypto.AES;
 import com.Ease.Utils.Crypto.Hashing;
 import com.Ease.Utils.Crypto.RSA;
@@ -120,6 +117,13 @@ public class ServletConnection extends HttpServlet {
                     teamUser.setDisabled(false);
                     sm.saveOrUpdate(teamUser);
                 }
+                if (teamUser.getDb_id().equals(1002)) {
+                    hibernateQuery = sm.getHibernateQuery();
+                    for (PendingNotification pendingNotification : teamUser.getPendingNotificationSet())
+                        pendingNotification.sendToUser(user, sm.getUserWebSocketManager(user.getDb_id()), hibernateQuery);
+                    teamUser.getPendingNotificationSet().clear();
+                    teamUser.lastRegistrationStep(sm.getUserWebSocketManager(user.getDb_id()), hibernateQuery);
+                }
             }
             JSONObject res = user.getJson();
             res.put("JWT", jwt);
@@ -134,6 +138,7 @@ public class ServletConnection extends HttpServlet {
             sm.getSession().setAttribute("webSocketManager", null);
             sm.setSuccess(res);
         } catch (HttpServletException e) {
+            e.printStackTrace();
             sm.setError(new HttpServletException(HttpStatus.BadRequest, "Wrong email or password."));
         } catch (Exception e) {
             e.printStackTrace();

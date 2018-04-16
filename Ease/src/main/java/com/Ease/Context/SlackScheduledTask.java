@@ -101,7 +101,7 @@ public class SlackScheduledTask extends TimerTask {
         List<Integer> userIds = hibernateQuery.list();
         if (userIds.isEmpty())
             return new LinkedList<>();
-        hibernateQuery.queryString("SELECT DISTINCT t.team FROM TeamUser t WHERE t.user IS NOT NULL AND t.user.db_id IN (:userIds)");
+        hibernateQuery.queryString("SELECT DISTINCT t.team FROM TeamUser t WHERE t.user IS NOT NULL AND t.user.db_id IN (:userIds) AND t.team.active IS true");
         hibernateQuery.setParameter("userIds", userIds);
         return hibernateQuery.list();
     }

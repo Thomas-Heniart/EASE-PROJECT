@@ -50,6 +50,10 @@
   transition-property: transform;
 }
 
+.em-svg {
+  font-size: .6em;
+}
+
 @media screen and (min-width: 768px) {
   .container {
     width: 750px;

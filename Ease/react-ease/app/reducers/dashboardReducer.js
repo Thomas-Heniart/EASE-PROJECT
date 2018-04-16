@@ -154,7 +154,7 @@ export const dashboard = createReducer({
         [profile.id]: {$set: profile}
       },
       columns: {
-        [profile.column_index]: {$push: [profile.id]}
+        [profile.column_index]: {$splice: [[profile.position_index, 0, profile.id]]}
       }
     });
   },

@@ -35,7 +35,7 @@ public class MetricsSchedulerTask extends TimerTask {
                 for (TeamUser teamUser : team.getTeamUsers().values()) {
                     people_invited++;
                     people_invited_emails.append(teamUser.getEmail()).append(";");
-                    if (teamUser.isVerified()) {
+                    if (teamUser.isRegistered()) {
                         people_joined++;
                         people_joined_emails.append(teamUser.getEmail()).append(";");
                         if (!teamUser.getTeamCardReceivers().isEmpty()) {

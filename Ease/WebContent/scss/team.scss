@@ -1256,7 +1256,7 @@ button.action_text_button {
   }
   .container {
     font-size: .9rem;
-    padding-top: 30px;
+    padding-top: 20px;
     padding-left: 30px;
     padding-right: 30px;
     margin-bottom: 0;
@@ -2261,6 +2261,18 @@ button.action_text_button {
   }
 }
 
+#ask_magic_link_modal {
+  .form {
+    .field {
+      strong {
+        display: block;
+      }
+      font-size: 16px;
+      line-height: 1.75;
+    }
+  }
+}
+
 .team_app_actions_holder {
   @include display-flex();
   z-index: 1;
@@ -2441,6 +2453,13 @@ button.action_text_button {
                     font-weight: bold;
                     color: white;
                   }
+                  &.userNotAccepted {
+                    font-style: italic;
+                    color: #a1a3b2;
+                    span {
+                      width: 100%;
+                    }
+                  }
                   &:hover {
                     cursor: pointer;
                     background-color: rgba(255,255,255, 0.2);
@@ -2452,11 +2471,6 @@ button.action_text_button {
                     margin-right: 5px;
                     font-size: .7em;
                     opacity: .8;
-                  }
-                  .userNotAccepted {
-                    font-style: italic;
-                    opacity: .6;
-                    width: 100%;
                   }
                 }
               }

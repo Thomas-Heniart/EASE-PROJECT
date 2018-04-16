@@ -233,8 +233,33 @@ FROM (SELECT
       ORDER BY user_id ASC, date DESC) AS t
 GROUP BY user_id;
 
-SELECT COUNT(*)
-FROM teamUsers
-  JOIN users ON teamUsers.user_id = users.id
-  JOIN status ON users.status_id = status.id
-WHERE status.registered = 1
+SELECT
+  year,
+  day_of_year,
+  COUNT(*) AS clicks
+FROM ease_tracking.EASE_EVENT
+WHERE (name LIKE 'PasswordUsed' OR name LIKE 'PasswordUser' AND user_id IN (SELECT user_id
+                                                                           FROM ease.teamUsers
+                                                                           WHERE team_id = 312 AND user_id IS NOT NULL)
+GROUP BY year, day_of_year
+ORDER BY year, day_of_year;
+
+SELECT *
+FROM ease_tracking.EASE_EVENT
+WHERE name LIKE 'PasswordUsed' OR name LIKE 'PasswordUser' AND user_id IN (SELECT user_id
+                                                                           FROM ease.teamUsers
+                                                                           WHERE team_id = 312 AND user_id IS NOT NULL);
+
+SELECT
+  year,
+  day_of_year,
+  COUNT(*) AS clicks
+FROM (
+       SELECT
+         year,
+         day_of_year,
+         id
+       FROM ease_tracking.EASE_EVENT
+       WHERE name LIKE ('PasswordUsed' OR name LIKE 'PasswordUser') AND user_id = 3411) AS t
+GROUP BY year, day_of_year
+ORDER BY year, day_of_year;

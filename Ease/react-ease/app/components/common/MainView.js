@@ -12,8 +12,8 @@ import NotificationBoxContainer from "../common/NotificationBoxContainer";
 var NewSimpleTeamCreationView = require('../onBoarding/NewSimpleTeamCreationView');
 import {connect} from "react-redux";
 import Footer from "./Footer";
-import {showExtensionDownloadModal, showConnectionDurationChooserModal} from "../../actions/modalActions";
 import HeaderSidebar from "./HeaderSidebar";
+import {showExtensionDownloadModal, showMagicLinkChooserModal, showConnectionDurationChooserModal} from "../../actions/modalActions";
 
 @connect(store => ({
   common: store.common
@@ -22,7 +22,6 @@ class MainView extends Component {
   componentDidMount(){
     setTimeout(() => {
       const user = this.props.common.user;
-      const extensionInstalled = !!document.querySelector('#new_ease_extension');
       if (!user.new_feature_seen)
         return;
       if (!user.status.popup_choose_connection_lifetime_seen){
@@ -31,6 +30,13 @@ class MainView extends Component {
         }));
         return;
       }
+      if (!user.status.popup_choose_magic_apps_seen){
+        this.props.dispatch(showMagicLinkChooserModal({
+          active: true
+        }));
+        return;
+      }
+      const extensionInstalled = !!document.querySelector('#new_ease_extension');
       if (!extensionInstalled){
         this.props.dispatch(showExtensionDownloadModal({active: true}));
       }

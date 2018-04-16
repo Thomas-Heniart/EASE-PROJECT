@@ -5,6 +5,7 @@ import com.Ease.Importation.ImportedAccount;
 import com.Ease.Metrics.ConnectionMetric;
 import com.Ease.NewDashboard.App;
 import com.Ease.NewDashboard.Profile;
+import com.Ease.NewDashboard.ProfileInformation;
 import com.Ease.NewDashboard.SsoGroup;
 import com.Ease.Team.Team;
 import com.Ease.Team.TeamUser;
@@ -22,6 +23,7 @@ import javax.servlet.http.Cookie;
 import java.nio.charset.Charset;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -513,6 +515,21 @@ public class User {
         this.getUserKeys().setKeyUser(AES.encryptUserKey(this.getUserKeys().getDecipheredKeyUser(accessCode), password, this.getUserKeys().getSaltPerso()));
         this.getUserKeys().setAccess_code_hash(null);
         this.getUserStatus().setRegistered(true);
+        this.getUserStatus().setNewFeatureSeen(true);
         this.getUserStatus().setOnboardingStep(1);
+    }
+
+    /* Hack for api/v1/admin/upgrade/es-137 */
+    public Profile getOrCreatePersonalProfile(HibernateQuery hibernateQuery) throws HttpServletException {
+        Profile profile = this.getProfileSet().stream().filter(profile1 -> profile1.getChannel() == null).findFirst().orElse(null);
+        if (profile == null) {
+            int column = ThreadLocalRandom.current().nextInt(0, 4);
+            int columnSize = Math.toIntExact(this.getProfileSet().stream().filter(profile1 -> profile1.getColumn_index().equals(column)).count());
+            profile = new Profile(this, column, columnSize, new ProfileInformation("Me"));
+            hibernateQuery.saveOrUpdateObject(profile);
+            this.addProfile(profile);
+            this.moveProfile(profile.getDb_id(), column, 0, hibernateQuery);
+        }
+        return profile;
     }
 }

@@ -101,6 +101,9 @@ export const modals = createReducer({
   },
   connectionDurationChooser: {
     active: false
+  },
+  magicLinkChooser: {
+    active: false
   }
 }, {
   ['SHOW_CLASSIC_APP_SETTINGS_MODAL'](state, action){
@@ -257,6 +260,12 @@ export const modals = createReducer({
     return {
         ...state,
       connectionDurationChooser: action.payload
+    }
+  },
+  ['SHOW_MAGIC_LINK_CHOOSER_MODAL'](state, action){
+    return {
+        ...state,
+      magicLinkChooser: action.payload
     }
   }
 });
