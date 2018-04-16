@@ -59,7 +59,7 @@ class LinkApp extends Component {
               transitionLeave={true}
               transitionEnterTimeout={1300}
               transitionLeaveTimeout={300}>
-              {this.state.hover &&
+              {this.state.hover && !this.props.dnd &&
                 <SettingsMenu
                   app={app}
                   remove={this.remove}

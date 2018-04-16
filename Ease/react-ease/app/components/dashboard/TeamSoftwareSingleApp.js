@@ -109,31 +109,23 @@ class TeamSoftwareSingleApp extends Component {
       if (this.state.copiedPassword !== item.priority && this.state.copiedOther !== item.priority) {
         if (item.name === 'password')
           return (
-            <div className='container_button'>
-              <button
-                className="settings_button"
-                onClick={e => this.copyPassword(item)}
-                key={idx}>
+            <div className='container_button' key={idx}>
+              <button className="settings_button" onClick={e => this.copyPassword(item)}>
                 <Icon name='copy'/> • • • • • • • •
               </button>
             </div>
           );
         return (
-          <div className='container_button'>
-            <button
-              key={idx}
-              className="settings_button"
-              onClick={e => this.copy(item)}>
+          <div className='container_button' key={idx}>
+            <button className="settings_button" onClick={e => this.copy(item)}>
               <Icon name='copy'/> {item.value}
             </button>
           </div>
         )
       }
       return (
-        <div className='container_button'>
-          <button
-            key={idx}
-            className="settings_button">
+        <div className='container_button' key={idx}>
+          <button className="settings_button">
             Copied!
           </button>
         </div>
@@ -167,7 +159,7 @@ class TeamSoftwareSingleApp extends Component {
             transitionLeave={true}
             transitionEnterTimeout={1300}
             transitionLeaveTimeout={300}>
-            {this.state.hover &&
+            {this.state.hover && !this.props.dnd &&
           <SettingsMenu app={app}
                         buttons={buttons}
                         remove={this.remove}

@@ -97,7 +97,7 @@ class TeamLinkApp extends Component {
               transitionLeave={true}
               transitionEnterTimeout={1300}
               transitionLeaveTimeout={300}>
-              {this.state.hover &&
+              {this.state.hover && !this.props.dnd &&
                 <SettingsMenu app={app}
                               teams={this.props.teams}
                               remove={this.remove}
