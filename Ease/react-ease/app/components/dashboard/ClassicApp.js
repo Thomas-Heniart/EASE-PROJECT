@@ -1,11 +1,16 @@
 import React, {Component} from "react";
+import {connect} from "react-redux";
 import {LoadingAppIndicator, EmptyAppIndicator, NewAppLabel, SettingsMenu, getPosition} from "./utils";
 import {showClassicAppSettingsModal} from "../../actions/modalActions";
 import {AppConnection, clickOnAppMetric, passwordCopied} from "../../actions/dashboardActions";
 import {copyTextToClipboard, transformWebsiteInfoIntoListAndSetValues} from "../../utils/utils";
 import {Icon} from 'semantic-ui-react';
 import * as api from "../../utils/api";
+import ReactCSSTransitionGroup from "react-addons-css-transition-group";
 
+@connect(store => ({
+  dnd: store.dashboard_dnd.dragging_app_id !== -1
+}))
 class ClassicApp extends Component {
   constructor(props){
     super(props);
@@ -33,7 +38,7 @@ class ClassicApp extends Component {
   activateMenu = (e) => {
     e.preventDefault();
     const {app} = this.props;
-    if (!app.empty) {
+    if (!app.empty && !this.props.dnd) {
       this.setState({hover: true, position: getPosition(app.id)});
       if (this.password === '')
         api.dashboard.getAppPassword({
@@ -100,34 +105,32 @@ class ClassicApp extends Component {
       if (this.state.copiedPassword !== item.priority && this.state.copiedOther !== item.priority) {
         if (item.name === 'password')
           return (
-            <button
-              className="settings_button"
-              onClick={e => this.copyPassword(item)}
-              key={idx}>
-              <Icon name='copy'/> • • • • • • • •
-            </button>
+            <div className='container_button' key={idx}>
+              <button className="settings_button" onClick={e => this.copyPassword(item)}>
+                <Icon name='copy'/> • • • • • • • •
+              </button>
+            </div>
           );
         return (
-          <button
-            key={idx}
-            className="settings_button"
-            onClick={e => this.copy(item)}>
-            <Icon name='copy'/> {item.value}
-          </button>
+          <div className='container_button' key={idx}>
+            <button className="settings_button" onClick={e => this.copy(item)}>
+              <Icon name='copy'/> {item.value}
+            </button>
+          </div>
         )
       }
       return (
-        <button
-          key={idx}
-          className="settings_button">
-          Copied!
-        </button>
+        <div className='container_button' key={idx}>
+          <button className="settings_button">
+            Copied!
+          </button>
+        </div>
       )
     });
     return (
         <div class='app classic'>
           <div className={app.empty ? 'logo_area' : this.state.menuActive ? 'logo_area active' : 'logo_area not_active'}
-               onMouseEnter={this.activateMenu} onMouseLeave={this.deactivateMenu}>
+               onMouseEnter={!this.props.dnd ? this.activateMenu : null} onMouseLeave={!this.props.dnd ? this.deactivateMenu : null}>
             {this.state.loading &&
             <LoadingAppIndicator/>}
             {app.empty &&
@@ -136,12 +139,20 @@ class ClassicApp extends Component {
             }}/>}
             {app.new &&
             <NewAppLabel/>}
+            <ReactCSSTransitionGroup
+              transitionName="settingsAnim"
+              transitionEnter={true}
+              transitionLeave={true}
+              transitionEnterTimeout={1300}
+              transitionLeaveTimeout={1}>
+              {this.state.hover && !this.props.dnd &&
               <SettingsMenu
                 app={app}
                 buttons={buttons}
                 remove={this.remove}
                 position={this.state.position}
-                clickOnSettings={this.clickOnSettings}/>
+                clickOnSettings={this.clickOnSettings}/>}
+            </ReactCSSTransitionGroup>
             <div class="logo_handler">
               <img class="logo" src={app.logo} onClick={this.connect}/>
             </div>
