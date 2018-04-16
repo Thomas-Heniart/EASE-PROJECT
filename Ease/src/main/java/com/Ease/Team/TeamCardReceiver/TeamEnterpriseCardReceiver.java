@@ -14,6 +14,7 @@ import org.json.JSONObject;
 
 import javax.persistence.*;
 import java.security.NoSuchAlgorithmException;
+import java.util.Date;
 
 @Entity
 @Cacheable
@@ -25,6 +26,9 @@ public class TeamEnterpriseCardReceiver extends TeamCardReceiver {
 
     @Column(name = "password_score")
     private Integer passwordScore;
+
+    @Column(name = "lastPasswordScoreAlertDate")
+    private Date lastPasswordScoreAlertDate;
 
     public TeamEnterpriseCardReceiver() {
 
@@ -40,6 +44,14 @@ public class TeamEnterpriseCardReceiver extends TeamCardReceiver {
 
     public void setPasswordScore(Integer passwordScore) {
         this.passwordScore = passwordScore;
+    }
+
+    public Date getLastPasswordScoreAlertDate() {
+        return lastPasswordScoreAlertDate;
+    }
+
+    public void setLastPasswordScoreAlertDate(Date lastPasswordScoreAlertDate) {
+        this.lastPasswordScoreAlertDate = lastPasswordScoreAlertDate;
     }
 
     @Override
@@ -58,6 +70,7 @@ public class TeamEnterpriseCardReceiver extends TeamCardReceiver {
         res.put("account_information", account.getJsonWithoutPassword());
         res.put("last_update_date", account.getLast_update().getTime());
         res.put("password_score", this.getPasswordScore() == null ? JSONObject.NULL : this.getPasswordScore());
+        res.put("last_password_score_alert_date", this.getLastPasswordScoreAlertDate() == null ? JSONObject.NULL : this.getLastPasswordScoreAlertDate().getTime());
         return res;
     }
 
