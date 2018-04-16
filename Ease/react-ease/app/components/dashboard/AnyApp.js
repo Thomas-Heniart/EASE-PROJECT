@@ -134,7 +134,7 @@ class AnyApp extends Component {
             transitionEnter={true}
             transitionLeave={true}
             transitionEnterTimeout={1300}
-            transitionLeaveTimeout={300}>
+            transitionLeaveTimeout={1}>
             {this.state.hover && !this.props.dnd &&
             <SettingsMenu
               app={app}
