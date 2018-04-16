@@ -269,3 +269,21 @@ export function connectionLifetimeModalSeen() {
     });
   }
 }
+
+export function magicLinkResponse({agree}) {
+  return (dispatch, getState) => {
+    return post_api.common.magicLinkModalSeen({
+      agree: agree
+    }).then(response => {
+      dispatch({
+        type: 'MAGIC_LINK_RESPONSE',
+        payload: {
+          agree: agree
+        }
+      });
+      return response;
+    }).catch(err => {
+      throw err;
+    })
+  }
+}

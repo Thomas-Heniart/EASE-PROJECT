@@ -1262,7 +1262,7 @@ button.action_text_button {
   }
   .container {
     font-size: .9rem;
-    padding-top: 30px;
+    padding-top: 20px;
     padding-left: 30px;
     padding-right: 30px;
     margin-bottom: 0;
@@ -2259,6 +2259,18 @@ button.action_text_button {
           text-align: left;
         }
       }
+    }
+  }
+}
+
+#ask_magic_link_modal {
+  .form {
+    .field {
+      strong {
+        display: block;
+      }
+      font-size: 16px;
+      line-height: 1.75;
     }
   }
 }
