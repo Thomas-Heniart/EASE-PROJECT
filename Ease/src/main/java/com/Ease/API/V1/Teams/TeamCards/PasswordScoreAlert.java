@@ -31,7 +31,7 @@ public class PasswordScoreAlert extends HttpServlet {
             TeamUser teamUserConnected = sm.getTeamUser(team);
             TeamUser teamUserReceiver;
             if (teamCard.isTeamSingleCard()) {
-                if (teamCard.getPasswordScore() != null && teamCard.getPasswordScore().equals(4))
+                if (teamCard.getPasswordScore() == null || teamCard.getPasswordScore().equals(4))
                     throw new HttpServletException(HttpStatus.BadRequest, "This password does not need to be updated");
                 teamUserReceiver = teamCard.getChannel().getRoom_manager();
                 if (teamUserConnected.equals(teamUserReceiver))
@@ -42,7 +42,7 @@ public class PasswordScoreAlert extends HttpServlet {
             } else if (teamCard.isTeamEnterpriseCard()) {
                 Integer teamCardReceiverId = sm.getIntParam("team_card_receiver_id", true, false);
                 TeamEnterpriseCardReceiver teamEnterpriseCardReceiver = (TeamEnterpriseCardReceiver) teamCard.getTeamCardReceiver(teamCardReceiverId);
-                if (teamEnterpriseCardReceiver.getPasswordScore() != null && teamEnterpriseCardReceiver.getPasswordScore().equals(4))
+                if (teamEnterpriseCardReceiver.getPasswordScore() == null || teamEnterpriseCardReceiver.getPasswordScore().equals(4))
                     throw new HttpServletException(HttpStatus.BadRequest, "This password does not need to be updated");
                 teamUserReceiver = teamEnterpriseCardReceiver.getTeamUser();
                 if (teamUserConnected.equals(teamUserReceiver))
