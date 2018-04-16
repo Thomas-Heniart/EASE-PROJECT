@@ -102,8 +102,7 @@ class SoftwareApp extends Component {
         )
       }
       return (
-        <div className='container_button'
-             key={idx}>
+        <div className='container_button' key={idx}>
           <button className="settings_button">
             Copied!
           </button>

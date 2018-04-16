@@ -186,6 +186,8 @@
           }
           &.not_active:hover {
             .settings_buttons.left {
+              visibility: visible;
+              max-height: unset;
               max-width: 180px;
               width: auto;
               padding-left: 10px;
@@ -193,11 +195,12 @@
               -webkit-transform: translateX(50px);
               transition: opacity .3s ease 1s, transform ease 1.2s, -webkit-transform ease 1.2s, width ease 1.2s;
               .settings_button {
-                display: block;
-                width: fit-content;
+                //width: fit-content;
               }
             }
             .settings_buttons.right {
+              visibility: visible;
+              max-height: unset;
               max-width: 180px;
               width: auto;
               padding-right: 10px;
@@ -207,27 +210,28 @@
               .container_button {
                 float: right;
                 .settings_button {
-                  display: block;
-                  width: fit-content;
+                  //width: fit-content;
                 }
               }
             }
           }
           &.active:hover {
             .settings_buttons.left {
+              visibility: visible;
+              max-height: unset;
               max-width: 180px;
               width: auto;
-              visibility: visible;
               padding-left: 10px;
               transform: translateX(50px);
               -webkit-transform: translateX(50px);
               transition: none;
               .settings_button {
-                display: block;
-                width: fit-content;
+                //width: fit-content;
               }
             }
             .settings_buttons.right {
+              visibility: visible;
+              max-height: unset;
               max-width: 180px;
               width: auto;
               padding-right: 10px;
@@ -237,9 +241,7 @@
               .container_button {
                 float: right;
                 .settings_button {
-                  display: block;
-                  width: fit-content;
-                  float: right;
+                  //width: fit-content;
                 }
               }
             }
@@ -249,7 +251,7 @@
               width: fit-content;
               padding-bottom: 4px;
               .settings_button {
-                width: 0;
+                width: fit-content;
                 display: block;
                 clear: both;
                 max-width: 180px;
@@ -263,7 +265,6 @@
                 color: white;
                 background-color: rgba(55, 59, 96, 0.9);
                 border-radius: 3px;
-                //margin-bottom: 4px;
                 -webkit-transition: -webkit-transform 85ms ease-in, width ease 1s;
                 transition: transform 85ms ease-in, -webkit-transform 85ms ease-in, width ease 1s;
                 &:hover {
@@ -282,6 +283,8 @@
               }
             }
             position: absolute;
+            visibility: hidden;
+            max-height: 0;
             width: 0;
             top: 0;
             left: 0;
@@ -711,11 +714,16 @@
   transition: all 300ms ease-in;
 }
 
+.settingsAnim {
+  position: absolute;
+}
 .settingsAnim-enter {
   opacity: 0;
+  left: -10000;
 }
 .settingsAnim-enter.settingsAnim-enter-active {
   opacity: 1;
+  left: 0;
   transition: all .3s ease-in 1s;
   //transition: opacity .3s ease 1s, transform ease 1.2s, -webkit-transform ease 1.2s, width ease 1.3s;
   //transition: opacity .3s ease 1s;

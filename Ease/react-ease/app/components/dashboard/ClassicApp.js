@@ -112,7 +112,7 @@ class ClassicApp extends Component {
             </div>
           );
         return (
-          <div className='container_button'>
+          <div className='container_button' key={idx}>
             <button className="settings_button" onClick={e => this.copy(item)}>
               <Icon name='copy'/> {item.value}
             </button>
@@ -120,7 +120,7 @@ class ClassicApp extends Component {
         )
       }
       return (
-        <div className='container_button'>
+        <div className='container_button' key={idx}>
           <button className="settings_button">
             Copied!
           </button>
