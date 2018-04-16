@@ -15,18 +15,19 @@ import {
   teamUserDepartureDatePassed, needPasswordUpdate,
   copyTextToClipboard, transformWebsiteInfoIntoListAndSetValues
 } from "../../utils/utils";
+import ReactCSSTransitionGroup from "react-addons-css-transition-group";
 
 @connect(store => ({
   teams: store.teams,
   team_apps: store.team_apps,
-  active: store.modals.teamAnyEnterpriseAppSettings.active
+  active: store.modals.teamAnyEnterpriseAppSettings.active,
+  dnd: store.dashboard_dnd.dragging_app_id !== -1
 }))
 class TeamAnyEnterpriseApp extends Component {
   constructor(props) {
     super(props);
     this.state = {
       loading: false,
-      isOpen: false,
       copiedPassword: null,
       copiedOther: null,
       menuActive: false,
@@ -56,21 +57,6 @@ class TeamAnyEnterpriseApp extends Component {
     window.open(team_app.website.login_url);
     extension.fillActiveTab({app_id: app.id});
   };
-  handleOpenClose = () => {
-    if (!this.props.active && !this.props.team_apps[this.props.app.team_card_id].empty) {
-      if (this.state.isOpen === false) {
-        if (this.props.app.new)
-          this.props.dispatch(validateApp({app_id: this.props.app.id}));
-        this.props.dispatch(clickOnAppMetric({app: this.props.app}));
-        api.dashboard.getAppPassword({
-          app_id: this.props.app.id
-        }).then(response => {
-          this.password = response.password;
-        });
-      }
-      this.setState({isOpen: !this.state.isOpen});
-    }
-  };
   activateMenu = (e) => {
     e.preventDefault();
     const {app, teams} = this.props;
@@ -78,7 +64,7 @@ class TeamAnyEnterpriseApp extends Component {
     const team = teams[team_app.team_id];
     const me = team.team_users[team.my_team_user_id];
     const meReceiver = team_app.receivers.find(item => (item.team_user_id === me.id));
-    if (!teamUserDepartureDatePassed(me.departure_date) && !me.disabled && !meReceiver.empty) {
+    if (!teamUserDepartureDatePassed(me.departure_date) && !me.disabled && !meReceiver.empty && !this.props.dnd) {
       this.setState({hover: true, position: getPosition(app.id)});
       if (this.password === '')
         api.dashboard.getAppPassword({
@@ -95,8 +81,6 @@ class TeamAnyEnterpriseApp extends Component {
     e.stopPropagation();
     const {app} = this.props;
     const team_app = this.props.team_apps[app.team_card_id];
-    this.setState({isOpen: false});
-    // this.props.dispatch(showTeamAnyEnterpriseAppSettingsModal({active: true, app: this.props.app}));
     this.props.dispatch(moveTeamCard({card_id: Number(team_app.id)}));
     this.props.history.push(`/teams/${app.team_id}/${team_app.channel_id}?app_id=${team_app.id}`);
 
@@ -153,35 +137,33 @@ class TeamAnyEnterpriseApp extends Component {
       if (this.state.copiedPassword !== item.priority && this.state.copiedOther !== item.priority) {
         if (item.name === 'password')
           return (
-              <button
-                  className="settings_button"
-                  onClick={e => this.copyPassword(item)}
-                  key={idx}>
+            <div className='container_button' key={idx}>
+              <button className="settings_button" onClick={e => this.copyPassword(item)}>
                 <Icon name='copy'/> • • • • • • • •
               </button>
+            </div>
           );
         return (
-            <button
-                key={idx}
-                className="settings_button"
-                onClick={e => this.copy(item)}>
+          <div className='container_button' key={idx}>
+            <button className="settings_button" onClick={e => this.copy(item)}>
               <Icon name='copy'/> {item.value}
             </button>
+          </div>
         )
       }
       return (
-          <button
-              key={idx}
-              className="settings_button">
+        <div className='container_button' key={idx}>
+          <button className="settings_button">
             Copied!
           </button>
+        </div>
       )
     });
     return (
         <div className='app'>
           <div className={(teamUserDepartureDatePassed(me.departure_date) || me.disabled || meReceiver.empty) ? 'logo_area'
               : this.state.menuActive ? 'logo_area active' : 'logo_area not_active'}
-               onMouseEnter={this.activateMenu} onMouseLeave={this.deactivateMenu}>
+               onMouseEnter={!this.props.dnd ? this.activateMenu : null} onMouseLeave={!this.props.dnd ? this.deactivateMenu : null}>
             {this.state.loading &&
             <LoadingAppIndicator/>}
             {app.new &&
@@ -196,12 +178,20 @@ class TeamAnyEnterpriseApp extends Component {
             }}/>}
             {!me.disabled && meReceiver.empty && !teamUserDepartureDatePassed(me.departure_date) &&
             <EmptyTeamAppIndicator onClick={e => {dispatch(showTeamAnyEnterpriseAppSettingsModal({active: true, app: this.props.app}))}}/>}
+            <ReactCSSTransitionGroup
+              transitionName="settingsAnim"
+              transitionEnter={true}
+              transitionLeave={true}
+              transitionEnterTimeout={1300}
+              transitionLeaveTimeout={1}>
+              {this.state.hover && !this.props.dnd &&
             <SettingsMenu app={app}
                           buttons={buttons}
                           remove={this.remove}
                           teams={this.props.teams}
                           position={this.state.position}
-                          clickOnSettings={this.clickOnSettings}/>
+                          clickOnSettings={this.clickOnSettings}/>}
+            </ReactCSSTransitionGroup>
             <div className="logo_handler">
               <img className="logo" src={team_app.logo} onClick={this.connect}/>
             </div>

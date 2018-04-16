@@ -127,21 +127,29 @@ export const SettingsMenu = ({app, clickOnSettings, remove, buttons, teams, posi
   return (
     <div id={`app_${app.id}_menu`} className={`settings_buttons ${position ? position : 'left'}`}>
       {app.type === 'logWithApp' &&
-      <button className="settings_button" onClick={clickOnSettings}>
-        <Icon name={`${app.logWith_website.name.toLowerCase()} square`}/> {app.login}
-      </button>}
+      <div className='container_button'>
+        <button className="settings_button" onClick={clickOnSettings}>
+          <Icon name={`${app.logWith_website.name.toLowerCase()} square`}/> {app.login}
+        </button>
+      </div>}
       {(app.type === 'anyApp' || app.sub_type === 'any') &&
-      <button className="settings_button" onClick={e => window.open(app.website.landing_url)}>
-        <Icon name='external'/> {app.website.landing_url}
-      </button>}
+      <div className='container_button'>
+        <button className="settings_button" onClick={e => window.open(app.website.landing_url)}>
+          <Icon name='external'/> {app.website.landing_url}
+        </button>
+      </div>}
       {buttons}
-      <button className={(role < 2 && (app.type === 'teamSingleApp' || app.type === 'teamLinkApp')) ? 'settings_button not_allowed' : 'settings_button'}
+      <div className='container_button'>
+        <button className={(role < 2 && (app.type === 'teamSingleApp' || app.type === 'teamLinkApp')) ? 'settings_button not_allowed' : 'settings_button'}
               onClick={(role < 2 && (app.type === 'teamSingleApp' || app.type === 'teamLinkApp')) ? null : clickOnSettings}>
-        <Icon name='setting'/> Settings {(app.type === 'teamSingleApp' || app.type === 'teamLinkApp') ? '(Admins only)' : null}
-      </button>
-      <button className='settings_button' onClick={remove}>
-        <Icon name='trash'/> Remove
-      </button>
+          <Icon name='setting'/> Settings {(app.type === 'teamSingleApp' || app.type === 'teamLinkApp') ? '(Admins only)' : null}
+        </button>
+      </div>
+      <div className='container_button'>
+        <button className='settings_button' onClick={remove}>
+          <Icon name='trash'/> Remove
+        </button>
+      </div>
     </div>
   )
 };

@@ -33,14 +33,14 @@
 
     <link rel="icon" type="image/png" href="resources/icons/APPEASE.png"/>
     <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Raleway:500,700" />
-    <link rel="stylesheet" type="text/css" href="/css/lib/fonts/museo-font.css?cssv=7"/>
+    <link rel="stylesheet" type="text/css" href="/css/lib/fonts/museo-font.css?cssv=8"/>
     <link rel="stylesheet" href="/semantic/dist/semantic.min.css"/>
-    <link rel="stylesheet" href="/css/default_style.css?cssv=7"/>
-    <link rel="stylesheet" href="/css/lib/fonts/font-awesome-4.2.0/css/font-awesome.min.css?cssv=7"/>
-    <link rel="stylesheet" href="/css/lib/fonts/untitled-font-4/styles.css?cssv=7"/>
-    <link rel="stylesheet" href="/css/team.css?cssv=7"/>
-    <link rel="stylesheet" href="/css/lib/loading.min.css?cssv=7"/>
-    <link rel="stylesheet" href="/css/lib/emoji.css?cssv=7"/>
+    <link rel="stylesheet" href="/css/default_style.css?cssv=8"/>
+    <link rel="stylesheet" href="/css/lib/fonts/font-awesome-4.2.0/css/font-awesome.min.css?cssv=8"/>
+    <link rel="stylesheet" href="/css/lib/fonts/untitled-font-4/styles.css?cssv=8"/>
+    <link rel="stylesheet" href="/css/team.css?cssv=8"/>
+    <link rel="stylesheet" href="/css/lib/loading.min.css?cssv=8"/>
+    <link rel="stylesheet" href="/css/lib/emoji.css?cssv=8"/>
 
     <script src="https://js.stripe.com/v3/"></script>
     <script src="/jsMinified/jsencrypt.js?jsv=2"></script>
@@ -51,7 +51,7 @@
 <BODY class="notranslate">
 <div id="app">
 </div>
-<script src="teams_bundle.js?v=118"></script>
+<script src="teams_bundle.js?v=119"></script>
 <script type="text/javascript">
   window.addEventListener('load', function () {
     $crisp = [];
