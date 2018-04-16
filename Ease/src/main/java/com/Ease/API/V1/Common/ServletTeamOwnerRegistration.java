@@ -49,7 +49,7 @@ public class ServletTeamOwnerRegistration extends HttpServlet {
             hibernateQuery.setParameter("email", email);
             hibernateQuery.setParameter("code", code);
             TeamUser teamUser = (TeamUser) hibernateQuery.getSingleResult();
-            if (teamUser == null)
+            if (teamUser == null || !teamUser.isTeamOwner())
                 throw new HttpServletException(HttpStatus.BadRequest, "No invitation for this email.");
             sm.initializeTeamWithContext(teamUser.getTeam());
             newUser = teamUser.getUser();
