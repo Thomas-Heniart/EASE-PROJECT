@@ -242,6 +242,15 @@ public class NotificationFactory {
         userWebSocketManager.sendObject(WebSocketMessageFactory.createNotificationMessage(notification));
     }
 
+    public void createPasswordScoreTooWeakNotification(TeamUser teamUserSender, TeamUser teamUserReceiver, TeamCard teamCard, WebSocketManager userWebSocketManager, HibernateQuery hibernateQuery) {
+        if (!teamUserReceiver.isRegistered())
+            return;
+        String url = "#/teams/" + teamCard.getTeam().getDb_id() + "/" + teamCard.getChannel().getDb_id() + "?app_id=" + teamCard.getDb_id();
+        Notification notification = this.createNotification(teamUserReceiver.getUser(), teamUserSender.getUsername() + " asked you to change the password of " + teamCard.getName() + " to make it stronger.", teamCard.getLogo(), url);
+        hibernateQuery.saveOrUpdateObject(notification);
+        userWebSocketManager.sendObject(WebSocketMessageFactory.createNotificationMessage(notification));
+    }
+
     public void createDepartureDateThreeDaysNotification(TeamUser teamUser, TeamUser teamUser_admin, String formattedDate, WebSocketManager userWebSocketManager, HibernateQuery hibernateQuery) {
         Notification notification = this.createNotification(teamUser_admin.getUser(), "the departure of " + teamUser.getUsername() + " is planned on next " + formattedDate + ".", "/resources/notifications/user_departure.png", teamUser, true);
         hibernateQuery.saveOrUpdateObject(notification);

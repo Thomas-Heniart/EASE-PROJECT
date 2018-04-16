@@ -294,5 +294,9 @@ public abstract class TeamCard {
         this.setPasswordScore(this.getAccount().calculatePasswordScore());
     }
 
+    public abstract Integer getPasswordScore();
+
     protected abstract void setPasswordScore(Integer score);
+
+    public abstract void setLastPasswordScoreAlertDate(Date date);
 }

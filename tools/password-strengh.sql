@@ -16,3 +16,10 @@ WHERE active = 0;
 UPDATE teams
 SET passwordScoreInitialize = 0
 WHERE active = 1;
+
+ALTER TABLE teamSingleCards
+  ADD COLUMN lastPasswordScoreAlertDate DATETIME;
+ALTER TABLE teamSingleSoftwareCards
+  ADD COLUMN lastPasswordScoreAlertDate DATETIME;
+ALTER TABLE teamEnterpriseCardReceivers
+  ADD COLUMN lastPasswordScoreAlertDate DATETIME;
