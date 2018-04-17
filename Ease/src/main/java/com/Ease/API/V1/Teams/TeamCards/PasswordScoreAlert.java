@@ -9,6 +9,9 @@ import com.Ease.User.NotificationFactory;
 import com.Ease.Utils.HttpServletException;
 import com.Ease.Utils.HttpStatus;
 import com.Ease.Utils.Servlets.PostServletManager;
+import com.Ease.websocketV1.WebSocketMessageAction;
+import com.Ease.websocketV1.WebSocketMessageFactory;
+import com.Ease.websocketV1.WebSocketMessageType;
 import org.json.JSONObject;
 
 import javax.servlet.RequestDispatcher;
@@ -36,23 +39,30 @@ public class PasswordScoreAlert extends HttpServlet {
                 if (teamCard.isTeamSingleCard()) {
                     notificationForSingleCard(teamCard, teamUserConnected, sm);
                     teamCard.decipher(teamKey);
+                    sm.addWebSocketMessage(WebSocketMessageFactory.createWebSocketMessage(WebSocketMessageType.TEAM_CARD, WebSocketMessageAction.CHANGED, teamCard.getWebSocketJson()));
                     sm.setSuccess(teamCard.getJson());
                 } else if (teamCard.isTeamEnterpriseCard()) {
-                    Integer teamCardReceiverId = sm.getIntParam("team_card_receiver_id", true, false);
-                    TeamEnterpriseCardReceiver teamEnterpriseCardReceiver = (TeamEnterpriseCardReceiver) teamCard.getTeamCardReceiver(teamCardReceiverId);
-                    notificationForEnterpriseCardReceiver(teamEnterpriseCardReceiver, teamUserConnected, sm);
-                    teamEnterpriseCardReceiver.decipher(teamKey);
-                    sm.setSuccess(teamEnterpriseCardReceiver.getCardJson());
+                    Integer teamCardReceiverId = sm.getIntParam("team_card_receiver_id", true, true);
+                    if (teamCardReceiverId != null) {
+                        TeamEnterpriseCardReceiver teamEnterpriseCardReceiver = (TeamEnterpriseCardReceiver) teamCard.getTeamCardReceiver(teamCardReceiverId);
+                        notificationForEnterpriseCardReceiver(teamEnterpriseCardReceiver, teamUserConnected, sm);
+                        teamEnterpriseCardReceiver.decipher(teamKey);
+                        sm.addWebSocketMessage(WebSocketMessageFactory.createWebSocketMessage(WebSocketMessageType.TEAM_CARD_RECEIVER, WebSocketMessageAction.CHANGED, teamEnterpriseCardReceiver.getWebSocketJson()));
+                        sm.setSuccess(teamEnterpriseCardReceiver.getCardJson());
+                    } else {
+                        notificationForEnterpriseCard(teamCard, teamUserConnected, sm);
+                        teamCard.decipher(teamKey);
+                        sm.addWebSocketMessage(WebSocketMessageFactory.createWebSocketMessage(WebSocketMessageType.TEAM_CARD, WebSocketMessageAction.CHANGED, teamCard.getWebSocketJson()));
+                        sm.setSuccess(teamCard.getJson());
+                    }
                 } else
                     throw new HttpServletException(HttpStatus.BadRequest, "Not allowed");
             } else {
                 for (TeamCard teamCard : team.getTeamCardSet()) {
                     if (teamCard.isTeamSingleCard())
                         notificationForSingleCard(teamCard, teamUserConnected, sm);
-                    else if (teamCard.isTeamEnterpriseCard()) {
-                        for (TeamCardReceiver teamCardReceiver : teamCard.getTeamCardReceiverMap().values())
-                            notificationForEnterpriseCardReceiver((TeamEnterpriseCardReceiver) teamCardReceiver, teamUserConnected, sm);
-                    }
+                    else if (teamCard.isTeamEnterpriseCard())
+                        notificationForEnterpriseCard(teamCard, teamUserConnected, sm);
                 }
                 team.setLastPasswordScoreAlertDate(new Date());
                 sm.saveOrUpdate(team);
@@ -64,6 +74,13 @@ public class PasswordScoreAlert extends HttpServlet {
             sm.setError(e);
         }
         sm.sendResponse();
+    }
+
+    private void notificationForEnterpriseCard(TeamCard teamCard, TeamUser teamUserConnected, PostServletManager sm) {
+        if (!teamCard.isTeamEnterpriseCard())
+            return;
+        for (TeamCardReceiver teamCardReceiver : teamCard.getTeamCardReceiverMap().values())
+            notificationForEnterpriseCardReceiver((TeamEnterpriseCardReceiver) teamCardReceiver, teamUserConnected, sm);
     }
 
     private void notificationForSingleCard(TeamCard teamCard, TeamUser teamUserConnected, PostServletManager sm) {

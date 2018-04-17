@@ -58,7 +58,7 @@ export const scanEnterpriseCardForWeakPasswords = (app) => {
       pwned++;
     else if (receiver.password_score < 3)
       reallyWeak++;
-    else if (receier.password_score === 3)
+    else if (receiver.password_score === 3)
       weak++;
   });
   return {
