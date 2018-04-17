@@ -20,7 +20,7 @@ public class ServletInitializeTeamScore extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         PostServletManager sm = new PostServletManager(this.getClass().getName(), request, response, true);
         try {
-            Integer teamId = sm.getIntParam("team", true, false);
+            Integer teamId = sm.getIntParam("team_id", true, false);
             Team team = sm.getTeam(teamId);
             sm.needToBeAdminOfTeam(team);
             if (!team.isPasswordScoreInitialize()) {
@@ -41,6 +41,7 @@ public class ServletInitializeTeamScore extends HttpServlet {
                     }
                 }
             }
+            sm.setSuccess("Done");
         } catch (Exception e) {
             sm.setError(e);
         }
