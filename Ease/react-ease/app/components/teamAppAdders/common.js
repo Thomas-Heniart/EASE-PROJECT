@@ -90,7 +90,16 @@ export class EmptyCredentialsSimpleAppIndicator extends Component {
           {(team_card.team_user_filler_id === -1 && !isAdmin(me.role)) &&
           <span>Waiting for login and password.</span>}
           {(team_card.team_user_filler_id !== -1 && team_card.team_user_filler_id === me.id) &&
-              <span>Waiting for <strong>{me.username}</strong> to<u onClick={this.fillCredentials}>fill info</u></span>}
+          <span>Waiting for <strong>{me.username}</strong> to<u onClick={this.fillCredentials}>fill info</u>
+            {this.props.actions_enabled &&
+            <React.Fragment>
+              {isAdmin(me.role) &&
+              <React.Fragment>
+                &nbsp;or
+                <u onClick={this.chooseMember}>choose another person</u>
+              </React.Fragment>}
+            </React.Fragment>}
+          </span>}
           {(team_card.team_user_filler_id !== -1 && team_card.team_user_filler_id !== me.id) &&
               <span>
                   Waiting for {team_users[team_card.team_user_filler_id].username} to fill info.
