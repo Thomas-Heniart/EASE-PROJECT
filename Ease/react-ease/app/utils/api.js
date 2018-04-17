@@ -332,8 +332,11 @@ module.exports = {
   },
   teams: {
     fetchTeams: () => {
-      return basic_get('/api/v1/teams/GetTeams', {
-        timestamp: new Date().getTime()
+      return basic_get('/api/v1/teams/GetTeams');
+    },
+    getTeamPasswordStrengthScore: ({team_id}) => {
+      return basic_get('/api/v1/teams/GetTeamScore', {
+        team_id: team_id
       });
     },
     fetchTeamApp: ({team_id, app_id}) => {
