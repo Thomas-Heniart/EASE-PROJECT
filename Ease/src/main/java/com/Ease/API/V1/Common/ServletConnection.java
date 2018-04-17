@@ -121,8 +121,6 @@ public class ServletConnection extends HttpServlet {
                     teamUser.setDisabled(false);
                     sm.saveOrUpdate(teamUser);
                 }
-                if (teamUser.isTeamAdmin())
-                    teamAndKeyMap.put(teamUser.getTeam(), sm.getTeamKey(teamUser.getTeam()));
             }
             JSONObject res = user.getJson();
             res.put("JWT", jwt);
@@ -143,7 +141,6 @@ public class ServletConnection extends HttpServlet {
             sm.setError(new HttpServletException(HttpStatus.BadRequest, "Wrong email or password."));
         }
         sm.sendResponse();
-        //teamAndKeyMap.forEach((team, s) -> new InitializeTeamPasswords(team, s).run());
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
