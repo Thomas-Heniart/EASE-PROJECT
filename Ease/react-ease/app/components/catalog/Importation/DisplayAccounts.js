@@ -3,8 +3,8 @@ import {connect} from 'react-redux';
 import {logoLetter} from "../../../utils/utils";
 import {testCredentials} from "../../../actions/catalogActions";
 import {Icon, Dropdown, Grid, Popup, Table, Checkbox} from 'semantic-ui-react';
-import {teamEditEnterpriseCardReceiver, teamEditSingleCardCredentials} from "../../../actions/appsActions";
 import {appAdded, editAppCredentials, updateAccepted} from "../../../actions/dashboardActions";
+import {teamEditEnterpriseCardReceiver, teamEditSingleCardCredentials} from "../../../actions/appsActions";
 
 @connect(store => ({
   teams: store.teams,
@@ -17,6 +17,8 @@ class DisplayAccounts extends Component {
     super(props);
     this.state = {
       view: 2,
+      accountSetting: {},
+      accountLocation: {},
       checkImport: {},
       checkPro: {},
       emptyApps: {},
@@ -45,7 +47,7 @@ class DisplayAccounts extends Component {
         emptyApps[account_id].team_card = emptyApp.team_id ? this.props.team_apps[emptyApp.team_card_id] : null;
       }
     });
-    this.setState({emptyApps: emptyApps, checkImport: checkImport, checkPro: checkPro}, this.props.getLogo());
+    this.setState({emptyApps: emptyApps, checkImport: checkImport, checkPro: checkPro});
   }
   componentDidMount(){
     const seePassword = {};
@@ -86,6 +88,20 @@ class DisplayAccounts extends Component {
     }));
   };
 
+  chooseAccountSetting = (id, {value}) => {
+    this.state.accountSetting[id] = value;
+  };
+  chooseLocation = (id, {value}) => {
+    this.state.accountLocation[id] = value;
+  };
+
+
+  sendImport = () => {
+    Object.keys(this.props.importedAccounts).map(account_id => {
+      const account = this.props.importedAccounts[account_id];
+      if (this.state.checkImport[account_id]) {}
+    })
+  };
 
   updateApp = () => {
     this.setState({loading: true});
@@ -233,10 +249,10 @@ class DisplayAccounts extends Component {
           {(this.state.checkImport[account_id] && this.state.checkPro[account_id]) &&
           <React.Fragment>
             <Table.Cell>
-              <Dropdown selection options={accountSettingOptions}/>
+              <Dropdown selection options={accountSettingOptions} onChange={(e, {value}) => this.chooseAccountSetting(account_id, {value})}/>
             </Table.Cell>
             <Table.Cell>
-              <Dropdown selection options={sendInOptions}/>
+              <Dropdown selection options={sendInOptions} onChange={(e, {value}) => this.chooseLocation(account_id, {value})}/>
             </Table.Cell>
           </React.Fragment>}
           {!this.state.checkImport[account_id] &&
@@ -259,7 +275,7 @@ class DisplayAccounts extends Component {
           Make sure your data are put in the right columns, then import.
         </p>
         <Grid id='accounts'>
-          <Grid.Column width={11}>
+          <Grid.Column width={14}>
 
             {this.state.view === 1 &&
             <Table singleLine>
@@ -306,7 +322,7 @@ class DisplayAccounts extends Component {
 
 
           </Grid.Column>
-          <Grid.Column width={5}/>
+          <Grid.Column width={2}/>
         </Grid>
       </React.Fragment>
     )

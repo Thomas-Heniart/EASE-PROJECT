@@ -705,7 +705,6 @@
         width: 38px;
         height: 38px;
         font-size: 14px;
-        margin-right: 10px;
         border: solid 1px #dededf;
         border-radius: 5px;
         background-size: 86px 86px;
@@ -713,14 +712,10 @@
         display: flex;
         background-color: #373b60;
         color: white;
-        &.pending {
-          margin-right: 8px;
-          //width: 30px;
-          //height: 30px;
-          p {
-            margin: auto;
-            width: auto !important;
-          }
+        margin-right: 8px;
+        p {
+          margin: auto;
+          width: auto !important;
         }
       }
       input {

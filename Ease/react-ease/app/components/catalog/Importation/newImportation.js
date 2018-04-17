@@ -92,7 +92,6 @@ class Importations extends React.Component {
       fields: {},
       importedAccounts: {},
       accountsPending: {},
-      errorAccounts: {},
       profiles: {},
       selectedProfile: -1,
       teamsInState: {},

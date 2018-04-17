@@ -7,7 +7,7 @@ import ChromeSecondStep from "./ChromeSecondStep";
 import Explication from "./Explication";
 import PasteStep from "./PasteStep";
 import DisplayAccounts from "./DisplayAccounts";
-import ErrorAccounts from "./ErrorAccounts";
+// import ErrorAccounts from "./ErrorAccounts";
 import {
   catalogAddAnyApp, catalogAddBookmark, catalogAddClassicApp,
   getImportedAccounts
@@ -1106,13 +1106,13 @@ class OnBoardingImportation extends React.Component {
           importedAccounts={this.state.importedAccounts}
           accountsPending={this.state.accountsPending}
           selectedProfile={this.state.selectedProfile}/>}
-        {(this.state.view === 5 && this.state.errorAccounts && this.state.loading === false) &&
-        <ErrorAccounts
-          errorAccounts={this.state.errorAccounts}
-          handleErrorAppInfo={this.handleErrorAppInfo}
-          importErrorAccounts={this.importErrorAccounts}
-          deleteErrorAccount={this.deleteErrorAccount}
-          fields={this.state.fields}/>}
+        {/*{(this.state.view === 5 && this.state.errorAccounts && this.state.loading === false) &&*/}
+        {/*<ErrorAccounts*/}
+          {/*errorAccounts={this.state.errorAccounts}*/}
+          {/*handleErrorAppInfo={this.handleErrorAppInfo}*/}
+          {/*importErrorAccounts={this.importErrorAccounts}*/}
+          {/*deleteErrorAccount={this.deleteErrorAccount}*/}
+          {/*fields={this.state.fields}/>}*/}
       </div>
     )
   }
