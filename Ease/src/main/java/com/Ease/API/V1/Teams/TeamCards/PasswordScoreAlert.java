@@ -2,12 +2,14 @@ package com.Ease.API.V1.Teams.TeamCards;
 
 import com.Ease.Team.Team;
 import com.Ease.Team.TeamCard.TeamCard;
+import com.Ease.Team.TeamCardReceiver.TeamCardReceiver;
 import com.Ease.Team.TeamCardReceiver.TeamEnterpriseCardReceiver;
 import com.Ease.Team.TeamUser;
 import com.Ease.User.NotificationFactory;
 import com.Ease.Utils.HttpServletException;
 import com.Ease.Utils.HttpStatus;
 import com.Ease.Utils.Servlets.PostServletManager;
+import org.json.JSONObject;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -26,37 +28,68 @@ public class PasswordScoreAlert extends HttpServlet {
             Integer teamId = sm.getIntParam("team_id", true, false);
             Team team = sm.getTeam(teamId);
             sm.needToBeAdminOfTeam(team);
-            Integer teamCardId = sm.getIntParam("team_card_id", true, false);
-            TeamCard teamCard = team.getTeamCard(teamCardId);
+            Integer teamCardId = sm.getIntParam("team_card_id", true, true);
             TeamUser teamUserConnected = sm.getTeamUser(team);
-            TeamUser teamUserReceiver;
-            if (teamCard.isTeamSingleCard()) {
-                if (teamCard.getPasswordScore() == null || teamCard.getPasswordScore().equals(4))
-                    throw new HttpServletException(HttpStatus.BadRequest, "This password does not need to be updated");
-                teamUserReceiver = teamCard.getChannel().getRoom_manager();
-                if (teamUserConnected.equals(teamUserReceiver))
-                    throw new HttpServletException(HttpStatus.BadRequest, "Don't be too hard with you");
-                teamCard.setLastPasswordScoreAlertDate(new Date());
-                teamCard.decipher(sm.getTeamKey(team));
-                sm.setSuccess(teamCard.getJson());
-            } else if (teamCard.isTeamEnterpriseCard()) {
-                Integer teamCardReceiverId = sm.getIntParam("team_card_receiver_id", true, false);
-                TeamEnterpriseCardReceiver teamEnterpriseCardReceiver = (TeamEnterpriseCardReceiver) teamCard.getTeamCardReceiver(teamCardReceiverId);
-                if (teamEnterpriseCardReceiver.getPasswordScore() == null || teamEnterpriseCardReceiver.getPasswordScore().equals(4))
-                    throw new HttpServletException(HttpStatus.BadRequest, "This password does not need to be updated");
-                teamUserReceiver = teamEnterpriseCardReceiver.getTeamUser();
-                if (teamUserConnected.equals(teamUserReceiver))
-                    throw new HttpServletException(HttpStatus.BadRequest, "Don't be too hard with you");
-                teamEnterpriseCardReceiver.setLastPasswordScoreAlertDate(new Date());
-                teamEnterpriseCardReceiver.decipher(sm.getTeamKey(team));
-                sm.setSuccess(teamEnterpriseCardReceiver.getCardJson());
-            } else
-                throw new HttpServletException(HttpStatus.BadRequest, "Not allowed");
-            NotificationFactory.getInstance().createPasswordScoreTooWeakNotification(teamUserConnected, teamUserReceiver, teamCard, sm.getUserWebSocketManager(teamUserReceiver.getUser().getDb_id()), sm.getHibernateQuery());
+            String teamKey = sm.getTeamKey(team);
+            if (teamCardId != null) {
+                TeamCard teamCard = team.getTeamCard(teamCardId);
+                if (teamCard.isTeamSingleCard()) {
+                    notificationForSingleCard(teamCard, teamUserConnected, sm);
+                    teamCard.decipher(teamKey);
+                    sm.setSuccess(teamCard.getJson());
+                } else if (teamCard.isTeamEnterpriseCard()) {
+                    Integer teamCardReceiverId = sm.getIntParam("team_card_receiver_id", true, false);
+                    TeamEnterpriseCardReceiver teamEnterpriseCardReceiver = (TeamEnterpriseCardReceiver) teamCard.getTeamCardReceiver(teamCardReceiverId);
+                    notificationForEnterpriseCardReceiver(teamEnterpriseCardReceiver, teamUserConnected, sm);
+                    teamEnterpriseCardReceiver.decipher(teamKey);
+                    sm.setSuccess(teamEnterpriseCardReceiver.getCardJson());
+                } else
+                    throw new HttpServletException(HttpStatus.BadRequest, "Not allowed");
+            } else {
+                for (TeamCard teamCard : team.getTeamCardSet()) {
+                    if (teamCard.isTeamSingleCard())
+                        notificationForSingleCard(teamCard, teamUserConnected, sm);
+                    else if (teamCard.isTeamEnterpriseCard()) {
+                        for (TeamCardReceiver teamCardReceiver : teamCard.getTeamCardReceiverMap().values())
+                            notificationForEnterpriseCardReceiver((TeamEnterpriseCardReceiver) teamCardReceiver, teamUserConnected, sm);
+                    }
+                }
+                team.setLastPasswordScoreAlertDate(new Date());
+                sm.saveOrUpdate(team);
+                JSONObject res = new JSONObject();
+                res.put("last_password_score_alert_date", team.getLastPasswordScoreAlertDate().getTime());
+                sm.setSuccess(res);
+            }
         } catch (Exception e) {
             sm.setError(e);
         }
         sm.sendResponse();
+    }
+
+    private void notificationForSingleCard(TeamCard teamCard, TeamUser teamUserConnected, PostServletManager sm) {
+        if (!teamCard.isTeamSingleCard())
+            return;
+        if (teamCard.getPasswordScore() == null || teamCard.getPasswordScore().equals(4))
+            return;
+        TeamUser teamUserReceiver = teamCard.getChannel().getRoom_manager();
+        if (teamUserConnected.equals(teamUserReceiver))
+            return;
+        teamCard.setLastPasswordScoreAlertDate(new Date());
+        sm.saveOrUpdate(teamCard);
+        if (teamUserReceiver.isRegistered())
+            NotificationFactory.getInstance().createPasswordScoreTooWeakNotification(teamUserConnected, teamUserReceiver, teamCard, sm.getUserWebSocketManager(teamUserReceiver.getUser().getDb_id()), sm.getHibernateQuery());
+    }
+
+    private void notificationForEnterpriseCardReceiver(TeamEnterpriseCardReceiver teamEnterpriseCardReceiver, TeamUser teamUserConnected, PostServletManager sm) {
+        if (teamEnterpriseCardReceiver.getPasswordScore() == null || teamEnterpriseCardReceiver.getPasswordScore().equals(4))
+            return;
+        TeamUser teamUserReceiver = teamEnterpriseCardReceiver.getTeamUser();
+        if (teamUserConnected.equals(teamUserReceiver))
+            return;
+        teamEnterpriseCardReceiver.setLastPasswordScoreAlertDate(new Date());
+        sm.saveOrUpdate(teamEnterpriseCardReceiver);
+        if (teamUserReceiver.isRegistered())
+            NotificationFactory.getInstance().createPasswordScoreTooWeakNotification(teamUserConnected, teamUserReceiver, teamEnterpriseCardReceiver.getTeamCard(), sm.getUserWebSocketManager(teamUserReceiver.getUser().getDb_id()), sm.getHibernateQuery());
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {

@@ -23,3 +23,5 @@ ALTER TABLE teamSingleSoftwareCards
   ADD COLUMN lastPasswordScoreAlertDate DATETIME;
 ALTER TABLE teamEnterpriseCardReceivers
   ADD COLUMN lastPasswordScoreAlertDate DATETIME;
+ALTER TABLE teams
+  ADD COLUMN lastPasswordScoreAlertDate DATETIME;
