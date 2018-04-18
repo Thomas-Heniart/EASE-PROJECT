@@ -95,6 +95,7 @@ public class MetricsSchedulerTask extends TimerTask {
                 int people_with_personnal_apps = 0;
                 StringBuilder people_with_personnal_apps_emails = new StringBuilder();
                 StringBuilder people_click_on_app_five_times_emails = new StringBuilder();
+                int password_killed = 0;
                 for (TeamUser teamUser : team.getTeamUsers().values()) {
                     if (!teamUser.isRegistered())
                         continue;
@@ -103,6 +104,7 @@ public class MetricsSchedulerTask extends TimerTask {
                     trackingHibernateQuery.setParameter("userId", user.getDb_id());
                     trackingHibernateQuery.setParameter("weekOfYear", calendar.get(Calendar.WEEK_OF_YEAR));
                     int weekClicks = trackingHibernateQuery.list().size();
+                    password_killed += weekClicks;
                     if (weekClicks >= 1) {
                         people_click_on_app_once++;
                         people_click_on_app_once_emails.append(teamUser.getEmail()).append(";");
@@ -178,6 +180,7 @@ public class MetricsSchedulerTask extends TimerTask {
                 teamMetrics.setPeople_click_on_app_once_emails(people_click_on_app_once_emails.toString());
                 teamMetrics.setPeople_click_on_app_three_times_emails(people_click_on_app_three_times_emails.toString());
                 teamMetrics.setPeople_click_on_app_five_times_emails(people_click_on_app_five_times_emails.toString());
+                teamMetrics.setPasswordKilled(password_killed);
                 hibernateQuery.saveOrUpdateObject(teamMetrics);
             }
             System.out.println("Metric team stop");

@@ -650,6 +650,7 @@ function addTeamRow(team, index) {
     "<td>" + team.cards_with_tags + "</td>" +
     "<td>" + team.people_joined + "</td>" +
     "<td>" + team.people_joined_with_cards + "</td>" +
+    "<td>" + team.password_killed + "</td>" +
     "<td>" + team.people_click_on_app_once + "</td>" +
     "<td>" + team.people_click_on_app_three_times + "</td>" +
     "</tr>");
