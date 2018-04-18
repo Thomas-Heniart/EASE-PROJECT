@@ -91,8 +91,6 @@ public class FillTeamSingleCardServlet extends HttpServlet {
                 teamSingleSoftwareCard.setMagicLink(null);
                 teamSingleSoftwareCard.setMagicLinkExpirationDate(null);
             }
-            if (teamCard.getAccount() != null)
-                teamCard.calculatePasswordScore();
             sm.saveOrUpdate(teamCard);
             sm.setTeam(teamCard.getTeam());
             NotificationFactory.getInstance().createAppFilledNotification(null, teamCard, sm.getUserIdMap(), sm.getHibernateQuery());

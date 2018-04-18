@@ -61,8 +61,6 @@ public class EditTeamEnterpriseCardReceiver extends HttpServlet {
                 app.setAccount(account);
             } else
                 account.edit(account_information, sm.getHibernateQuery());
-            if (account != null)
-                teamEnterpriseCardReceiver.calculatePasswordScore();
             sm.saveOrUpdate(teamCard);
             sm.addWebSocketMessage(WebSocketMessageFactory.createWebSocketMessage(WebSocketMessageType.TEAM_CARD_RECEIVER, WebSocketMessageAction.CHANGED, teamEnterpriseCardReceiver.getWebSocketJson()));
             sm.setSuccess(teamEnterpriseCardReceiver.getCardJson());

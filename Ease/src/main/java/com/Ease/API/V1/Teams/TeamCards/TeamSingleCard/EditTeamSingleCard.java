@@ -80,8 +80,6 @@ public class EditTeamSingleCard extends HttpServlet {
                     }
                 }
             }
-            if (teamSingleCard.getAccount() != null)
-                teamSingleCard.calculatePasswordScore();
             sm.saveOrUpdate(teamSingleCard);
             sm.addWebSocketMessage(WebSocketMessageFactory.createWebSocketMessage(WebSocketMessageType.TEAM_CARD, WebSocketMessageAction.CHANGED, teamSingleCard.getWebSocketJson()));
             sm.setSuccess(teamSingleCard.getJson());

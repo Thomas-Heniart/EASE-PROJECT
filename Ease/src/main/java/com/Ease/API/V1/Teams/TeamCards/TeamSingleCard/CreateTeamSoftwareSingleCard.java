@@ -89,8 +89,6 @@ public class CreateTeamSoftwareSingleCard extends HttpServlet {
                 account = AccountFactory.getInstance().createAccountFromJson(account_information, teamKey, password_reminder_interval, hibernateQuery);
                 teamSingleSoftwareCard.setAccount(account);
             }
-            if (account != null)
-                teamSingleSoftwareCard.calculatePasswordScore();
             sm.saveOrUpdate(teamSingleSoftwareCard);
             JSONObject receivers = sm.getJsonParam("receivers", false, false);
             for (Object object : receivers.keySet()) {
