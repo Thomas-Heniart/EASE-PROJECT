@@ -73,7 +73,7 @@ public class ServletRetrieveTeamsClickChartData extends HttpServlet {
                     labels.put(++days);
                     calendar.add(Calendar.DAY_OF_YEAR, 1);
                 }
-                ((JSONArray) click_average.get("data")).put(count.doubleValue() / userIds.size());
+                ((JSONArray) click_average.get("data")).put(count);
                 labels.put(++days);
             }
             /* while (calendar.get(Calendar.YEAR) < current.get(Calendar.YEAR)) {

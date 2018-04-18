@@ -68,25 +68,9 @@ public class ServletGetTeamClickChartData extends HttpServlet {
                     labels.put(++days);
                     calendar.add(Calendar.DAY_OF_YEAR, 1);
                 }
-                ((JSONArray) click_average.get("data")).put(count.doubleValue() / userIds.size());
+                ((JSONArray) click_average.get("data")).put(count);
                 labels.put(++days);
             }
-            /* while (calendar.get(Calendar.YEAR) < current.get(Calendar.YEAR)) {
-                JSONArray tmp = team.getAverageOfClick(calendar.get(Calendar.YEAR), calendar.get(Calendar.WEEK_OF_YEAR), sm.getHibernateQuery());
-                for (int i=0; i < tmp.length(); i++)
-                    ((JSONArray) click_average.get("data")).put(tmp.opt(i));
-                for (int i = 1; i <= 7; i++)
-                    labels.put(++days);
-                calendar.add(Calendar.WEEK_OF_YEAR, 1);
-            }
-            while (calendar.get(Calendar.WEEK_OF_YEAR) <= current.get(Calendar.WEEK_OF_YEAR)) {
-                JSONArray tmp = team.getAverageOfClick(calendar.get(Calendar.YEAR), calendar.get(Calendar.WEEK_OF_YEAR), sm.getHibernateQuery());
-                for (int i=0; i < tmp.length(); i++)
-                    ((JSONArray) click_average.get("data")).put(tmp.opt(i));
-                for (int i = 1; i <= 7; i++)
-                    labels.put(++days);
-                calendar.add(Calendar.WEEK_OF_YEAR, 1);
-            } */
             data.put("labels", labels);
             data.put("datasets", datasets);
             res.put("data", data);
