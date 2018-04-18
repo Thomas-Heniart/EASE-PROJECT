@@ -5,10 +5,11 @@ import com.Ease.NewDashboard.App;
 import com.Ease.Team.Channel;
 import com.Ease.Team.Team;
 import com.Ease.Team.TeamCard.TeamCard;
-import com.Ease.Team.TeamCardReceiver.TeamCardReceiver;
 import com.Ease.Team.TeamManager;
 import com.Ease.Team.TeamUser;
+import com.Ease.User.User;
 
+import java.util.Calendar;
 import java.util.TimerTask;
 
 public class MetricsSchedulerTask extends TimerTask {
@@ -22,6 +23,8 @@ public class MetricsSchedulerTask extends TimerTask {
     @Override
     public void run() {
         HibernateQuery hibernateQuery = new HibernateQuery();
+        HibernateQuery trackingHibernateQuery = new HibernateQuery("tracking");
+        Calendar calendar = Calendar.getInstance();
         try {
             System.out.println("Metric team start");
             for (Team team : teamManager.getTeams(hibernateQuery)) {
@@ -93,42 +96,27 @@ public class MetricsSchedulerTask extends TimerTask {
                 StringBuilder people_with_personnal_apps_emails = new StringBuilder();
                 StringBuilder people_click_on_app_five_times_emails = new StringBuilder();
                 for (TeamUser teamUser : team.getTeamUsers().values()) {
-                    if (!teamUser.isVerified())
+                    if (!teamUser.isRegistered())
                         continue;
-                    int week_clicks = 0;
-                    for (TeamCardReceiver teamCardReceiver : teamUser.getTeamCardReceivers()) {
-                        if (teamCardReceiver.getApp().hasBeenClickedForDays(5, hibernateQuery)) {
-                            week_clicks = 5;
-                            break;
-                        } else if (teamCardReceiver.getApp().hasBeenClickedForDays(3, hibernateQuery))
-                            week_clicks = 3;
-                        else if (teamCardReceiver.getApp().hasBeenClickedForDays(1, hibernateQuery))
-                            week_clicks = 1;
+                    User user = teamUser.getUser();
+                    trackingHibernateQuery.queryString("SELECT e FROM EaseEvent e WHERE user_id = :userId AND week_of_year = :weekOfYear");
+                    trackingHibernateQuery.setParameter("userId", user.getDb_id());
+                    trackingHibernateQuery.setParameter("weekOfYear", calendar.get(Calendar.WEEK_OF_YEAR));
+                    int weekClicks = trackingHibernateQuery.list().size();
+                    if (weekClicks >= 1) {
+                        people_click_on_app_once++;
+                        people_click_on_app_once_emails.append(teamUser.getEmail()).append(";");
                     }
-                    switch (week_clicks) {
-                        case 5:
-                            people_click_on_app_once++;
-                            people_click_on_app_three_times++;
-                            people_click_on_app_five_times++;
-                            people_click_on_app_once_emails.append(teamUser.getEmail()).append(";");
-                            people_click_on_app_three_times_emails.append(teamUser.getEmail()).append(";");
-                            people_click_on_app_five_times_emails.append(teamUser.getEmail()).append(";");
-                            break;
-                        case 3:
-                            people_click_on_app_once++;
-                            people_click_on_app_three_times++;
-                            people_click_on_app_once_emails.append(teamUser.getEmail()).append(";");
-                            people_click_on_app_three_times_emails.append(teamUser.getEmail()).append(";");
-                            break;
-                        case 1:
-                            people_click_on_app_once++;
-                            people_click_on_app_once_emails.append(teamUser.getEmail()).append(";");
-                            break;
-                        default:
-                            break;
+                    if (weekClicks >= 3) {
+                        people_click_on_app_three_times++;
+                        people_click_on_app_three_times_emails.append(teamUser.getEmail()).append(";");
+                    }
+                    if (weekClicks >= 5) {
+                        people_click_on_app_five_times++;
+                        people_click_on_app_five_times_emails.append(teamUser.getEmail()).append(";");
                     }
                     for (App app : teamUser.getUser().getApps()) {
-                        if (app.getTeamCardReceiver() == null && !app.isEmpty()) {
+                        if (app.getTeamCardReceiver() == null && app.getAccount() != null) {
                             people_with_personnal_apps++;
                             people_with_personnal_apps_emails.append(teamUser.getEmail()).append(";");
                             break;

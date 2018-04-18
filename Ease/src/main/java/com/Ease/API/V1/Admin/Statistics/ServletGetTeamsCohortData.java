@@ -14,6 +14,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Calendar;
+import java.util.LinkedList;
 import java.util.List;
 
 @WebServlet("/api/v1/admin/GetTeamsCohortData")
@@ -65,13 +66,19 @@ public class ServletGetTeamsCohortData extends HttpServlet {
         List<Integer> teamIds = hibernateQuery.list();
         this_week.put(teamIds.size());
         int weeksAdded = 0;
+        List<Integer> userIds = new LinkedList<>();
         if (!teamIds.isEmpty()) {
+            hibernateQuery.queryString("SELECT DISTINCT tu.user.db_id FROM TeamUser tu WHERE tu.team.db_id IN (:teamIds)");
+            hibernateQuery.setParameter("teamIds", teamIds);
+            userIds = hibernateQuery.list();
+        }
+        if (!userIds.isEmpty()) {
             while (start_calendar.get(Calendar.YEAR) < end_calendar.get(Calendar.YEAR)) {
-                trackWeek(start_calendar, avg_clicks, trackingHibernateQuery, this_week, teamIds, hibernateQuery);
+                trackWeek(start_calendar, avg_clicks, trackingHibernateQuery, this_week, userIds, hibernateQuery);
                 weeksAdded++;
             }
             while (start_calendar.get(Calendar.WEEK_OF_YEAR) <= end_calendar.get(Calendar.WEEK_OF_YEAR)) {
-                trackWeek(start_calendar, avg_clicks, trackingHibernateQuery, this_week, teamIds, hibernateQuery);
+                trackWeek(start_calendar, avg_clicks, trackingHibernateQuery, this_week, userIds, hibernateQuery);
                 weeksAdded++;
             }
         } else {
@@ -92,13 +99,13 @@ public class ServletGetTeamsCohortData extends HttpServlet {
         start_calendar.add(Calendar.WEEK_OF_YEAR, 1);
     }
 
-    private void trackWeek(Calendar start_calendar, Integer avg_clicks, HibernateQuery trackingHibernateQuery, JSONArray this_week, List<Integer> teamIds, HibernateQuery hibernateQuery) {
-        trackingHibernateQuery.querySQLString("SELECT DISTINCT t.uID FROM (SELECT user_id AS uId, COUNT(name) AS n FROM EASE_EVENT WHERE team_id IN (:teamIds) AND (name LIKE 'PasswordUsed' OR name LIKE 'PasswordUser') AND creation_date BETWEEN :start_week AND :end_week GROUP BY user_id) AS t WHERE t.n >= :avg_clicks");
+    private void trackWeek(Calendar start_calendar, Integer avg_clicks, HibernateQuery trackingHibernateQuery, JSONArray this_week, List<Integer> userIds, HibernateQuery hibernateQuery) {
+        trackingHibernateQuery.querySQLString("SELECT DISTINCT t.uID FROM (SELECT user_id AS uId, COUNT(name) AS n FROM EASE_EVENT WHERE user_id IN (:userIds) AND (name LIKE 'PasswordUsed' OR name LIKE 'PasswordUser') AND creation_date BETWEEN :start_week AND :end_week GROUP BY user_id) AS t WHERE t.n >= :avg_clicks");
         trackingHibernateQuery.setParameter("start_week", start_calendar.getTime());
         trackingHibernateQuery.setParameter("avg_clicks", avg_clicks);
         start_calendar.add(Calendar.WEEK_OF_YEAR, 1);
         trackingHibernateQuery.setParameter("end_week", start_calendar.getTime());
-        trackingHibernateQuery.setParameter("teamIds", teamIds);
+        trackingHibernateQuery.setParameter("userIds", userIds);
         List<Integer> activeUserIds = trackingHibernateQuery.list();
         int teamCount = 0;
         if (!activeUserIds.isEmpty()) {
