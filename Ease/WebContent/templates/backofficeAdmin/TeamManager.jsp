@@ -12,10 +12,10 @@
         <th>Plan</th>
         <th>CC</th>
         <th class="number_data">App w. tags</th>
-        <th class="number_data">P. added</th>
+        <th class="number_data">P. invited</th>
         <th class="number_data">P. w. apps</th>
-        <th class="number_data">P. click 1</th>
-        <th class="number_data">P. click 3</th>
+        <th class="number_data">Pwd Kill 1</th>
+        <th class="number_data">Pwd Kill 3</th>
     </tr>
     </thead>
     <tbody id="team-manager-body"></tbody>
@@ -40,13 +40,13 @@
                     <p>People with personal apps: <span id="people_with_personnal_apps"></span> <a href="#"
                                                                                                    id="people_with_personnal_apps_emails">(see
                         emails)</a></p>
-                    <p>People who click on app 1 day: <span id="people_click_on_app_once"></span> <a href="#"
+                    <p>People who killed passwords 1 day: <span id="people_click_on_app_once"></span> <a href="#"
                                                                                                      id="people_click_on_app_once_emails">(see
                         emails)</a></p>
-                    <p>People who click on app 3 days: <span id="people_click_on_app_three_times"></span> <a href="#"
+                    <p>People who killed passwords 3 days: <span id="people_click_on_app_three_times"></span> <a href="#"
                                                                                                              id="people_click_on_app_three_times_emails">(see
                         emails)</a></p>
-                    <p>People who click on app 5 days: <span id="people_click_on_app_five_times"></span> <a href="#"
+                    <p>People who killed passwords 5 days: <span id="people_click_on_app_five_times"></span> <a href="#"
                                                                                                             id="people_click_on_app_five_times_emails">(see
                         emails)</a></p>
                     <button class="ui blue button">Show history</button>
