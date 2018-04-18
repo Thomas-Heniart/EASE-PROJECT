@@ -99,8 +99,6 @@ public class CreateTeamAnySingleCard extends HttpServlet {
                 account = AccountFactory.getInstance().createAccountFromMap(new HashMap<>(), teamKey, reminder_interval, sm.getHibernateQuery());
                 ((TeamSingleCard)teamCard).setAccount(account);
             }
-            if (account != null)
-                teamCard.calculatePasswordScore();
             JSONObject receivers = sm.getJsonParam("receivers", false, false);
             sm.saveOrUpdate(teamCard);
             for (Object object : receivers.keySet()) {
