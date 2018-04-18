@@ -239,10 +239,10 @@ SELECT
   COUNT(*) AS clicks
 FROM ease_tracking.EASE_EVENT
 WHERE (name LIKE 'PasswordUsed' OR name LIKE 'PasswordUser' AND user_id IN (SELECT user_id
-                                                                           FROM ease.teamUsers
-                                                                           WHERE team_id = 312 AND user_id IS NOT NULL)
-GROUP BY year, day_of_year
-ORDER BY year, day_of_year;
+                                                                            FROM ease.teamUsers
+                                                                            WHERE team_id = 312 AND user_id IS NOT NULL)
+       GROUP BY YEAR, day_of_year
+       ORDER BY YEAR, day_of_year;
 
 SELECT *
 FROM ease_tracking.EASE_EVENT
@@ -264,19 +264,19 @@ FROM (
 GROUP BY year, day_of_year
 ORDER BY year, day_of_year;
 
-SELECT
-  year,
-  day_of_year,
-  week_of_year,
-  COUNT(*) AS clicks
-FROM (
-       SELECT
-         year,
-         day_of_year,
-         week_of_year,
-         id
-       FROM ease_tracking.EASE_EVENT
-       WHERE (name LIKE 'PasswordUsed' OR name LIKE 'PasswordUser') AND user_id = 17) AS t
-WHERE year = 2018 AND week_of_year = 16
-GROUP BY year, day_of_year, week_of_year
-ORDER BY year, day_of_year;
+SELECT COUNT(*)
+FROM (SELECT
+        year,
+        day_of_year,
+        COUNT(*) AS clicks
+      FROM (
+             SELECT
+               year,
+               day_of_year,
+               week_of_year,
+               id
+             FROM ease_tracking.EASE_EVENT
+             WHERE (name LIKE 'PasswordUsed' OR name LIKE 'PasswordUser') AND user_id = 17) AS t
+      WHERE year = 2018 AND week_of_year = 16
+      GROUP BY year, day_of_year, week_of_year
+      ORDER BY year, day_of_year) AS t;

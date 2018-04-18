@@ -23,8 +23,8 @@ public class ServletUpdateTeamMetrics extends HttpServlet {
         GetServletManager sm = new GetServletManager(this.getClass().getName(), request, response, true);
         try {
             sm.needToBeEaseAdmin();
-            HibernateQuery hibernateQuery = new HibernateQuery();
-            HibernateQuery trackingHibernateQuery = new HibernateQuery("tracking");
+            HibernateQuery hibernateQuery = sm.getHibernateQuery();
+            HibernateQuery trackingHibernateQuery = sm.getTrackingHibernateQuery();
             Calendar calendar = Calendar.getInstance();
             int year = calendar.get(Calendar.YEAR);
             int weekOfYear = calendar.get(Calendar.WEEK_OF_YEAR);
@@ -49,16 +49,30 @@ public class ServletUpdateTeamMetrics extends HttpServlet {
             StringBuilder people_click_on_app_three_times_emails = new StringBuilder();
             int people_click_on_app_five_times = 0;
             StringBuilder people_click_on_app_five_times_emails = new StringBuilder();
-            int password_killed = 0;
             for (TeamUser teamUser : team.getTeamUsers().values()) {
                 if (!teamUser.isRegistered())
                     continue;
                 User user = teamUser.getUser();
-                trackingHibernateQuery.queryString("SELECT e FROM EaseEvent e WHERE user_id = :userId AND week_of_year = :weekOfYear");
+                trackingHibernateQuery.querySQLString("SELECT COUNT(*)\n" +
+                        "FROM (SELECT\n" +
+                        "        year,\n" +
+                        "        day_of_year,\n" +
+                        "        COUNT(*) AS clicks\n" +
+                        "      FROM (\n" +
+                        "             SELECT\n" +
+                        "               year,\n" +
+                        "               day_of_year,\n" +
+                        "               week_of_year,\n" +
+                        "               id\n" +
+                        "             FROM ease_tracking.EASE_EVENT\n" +
+                        "             WHERE (name LIKE 'PasswordUsed' OR name LIKE 'PasswordUser') AND user_id = :userId) AS t\n" +
+                        "      WHERE year = :year AND week_of_year = :weekOfYear\n" +
+                        "      GROUP BY year, day_of_year, week_of_year\n" +
+                        "      ORDER BY year, day_of_year) AS t;");
                 trackingHibernateQuery.setParameter("userId", user.getDb_id());
                 trackingHibernateQuery.setParameter("weekOfYear", calendar.get(Calendar.WEEK_OF_YEAR));
+                trackingHibernateQuery.setParameter("year", calendar.get(Calendar.YEAR));
                 int weekClicks = trackingHibernateQuery.list().size();
-                password_killed += weekClicks;
                 if (weekClicks >= 1) {
                     people_click_on_app_once++;
                     people_click_on_app_once_emails.append(teamUser.getEmail()).append(";");
@@ -72,13 +86,18 @@ public class ServletUpdateTeamMetrics extends HttpServlet {
                     people_click_on_app_five_times_emails.append(teamUser.getEmail()).append(";");
                 }
             }
+            if (people_click_on_app_once_emails.length() > 0)
+                people_click_on_app_once_emails.deleteCharAt(people_click_on_app_once_emails.length() - 1);
+            if (people_click_on_app_three_times_emails.length() > 0)
+                people_click_on_app_three_times_emails.deleteCharAt(people_click_on_app_three_times_emails.length() - 1);
+            if (people_click_on_app_five_times_emails.length() > 0)
+                people_click_on_app_five_times_emails.deleteCharAt(people_click_on_app_five_times_emails.length() - 1);
             teamMetrics.setPeople_click_on_app_once(people_click_on_app_once);
             teamMetrics.setPeople_click_on_app_three_times(people_click_on_app_three_times);
             teamMetrics.setPeople_click_on_app_five_times(people_click_on_app_five_times);
             teamMetrics.setPeople_click_on_app_once_emails(people_click_on_app_once_emails.toString());
             teamMetrics.setPeople_click_on_app_three_times_emails(people_click_on_app_three_times_emails.toString());
             teamMetrics.setPeople_click_on_app_five_times_emails(people_click_on_app_five_times_emails.toString());
-            teamMetrics.setPasswordKilled(password_killed);
             hibernateQuery.saveOrUpdateObject(teamMetrics);
         }
     }

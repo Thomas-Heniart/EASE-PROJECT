@@ -100,11 +100,26 @@ public class MetricsSchedulerTask extends TimerTask {
                     if (!teamUser.isRegistered())
                         continue;
                     User user = teamUser.getUser();
-                    trackingHibernateQuery.queryString("SELECT e FROM EaseEvent e WHERE user_id = :userId AND week_of_year = :weekOfYear");
+                    trackingHibernateQuery.querySQLString("SELECT COUNT(*)\n" +
+                            "FROM (SELECT\n" +
+                            "        year,\n" +
+                            "        day_of_year,\n" +
+                            "        COUNT(*) AS clicks\n" +
+                            "      FROM (\n" +
+                            "             SELECT\n" +
+                            "               year,\n" +
+                            "               day_of_year,\n" +
+                            "               week_of_year,\n" +
+                            "               id\n" +
+                            "             FROM ease_tracking.EASE_EVENT\n" +
+                            "             WHERE (name LIKE 'PasswordUsed' OR name LIKE 'PasswordUser') AND user_id = :userId) AS t\n" +
+                            "      WHERE year = :year AND week_of_year = :weekOfYear\n" +
+                            "      GROUP BY year, day_of_year, week_of_year\n" +
+                            "      ORDER BY year, day_of_year) AS t;");
                     trackingHibernateQuery.setParameter("userId", user.getDb_id());
                     trackingHibernateQuery.setParameter("weekOfYear", calendar.get(Calendar.WEEK_OF_YEAR));
+                    trackingHibernateQuery.setParameter("year", calendar.get(Calendar.YEAR));
                     int weekClicks = trackingHibernateQuery.list().size();
-                    password_killed += weekClicks;
                     if (weekClicks >= 1) {
                         people_click_on_app_once++;
                         people_click_on_app_once_emails.append(teamUser.getEmail()).append(";");
