@@ -2,10 +2,11 @@ import React, {Component, Fragment} from "react";
 import classnames from "classnames";
 import {connect} from "react-redux";
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
-import {showTeamMenu} from "../actions/teamActions";
+import {showTeamMenu, teamPasswordScoreAlert} from "../actions/teamActions";
 import * as channelActions from "../actions/channelActions";
 import * as userActions from "../actions/userActions";
 import * as teamModalsActions from "../actions/teamModalActions";
+import {basicDateFormat} from "../utils/utils";
 import {isAdmin} from "../utils/helperFunctions";
 import { NavLink,withRouter} from 'react-router-dom';
 import {findDOMNode} from 'react-dom';
@@ -183,36 +184,106 @@ function UserList({team, me, dispatch, match}){
 class TeamPasswordsStrengthProgress extends Component {
   constructor(props){
     super(props);
+    this.state = {
+      alertSent: false
+    }
   }
+  sendAlert = () => {
+    const {team_id, dispatch} = this.props;
+
+    this.setState({alertSent: true});
+    setTimeout(() => {
+      this.setState({alertSent: false});
+    }, 2000);
+    dispatch(teamPasswordScoreAlert({
+      team_id: team_id
+    }));
+  };
+  getPopupContent = (password_count, strong_password_count, percentage) => {
+    const {last_alert_date} = this.props;
+    const {alertSent} = this.state;
+
+    if (password_count < 10)
+      return (
+          <span>
+            <i class="em-svg em-wave"/> They aren’t enough passwords in your team (yet) to calculate your team security score.
+            To make it happen you can <NavLink class="simple_link" to={'/main/catalog/importations'}>import some</NavLink> or <NavLink class="simple_link" to={'/main/catalog/website'}>add more apps</NavLink>.
+          </span>
+      );
+    else if (percentage < 70)
+      return (
+          <span>
+            Out of {password_count} passwords in your team, only {percentage}% of them are strong enough. You’re not on top 🙄<i class="em-svg em-face_with_rolling_eyes"/>… yet!<br/>
+            {alertSent ?
+                <Fragment>Request sent!</Fragment>
+                :
+                <Fragment>You can <a class="simple_link" onClick={this.sendAlert}>Require people to make them stronger</a>💪<i class="em-svg em-muscle"/>.</Fragment>}
+            {!!last_alert_date &&
+            <Fragment><br/>(Last request sent {basicDateFormat(last_alert_date)})</Fragment>}
+          </span>
+      );
+    else if (percentage < 90)
+      return (
+          <span>
+            <i class="em-svg em---1"/> Out of {password_count} passwords in your team, only {percentage}% of them are strong enough. You’re not on top 🙄… yet!<br/>
+            {alertSent ?
+                <Fragment>Request sent!</Fragment>
+                :
+                <Fragment>For those who aren't, you can <a class="simple_link" onClick={this.sendAlert}>Require people to make them stronger</a><i class="em-svg em-muscle"/>.</Fragment>}
+            {!!last_alert_date &&
+            <Fragment><br/>(Last request sent {basicDateFormat(last_alert_date)})</Fragment>}
+          </span>
+      );
+    else if (percentage < 100)
+      return (
+          <span>
+            Pretty good! Out of {password_count} passwords in your team, {percentage}% of them are strong enough.<i class="em-svg em-clap"/> 👏You’re quite close to the top level!<br/>
+            {alertSent ?
+                <Fragment>Request sent!</Fragment>
+                :
+                <Fragment>To reach the top you can <a class="simple_link" onClick={this.sendAlert}>require people to make them stronger</a><i class="em-svg em-muscle"/>.</Fragment>}
+            {!!last_alert_date &&
+            <Fragment><br/>(Last request sent {basicDateFormat(last_alert_date)})</Fragment>}
+          </span>
+      );
+  };
   render(){
-    const {totalPasswords, strongPasswords} = this.props;
+    const {passwordStrengthDescription} = this.props;
+    if (!passwordStrengthDescription)
+      return null;
+    const {password_count, strong_password_count} = passwordStrengthDescription;
+    const percentage = 100 / password_count * strong_password_count;
+    let popupText = this.getPopupContent(password_count, strong_password_count, Math.floor(percentage));
 
     return (
         <Popup
             size="mini"
             inverted
             position='right center'
+            hoverable
+            wide
             trigger={
-              <div class="circular-progress">
+              <div class='circular-progress'>
                 <CircularProgressbar
-                    textForPercentage={totalPasswords < 10 ? null : (pct) => `${pct}%`}
+                    textForPercentage={password_count < 10 ? null : (pct) => `${Math.floor(pct)}%`}
                     initialAnimation={true}
-                    percentage={100 / totalPasswords * strongPasswords} />
-                {totalPasswords < 10 &&
+                    className={percentage > 90 ? 'green' : null}
+                    percentage={percentage} />
+                {password_count < 10 &&
                 <Icon name="lock"/>}
               </div>
             }
             content={
-              <span>
-                this is text of the popup
-              </span>
+              popupText
             }
         />
     )
   }
 }
 
-@connect()
+@connect((store, ownProps) => ({
+  passwordStrengthDescription: store.team_cards_password_strength[ownProps.team.id]
+}))
 class TeamSideBar extends React.Component{
   constructor(props){
     super(props);
@@ -233,9 +304,12 @@ class TeamSideBar extends React.Component{
                 {me.username}
               </div>
             </div>
+            {team.plan_id !== 0 &&
             <TeamPasswordsStrengthProgress
-                totalPasswords={100}
-                strongPasswords={25}/>
+                team_id={team.id}
+                dispatch={this.props.dispatch}
+                last_alert_date={team.last_password_score_alert_date}
+                passwordStrengthDescription={this.props.passwordStrengthDescription}/>}
           </div>
           <div id="col_channels">
             <div id="col_channels_scroller">

@@ -2,7 +2,8 @@ import { Header, Popup, Grid, Label,List, Search,SearchResult, Container, Divide
 import classnames from "classnames";
 import api from "../../utils/api";
 import {
-  credentialIconType
+  credentialIconType,
+  basicDateFormat
 } from "../../utils/utils";
 import {
   showTeamEditEnterpriseAppModal, showFillSimpleCardCredentialsModal, showUpgradeTeamPlanModal,
@@ -54,6 +55,8 @@ export const scanEnterpriseCardForWeakPasswords = (app) => {
   let weak = 0;
   let reallyWeak = 0;
   app.receivers.forEach(receiver => {
+    if (!!receiver.empty)
+      return;
     if (receiver.password_score === -1)
       pwned++;
     else if (receiver.password_score < 3)
@@ -75,35 +78,64 @@ export const passwordStrengthDescription = {
   3: "This password is quite weak and shouldn’t be used."
 };
 
-export const EnterpriseTeamCardPasswordInputStrengthIndicator = ({score, myPassword}) => {
-  return (
-      <Popup
-          size="mini"
-          position="bottom center"
-          inverted
-          hoverable
-          trigger={
-            <Icon name="warning sign"
-                  fitted
-                  color={score < 3 ? 'red' : 'orange'}
-                  class="password_input_strength_indicator"/>
-          }
-          content={
-            <Fragment>
-              <span>{passwordStrengthDescription[score]}</span>
-              <br/>
-              {myPassword ?
-                  <span><a class="simple_link">Change it to a strong one</a>&nbsp;💪<i class="em-svg em-muscle"/></span>
-                  :
-                  <span><a class="simple_link">Require people to make their password stronger</a>&nbsp;💪<i class="em-svg em-muscle"/></span>
-              }
-            </Fragment>
-          }
-      />
-  )
+export class EnterpriseTeamCardPasswordInputStrengthIndicator extends Component {
+  constructor(props){
+    super(props);
+    this.state = {
+      alertSent: false
+    }
+  }
+  goToUrl = () => {
+    window.open(this.props.websiteUrl);
+  };
+  sendAlert = () => {
+    this.setState({alertSent: true});
+    setTimeout(() => {
+      this.setState({alertSent: false});
+    }, 2000);
+    this.props.passwordChangeAlert();
+  };
+  render(){
+    const {score, myPassword, lastPasswordChangeAlert, websiteUrl} = this.props;
+    return (
+        <Popup
+            size="mini"
+            position="bottom center"
+            inverted
+            hoverable
+            trigger={
+              <Icon name="warning sign"
+                    fitted
+                    color={score < 3 ? 'red' : 'orange'}
+                    class="password_input_strength_indicator"/>
+            }
+            content={
+              <Fragment>
+                <span>{passwordStrengthDescription[score]}</span>
+                <br/>
+                {myPassword ?
+                    <span>{!!websiteUrl ? <a class="simple_link" onClick={this.goToUrl}>Change it to a strong one</a> : 'Change it to a strong one'}&nbsp;💪<i
+                        class="em-svg em-muscle"/></span>
+                    :
+                    this.state.alertSent ?
+                        <span>Request sent!</span>
+                        :
+                        <span><a class="simple_link" onClick={this.sendAlert}>Require people to make their password stronger</a>&nbsp;💪<i
+                            class="em-svg em-muscle"/></span>
+                }
+                {!myPassword && !!lastPasswordChangeAlert &&
+                <Fragment>
+                  <br/>
+                  (Last request sent {basicDateFormat(lastPasswordChangeAlert)})
+                </Fragment>}
+              </Fragment>
+            }
+        />
+    )
+  }
 };
 
-export const StaticEnterpriseTeamCardPasswordInput = ({item, passwordScore, myPassword}) => {
+export const StaticEnterpriseTeamCardPasswordInput = ({item, passwordScore, myPassword, lastPasswordChangeAlert, websiteUrl, passwordChangeAlert}) => {
   return (
       <Input size="mini"
              class="team-app-input"
@@ -117,36 +149,185 @@ export const StaticEnterpriseTeamCardPasswordInput = ({item, passwordScore, myPa
         <input/>
         {!!passwordScore && passwordScore < 4 &&
         <EnterpriseTeamCardPasswordInputStrengthIndicator score={passwordScore}
+                                                          lastPasswordChangeAlert={lastPasswordChangeAlert}
+                                                          passwordChangeAlert={passwordChangeAlert}
+                                                          websiteUrl={websiteUrl}
                                                           myPassword={myPassword}/>}
       </Input>
   )
 };
 
-const SimpleTeamCardPasswordInputStrengthIndicator = ({score}) => {
-  return (
-      <Popup
-          size="mini"
-          position="bottom center"
-          inverted
-          hoverable
-          trigger={
-            <Icon name="warning sign"
-                  fitted
-                  color={score < 3 ? 'red' : 'orange'}
-                  class="password_input_strength_indicator"/>
-          }
-          content={
+export class TeamSimpleCardPasswordStrengthIndicator extends Component {
+  constructor(props){
+    super(props);
+    this.state = {
+      alertSent: false
+    }
+  }
+  sendAlert = () => {
+    this.setState({alertSent: true});
+    setTimeout(() => {
+      this.setState({alertSent: false});
+    }, 2000);
+    this.props.passwordChangeAlert();
+  };
+  goToUrl = () => {
+    const {teamCard} = this.props;
+
+    window.open(teamCard.website.login_url);
+  };
+  getText = () => {
+    const {score} = this.props;
+
+    if (score < 3)
+      return (
+          <span class="password_strength_indicator"><Icon name="lock" fitted/> Weak password</span>
+      );
+    else if (score < 4)
+      return (
+          <span class="password_strength_indicator medium"><Icon name="lock" fitted/> Weak password</span>
+      );
+    else if (score === 4)
+      return (
+          <span class="password_strength_indicator strong"><Icon name="lock" fitted/></span>
+      );
+  };
+  getPopupContent = () => {
+    const {score, meReceiver, teamCard} = this.props;
+    const lastPasswordScoreAlertDate = teamCard.last_password_score_alert_date;
+
+    if (score === 4)
+      return (
+          <span>The password for this app is strong <i class="em-svg em-closed_lock_with_key"/>. Keep it like this <i class="em-svg em-ok_hand"/></span>
+      );
+    else if (score < 4)
+      return (
+          <Fragment>
+            <span>{passwordStrengthDescription[score]}</span>
+            <br/>
+            {meReceiver ?
+                <span><a class="simple_link" onClick={this.goToUrl}>Change it to a strong one</a>&nbsp;💪<i class="em-svg em-muscle"/></span>
+                :
+                this.state.alertSent ?
+                    <span>Request sent!</span>
+                    :
+                    <span><a class="simple_link" onClick={this.sendAlert}>Require to change it to a strong one</a> <i class="em-svg em-muscle"/></span>
+            }
+            {!!lastPasswordScoreAlertDate && !meReceiver &&
             <Fragment>
-              <span>{passwordStrengthDescription[score]}</span>
               <br/>
-              <span><a class="simple_link">Change it to a strong one</a>&nbsp;💪<i class="em-svg em-muscle"/></span>
-            </Fragment>
-          }
-      />
-  )
+              (Last request sent {basicDateFormat(lastPasswordScoreAlertDate)})
+            </Fragment>}
+          </Fragment>
+      );
+  };
+  getPopupContentSoftware = () => {
+    const {score, meReceiver, teamCard} = this.props;
+    const lastPasswordScoreAlertDate = teamCard.last_password_score_alert_date;
+
+    if (score === 4)
+      return (
+          <span>The password for this app is strong <i class="em-svg em-closed_lock_with_key"/>. Keep it like this <i class="em-svg em-ok_hand"/></span>
+      );
+    else if (score < 4)
+      return (
+          <Fragment>
+            <span>{passwordStrengthDescription[score]}</span>
+            <br/>
+            {meReceiver ?
+                <span>Change it to a strong one 💪<i class="em-svg em-muscle"/></span>
+                :
+                this.state.alertSent ?
+                    <span>Request sent!</span>
+                    :
+                    <span><a class="simple_link" onClick={this.sendAlert}>Require to change it to a strong one</a> <i class="em-svg em-muscle"/></span>
+            }
+            {!!lastPasswordScoreAlertDate && !meReceiver &&
+            <Fragment>
+              <br/>
+              (Last request sent {basicDateFormat(lastPasswordScoreAlertDate)})
+            </Fragment>}
+          </Fragment>
+      );
+  };
+  render(){
+    const {teamCard} = this.props;
+    const text = this.getText();
+    const popupContent = teamCard.software ? this.getPopupContentSoftware() : this.getPopupContent();
+
+    return (
+        <Popup
+            size="mini"
+            inverted
+            position="bottom center"
+            hoverable
+            trigger={text}
+            content={popupContent}/>
+    )
+  }
+}
+
+@connect((store, ownProps) => ({
+  team_card: store.team_apps[ownProps.team_card_id]
+}))
+class SimpleTeamCardPasswordInputStrengthIndicator extends Component {
+  constructor(props){
+    super(props);
+    this.state = {
+      sent: false
+    }
+  }
+  sendAlert = () => {
+    this.setState({sent: true});
+    setTimeout(() => {
+      this.setState({sent: false});
+    }, 2000);
+    this.props.changePasswordAlert();
+  };
+  goToUrl = () => {
+    const {team_card} = this.props;
+
+    window.open(team_card.website.login_url);
+  };
+  render(){
+    const {score, changePasswordAlert, canChangePassword, lastPasswordScoreAlertDate} = this.props;
+    return (
+        <Popup
+            size="mini"
+            position="bottom center"
+            inverted
+            hoverable
+            trigger={
+              <Icon name="warning sign"
+                    fitted
+                    color={score < 3 ? 'red' : 'orange'}
+                    class="password_input_strength_indicator"/>
+            }
+            content={
+              <Fragment>
+                <span>{passwordStrengthDescription[score]}</span>
+                <br/>
+                {canChangePassword ?
+                    <span><a class="simple_link" onClick={this.goToUrl}>Change it to a strong one</a>&nbsp;💪<i class="em-svg em-muscle"/></span>
+                    :
+                    this.state.sent ?
+                        <span>Request sent!</span>
+                        :
+                        <span><a class="simple_link" onClick={this.sendAlert}>Require to change it to a strong one</a> <i class="em-svg em-muscle"/></span>
+                }
+                {!!lastPasswordScoreAlertDate && !canChangePassword &&
+                <Fragment>
+                  <br/>
+                  (Last request sent {basicDateFormat(lastPasswordScoreAlertDate)})
+                </Fragment>}
+              </Fragment>
+            }
+        />
+    )
+  }
 };
 
-export const StaticSimpleTeamCardPasswordInput = ({item, passwordScore}) => {
+export const StaticSimpleTeamCardPasswordInput = ({item, passwordScore, canChangePassword, lastPasswordScoreAlertDate, changePasswordAlert, team_card_id}) => {
   return (
       <div class='credentials_single_card'>
         <Input
@@ -159,7 +340,12 @@ export const StaticSimpleTeamCardPasswordInput = ({item, passwordScore}) => {
           <Label><Icon name={credentialIconType[item.name]}/></Label>
           <input/>
           {!!passwordScore && passwordScore < 4 &&
-          <SimpleTeamCardPasswordInputStrengthIndicator score={passwordScore}/>}
+          <SimpleTeamCardPasswordInputStrengthIndicator
+              team_card_id={team_card_id}
+              canChangePassword={canChangePassword}
+              changePasswordAlert={changePasswordAlert}
+              lastPasswordScoreAlertDate={lastPasswordScoreAlertDate}
+              score={passwordScore}/>}
         </Input>
       </div>
   )
@@ -242,27 +428,27 @@ export class EmptyCredentialsSimpleAppIndicator extends Component {
           {(team_card.team_user_filler_id === -1 && !isAdmin(me.role)) &&
           <span>Waiting for login and password.</span>}
           {(team_card.team_user_filler_id !== -1 && team_card.team_user_filler_id === me.id) &&
-              <span>Waiting for <strong>{me.username}</strong> to<u onClick={this.fillCredentials}>fill info</u></span>}
+          <span>Waiting for <strong>{me.username}</strong> to<u onClick={this.fillCredentials}>fill info</u></span>}
           {(team_card.team_user_filler_id !== -1 && team_card.team_user_filler_id !== me.id) &&
-              <span>
+          <span>
                   Waiting for {team_users[team_card.team_user_filler_id].username} to fill info.
-                {this.props.actions_enabled &&
-                <React.Fragment>
-                  {(!!meReceiver || isAdmin(me.role)) &&
-                  <u onClick={this.sendReminder}>
-                    {this.state.reminderSent ?
-                        'Reminder sent!' :
-                        'Send reminder'}
-                  </u>}
-                  {isAdmin(me.role) &&
-                  <React.Fragment>
-                    &nbsp;or
-                    <u onClick={this.chooseMember}>
-                      choose another person
-                    </u>
-                  </React.Fragment>}
-                </React.Fragment>
-                }
+            {this.props.actions_enabled &&
+            <React.Fragment>
+              {(!!meReceiver || isAdmin(me.role)) &&
+              <u onClick={this.sendReminder}>
+                {this.state.reminderSent ?
+                    'Reminder sent!' :
+                    'Send reminder'}
+              </u>}
+              {isAdmin(me.role) &&
+              <React.Fragment>
+                &nbsp;or
+                <u onClick={this.chooseMember}>
+                  choose another person
+                </u>
+              </React.Fragment>}
+            </React.Fragment>
+            }
               </span>
           }
         </Button>

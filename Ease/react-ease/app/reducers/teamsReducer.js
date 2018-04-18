@@ -8,6 +8,15 @@ export const teams = createReducer({
       ...action.payload.teams
     }
   },
+  ['TEAM_PASSWORD_SCORE_ALERT'](state, action){
+    const {team_id, last_alert_date} = action.payload;
+
+    return update(state, {
+      [team_id]: {
+        last_password_score_alert_date: {$set: last_alert_date}
+      }
+    })
+  },
   ['DISABLE_INVITE_TEAM_USERS_MODAL'](state, action){
     const {team_id} = action.payload;
 
@@ -546,3 +555,14 @@ export const team_payments = createReducer({
   }
 });
 
+export const team_cards_password_strength = createReducer({
+
+}, {
+  ['FETCH_TEAM_CARDS_PASSWORD_STRENGTH_DESCRIPTION'](state, action){
+    const {description, team_id} = action.payload;
+
+    return update(state, {
+      [team_id]: {$set: description}
+    });
+  }
+});

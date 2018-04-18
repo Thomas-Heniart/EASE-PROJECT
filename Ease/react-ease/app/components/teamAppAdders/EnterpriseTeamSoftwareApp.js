@@ -15,7 +15,7 @@ import {
   teamEditSoftwareEnterpriseCard,
   teamEditEnterpriseCardReceiver,
   teamShareEnterpriseCard,
-  removeTeamCardReceiver
+  removeTeamCardReceiver, teamEnterpriseCardPasswordScoreAlert, teamEnterpriseCardReceiverPasswordScoreAlert
 } from "../../actions/appsActions";
 import {
   copyTextToClipboard,
@@ -181,7 +181,7 @@ class CopyPasswordButton extends Component {
   }
 };
 
-const StaticReceivers = ({receivers, me, expanded, password_reminder_interval, dispatch, proPlan}) => {
+const StaticReceivers = ({receivers, me, expanded, password_reminder_interval, dispatch, proPlan, passwordChangeAlert}) => {
   const meAdmin = isAdmin(me.role);
   return (
       <div class="receivers">
@@ -202,10 +202,13 @@ const StaticReceivers = ({receivers, me, expanded, password_reminder_interval, d
                         meAdmin={meAdmin}/> :
                     receiver.credentials.map(item => {
                       if (item.information_type === 'password')
-                        return <StaticEnterpriseTeamCardPasswordInput item={item}
-                                                                      myPassword={me.id === receiver.user.id}
-                                                                      passwordScore={(proPlan && (meAdmin || me.id === receiver.user.id)) ? receiver.receiver.password_score : null}
-                                                                      key={item.name}/>;
+                        return <StaticEnterpriseTeamCardPasswordInput
+                            item={item}
+                            lastPasswordChangeAlert={receiver.receiver.last_password_score_alert_date}
+                            passwordChangeAlert={passwordChangeAlert.bind(null, receiver.receiver.id)}
+                            myPassword={me.id === receiver.user.id}
+                            passwordScore={(proPlan && (meAdmin || me.id === receiver.user.id)) ? receiver.receiver.password_score : null}
+                            key={item.name}/>;
                       return <Input size="mini"
                                     key={item.name}
                                     class="team-app-input"
@@ -486,6 +489,15 @@ class EnterpriseTeamSoftwareApp extends Component {
       return a.user.username.localeCompare(b.user.username);
     });
   };
+  passwordChangeReceiverAlert = (team_card_receiver_id) => {
+    const {app} = this.props;
+
+    this.props.dispatch(teamEnterpriseCardReceiverPasswordScoreAlert({
+      team_id: app.team_id,
+      team_card_id: app.id,
+      team_card_receiver_id: team_card_receiver_id
+    }));
+  };
   render(){
     const app = this.props.app;
     const me = this.props.me;
@@ -559,6 +571,7 @@ class EnterpriseTeamSoftwareApp extends Component {
                 </div>
                 {!this.state.edit &&
                 <StaticReceivers receivers={users}
+                                 passwordChangeAlert={this.passwordChangeReceiverAlert}
                                  dispatch={this.props.dispatch}
                                  password_reminder_interval={app.password_reminder_interval}
                                  proPlan={proPlan}

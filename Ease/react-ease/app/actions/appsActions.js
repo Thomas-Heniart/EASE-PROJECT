@@ -818,3 +818,52 @@ export function teamCardRequestRemovedAction({team_card_id, request_id}){
     }
   }
 }
+
+export function teamSimpleCardPasswordScoreAlert({team_id, team_card_id}) {
+  return (dispatch, getState) => {
+    return post_api.teamApps.passwordScoreAlert({
+      team_id: team_id,
+      team_card_id: team_card_id
+    }).then(team_card => {
+      dispatch(teamCardChangedAction({
+        team_card: team_card
+      }));
+      return team_card;
+    }).catch(err => {
+      throw err;
+    });
+  }
+}
+
+export function teamEnterpriseCardPasswordScoreAlert({team_id, team_card_id}) {
+  return (dispatch, getState) => {
+    return post_api.teamApps.passwordScoreAlert({
+      team_id: team_id,
+      team_card_id: team_card_id
+    }).then(team_card => {
+      dispatch(teamCardChangedAction({
+        team_card: team_card
+      }));
+      return team_card;
+    }).catch(err => {
+      throw err;
+    });
+  }
+}
+
+export function teamEnterpriseCardReceiverPasswordScoreAlert({team_id, team_card_id, team_card_receiver_id}) {
+  return (dispatch, getState) => {
+    return post_api.teamApps.passwordScoreAlert({
+      team_id: team_id,
+      team_card_id: team_card_id,
+      team_card_receiver_id: team_card_receiver_id
+    }).then(receiver => {
+      dispatch(teamCardReceiverChangedAction({
+        receiver: receiver
+      }));
+      return receiver;
+    }).catch(err => {
+      throw err;
+    });
+  }
+}

@@ -771,6 +771,12 @@ i.icon.pin_button {
     font-size: .8rem;
     color: $themeRedColor;
     margin-left: 10px;
+    &.medium {
+      color: #f2711c;
+    }
+    &.strong {
+      color: $themeGreenColor;
+    }
     .icon {
       margin: 0 !important;
     }
@@ -2386,6 +2392,14 @@ button.action_text_button {
           @include flex-shrink(0);
           width: auto;
           height: 100%;
+          &.green {
+            .CircularProgressbar-text {
+              fill: $themeGreenColor;
+            }
+            .CircularProgressbar-path {
+              stroke: $themeGreenColor;
+            }
+          }
           .CircularProgressbar-text {
             font-size: 25px;
             fill: rgba(255, 154, 0, 0.6);

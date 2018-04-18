@@ -1,4 +1,3 @@
-import axios from "axios"
 var api = require('../utils/api');
 var post_api = require('../utils/post_api');
 import {dashboardAppRemovedAction} from "./dashboardActions";
@@ -24,11 +23,33 @@ export function fetchTeams(){
         teams[team.id] = team;
         teams[team.id].rooms = rooms;
         teams[team.id].team_users = team_users;
+        dispatch(fetchTeamCardsPasswordStrength({
+          team_id: team.id
+        }));
       });
       dispatch({type: 'FETCH_TEAMS_FULFILLED', payload: {teams: teams}});
       return response;
     }).catch(err => {
       dispatch({type: 'FETCH_TEAMS_REJECTED'});
+      throw err;
+    });
+  }
+}
+
+export function fetchTeamCardsPasswordStrength({team_id}) {
+  return (dispatch, getState) => {
+    return api.teams.getTeamPasswordStrengthScore({
+      team_id: team_id
+    }).then(description => {
+      dispatch({
+        type: 'FETCH_TEAM_CARDS_PASSWORD_STRENGTH_DESCRIPTION',
+        payload: {
+          team_id: team_id,
+          description: description
+        }
+      });
+      return description;
+    }).catch(err => {
       throw err;
     });
   }
@@ -255,4 +276,23 @@ export function teamRemovedAction({team_id}) {
       }
     });
   };
+}
+
+export function teamPasswordScoreAlert({team_id}) {
+  return (dispatch, getState) => {
+    return post_api.teamApps.passwordScoreAlert({
+      team_id: team_id
+    }).then(last_alert_date => {
+      dispatch({
+        type: 'TEAM_PASSWORD_SCORE_ALERT',
+        payload: {
+          team_id: team_id,
+          last_alert_date: last_alert_date
+        }
+      });
+      return last_alert_date;
+    }).catch(err => {
+      throw err;
+    });
+  }
 }
