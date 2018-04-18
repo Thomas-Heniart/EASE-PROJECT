@@ -53,8 +53,7 @@ public class ServletUpdateTeamMetrics extends HttpServlet {
                 if (!teamUser.isRegistered())
                     continue;
                 User user = teamUser.getUser();
-                trackingHibernateQuery.querySQLString("SELECT COUNT(*)\n" +
-                        "FROM (SELECT\n" +
+                trackingHibernateQuery.querySQLString("SELECT\n" +
                         "        year,\n" +
                         "        day_of_year,\n" +
                         "        COUNT(*) AS clicks\n" +
@@ -68,7 +67,7 @@ public class ServletUpdateTeamMetrics extends HttpServlet {
                         "             WHERE (name LIKE 'PasswordUsed' OR name LIKE 'PasswordUser') AND user_id = :userId) AS t\n" +
                         "      WHERE year = :year AND week_of_year = :weekOfYear\n" +
                         "      GROUP BY year, day_of_year, week_of_year\n" +
-                        "      ORDER BY year, day_of_year) AS t;");
+                        "      ORDER BY year, day_of_year;");
                 trackingHibernateQuery.setParameter("userId", user.getDb_id());
                 trackingHibernateQuery.setParameter("weekOfYear", calendar.get(Calendar.WEEK_OF_YEAR));
                 trackingHibernateQuery.setParameter("year", calendar.get(Calendar.YEAR));
