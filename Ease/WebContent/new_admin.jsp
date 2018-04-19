@@ -84,6 +84,7 @@
             <a class="item" data-target="#onboarding-rooms-segment">Onboarding rooms</a>
             <a class="item" data-target="#teams-deleted-segment">Teams deleted</a>
             <a class="item" data-target="#statistics">Statistics</a>
+            <a class="item" data-target="#onboarding">Onboarding</a>
         </div>
     </div>
     <div class="thirteen wide stretched column tabs">
@@ -113,6 +114,9 @@
         </div>
         <div id="statistics" class="ui segment loading backOffice_part" style="display: none">
             <%@include file="templates/backofficeAdmin/Statistics.jsp" %>
+        </div>
+        <div id="onboarding" class="ui segment loading backOffice_part" style="display: none">
+            <%@include file="templates/backofficeAdmin/Onboarding.jsp" %>
         </div>
     </div>
 </div>

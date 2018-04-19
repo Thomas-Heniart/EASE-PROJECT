@@ -291,6 +291,24 @@ const buildAppProvenanceChart = (data) => {
     data: data.perso,
     stack: 2
   });
+  datasets.push({
+    backgroundColor: '#681EAB',
+    label: 'Catalog',
+    data: data.catalog,
+    stack: 3
+  });
+  datasets.push({
+    backgroundColor: '#396D00',
+    label: 'Update',
+    data: data.update,
+    stack: 3
+  });
+  datasets.push({
+    backgroundColor: '#D0901A',
+    label: 'Importation',
+    data: data.importation,
+    stack: 3
+  });
   if (!!appProvenanceChart)
     appProvenanceChart.destroy();
   appProvenanceChart = new Chart(appProvenanceCanvas, {

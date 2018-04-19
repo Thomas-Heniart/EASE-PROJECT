@@ -1,6 +1,5 @@
 <div class="ui top attached tabular menu">
     <div class="item active" data-tab="recap">Recap</div>
-    <div class="item" data-tab="onboarding">Onboarding</div>
     <div class="item" data-tab="users_cohort">Users cohort</div>
     <div class="item" data-tab="teams_cohort">Teams cohort</div>
     <div class="item" data-tab="click_repartition">Click provenance</div>
@@ -24,11 +23,6 @@
         </thead>
         <tbody id="stats_body"></tbody>
     </table>
-</div>
-<div class="ui bottom attached tab segment" data-tab="onboarding">
-    <div style="max-height: 600px; max-width: 1000px">
-        <canvas id="onboardingChart" width="800" height="500"></canvas>
-    </div>
 </div>
 <div class="ui bottom attached tab segment" data-tab="users_cohort">
     <div id="main_users_cohort"></div>
@@ -102,4 +96,4 @@
         <canvas id="appProvenanceChart" width="800" height="500"></canvas>
     </div>
 </div>
-<script src="js/backOffice/statistics.js?v=3" async></script>
+<script src="js/backOffice/statistics.js?v=4" async></script>

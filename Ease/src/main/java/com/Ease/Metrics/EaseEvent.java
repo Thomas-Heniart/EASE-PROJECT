@@ -113,6 +113,10 @@ public class EaseEvent {
         this.data = data;
     }
 
+    public void setData(JSONObject data) {
+        this.data = data.toString();
+    }
+
     public JSONObject getJson() {
         JSONObject res = new JSONObject();
         res.put("id", this.getId());
@@ -172,5 +176,17 @@ public class EaseEvent {
 
     public boolean isEnterprise() {
         return this.getType().toLowerCase().contains("enterprise");
+    }
+
+    public boolean isFromCatalog() {
+        return this.getFrom().equalsIgnoreCase("Catalog");
+    }
+
+    public boolean isFromUpdate() {
+        return this.getFrom().equalsIgnoreCase("Update");
+    }
+
+    public boolean isFromImportation() {
+        return this.getFrom().equalsIgnoreCase("Importation");
     }
 }
