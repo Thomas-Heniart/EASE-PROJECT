@@ -113,7 +113,7 @@ public class ServletGetTeamsCohortData extends HttpServlet {
         List<Integer> activeUserIds = trackingHibernateQuery.list();
         int teamCount = 0;
         if (!activeUserIds.isEmpty()) {
-            hibernateQuery.queryString("SELECT DISTINCT tu.team FROM TeamUser tu WHERE tu.user IS NOT NULL AND tu.user.db_id IN (:userIds) AND t.subscription_date BETWEEN :start_week AND :subscription_week");
+            hibernateQuery.queryString("SELECT DISTINCT tu.team FROM TeamUser tu WHERE tu.user IS NOT NULL AND tu.user.db_id IN (:userIds) AND tu.team.subscription_date BETWEEN :start_week AND :subscription_week");
             startCalendar.add(Calendar.WEEK_OF_YEAR, -1);
             hibernateQuery.setDate("start_week", startCalendar);
             hibernateQuery.setDate("subscription_week", subscriptionWeek);

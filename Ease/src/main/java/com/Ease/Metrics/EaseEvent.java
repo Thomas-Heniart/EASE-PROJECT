@@ -134,7 +134,7 @@ public class EaseEvent {
         return new JSONObject(this.getData()).optString("from");
     }
 
-    private String getType() {
+    public String getType() {
         return new JSONObject(this.getData()).optString("type");
     }
 
@@ -164,5 +164,13 @@ public class EaseEvent {
 
     public boolean isAnyAppUsed() {
         return this.getType().equals("any") || this.getSubType().equals("any");
+    }
+
+    public boolean isSingle() {
+        return this.getType().toLowerCase().contains("single");
+    }
+
+    public boolean isEnterprise() {
+        return this.getType().toLowerCase().contains("enterprise");
     }
 }
