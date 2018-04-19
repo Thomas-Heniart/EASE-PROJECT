@@ -4,7 +4,6 @@ import com.Ease.Hibernate.HibernateQuery;
 import com.Ease.Metrics.EaseEvent;
 import com.Ease.Utils.Servlets.GetServletManager;
 import org.json.JSONArray;
-import org.json.JSONObject;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -40,16 +39,5 @@ public class ServletOnboardingBeforeCreationChartData extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         RequestDispatcher rd = request.getRequestDispatcher("index.jsp");
         rd.forward(request, response);
-    }
-
-    public static void main(String[] args) throws Exception {
-        HibernateQuery hibernateQuery = new HibernateQuery("tracking");
-        for (int i = 0; i < 30; i++) {
-            EaseEvent easeEvent = new EaseEvent();
-            easeEvent.setName("OnboardingEvent");
-            easeEvent.setData(new JSONObject().put("type", "DigitsSubmit"));
-            hibernateQuery.saveOrUpdateObject(easeEvent);
-        }
-        hibernateQuery.commit();
     }
 }
