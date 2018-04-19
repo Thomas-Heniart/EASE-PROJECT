@@ -270,12 +270,26 @@ const buildAppProvenanceChart = (data) => {
   datasets.push({
     backgroundColor: '#051937',
     label: 'Single',
-    data: data.single
+    data: data.single,
+    stack: 1
   });
   datasets.push({
     backgroundColor: '#A8EB12',
     label: 'Enterprise',
-    data: data.enterprise
+    data: data.enterprise,
+    stack: 1
+  });
+  datasets.push({
+    backgroundColor: '#0363F2',
+    label: 'Pro',
+    data: data.pro,
+    stack: 2
+  });
+  datasets.push({
+    backgroundColor: '#D0C11A',
+    label: 'Perso',
+    data: data.perso,
+    stack: 2
   });
   if (!!appProvenanceChart)
     appProvenanceChart.destroy();

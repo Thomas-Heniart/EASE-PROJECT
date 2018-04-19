@@ -31,6 +31,8 @@ public class ServletGetAppProvenanceStatistics extends HttpServlet {
             JSONArray totals = new JSONArray();
             JSONArray single = new JSONArray();
             JSONArray enterprise = new JSONArray();
+            JSONArray pro = new JSONArray();
+            JSONArray perso = new JSONArray();
             Calendar start_calendar = Calendar.getInstance();
             Calendar end_calendar = Calendar.getInstance();
             Long start_week_ms = sm.getLongParam("start_week_ms", true, true);
@@ -46,16 +48,18 @@ public class ServletGetAppProvenanceStatistics extends HttpServlet {
                 end_calendar.setTimeInMillis(end_week_ms);
             }
             while (start_calendar.get(Calendar.YEAR) < end_calendar.get(Calendar.YEAR)) {
-                trackWeek(trackingHibernateQuery, start_calendar, labels, totals, single, enterprise);
+                trackWeek(trackingHibernateQuery, start_calendar, labels, totals, single, enterprise, pro, perso);
                 start_calendar.add(Calendar.WEEK_OF_YEAR, 1);
             }
             while (start_calendar.get(Calendar.WEEK_OF_YEAR) <= end_calendar.get(Calendar.WEEK_OF_YEAR)) {
-                trackWeek(trackingHibernateQuery, start_calendar, labels, totals, single, enterprise);
+                trackWeek(trackingHibernateQuery, start_calendar, labels, totals, single, enterprise, pro, perso);
                 start_calendar.add(Calendar.WEEK_OF_YEAR, 1);
             }
             res.put("labels", labels);
             res.put("totals", totals);
             res.put("single", single);
+            res.put("pro", pro);
+            res.put("perso", perso);
             res.put("enterprise", enterprise);
             sm.setSuccess(res);
         } catch (Exception e) {
@@ -64,14 +68,14 @@ public class ServletGetAppProvenanceStatistics extends HttpServlet {
         sm.sendResponse();
     }
 
-    private void trackWeek(HibernateQuery trackingHibernateQuery, Calendar calendar, JSONArray labels, JSONArray totals, JSONArray single, JSONArray enterprise) {
+    private void trackWeek(HibernateQuery trackingHibernateQuery, Calendar calendar, JSONArray labels, JSONArray totals, JSONArray single, JSONArray enterprise, JSONArray pro, JSONArray perso) {
         trackingHibernateQuery.queryString("SELECT e FROM EaseEvent e WHERE e.name LIKE 'CardAdded' AND e.year = :year AND e.week_of_year = :week_of_year");
         trackingHibernateQuery.setParameter("year", calendar.get(Calendar.YEAR));
         trackingHibernateQuery.setParameter("week_of_year", calendar.get(Calendar.WEEK_OF_YEAR));
         List<EaseEvent> easeEvents = trackingHibernateQuery.list();
         easeEvents = easeEvents.stream().filter(easeEvent -> !easeEvent.getType().isEmpty()).collect(Collectors.toList());
         double total = easeEvents.size();
-        totals.put(total);
+        double proApps = easeEvents.size();
         if (total == 0.) {
             single.put(0);
             enterprise.put(0);
@@ -79,6 +83,20 @@ public class ServletGetAppProvenanceStatistics extends HttpServlet {
             single.put(easeEvents.stream().filter(EaseEvent::isSingle).count() / total * 100);
             enterprise.put(easeEvents.stream().filter(EaseEvent::isEnterprise).count() / total * 100);
         }
+        trackingHibernateQuery.queryString("SELECT e FROM EaseEvent e WHERE e.name LIKE 'AppAdded' AND e.year = :year AND e.week_of_year = :week_of_year");
+        trackingHibernateQuery.setParameter("year", calendar.get(Calendar.YEAR));
+        trackingHibernateQuery.setParameter("week_of_year", calendar.get(Calendar.WEEK_OF_YEAR));
+        easeEvents = trackingHibernateQuery.list();
+        easeEvents = easeEvents.stream().filter(easeEvent -> !easeEvent.getType().isEmpty()).collect(Collectors.toList());
+        double persoApps = easeEvents.size();
+        if (proApps == 0.)
+            pro.put(0);
+        else
+            pro.put(proApps / (proApps + persoApps) * 100);
+        if (persoApps == 0)
+            perso.put(0);
+        else
+            perso.put(persoApps / (proApps + persoApps) * 100);
         labels.put("Week " + calendar.get(Calendar.WEEK_OF_YEAR) + ", " + calendar.get(Calendar.YEAR) + "(" + Math.round(total) + ")");
     }
 
