@@ -14,6 +14,7 @@
         <th class="number_data">App w. tags</th>
         <th class="number_data">P. invited</th>
         <th class="number_data">P. w. apps</th>
+        <th class="number_data">Pwd Killed</th>
         <th class="number_data">Pwd Kill 1</th>
         <th class="number_data">Pwd Kill 3</th>
     </tr>

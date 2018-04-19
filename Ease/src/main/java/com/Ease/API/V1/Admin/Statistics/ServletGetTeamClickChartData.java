@@ -36,7 +36,7 @@ public class ServletGetTeamClickChartData extends HttpServlet {
             JSONArray labels = new JSONArray();
             JSONArray datasets = new JSONArray();
             JSONObject click_average = new JSONObject();
-            click_average.put("label", "Average of clicks");
+            click_average.put("label", "Number of clicks");
             click_average.put("borderColor", "rgba(55, 59, 96, 0.75)"); /*373B60*/
             click_average.put("backgroundColor", "rgba(55, 59, 96, 0.75)");
             click_average.put("data", new JSONArray());

@@ -34,7 +34,7 @@ module.exports = {
         }
       })
     }),
-    cardAdded: (({card}) => {
+    cardAdded: (({card, from}) => {
       return basic_post('/api/v1/trackEvent', {
         name: 'CardAdded',
         data: {
@@ -42,7 +42,8 @@ module.exports = {
           type: card.type,
           filled: !card.empty,
           ask_someone: card.team_user_filler_id !== -1,
-          ask_magic_link: card.magic_link !== ''
+          ask_magic_link: card.magic_link !== '',
+          from: from
         }
       })
     }),

@@ -113,6 +113,10 @@ public class EaseEvent {
         this.data = data;
     }
 
+    public void setData(JSONObject data) {
+        this.data = data.toString();
+    }
+
     public JSONObject getJson() {
         JSONObject res = new JSONObject();
         res.put("id", this.getId());
@@ -134,7 +138,7 @@ public class EaseEvent {
         return new JSONObject(this.getData()).optString("from");
     }
 
-    private String getType() {
+    public String getType() {
         return new JSONObject(this.getData()).optString("type");
     }
 
@@ -164,5 +168,45 @@ public class EaseEvent {
 
     public boolean isAnyAppUsed() {
         return this.getType().equals("any") || this.getSubType().equals("any");
+    }
+
+    public boolean isSingle() {
+        return this.getType().toLowerCase().contains("single");
+    }
+
+    public boolean isEnterprise() {
+        return this.getType().toLowerCase().contains("enterprise");
+    }
+
+    public boolean isFromCatalog() {
+        return this.getFrom().equalsIgnoreCase("Catalog");
+    }
+
+    public boolean isFromUpdate() {
+        return this.getFrom().equalsIgnoreCase("Update");
+    }
+
+    public boolean isFromImportation() {
+        return this.getFrom().equalsIgnoreCase("Importation");
+    }
+
+    public boolean isBookmark() {
+        return this.getType().toLowerCase().contains("link") || this.getSubType().equalsIgnoreCase("link");
+    }
+
+    public boolean isClassic() {
+        return this.getType().toLowerCase().contains("classic") || this.getSubType().equalsIgnoreCase("classic");
+    }
+
+    public boolean isSoftware() {
+        return this.getType().toLowerCase().contains("software") || this.getSubType().equalsIgnoreCase("software");
+    }
+
+    public boolean isAny() {
+        return this.getType().toLowerCase().contains("any") || this.getSubType().equalsIgnoreCase("any");
+    }
+
+    public JSONObject getJsonData() {
+        return new JSONObject(this.getData());
     }
 }
