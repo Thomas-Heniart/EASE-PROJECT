@@ -2,7 +2,6 @@ package com.Ease.API.V1.Admin.Statistics;
 
 import com.Ease.Hibernate.HibernateQuery;
 import com.Ease.Metrics.EaseEvent;
-import com.Ease.Team.TeamCard.TeamCard;
 import com.Ease.Utils.HttpServletException;
 import com.Ease.Utils.HttpStatus;
 import com.Ease.Utils.Servlets.GetServletManager;
@@ -130,28 +129,5 @@ public class ServletGetAppProvenanceStatistics extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         RequestDispatcher rd = request.getRequestDispatcher("index.jsp");
         rd.forward(request, response);
-    }
-
-    public static void main(String[] args) throws Exception {
-        HibernateQuery trackingHibernateQuery = new HibernateQuery("tracking");
-        HibernateQuery hibernateQuery = new HibernateQuery();
-        trackingHibernateQuery.queryString("SELECT e FROM EaseEvent e WHERE e.name LIKE 'CardAdded'");
-        List<EaseEvent> easeEvents = trackingHibernateQuery.list();
-        for (EaseEvent easeEvent : easeEvents) {
-            JSONObject data = easeEvent.getJsonData();
-            int id = data.optInt("id", -1);
-            hibernateQuery.queryString("SELECT t FROM TeamCard t WHERE t.id = :id");
-            hibernateQuery.setParameter("id", id);
-            TeamCard teamCard = (TeamCard) hibernateQuery.getSingleResult();
-            if (teamCard == null)
-                data.put("sub_type", "classic");
-            else
-                data.put("sub_type", teamCard.getSubtype());
-            easeEvent.setData(data);
-            trackingHibernateQuery.saveOrUpdateObject(easeEvent);
-        }
-        trackingHibernateQuery.commit();
-        hibernateQuery.commit();
-        return;
     }
 }
