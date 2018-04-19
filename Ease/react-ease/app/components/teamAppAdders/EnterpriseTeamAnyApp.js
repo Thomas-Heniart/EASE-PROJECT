@@ -505,6 +505,14 @@ class EnterpriseTeamAnyApp extends Component {
       team_card_receiver_id: team_card_receiver_id
     }));
   };
+  passwordChangeAlert = () => {
+    const {app} = this.props;
+
+    this.props.dispatch(teamEnterpriseCardPasswordScoreAlert({
+      team_id: app.team_id,
+      team_card_id: app.id
+    }));
+  };
   render(){
     const app = this.props.app;
     const me = this.props.me;
@@ -540,11 +548,12 @@ class EnterpriseTeamAnyApp extends Component {
               <SharingRequestButton
                   requestNumber={app.requests.length}
                   onClick={e => {this.props.dispatch(modalActions.showTeamManageAppRequestModal({active: true, team_card_id: app.id}))}}/>}
-              {!this.state.edit && !!passwordWeakness && !!passwordWeakness.weaknessStatus &&
+              {!this.state.edit && !!passwordWeakness &&
               <EnterpriseCardPasswordStrengthIndicator
+                  passwordChangeAlert={this.passwordChangeAlert}
+                  lastPasswordChangeAlertDate={app.last_password_score_alert_date}
                   weaknessStatus={passwordWeakness.weaknessStatus}
-                  weakPasswordsCount={passwordWeakness.weakPasswordsCount}
-              />}
+                  weakPasswordsCount={passwordWeakness.weakPasswordsCount}/>}
             </Header>
             {!this.state.edit &&
             <TeamEnterpriseAppButtonSet app={app}

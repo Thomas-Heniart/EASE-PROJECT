@@ -30,21 +30,73 @@ export const enterpriseCardPasswordStrengthSumDescription = {
 export class EnterpriseCardPasswordStrengthIndicator extends Component {
   constructor(props){
     super(props);
+    this.state = {
+      alertSent: false
+    }
   }
-  render(){
+  sendAlert = () => {
+    this.setState({alertSent: true});
+    setTimeout(() => {
+      this.setState({alertSent: false})
+    }, 2000);
+    this.props.passwordChangeAlert();
+  };
+  getText = () => {
     const {weaknessStatus, weakPasswordsCount} = this.props;
 
+    if (weaknessStatus === 0)
+      return (
+          <span className="password_strength_indicator strong"><Icon name="lock" fitted/></span>
+      );
+    else if (weaknessStatus === 4)
+      return (
+          <span className="password_strength_indicator medium"><Icon name="lock" fitted/> {weakPasswordsCount} Weak password{weakPasswordsCount > 1 ? 's' : null}</span>
+      );
+    else
+      return (
+          <span className="password_strength_indicator"><Icon name="lock" fitted/> {weakPasswordsCount} Weak password{weakPasswordsCount > 1 ? 's' : null}</span>
+      );
+  };
+  getPopupText = () => {
+    const {weaknessStatus, lastPasswordChangeAlertDate} = this.props;
+
+    if (weaknessStatus === 0)
+      return (
+          <span>The passwords for this app are strong <i class="em-svg em-closed_lock_with_key"/>. Keep them like this <i className="em-svg em-ok_hand"/></span>
+      );
+    else
+      return (
+          <Fragment>
+            <span>{enterpriseCardPasswordStrengthSumDescription[weaknessStatus]}</span><br/>
+            {this.state.alertSent ?
+                <span>Request sent!</span>
+                :
+                <span><a className="simple_link"
+                         onClick={this.sendAlert}>Require people to make their password stronger</a>&nbsp;💪<i
+                    className="em-svg em-muscle"/></span>
+            }
+            {!!lastPasswordChangeAlertDate &&
+            <Fragment>
+              <br/>
+              <span>
+                 (Last request sent {basicDateFormat(lastPasswordChangeAlertDate)})
+              </span>
+            </Fragment>}
+          </Fragment>
+      )
+  };
+  render(){
+    const text = this.getText();
+    const popupText = this.getPopupText();
     return (
         <Popup
             inverted
             size="mini"
+            hoverable
+            hideOnScroll
             position='bottom center'
-            trigger={
-              <span class="password_strength_indicator">&nbsp;<Icon name="lock" fitted/> {weakPasswordsCount} Weak password{weakPasswordsCount > 1 ? 's' : null}</span>
-            }
-            content={
-              <span>{enterpriseCardPasswordStrengthSumDescription[weaknessStatus]}</span>
-            }
+            trigger={text}
+            content={popupText}
         />
     )
   }
