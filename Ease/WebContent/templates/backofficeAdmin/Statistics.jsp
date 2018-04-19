@@ -56,8 +56,8 @@
         <input type="date" id="click_repartition_date_end" />
         <button type="submit">Generate</button>
     </form>
-    <div style="max-height: 600px; max-width: 1000px">
-        <canvas id="clickRepartitionChart" width="800" height="500"></canvas>
+    <div>
+        <canvas id="clickRepartitionChart"></canvas>
     </div>
 </div>
 <div class="ui bottom attached tab segment" data-tab="click_types">
@@ -68,8 +68,8 @@
         <input type="date" id="click_types_date_end" />
         <button type="submit">Generate</button>
     </form>
-    <div style="max-height: 600px; max-width: 1000px">
-        <canvas id="clickTypesChart" width="800" height="500"></canvas>
+    <div>
+        <canvas id="clickTypesChart"></canvas>
     </div>
 </div>
 <div class="ui bottom attached tab segment" data-tab="click_history">
@@ -80,8 +80,8 @@
         <input type="date" id="click_history_date_end" />
         <button type="submit">Generate</button>
     </form>
-    <div style="max-height: 600px; max-width: 1000px">
-        <canvas id="clickHistoryChart" width="800" height="500"></canvas>
+    <div>
+        <canvas id="clickHistoryChart"></canvas>
     </div>
 </div>
 <div class="ui bottom attached tab segment" data-tab="app_provenance">
@@ -92,8 +92,8 @@
         <input type="date" id="app_provenance_date_end" />
         <button type="submit">Generate</button>
     </form>
-    <div style="max-height: 600px; max-width: 1000px">
-        <canvas id="appProvenanceChart" width="800" height="500"></canvas>
+    <div>
+        <canvas id="appProvenanceChart"></canvas>
     </div>
 </div>
 <script src="js/backOffice/statistics.js?v=4" async></script>

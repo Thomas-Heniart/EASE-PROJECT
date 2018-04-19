@@ -2,6 +2,7 @@ package com.Ease.API.V1.Admin.Statistics;
 
 import com.Ease.Hibernate.HibernateQuery;
 import com.Ease.Metrics.EaseEvent;
+import com.Ease.Team.TeamCard.TeamCard;
 import com.Ease.Utils.HttpServletException;
 import com.Ease.Utils.HttpStatus;
 import com.Ease.Utils.Servlets.GetServletManager;
@@ -35,6 +36,10 @@ public class ServletGetAppProvenanceStatistics extends HttpServlet {
             JSONArray catalog = new JSONArray();
             JSONArray update = new JSONArray();
             JSONArray importation = new JSONArray();
+            JSONArray classic = new JSONArray();
+            JSONArray any = new JSONArray();
+            JSONArray software = new JSONArray();
+            JSONArray bookmark = new JSONArray();
             Calendar start_calendar = Calendar.getInstance();
             Calendar end_calendar = Calendar.getInstance();
             Long start_week_ms = sm.getLongParam("start_week_ms", true, true);
@@ -50,11 +55,11 @@ public class ServletGetAppProvenanceStatistics extends HttpServlet {
                 end_calendar.setTimeInMillis(end_week_ms);
             }
             while (start_calendar.get(Calendar.YEAR) < end_calendar.get(Calendar.YEAR)) {
-                trackWeek(trackingHibernateQuery, start_calendar, labels, single, enterprise, pro, perso, catalog, update, importation);
+                trackWeek(trackingHibernateQuery, start_calendar, labels, single, enterprise, pro, perso, catalog, update, importation, classic, any, software, bookmark);
                 start_calendar.add(Calendar.WEEK_OF_YEAR, 1);
             }
             while (start_calendar.get(Calendar.WEEK_OF_YEAR) <= end_calendar.get(Calendar.WEEK_OF_YEAR)) {
-                trackWeek(trackingHibernateQuery, start_calendar, labels, single, enterprise, pro, perso, catalog, update, importation);
+                trackWeek(trackingHibernateQuery, start_calendar, labels, single, enterprise, pro, perso, catalog, update, importation, classic, any, software, bookmark);
                 start_calendar.add(Calendar.WEEK_OF_YEAR, 1);
             }
             res.put("labels", labels);
@@ -65,6 +70,10 @@ public class ServletGetAppProvenanceStatistics extends HttpServlet {
             res.put("catalog", catalog);
             res.put("importation", importation);
             res.put("update", update);
+            res.put("classic", classic);
+            res.put("any", any);
+            res.put("software", software);
+            res.put("bookmark", bookmark);
             sm.setSuccess(res);
         } catch (Exception e) {
             sm.setError(e);
@@ -72,7 +81,7 @@ public class ServletGetAppProvenanceStatistics extends HttpServlet {
         sm.sendResponse();
     }
 
-    private void trackWeek(HibernateQuery trackingHibernateQuery, Calendar calendar, JSONArray labels, JSONArray single, JSONArray enterprise, JSONArray pro, JSONArray perso, JSONArray catalog, JSONArray updates, JSONArray importation) {
+    private void trackWeek(HibernateQuery trackingHibernateQuery, Calendar calendar, JSONArray labels, JSONArray single, JSONArray enterprise, JSONArray pro, JSONArray perso, JSONArray catalog, JSONArray updates, JSONArray importation, JSONArray classic, JSONArray any, JSONArray software, JSONArray bookmark) {
         trackingHibernateQuery.queryString("SELECT e FROM EaseEvent e WHERE (e.name LIKE 'CardAdded' OR e.name LIKE 'AppAdded') AND e.year = :year AND e.week_of_year = :week_of_year");
         trackingHibernateQuery.setParameter("year", calendar.get(Calendar.YEAR));
         trackingHibernateQuery.setParameter("week_of_year", calendar.get(Calendar.WEEK_OF_YEAR));
@@ -102,10 +111,18 @@ public class ServletGetAppProvenanceStatistics extends HttpServlet {
             catalog.put(0);
             updates.put(0);
             importation.put(0);
+            classic.put(0);
+            any.put(0);
+            software.put(0);
+            bookmark.put(0);
         } else {
             catalog.put(addEvents.stream().filter(EaseEvent::isFromCatalog).count() / total * 100);
             updates.put(addEvents.stream().filter(EaseEvent::isFromUpdate).count() / total * 100);
             importation.put(addEvents.stream().filter(EaseEvent::isFromImportation).count() / total * 100);
+            classic.put(addEvents.stream().filter(EaseEvent::isClassic).count() / total * 100);
+            any.put(addEvents.stream().filter(EaseEvent::isAny).count() / total * 100);
+            software.put(addEvents.stream().filter(EaseEvent::isSoftware).count() / total * 100);
+            bookmark.put(addEvents.stream().filter(EaseEvent::isBookmark).count() / total * 100);
         }
         labels.put("Week " + calendar.get(Calendar.WEEK_OF_YEAR) + ", " + calendar.get(Calendar.YEAR));
     }
@@ -113,5 +130,28 @@ public class ServletGetAppProvenanceStatistics extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         RequestDispatcher rd = request.getRequestDispatcher("index.jsp");
         rd.forward(request, response);
+    }
+
+    public static void main(String[] args) throws Exception {
+        HibernateQuery trackingHibernateQuery = new HibernateQuery("tracking");
+        HibernateQuery hibernateQuery = new HibernateQuery();
+        trackingHibernateQuery.queryString("SELECT e FROM EaseEvent e WHERE e.name LIKE 'CardAdded'");
+        List<EaseEvent> easeEvents = trackingHibernateQuery.list();
+        for (EaseEvent easeEvent : easeEvents) {
+            JSONObject data = easeEvent.getJsonData();
+            int id = data.optInt("id", -1);
+            hibernateQuery.queryString("SELECT t FROM TeamCard t WHERE t.id = :id");
+            hibernateQuery.setParameter("id", id);
+            TeamCard teamCard = (TeamCard) hibernateQuery.getSingleResult();
+            if (teamCard == null)
+                data.put("sub_type", "classic");
+            else
+                data.put("sub_type", teamCard.getSubtype());
+            easeEvent.setData(data);
+            trackingHibernateQuery.saveOrUpdateObject(easeEvent);
+        }
+        trackingHibernateQuery.commit();
+        hibernateQuery.commit();
+        return;
     }
 }

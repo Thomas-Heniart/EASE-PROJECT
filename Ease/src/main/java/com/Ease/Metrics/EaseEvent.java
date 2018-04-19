@@ -189,4 +189,24 @@ public class EaseEvent {
     public boolean isFromImportation() {
         return this.getFrom().equalsIgnoreCase("Importation");
     }
+
+    public boolean isBookmark() {
+        return this.getType().toLowerCase().contains("link") || this.getSubType().equalsIgnoreCase("link");
+    }
+
+    public boolean isClassic() {
+        return this.getType().toLowerCase().contains("classic") || this.getSubType().equalsIgnoreCase("classic");
+    }
+
+    public boolean isSoftware() {
+        return this.getType().toLowerCase().contains("software") || this.getSubType().equalsIgnoreCase("software");
+    }
+
+    public boolean isAny() {
+        return this.getType().toLowerCase().contains("any") || this.getSubType().equalsIgnoreCase("any");
+    }
+
+    public JSONObject getJsonData() {
+        return new JSONObject(this.getData());
+    }
 }

@@ -309,6 +309,30 @@ const buildAppProvenanceChart = (data) => {
     data: data.importation,
     stack: 3
   });
+  datasets.push({
+    backgroundColor: '#D0C11A',
+    label: 'Classic',
+    data: data.classic,
+    stack: 4
+  });
+  datasets.push({
+    backgroundColor: '#681EAB',
+    label: 'Any',
+    data: data.any,
+    stack: 4
+  });
+  datasets.push({
+    backgroundColor: '#396D00',
+    label: 'Software',
+    data: data.software,
+    stack: 4
+  });
+  datasets.push({
+    backgroundColor: '#D0901A',
+    label: 'bookmark',
+    data: data.bookmark,
+    stack: 4
+  });
   if (!!appProvenanceChart)
     appProvenanceChart.destroy();
   appProvenanceChart = new Chart(appProvenanceCanvas, {
