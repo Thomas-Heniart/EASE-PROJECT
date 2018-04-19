@@ -81,6 +81,8 @@ public class PasswordScoreAlert extends HttpServlet {
             return;
         for (TeamCardReceiver teamCardReceiver : teamCard.getTeamCardReceiverMap().values())
             notificationForEnterpriseCardReceiver((TeamEnterpriseCardReceiver) teamCardReceiver, teamUserConnected, sm);
+        teamCard.setLastPasswordScoreAlertDate(new Date());
+        sm.saveOrUpdate(teamCard);
     }
 
     private void notificationForSingleCard(TeamCard teamCard, TeamUser teamUserConnected, PostServletManager sm) {
