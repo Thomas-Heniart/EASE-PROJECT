@@ -6,11 +6,9 @@ import com.Ease.Team.Team;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
+import org.json.JSONObject;
 
-import javax.persistence.Cacheable;
-import javax.persistence.Entity;
-import javax.persistence.PrimaryKeyJoinColumn;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.util.Date;
 
 @Entity
@@ -20,6 +18,9 @@ import java.util.Date;
 @PrimaryKeyJoinColumn(name = "id")
 @OnDelete(action = OnDeleteAction.CASCADE)
 public class TeamEnterpriseCard extends TeamWebsiteCard {
+
+    @Column(name = "lastPasswordScoreAlertDate")
+    private Date lastPasswordScoreAlertDate;
 
     public TeamEnterpriseCard() {
 
@@ -39,9 +40,13 @@ public class TeamEnterpriseCard extends TeamWebsiteCard {
         throw new RuntimeException("You shouldn't be there");
     }
 
+    public Date getLastPasswordScoreAlertDate() {
+        return lastPasswordScoreAlertDate;
+    }
+
     @Override
     public void setLastPasswordScoreAlertDate(Date date) {
-        throw new RuntimeException("You shouldn't be there");
+        this.lastPasswordScoreAlertDate = date;
     }
 
     @Override
@@ -52,5 +57,12 @@ public class TeamEnterpriseCard extends TeamWebsiteCard {
     @Override
     public boolean isTeamEnterpriseCard() {
         return true;
+    }
+
+    @Override
+    public JSONObject getJson() {
+        JSONObject res = super.getJson();
+        res.put("last_password_score_alert_date", this.getLastPasswordScoreAlertDate() == null ? JSONObject.NULL : this.getLastPasswordScoreAlertDate().getTime());
+        return res;
     }
 }
