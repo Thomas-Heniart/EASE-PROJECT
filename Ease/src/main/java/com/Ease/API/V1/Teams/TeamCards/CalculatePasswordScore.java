@@ -55,6 +55,7 @@ public class CalculatePasswordScore extends HttpServlet {
                     sm.addWebSocketMessage(WebSocketMessageFactory.createWebSocketMessage(WebSocketMessageType.TEAM_CARD, WebSocketMessageAction.CHANGED, teamCard.getWebSocketJson()));
                 } else {
                     TeamEnterpriseCardReceiver teamEnterpriseCardReceiver = (TeamEnterpriseCardReceiver) teamCard.getTeamCardReceiver(teamCardReceiverId);
+                    teamEnterpriseCardReceiver.decipher(teamKey);
                     teamEnterpriseCardReceiver.calculatePasswordScore();
                     hibernateQuery.saveOrUpdateObject(teamEnterpriseCardReceiver);
                     sm.setSuccess(teamEnterpriseCardReceiver.getCardJson());
