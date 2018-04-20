@@ -26,6 +26,7 @@ public class CalculatePasswordScore extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         PostServletManager sm = new PostServletManager(this.getClass().getName(), request, response, true);
         try {
+            sm.needToBeConnected();
             Integer teamId = sm.getIntParam("team_id", true, false);
             Team team = sm.getTeam(teamId);
             TeamUser teamUserConnected = sm.getTeamUser(team);
