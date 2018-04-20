@@ -254,7 +254,10 @@ const buildAppProvenanceChart = (data) => {
   const options = {
     scales: {
       xAxes: [{
-        stacked: true
+        stacked: true,
+        ticks: {
+          mirror: true
+        }
       }],
       yAxes: [{
         stacked: true,
@@ -268,67 +271,67 @@ const buildAppProvenanceChart = (data) => {
   const labels = data.labels;
   let datasets = [];
   datasets.push({
-    backgroundColor: '#051937',
+    backgroundColor: '#4B4E6D',
     label: 'Single',
     data: data.single,
     stack: 1
   });
   datasets.push({
-    backgroundColor: '#A8EB12',
+    backgroundColor: '#80B192',
     label: 'Enterprise',
     data: data.enterprise,
     stack: 1
   });
   datasets.push({
-    backgroundColor: '#0363F2',
+    backgroundColor: '#77FF94',
     label: 'Pro',
     data: data.pro,
     stack: 2
   });
   datasets.push({
-    backgroundColor: '#D0C11A',
+    backgroundColor: '#613A3A',
     label: 'Perso',
     data: data.perso,
     stack: 2
   });
   datasets.push({
-    backgroundColor: '#681EAB',
+    backgroundColor: '#D138BF',
     label: 'Catalog',
     data: data.catalog,
     stack: 3
   });
   datasets.push({
-    backgroundColor: '#396D00',
+    backgroundColor: '#613DC1',
     label: 'Update',
     data: data.update,
     stack: 3
   });
   datasets.push({
-    backgroundColor: '#D0901A',
+    backgroundColor: '#2C0735',
     label: 'Importation',
     data: data.importation,
     stack: 3
   });
   datasets.push({
-    backgroundColor: '#D0C11A',
+    backgroundColor: '#494947',
     label: 'Classic',
     data: data.classic,
     stack: 4
   });
   datasets.push({
-    backgroundColor: '#681EAB',
+    backgroundColor: '#35FF69',
     label: 'Any',
     data: data.any,
     stack: 4
   });
   datasets.push({
-    backgroundColor: '#396D00',
+    backgroundColor: '#44CCFF',
     label: 'Software',
     data: data.software,
     stack: 4
   });
   datasets.push({
-    backgroundColor: '#D0901A',
+    backgroundColor: '#D138BF',
     label: 'bookmark',
     data: data.bookmark,
     stack: 4
