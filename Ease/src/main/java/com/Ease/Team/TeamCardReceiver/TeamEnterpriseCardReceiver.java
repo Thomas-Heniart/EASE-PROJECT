@@ -65,12 +65,12 @@ public class TeamEnterpriseCardReceiver extends TeamCardReceiver {
         Account account = this.getApp().getAccount();
         res.put("account_information", new JSONObject());
         res.put("empty", this.isEmpty());
+        res.put("password_score", this.getPasswordScore() == null ? JSONObject.NULL : this.getPasswordScore());
+        res.put("last_password_score_alert_date", this.getLastPasswordScoreAlertDate() == null ? JSONObject.NULL : this.getLastPasswordScoreAlertDate().getTime());
         if (account == null)
             return res;
         res.put("account_information", account.getJsonWithoutPassword());
         res.put("last_update_date", account.getLast_update().getTime());
-        res.put("password_score", this.getPasswordScore() == null ? JSONObject.NULL : this.getPasswordScore());
-        res.put("last_password_score_alert_date", this.getLastPasswordScoreAlertDate() == null ? JSONObject.NULL : this.getLastPasswordScoreAlertDate().getTime());
         return res;
     }
 
