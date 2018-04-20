@@ -296,3 +296,23 @@ export function teamPasswordScoreAlert({team_id}) {
     });
   }
 }
+
+export function updateTeamPasswordsAmount({team_id, diff}){
+  return {
+    type: 'TEAM_CARDS_PASSWORDS_TOTAL_CHANGED',
+    payload: {
+      team_id: team_id,
+      diff: diff
+    }
+  }
+}
+
+export function updateTeamStrongPasswordsAmount({team_id, diff}){
+  return {
+    type: 'TEAM_CARDS_STRONG_PASSWORDS_TOTAL_CHANGED',
+    payload: {
+      team_id: team_id,
+      diff: diff
+    }
+  }
+}

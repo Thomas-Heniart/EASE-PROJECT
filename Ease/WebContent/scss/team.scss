@@ -766,6 +766,9 @@ i.icon.pin_button {
       @include placeholder-color(rgba(41,41,41,.95));
     }
   }
+  .password_strength_loader {
+    margin-left: 10px !important;
+  }
   .password_strength_indicator {
     font-weight: normal;
     font-size: .8rem;

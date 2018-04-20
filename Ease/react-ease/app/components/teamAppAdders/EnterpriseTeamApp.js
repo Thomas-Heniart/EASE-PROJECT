@@ -8,7 +8,7 @@ import {
   setUserDropdownText,
   SharingRequestButton, StaticEnterpriseTeamCardPasswordInput,
   TeamAppActionButton,
-  EnterpriseCardPasswordStrengthIndicator
+  EnterpriseCardPasswordStrengthIndicator, PasswordStrengthLoading
 } from "./common";
 import * as modalActions from "../../actions/teamModalActions";
 import {showUpgradeTeamPlanModal} from "../../actions/teamModalActions";
@@ -339,9 +339,10 @@ const isDifferentCredentials = (first, second) => {
   return different;
 };
 
-@connect(store => ({
+@connect((store, ownProps) => ({
   teams: store.teams,
-  teamCard: store.teamCard
+  teamCard: store.teamCard,
+  pwdChecking: store.team_cards_password_strength_checking[ownProps.app.id]
 }), reduxActionBinder)
 class EnterpriseTeamApp extends Component {
   constructor(props){
@@ -568,6 +569,7 @@ class EnterpriseTeamApp extends Component {
     const app = this.props.app;
     const me = this.props.me;
     const team = this.props.teams[app.team_id];
+    const pwdChecking = this.props.pwdChecking;
     const meReceiver = getReceiverInList(app.receivers, me.id);
     let passwordWeakness = null;
     const website = app.website;
@@ -600,12 +602,14 @@ class EnterpriseTeamApp extends Component {
               <SharingRequestButton
                   requestNumber={app.requests.length}
                   onClick={e => {this.props.dispatch(modalActions.showTeamManageAppRequestModal({active: true, team_card_id: app.id}))}}/>}
-              {!this.state.edit && !!passwordWeakness &&
+              {!this.state.edit && !!passwordWeakness && !passwordWeakness.notChecked &&
               <EnterpriseCardPasswordStrengthIndicator
                   passwordChangeAlert={this.passwordChangeAlert}
                   lastPasswordChangeAlertDate={app.last_password_score_alert_date}
                   weaknessStatus={passwordWeakness.weaknessStatus}
                   weakPasswordsCount={passwordWeakness.weakPasswordsCount}/>}
+              {!!pwdChecking && !this.state.edit &&
+              <PasswordStrengthLoading/>}
             </Header>
             {!this.state.edit &&
             <TeamEnterpriseAppButtonSet app={app}

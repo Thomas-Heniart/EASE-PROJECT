@@ -1,4 +1,26 @@
-import { Header, Popup, Grid, Label,List, Search,SearchResult, Container, Divider, Icon, Transition, TextArea, Segment, Checkbox, Form, Input, Select, Dropdown, Button, Message } from 'semantic-ui-react';
+import {
+  Header,
+  Popup,
+  Grid,
+  Label,
+  List,
+  Search,
+  SearchResult,
+  Container,
+  Divider,
+  Icon,
+  Transition,
+  TextArea,
+  Segment,
+  Checkbox,
+  Form,
+  Input,
+  Select,
+  Dropdown,
+  Button,
+  Message,
+  Loader
+} from 'semantic-ui-react';
 import classnames from "classnames";
 import api from "../../utils/api";
 import {
@@ -106,9 +128,17 @@ export const scanEnterpriseCardForWeakPasswords = (app) => {
   let pwned = 0;
   let weak = 0;
   let reallyWeak = 0;
+  let totalFilled = 0;
+  let totalNotScored = 0;
+
   app.receivers.forEach(receiver => {
     if (!!receiver.empty)
       return;
+    totalFilled++;
+    if (receiver.password_score === null){
+      totalNotScored++;
+      return;
+    }
     if (receiver.password_score === -1)
       pwned++;
     else if (receiver.password_score < 3)
@@ -117,9 +147,28 @@ export const scanEnterpriseCardForWeakPasswords = (app) => {
       weak++;
   });
   return {
+    notChecked: totalNotScored === totalFilled,
     weakPasswordsCount: pwned + weak + reallyWeak,
     weaknessStatus: !!pwned * 1 + !!reallyWeak * 2 + !!weak * 4
   }
+};
+
+export const PasswordStrengthLoading = () => {
+  return (
+      <Popup
+          size='mini'
+          position="bottom center"
+          inverted
+          hideOnScroll
+          trigger={
+            <Loader active
+                    inline
+                    size='mini'
+                    class="password_strength_loader"/>
+          }
+          content={'Checking password strength...'}
+      />
+  )
 };
 
 export const passwordStrengthDescription = {

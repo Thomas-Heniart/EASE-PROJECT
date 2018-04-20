@@ -4,7 +4,7 @@ import {Button, Container, Dropdown, Header, Icon, Input, Label, Popup, Segment,
 import {
   EmptyCredentialsEnterpriseAppIndicator, EnterpriseCardPasswordStrengthIndicator,
   PasswordChangeDropdownEnterprise,
-  PasswordChangeHolderEnterprise, scanEnterpriseCardForWeakPasswords,
+  PasswordChangeHolderEnterprise, PasswordStrengthLoading, scanEnterpriseCardForWeakPasswords,
   setUserDropdownText,
   SharingRequestButton, StaticEnterpriseTeamCardPasswordInput,
   TeamAppActionButton
@@ -313,9 +313,10 @@ const isDifferentCredentials = (first, second) => {
   return different;
 };
 
-@connect(store => ({
+@connect((store, ownProps) => ({
   teams: store.teams,
-  teamCard: store.teamCard
+  teamCard: store.teamCard,
+  pwdChecking: store.team_cards_password_strength_checking[ownProps.app.id]
 }), reduxActionBinder)
 class EnterpriseTeamSoftwareApp extends Component {
   constructor(props){
@@ -510,6 +511,7 @@ class EnterpriseTeamSoftwareApp extends Component {
     const app = this.props.app;
     const me = this.props.me;
     const team = this.props.teams[app.team_id];
+    const pwdChecking = this.props.pwdChecking;
     let passwordWeakness = null;
 //    const meReceiver = getReceiverInList(app.receivers, me.id);
     const website = app.software;
@@ -542,12 +544,14 @@ class EnterpriseTeamSoftwareApp extends Component {
               <SharingRequestButton
                   requestNumber={app.requests.length}
                   onClick={e => {this.props.dispatch(modalActions.showTeamManageAppRequestModal({active: true, team_card_id: app.id}))}}/>}
-              {!this.state.edit && !!passwordWeakness &&
+              {!this.state.edit && !!passwordWeakness && !passwordWeakness.notChecked &&
               <EnterpriseCardPasswordStrengthIndicator
                   passwordChangeAlert={this.passwordChangeAlert}
                   lastPasswordChangeAlertDate={app.last_password_score_alert_date}
                   weaknessStatus={passwordWeakness.weaknessStatus}
                   weakPasswordsCount={passwordWeakness.weakPasswordsCount}/>}
+              {!!pwdChecking && !this.state.edit &&
+              <PasswordStrengthLoading/>}
             </Header>
             {!this.state.edit &&
             <TeamEnterpriseAppButtonSet app={app}
