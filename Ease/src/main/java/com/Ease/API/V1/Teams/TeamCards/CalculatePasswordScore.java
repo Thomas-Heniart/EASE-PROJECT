@@ -5,6 +5,7 @@ import com.Ease.Team.Team;
 import com.Ease.Team.TeamCard.TeamCard;
 import com.Ease.Team.TeamCardReceiver.TeamCardReceiver;
 import com.Ease.Team.TeamCardReceiver.TeamEnterpriseCardReceiver;
+import com.Ease.Team.TeamUser;
 import com.Ease.Utils.HttpServletException;
 import com.Ease.Utils.HttpStatus;
 import com.Ease.Utils.Servlets.PostServletManager;
@@ -27,9 +28,11 @@ public class CalculatePasswordScore extends HttpServlet {
         try {
             Integer teamId = sm.getIntParam("team_id", true, false);
             Team team = sm.getTeam(teamId);
-            sm.needToBeAdminOfTeam(team);
+            TeamUser teamUserConnected = sm.getTeamUser(team);
             Integer teamCardId = sm.getIntParam("team_card_id", true, false);
             TeamCard teamCard = team.getTeamCard(teamCardId);
+            if (!teamUserConnected.equals(teamCard.getTeamUser_sender()) && !teamUserConnected.isTeamAdmin())
+                throw new HttpServletException(HttpStatus.BadRequest, "Not allowed");
             if (teamCard.isTeamLinkCard())
                 throw new HttpServletException(HttpStatus.BadRequest, "Not allowed");
             String teamKey = sm.getTeamKey(team);
