@@ -72,13 +72,15 @@ public class ServletGetTeamsCohortData extends HttpServlet {
             hibernateQuery.setParameter("teamIds", teamIds);
             userIds = hibernateQuery.list();
         }
+        Calendar subscriptionCalendar = Calendar.getInstance();
+        subscriptionCalendar.setTimeInMillis(start_calendar.getTimeInMillis());
         if (!userIds.isEmpty()) {
             while (start_calendar.get(Calendar.YEAR) < end_calendar.get(Calendar.YEAR)) {
-                trackWeek(start_calendar, subscription_week, avg_clicks, trackingHibernateQuery, this_week, userIds, hibernateQuery);
+                trackWeek(subscriptionCalendar, start_calendar, subscription_week, avg_clicks, trackingHibernateQuery, this_week, userIds, hibernateQuery);
                 weeksAdded++;
             }
             while (start_calendar.get(Calendar.WEEK_OF_YEAR) <= end_calendar.get(Calendar.WEEK_OF_YEAR)) {
-                trackWeek(start_calendar, subscription_week, avg_clicks, trackingHibernateQuery, this_week, userIds, hibernateQuery);
+                trackWeek(subscriptionCalendar, start_calendar, subscription_week, avg_clicks, trackingHibernateQuery, this_week, userIds, hibernateQuery);
                 weeksAdded++;
             }
         } else {
@@ -99,7 +101,7 @@ public class ServletGetTeamsCohortData extends HttpServlet {
         start_calendar.add(Calendar.WEEK_OF_YEAR, 1);
     }
 
-    private void trackWeek(Calendar startCalendar, Calendar subscriptionWeek, Integer avgClicks, HibernateQuery trackingHibernateQuery, JSONArray thisWeek, List<Integer> userIds, HibernateQuery hibernateQuery) {
+    private void trackWeek(Calendar subscriptionCalendar, Calendar startCalendar, Calendar subscriptionWeek, Integer avgClicks, HibernateQuery trackingHibernateQuery, JSONArray thisWeek, List<Integer> userIds, HibernateQuery hibernateQuery) {
         trackingHibernateQuery.querySQLString("SELECT DISTINCT t.uID " +
                 "FROM (SELECT user_id AS uId, COUNT(name) AS n " +
                 "FROM EASE_EVENT " +
@@ -115,7 +117,7 @@ public class ServletGetTeamsCohortData extends HttpServlet {
         if (!activeUserIds.isEmpty()) {
             hibernateQuery.queryString("SELECT DISTINCT tu.team FROM TeamUser tu WHERE tu.user IS NOT NULL AND tu.user.db_id IN (:userIds) AND tu.team.subscription_date BETWEEN :start_week AND :subscription_week");
             startCalendar.add(Calendar.WEEK_OF_YEAR, -1);
-            hibernateQuery.setDate("start_week", startCalendar);
+            hibernateQuery.setDate("start_week", subscriptionCalendar);
             hibernateQuery.setDate("subscription_week", subscriptionWeek);
             hibernateQuery.setParameter("userIds", activeUserIds);
             teamCount = hibernateQuery.list().size();
