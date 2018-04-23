@@ -94,6 +94,7 @@ public class PasswordScoreAlert extends HttpServlet {
         if (teamUserConnected.equals(teamUserReceiver))
             return;
         teamCard.setLastPasswordScoreAlertDate(new Date());
+        teamCard.getAccount().setStrongerPasswordAsked(true);
         sm.saveOrUpdate(teamCard);
         if (teamUserReceiver.isRegistered())
             NotificationFactory.getInstance().createPasswordScoreTooWeakNotification(teamUserConnected, teamUserReceiver, teamCard, sm.getUserWebSocketManager(teamUserReceiver.getUser().getDb_id()), sm.getHibernateQuery());
@@ -106,6 +107,7 @@ public class PasswordScoreAlert extends HttpServlet {
         if (teamUserConnected.equals(teamUserReceiver))
             return;
         teamEnterpriseCardReceiver.setLastPasswordScoreAlertDate(new Date());
+        teamEnterpriseCardReceiver.getApp().getAccount().setStrongerPasswordAsked(true);
         sm.saveOrUpdate(teamEnterpriseCardReceiver);
         if (teamUserReceiver.isRegistered())
             NotificationFactory.getInstance().createPasswordScoreTooWeakNotification(teamUserConnected, teamUserReceiver, teamEnterpriseCardReceiver.getTeamCard(), sm.getUserWebSocketManager(teamUserReceiver.getUser().getDb_id()), sm.getHibernateQuery());
