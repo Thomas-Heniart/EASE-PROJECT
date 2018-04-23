@@ -67,6 +67,7 @@ public class TeamEnterpriseCardReceiver extends TeamCardReceiver {
         res.put("empty", this.isEmpty());
         res.put("password_score", this.getPasswordScore() == null ? JSONObject.NULL : this.getPasswordScore());
         res.put("last_password_score_alert_date", this.getLastPasswordScoreAlertDate() == null ? JSONObject.NULL : this.getLastPasswordScoreAlertDate().getTime());
+        res.put("stronger_password_asked", account != null && account.isStrongerPasswordAsked());
         if (account == null)
             return res;
         res.put("account_information", account.getJsonWithoutPassword());

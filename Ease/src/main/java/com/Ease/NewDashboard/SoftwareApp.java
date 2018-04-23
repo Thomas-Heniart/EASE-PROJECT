@@ -83,7 +83,6 @@ public class SoftwareApp extends App {
         res.put("software", this.getSoftware().getJson());
         res.put("empty", this.isEmpty());
         res.put("account_information", new JSONObject());
-        res.put("stronger_password_asked", this.getAccount() != null && this.getAccount().isStrongerPasswordAsked());
         if (this.getAccount() == null)
             return res;
         res.put("last_update_date", this.getAccount().getLast_update().getTime());
