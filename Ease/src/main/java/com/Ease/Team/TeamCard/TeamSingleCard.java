@@ -113,6 +113,7 @@ public class TeamSingleCard extends TeamWebsiteCard {
         res.put("empty", this.getAccount() == null || !this.getAccount().satisfyWebsite((this.getWebsite())));
         res.put("account_information", new JSONObject());
         res.put("team_user_filler_id", this.getTeamUser_filler() == null ? -1 : this.getTeamUser_filler().getDb_id());
+        res.put("stronger_password_asked", this.getAccount() != null && this.getAccount().isStrongerPasswordAsked());
         if (this.getAccount() == null)
             return res;
         res.put("last_update_date", this.getAccount().getLast_update().getTime());

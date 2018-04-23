@@ -56,6 +56,9 @@ public class Account {
     @Temporal(TemporalType.TIMESTAMP)
     private Date lastPasswordReminderDate;
 
+    @Column(name = "strongerPasswordAsked")
+    private boolean strongerPasswordAsked = false;
+
     @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @OneToMany(mappedBy = "account", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<AccountInformation> accountInformationSet = ConcurrentHashMap.newKeySet();
@@ -164,6 +167,14 @@ public class Account {
         this.lastPasswordReminderDate = lastPasswordReminderDate;
     }
 
+    public boolean isStrongerPasswordAsked() {
+        return strongerPasswordAsked;
+    }
+
+    public void setStrongerPasswordAsked(boolean strongerPasswordAsked) {
+        this.strongerPasswordAsked = strongerPasswordAsked;
+    }
+
     /**
      * This method is used to decipher the account
      * For example: after user connection
@@ -237,8 +248,10 @@ public class Account {
                 accountInformation.setDeciphered_information_value(value);
                 hibernateQuery.saveOrUpdateObject(accountInformation);
             }
-            if (key.equals("password") && !value.equals(old_value))
+            if (key.equals("password") && !value.equals(old_value)) {
                 this.setLast_update(new Date());
+                this.setStrongerPasswordAsked(false);
+            }
         }
     }
 

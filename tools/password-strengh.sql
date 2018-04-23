@@ -29,3 +29,6 @@ ALTER TABLE teamEnterpriseCards
   ADD COLUMN lastPasswordScoreAlertDate DATETIME;
 ALTER TABLE teamEnterpriseSoftwareCards
   ADD COLUMN lastPasswordScoreAlertDate DATETIME;
+
+ALTER TABLE accounts
+  ADD COLUMN strongerPasswordAsked TINYINT(1) NOT NULL DEFAULT 0;

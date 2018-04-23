@@ -141,6 +141,7 @@ public class TeamSingleSoftwareCard extends TeamSoftwareCard {
         res.put("empty", this.getAccount() == null || !this.getAccount().satisfySoftware((this.getSoftware())));
         res.put("account_information", new JSONObject());
         res.put("team_user_filler_id", this.getTeamUser_filler_test() == null ? -1 : this.getTeamUser_filler_test().getDb_id());
+        res.put("stronger_password_asked", this.getAccount() != null && this.getAccount().isStrongerPasswordAsked());
         if (this.getAccount() == null)
             return res;
         res.put("last_update_date", this.getAccount().getLast_update().getTime());
