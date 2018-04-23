@@ -275,6 +275,7 @@ public class User {
         res.put("connection_lifetime", this.getOptions().getConnection_lifetime());
         res.put("background_picture", this.getOptions().isBackground_picked());
         res.put("new_feature_seen", this.getUserStatus().isNewFeatureSeen());
+        res.put("registration_date", this.getRegistration_date() == null ? JSONObject.NULL : this.getRegistration_date().getTime());
         return res;
     }
 
