@@ -315,3 +315,49 @@ SELECT *
 FROM teams
   JOIN TEAM_ONBOARDING_STATUS ON teams.onboarding_status_id = TEAM_ONBOARDING_STATUS.id
 WHERE step = 5;
+
+SELECT
+  users.id,
+  email,
+  registration_date,
+  t.n,
+  MAX(year),
+  MAX(day_of_year),
+  COUNT(EASE_UPDATE.id) AS updates
+FROM EASE_UPDATE
+  JOIN users ON users.id = EASE_UPDATE.user_id
+  JOIN (SELECT
+          user_id,
+          COUNT(*) AS n
+        FROM METRIC_CONNECTION
+        GROUP BY user_id) AS t ON t.user_id = users.id
+  JOIN METRIC_CONNECTION ON METRIC_CONNECTION.user_id = users.id AND connected = 1
+GROUP BY EASE_UPDATE.user_id
+ORDER BY updates
+INTO OUTFILE '/tmp/updates.csv'
+FIELDS TERMINATED BY ','
+  ENCLOSED BY '"'
+LINES TERMINATED BY '\n';
+
+SELECT
+  email,
+  registration_date,
+  t.n AS nb_of_co,
+  DATE_ADD(DATE(concat(t.year, '-01-01')), INTERVAL (t.day_of_year - 1) DAY) AS last_connection,
+  COUNT(*) AS updates
+FROM EASE_UPDATE
+  JOIN users ON EASE_UPDATE.user_id = users.id
+  JOIN (SELECT
+          user_id,
+          MAX(year)        AS year,
+          MAX(day_of_year) AS day_of_year,
+          COUNT(*)         AS n
+        FROM METRIC_CONNECTION
+        WHERE connected = 1
+        GROUP BY user_id) AS t ON t.user_id = users.id
+GROUP BY EASE_UPDATE.user_id
+ORDER BY updates
+INTO OUTFILE '/tmp/updates.csv'
+FIELDS TERMINATED BY ','
+  ENCLOSED BY '"'
+LINES TERMINATED BY '\n';
