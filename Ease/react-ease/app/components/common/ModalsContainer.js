@@ -61,6 +61,7 @@ import TagUserInAllAppsModal from "../teamModals/TagUserInAllAppsModal";
 import ConnectionDurationChooserModal from "../modals/ConnectionDurationChooserModal";
 import MagicLinkChooserModal from "../modals/MagicLinkChooserModal";
 import MoveAppModal from "../teamModals/MoveAppModal";
+import PasswordScoreUpgradeTeamPlanModal from "../teamModals/PasswordScoreUpgradeTeamPlanModal";
 
 @connect(store => ({
   addUserModal: store.teamModals.addUserModal,
@@ -231,6 +232,8 @@ class ModalsContainer extends Component{
           <ConnectionDurationChooserModal/>}
           {this.props.modals.magicLinkChooser.active &&
           <MagicLinkChooserModal/>}
+          {this.props.modals.passwordScoreUpgradeTeamPlan.active &&
+          <PasswordScoreUpgradeTeamPlanModal/>}
         </div>
     )
   }

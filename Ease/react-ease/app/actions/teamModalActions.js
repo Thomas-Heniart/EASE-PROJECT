@@ -329,6 +329,16 @@ export function showMoveAppModal({active, app_id}) {
   }
 }
 
+export function showPasswordScoreUpgradeTeamPlanModal({active, team_id}){
+  return {
+    type: 'SHOW_PASSWORD_SCORE_UPGRADE_TEAM_PLAN_MODAL',
+    payload:{
+      active: active,
+      team_id: team_id
+    }
+  }
+}
+
 export function cardAdded({card}) {
   return (dispatch, getState) => {
     return event_api.track.cardAdded({

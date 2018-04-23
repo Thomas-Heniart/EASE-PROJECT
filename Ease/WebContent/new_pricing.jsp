@@ -106,6 +106,10 @@
                             <i class="fa fa-check tic"></i>
                             <span><fmt:message key="pricing.feature.6"/></span>
                         </div>
+                        <div class="feature">
+                            <i class="fa fa-check tic"></i>
+                            <span><fmt:message key="pricing.feature.7"/></span>
+                        </div>
                     </div>
                 </div>
                 <div class="team_plan_wrapper">
@@ -149,6 +153,10 @@
                         <div class="feature">
                             <i class="fa fa-check tic"></i>
                             <span><fmt:message key="pricing.feature.19"/></span>
+                        </div>
+                        <div class="feature">
+                            <i class="fa fa-check tic"></i>
+                            <span><fmt:message key="pricing.feature.20"/></span>
                         </div>
                     </div>
                 </div>

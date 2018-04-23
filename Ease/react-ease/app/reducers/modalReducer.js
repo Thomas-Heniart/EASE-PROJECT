@@ -104,6 +104,10 @@ export const modals = createReducer({
   },
   magicLinkChooser: {
     active: false
+  },
+  passwordScoreUpgradeTeamPlan: {
+    active: false,
+    team_id: -1
   }
 }, {
   ['SHOW_CLASSIC_APP_SETTINGS_MODAL'](state, action){
@@ -266,6 +270,12 @@ export const modals = createReducer({
     return {
         ...state,
       magicLinkChooser: action.payload
+    }
+  },
+  ['SHOW_PASSWORD_SCORE_UPGRADE_TEAM_PLAN_MODAL'](state, action){
+    return {
+        ...state,
+      passwordScoreUpgradeTeamPlan: action.payload
     }
   }
 });

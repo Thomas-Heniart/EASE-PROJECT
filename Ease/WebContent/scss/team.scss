@@ -2382,8 +2382,12 @@ button.action_text_button {
         height: 60px;
         padding: .5625em 1em;
         .circular-progress {
-          position: relative;
           @include flex-shrink(0);
+          position: relative;
+          opacity: .7;
+          &:hover {
+            opacity: 1;
+          }
           & > i {
             position: absolute;
             top: 50%;
@@ -2403,12 +2407,15 @@ button.action_text_button {
               stroke: $themeGreenColor;
             }
           }
+          .CircularProgressbar-trail {
+            stroke: white;
+          }
           .CircularProgressbar-text {
             font-size: 25px;
-            fill: rgba(255, 154, 0, 0.6);
+            fill: rgb(255, 154, 0);
           }
           .CircularProgressbar-path {
-            stroke: rgba(255, 154, 0, 0.6);
+            stroke: rgb(255, 154, 0);
           }
         }
         &:hover {

@@ -6,6 +6,7 @@ import {showTeamMenu, teamPasswordScoreAlert} from "../actions/teamActions";
 import * as channelActions from "../actions/channelActions";
 import * as userActions from "../actions/userActions";
 import * as teamModalsActions from "../actions/teamModalActions";
+import {showPasswordScoreUpgradeTeamPlanModal} from "../actions/teamModalActions";
 import {basicDateFormat} from "../utils/utils";
 import {isAdmin} from "../utils/helperFunctions";
 import { NavLink,withRouter} from 'react-router-dom';
@@ -199,8 +200,16 @@ class TeamPasswordsStrengthProgress extends Component {
       team_id: team_id
     }));
   };
+  upgrade = () => {
+    const {team_id, dispatch} = this.props;
+
+    dispatch(showPasswordScoreUpgradeTeamPlanModal({
+      active: true,
+      team_id: team_id
+    }));
+  };
   getPopupContent = (password_count, strong_password_count, percentage) => {
-    const {last_alert_date} = this.props;
+    const {last_alert_date, proPlan} = this.props;
     const {alertSent} = this.state;
 
     if (password_count < 10)
@@ -214,36 +223,63 @@ class TeamPasswordsStrengthProgress extends Component {
       return (
           <span>
             Out of {password_count} passwords in your team, only {percentage}% of them are strong enough. You’re not on top 🙄<i class="em-svg em-face_with_rolling_eyes"/>… yet!<br/>
-            {alertSent ?
-                <Fragment>Request sent!</Fragment>
-                :
-                <Fragment>You can <a class="simple_link" onClick={this.sendAlert}>Require people to make them stronger</a>💪<i class="em-svg em-muscle"/>.</Fragment>}
-            {!!last_alert_date &&
+            {proPlan &&
+            <Fragment>
+              {alertSent ?
+                  <Fragment>Request sent!</Fragment>
+                  :
+                  <Fragment>You can <a class="simple_link" onClick={this.sendAlert}>Require people to make them stronger</a>💪<i class="em-svg em-muscle"/>.</Fragment>}
+            </Fragment>}
+            {proPlan && !!last_alert_date &&
             <Fragment><br/>(Last request sent {basicDateFormat(last_alert_date)})</Fragment>}
+            {!proPlan &&
+            <span>
+                  <a class='simple_link' onClick={this.upgrade}>
+                    Click here to know which passwords have been found in a data breach or are too weak.
+                  </a>
+            </span>}
           </span>
       );
     else if (percentage < 90)
       return (
           <span>
             <i class="em-svg em---1"/> Out of {password_count} passwords in your team, only {percentage}% of them are strong enough. You’re not on top 🙄… yet!<br/>
-            {alertSent ?
-                <Fragment>Request sent!</Fragment>
-                :
-                <Fragment>For those who aren't, you can <a class="simple_link" onClick={this.sendAlert}>Require people to make them stronger</a><i class="em-svg em-muscle"/>.</Fragment>}
-            {!!last_alert_date &&
+            {proPlan &&
+            <Fragment>
+              {alertSent ?
+                  <Fragment>Request sent!</Fragment>
+                  :
+                  <Fragment>For those who aren't, you can <a class="simple_link" onClick={this.sendAlert}>Require people to make them stronger</a><i class="em-svg em-muscle"/>.</Fragment>}
+            </Fragment>}
+            {proPlan && !!last_alert_date &&
             <Fragment><br/>(Last request sent {basicDateFormat(last_alert_date)})</Fragment>}
+            {!proPlan &&
+            <span>
+                  <a class='simple_link' onClick={this.upgrade}>
+                    Click here to know which passwords have been found in a data breach or are too weak.
+                  </a>
+            </span>}
           </span>
       );
     else if (percentage < 100)
       return (
           <span>
             Pretty good! Out of {password_count} passwords in your team, {percentage}% of them are strong enough.<i class="em-svg em-clap"/> 👏You’re quite close to the top level!<br/>
-            {alertSent ?
-                <Fragment>Request sent!</Fragment>
-                :
-                <Fragment>To reach the top you can <a class="simple_link" onClick={this.sendAlert}>require people to make them stronger</a><i class="em-svg em-muscle"/>.</Fragment>}
-            {!!last_alert_date &&
+            {proPlan &&
+            <Fragment>
+              {alertSent ?
+                  <Fragment>Request sent!</Fragment>
+                  :
+                  <Fragment>To reach the top you can <a class="simple_link" onClick={this.sendAlert}>require people to make them stronger</a><i class="em-svg em-muscle"/>.</Fragment>}
+            </Fragment>}
+            {proPlan && !!last_alert_date &&
             <Fragment><br/>(Last request sent {basicDateFormat(last_alert_date)})</Fragment>}
+            {!proPlan &&
+            <span>
+                  <a class='simple_link' onClick={this.upgrade}>
+                    Click here to know which passwords have been found in a data breach or are too weak.
+                  </a>
+            </span>}
           </span>
       );
   };
@@ -304,12 +340,12 @@ class TeamSideBar extends React.Component{
                 {me.username}
               </div>
             </div>
-            {team.plan_id !== 0 &&
             <TeamPasswordsStrengthProgress
                 team_id={team.id}
+                proPlan={team.plan_id !== 0}
                 dispatch={this.props.dispatch}
                 last_alert_date={team.last_password_score_alert_date}
-                passwordStrengthDescription={this.props.passwordStrengthDescription}/>}
+                passwordStrengthDescription={this.props.passwordStrengthDescription}/>
           </div>
           <div id="col_channels">
             <div id="col_channels_scroller">

@@ -787,16 +787,38 @@ export function teamCardRemovedAction({team_id, team_card_id}){
     const teamCard = store.team_apps[team_card_id];
     if (!!teamCard){
       if (teamCard.type.includes('Single')){
-        if (teamCard.password_score !== null)
+        if (teamCard.password_score !== null) {
           dispatch(updateTeamPasswordsAmount({
             team_id: team_id,
             diff: -1
           }));
-        if (teamCard.password_score === 4)
-          dispatch(updateTeamStrongPasswordsAmount({
+          if (teamCard.password_score === 4)
+            dispatch(updateTeamStrongPasswordsAmount({
+              team_id: team_id,
+              diff: -1
+            }));
+        }
+      } else if (teamCard.type.includes('Enterprise')){
+        let strongPasswords = 0;
+        let totalPasswords = 0;
+        teamCard.receivers.forEach(receiver => {
+          if (receiver.password_score !== null){
+            totalPasswords--;
+            if (receiver.password_score === 4)
+              strongPasswords--;
+          }
+        });
+        if (!!totalPasswords) {
+          dispatch(updateTeamPasswordsAmount({
             team_id: team_id,
-            diff: -1
+            diff: totalPasswords
           }));
+          if (!!strongPasswords)
+            dispatch(updateTeamStrongPasswordsAmount({
+              team_id: team_id,
+              diff: strongPasswords
+            }));
+        }
       }
     }
     dispatch({
@@ -903,12 +925,12 @@ export function teamCardReceiverRemovedAction({team_id, team_card_id, team_user_
         }
       }
     }
-/*    if (team.my_team_user_id === team_user_id){
-      const receiver = teamCard.receivers.find(receiver => (receiver.team_user_id === team_user_id));
-      dispatch(deleteAppAction({
-        app_id: receiver.app_id
-      }));
-    }*/
+    /*    if (team.my_team_user_id === team_user_id){
+          const receiver = teamCard.receivers.find(receiver => (receiver.team_user_id === team_user_id));
+          dispatch(deleteAppAction({
+            app_id: receiver.app_id
+          }));
+        }*/
     dispatch({
       type: 'TEAM_CARD_RECEIVER_REMOVED',
       payload: {
