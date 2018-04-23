@@ -390,9 +390,10 @@
   z-index: 1;
   cursor: pointer;
   border-radius: 5px;
+  font-size: .8rem;
   background-color: rgba(55, 59, 96, 0.8);
   &.red {
-    background-color: rgba(235, 85,92, 0.8);
+    background-color: rgba(235, 85,92, 0.6);
   }
   &.grey {
     background-color: rgba(65,65,65,0.8);

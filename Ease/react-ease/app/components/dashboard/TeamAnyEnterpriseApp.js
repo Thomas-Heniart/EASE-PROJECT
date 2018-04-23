@@ -187,7 +187,7 @@ class TeamAnyEnterpriseApp extends Component {
             {app.new &&
             <NewAppLabel/>}
             {password_update &&
-            <UpdatePasswordLabel/>}
+            <UpdatePasswordIndicator onClick={this.connect}/>}
             {teamUserDepartureDatePassed(me.departure_date) &&
             <DepartureDatePassedIndicator team_name={team.name} departure_date={me.departure_date}/>}
             {me.disabled && !teamUserDepartureDatePassed(me.departure_date) &&

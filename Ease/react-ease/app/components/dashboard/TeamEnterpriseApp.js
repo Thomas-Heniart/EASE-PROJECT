@@ -1,7 +1,7 @@
 import React, {Component} from "react";
 import {
   DepartureDatePassedIndicator, UpdatePasswordLabel, EmptyTeamAppIndicator, NewAppLabel,
-  WaitingTeamApproveIndicator, LoadingAppIndicator, SettingsMenu, getPosition
+  WaitingTeamApproveIndicator, LoadingAppIndicator, SettingsMenu, getPosition, UpdatePasswordIndicator
 } from "./utils";
 import {
   showTeamEnterpriseAppSettingsModal,
@@ -182,7 +182,7 @@ class TeamEnterpriseApp extends Component {
             {app.new &&
             <NewAppLabel/>}
             {password_update &&
-            <UpdatePasswordLabel/>}
+            <UpdatePasswordIndicator onClick={this.connectWithPasswordUpdate}/>}
             {teamUserDepartureDatePassed(me.departure_date) &&
             <DepartureDatePassedIndicator team_name={team.name} departure_date={me.departure_date}/>}
             {me.disabled && !teamUserDepartureDatePassed(me.departure_date) &&
@@ -196,7 +196,7 @@ class TeamEnterpriseApp extends Component {
                           position={this.state.position}
                           clickOnSettings={this.clickOnSettings}/>
             <div class="logo_handler">
-              <img class="logo" src={team_app.logo} onClick={password_update ? this.connectWithPasswordUpdate : this.connect}/>
+              <img class="logo" src={team_app.logo} onClick={this.connect}/>
             </div>
           </div>
           <span class="app_name overflow-ellipsis"

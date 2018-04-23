@@ -1,7 +1,15 @@
 import React, {Component} from "react";
 import {
-  DepartureDatePassedIndicator, UpdatePasswordLabel, EmptyTeamAppIndicator, NewAppLabel,
-  DisabledAppIndicator, WaitingTeamApproveIndicator, LoadingAppIndicator, SettingsMenu, getPosition
+  DepartureDatePassedIndicator,
+  UpdatePasswordLabel,
+  EmptyTeamAppIndicator,
+  NewAppLabel,
+  DisabledAppIndicator,
+  WaitingTeamApproveIndicator,
+  LoadingAppIndicator,
+  SettingsMenu,
+  getPosition,
+  UpdatePasswordIndicator
 } from "./utils";
 import {showTeamAnySingleAppSettingsModal, showLockedTeamAppModal} from "../../actions/modalActions";
 import {Icon} from 'semantic-ui-react';
@@ -183,7 +191,7 @@ class TeamAnySingleApp extends Component {
             {app.new &&
             <NewAppLabel/>}
             {password_update &&
-            <UpdatePasswordLabel/>}
+            <UpdatePasswordIndicator onClick={this.connect}/>}
             {!me.disabled && teamUserDepartureDatePassed(me.departure_date) &&
             <DepartureDatePassedIndicator team_name={team.name} departure_date={me.departure_date}/>}
             {me.disabled &&

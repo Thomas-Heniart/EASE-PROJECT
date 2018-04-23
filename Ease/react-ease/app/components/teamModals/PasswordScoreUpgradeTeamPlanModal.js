@@ -42,10 +42,10 @@ class PasswordScoreUpgradeTeamPlanModal extends Component{
           <Form class="container"
                 onSubmit={this.confirm}
                 error={!!this.state.errorMessage.length}>
-            <Form.Field>
+            <Form.Field style={{color: "#949EB7"}}>
               Sorry, you can't check which passwords are vulnerable in your team. To get a precise view on which passwords are too weak or found in public data breaches, try the <a class="simple_link">Pro plan</a>. It will tell you and your team members which passwords to change.
             </Form.Field>
-            <Form.Field>
+            <Form.Field style={{color: "#949EB7"}}>
               No credit card needed for 1 month trial. After, Pro is billed 59€ monthly.
             </Form.Field>
             <Message error content={this.state.errorMessage}/>

@@ -1,7 +1,8 @@
 import React, {Component} from "react";
 import {
   DepartureDatePassedIndicator, UpdatePasswordLabel, EmptyTeamAppIndicator, NewAppLabel,
-  DisabledAppIndicator, WaitingTeamApproveIndicator, LoadingAppIndicator, SettingsMenu, getPosition
+  DisabledAppIndicator, WaitingTeamApproveIndicator, LoadingAppIndicator, SettingsMenu, getPosition,
+  UpdatePasswordIndicator
 } from "./utils";
 import {
   showTeamSingleAppSettingsModal, showLockedTeamAppModal,
@@ -182,7 +183,7 @@ class TeamSingleApp extends Component {
             {app.new &&
             <NewAppLabel/>}
             {password_update &&
-            <UpdatePasswordLabel/>}
+            <UpdatePasswordIndicator onClick={this.connectWithPasswordUpdate}/>}
             {!me.disabled && teamUserDepartureDatePassed(me.departure_date) &&
             <DepartureDatePassedIndicator team_name={team.name} departure_date={me.departure_date}/>}
             {me.disabled &&
