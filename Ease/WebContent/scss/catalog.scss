@@ -482,7 +482,12 @@
     .dropdown {
       font-size: 14px;
       //width: 16.7%;
-      width: 500px;
+      &.table_update {
+        width: 500px;
+      }
+      &.table_import {
+        width: 260px;
+      }
       color: #949eb7 !important;
       padding-top: 7px !important;
       padding-bottom: 7px !important;
@@ -603,6 +608,9 @@
       }
       table {
         border-color: white;
+        .center {
+          text-align: center;
+        }
         tr {
           background-color: #F6F7F9;
           &:hover {
@@ -618,6 +626,7 @@
             span {
               font-size: 14px;
               color: #949eb7;
+              display: block;
             }
             &.app_indication {
               display: flex;
@@ -625,6 +634,21 @@
                 display: grid;
                 font-size: 14px;
                 color: #949eb7;
+                .span_table {
+                  max-width: 150px;
+                  text-overflow: ellipsis;
+                  word-wrap: break-word;
+                  overflow: auto;
+                }
+              }
+            }
+            &.cell_relative {
+              position: relative;
+              width: 291px;
+              .span_table {
+                position: absolute;
+                top: 50%;
+                transform: translateY(-50%);
               }
             }
           }
@@ -750,6 +774,27 @@
         //bottom: 20px;
         margin-top: 10px;
         width: 100%;
+      }
+    }
+    .importation_bottom {
+      bottom: 0;
+      z-index: 2;
+      width: 95.5%;
+      position: fixed;
+      background: white;
+      padding: 10px 70px;
+      text-align: center;
+      .button_right {
+        float: right;
+      }
+      .button_left {
+        float: left;
+      }
+      .span_step {
+        top: 50%;
+        left: 50%;
+        position: absolute;
+        transform: translateY(-50%) translateX(-50%);
       }
     }
     textarea {

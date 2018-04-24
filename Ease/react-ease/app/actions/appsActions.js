@@ -2,7 +2,7 @@ import {showMoveAppModal} from "./teamModalActions";
 
 var api = require('../utils/api');
 var post_api = require('../utils/post_api');
-import {dashboardAppRemovedAction, deleteAppAction, fetchApp} from "./dashboardActions";
+import {appAdded, dashboardAppRemovedAction, deleteAppAction, fetchApp} from "./dashboardActions";
 import {fetchTeamApp} from "../actions/teamActions";
 import {addNotification} from "./notificationBoxActions";
 
@@ -25,6 +25,101 @@ export function fetchAllTeamCards({team_id}) {
     }).catch(err => {
       throw err;
     });
+  }
+}
+
+export function catalogImportationCreateCard({account, receivers, team_id, room_id, single}){
+  return (dispatch, getState) => {
+    if (single) {
+      if (account.website_id !== -1 && account.login !== '' && account.password !== '') {
+        return dispatch(teamCreateSingleApp({
+          team_id: team_id,
+          channel_id: room_id,
+          name: account.name,
+          website_id: account.website_id,
+          password_reminder_interval: 0,
+          account_information: {login: account.login, password: account.password},
+          description: '',
+          receivers: receivers
+        })).then(response => {
+          account.type = 'teamSingleApp';
+          account.sub_type = 'classic';
+          dispatch(appAdded({
+            app: account,
+            from: "Importation"
+          }));
+        });
+      }
+      else {
+        return dispatch(teamCreateAnySingleCard({
+          team_id: team_id,
+          channel_id: room_id,
+          name: account.name,
+          description: '',
+          password_reminder_interval: 0,
+          url: account.url,
+          img_url: account.logo,
+          credentials_provided: false,
+          receivers: receivers,
+          account_information: {login: account.login, password: account.password},
+          connection_information: {
+            login: {type: "text", priority: 0, placeholder: "Login"},
+            password: {type: "password", priority: 1, placeholder: "Password"}
+          }
+        })).then(response => {
+          account.type = 'teamSingleApp';
+          account.sub_type = 'any';
+          dispatch(appAdded({
+            app: account,
+            from: "Importation"
+          }));
+        });
+      }
+    }
+    else {
+      if (account.website_id !== -1 && account.login !== '' && account.password !== '') {
+        return dispatch(teamCreateEnterpriseCard({
+          team_id: team_id,
+          channel_id: room_id,
+          website_id: account.website_id,
+          name: account.name,
+          description: "",
+          password_reminder_interval: 0,
+          receivers: receivers
+        })).then(response => {
+          account.type = 'teamEnterpriseApp';
+          account.sub_type = 'classic';
+          dispatch(appAdded({
+            app: account,
+            from: "Importation"
+          }));
+        });
+      }
+      else {
+        return dispatch(teamCreateAnyEnterpriseCard({
+          team_id: team_id,
+          channel_id: room_id,
+          name: account.name,
+          description: "",
+          password_reminder_interval: 0,
+          receivers: receivers,
+          url: account.url,
+          img_url: account.logo,
+          credentials_provided: false,
+          connection_information: {
+            login: {type: "text", priority: 0, placeholder: "Login"},
+            password: {type: "password", priority: 1, placeholder: "Password"}
+          }
+        })).then(response => {
+          account.type = 'teamEnterpriseApp';
+          account.sub_type = 'any';
+          dispatch(appAdded({
+            app: account,
+            from: "Importation"
+          }));
+        });
+      }
+    }
   }
 }
 

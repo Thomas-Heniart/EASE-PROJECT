@@ -3,7 +3,7 @@ import post_api from "../utils/post_api";
 import delete_api from "../utils/delete_api";
 import {addNotification} from "./notificationBoxActions";
 import extension from "../utils/extension_api";
-import {createSsoGroup, editAppCredentials} from "./dashboardActions";
+import {appAdded, createSsoGroup, editAppCredentials} from "./dashboardActions";
 
 export function fetchCatalog(){
   return (dispatch,getState) => {
@@ -93,6 +93,45 @@ export function catalogAddApp({name, url, img_url, profile_id, account_informati
   }
   else
     return catalogAddAnyApp({name, url, img_url, profile_id,account_information,connection_information,credentials_provided});
+}
+
+export function catalogImportationAddPersonalApp({account, selectedProfile}) {
+  return (dispatch, getState) => {
+    if (account.website_id !== -1 && account.login !== '' && account.password !== '') {
+      return dispatch(catalogAddClassicApp({
+        name: account.name,
+        website_id: account.website_id,
+        profile_id: selectedProfile,
+        account_information: {login: account.login, password: account.password}
+      })).then(response => {
+        account.type = 'classicApp';
+        dispatch(appAdded({
+          app: account,
+          from: "Importation"
+        }));
+      });
+    }
+    else {
+      return dispatch(catalogAddAnyApp({
+        name: account.name,
+        url: account.url,
+        img_url: account.logo,
+        profile_id: selectedProfile,
+        account_information: {login: account.login, password: account.password},
+        connection_information: {
+          login: {type: "text", priority: 0, placeholder: "Login"},
+          password: {type: "password", priority: 1, placeholder: "Password"}
+        },
+        credentials_provided: false
+      })).then(response => {
+        account.type = 'anyApp';
+        dispatch(appAdded({
+          app: account,
+          from: "Importation"
+        }));
+      });
+    }
+  }
 }
 
 export function catalogAddAnyApp({name, url, img_url, profile_id, account_information, connection_information, credentials_provided}){

@@ -44,7 +44,8 @@ function json(fields, separator, csv, dispatch) {
       }
       if (!item.url.trim().startsWith('http://') && !item.url.trim().startsWith('https://') && item.url.trim() !== '')
         item.url = "https://" + item.url.trim();
-      if (item.url.trim() !== '' && item.url.trim().match(/^(https?:\/\/)?([\da-z.-]+)\.([a-z.]{2,6})(\/?)/) !== null) {
+      if (item.url.trim() !== '' && item.url.trim().match(/^(https?:\/\/)?([\da-z.-]+)\.([a-z.]{2,6})(\/?)/) !== null
+        && item.login.trim() !== '' && item.password.trim() !== '') {
         calls.push(dispatch(importAccount({
           name: item.name.trim() ? item.name.trim() : '',
           url: item.url.trim(),
@@ -191,31 +192,6 @@ class Importations extends React.Component {
   };
   resetChromeCredentials = () => {
     this.setState({chromeLogin: '', chromePassword: ''});
-  };
-  toPending = (id) => {
-    if (this.state.selectedProfile === -1 && this.state.selectedRoom === -1) {
-      this.setState({error:"Choose where you want to put your apps!"})
-    }
-    else {
-      const accountsPending = {...this.state.accountsPending};
-      const importedAccounts = {...this.state.importedAccounts};
-      if (importedAccounts[id].url.match(/^(https?:\/\/)?([\da-z.-]+)\.([a-z.]{2,6})(\/?)/) !== null && importedAccounts[id].name !== '') {
-        accountsPending[id] = {...this.state.importedAccounts[id]};
-        delete importedAccounts[id];
-      }
-      else if (importedAccounts[id].url.match(/^(https?:\/\/)?([\da-z.-]+)\.([a-z.]{2,6})(\/?)/) !== null && importedAccounts[id].name === '')
-        this.setState({error: 'Please name the account before importing it.', fieldProblem: {name: 'name', id: id}});
-      else
-        this.setState({error: 'It is not an URL', fieldProblem: {name: 'url', id: id}});
-      this.setState({importedAccounts: importedAccounts, accountsPending: accountsPending});
-    }
-  };
-  cancelPending = (id) => {
-    const accountsPending = {...this.state.accountsPending};
-    const importedAccounts = {...this.state.importedAccounts};
-    importedAccounts[id] = accountsPending[id];
-    delete accountsPending[id];
-    this.setState({importedAccounts: importedAccounts, accountsPending: accountsPending});
   };
   selectProfile = () => {
     let profileChoose = null;
@@ -412,6 +388,7 @@ class Importations extends React.Component {
         }
       });
   };
+
   importAccounts = () => {
     this.setState({loadingSending: true});
     let calls = [];
@@ -493,7 +470,7 @@ class Importations extends React.Component {
           profiles: Object.assign({}, this.props.profiles),
           teamsInState: teams
         });
-        if (this.state.importedAccounts.length < 1)
+        if (Object.keys(this.state.importedAccounts).length < 1)
           this.setState({view: 1, separator: ',', specialError: false});
       }).catch(err => {
         this.setState({error: err, loadingSending: false});
@@ -503,8 +480,6 @@ class Importations extends React.Component {
       calls = this.importAccountsRoom();
     else if (this.state.selectedProfile === 0)
       calls = this.importAccountsNewProfile();
-    else if (this.state.selectedRoom === 0)
-      calls = this.importAccountsNewRoom();
   };
   importAccountsNewProfile = () => {
     let calls = [];
@@ -590,7 +565,7 @@ class Importations extends React.Component {
           profiles: Object.assign({}, this.props.profiles),
           teamsInState: newTeams
         });
-        if (this.state.importedAccounts.length < 1)
+        if (Object.keys(this.state.importedAccounts).length < 1)
           this.setState({view: 1, separator: ',', specialError: false});
       }).catch(err => {
         this.setState({error: err, loadingSending: false});
@@ -700,113 +675,7 @@ class Importations extends React.Component {
       teamsInState: newTeams
     });
     if (Object.keys(this.state.importedAccounts).length < 1)
-      this.setState({view: 1, separator: ',',})
-  };
-  importAccountsNewRoom = async () => {
-    let trackingCalls = [];
-    const receivers = {[this.props.teams[this.state.selectedTeam].my_team_user_id]: {allowed_to_see_password: true}};
-    const receiversLink = [this.props.teams[this.state.selectedTeam].my_team_user_id];
-    const response = await this.props.dispatch(createTeamChannel({
-      team_id: this.state.selectedTeam,
-      name: this.state.roomName[this.state.selectedTeam],
-      purpose: ''
-    }));
-    const resp2 = await  this.props.dispatch(addTeamUserToChannel({
-      team_id: this.state.selectedTeam,
-      channel_id: response.id,
-      team_user_id: this.props.teams[this.state.selectedTeam].my_team_user_id
-    }));
-    for (let i = 0; i < this.state.accountsPending.length; i++) {
-      const app = this.state.accountsPending[Object.keys(this.state.accountsPending)[i]];
-      if (app.website_id !== -1 && app.login !== '' && app.password !== '') {
-        await this.props.dispatch(teamCreateSingleApp({
-          team_id: this.state.selectedTeam,
-          channel_id: response.id,
-          name: app.name,
-          website_id: app.website_id,
-          password_reminder_interval: 0,
-          account_information: {login: app.login, password: app.password},
-          description: '',
-          receivers: receivers
-        }));
-        app.type = 'teamSingleApp';
-        app.sub_type = 'classic';
-      }
-      else {
-        if (app.login !== '' && app.password !== '') {
-          await this.props.dispatch(teamCreateAnySingleCard({
-            team_id: this.state.selectedTeam,
-            channel_id: response.id,
-            name: app.name,
-            description: '',
-            password_reminder_interval: 0,
-            url: app.url,
-            img_url: app.logo,
-            account_information: {login: app.login, password: app.password},
-            connection_information: {
-              login: {type: "text", priority: 0, placeholder: "Login"},
-              password: {type: "password", priority: 1, placeholder: "Password"}
-            },
-            credentials_provided: false,
-            receivers: receivers
-          }));
-          app.type = 'teamSingleApp';
-          app.sub_type = 'any';
-        }
-        else {
-          await this.props.dispatch(teamCreateLinkCard({
-            team_id: this.state.selectedTeam,
-            channel_id: response.id,
-            name: app.name,
-            description: '',
-            url: app.url,
-            img_url: app.logo,
-            receivers: receiversLink
-          }));
-          app.type = 'teamLinkApp';
-        }
-      }
-      await this.props.dispatch(deleteImportedAccount({
-        id: app.id
-      }));
-      trackingCalls.push(this.props.dispatch(appAdded({
-        app: app,
-        from: "Importation"
-      })))
-    }
-    Promise.all(trackingCalls);
-    let newTeams = {};
-    Object.keys(this.props.teams).map(item => {
-      const team  = this.props.teams[item];
-      newTeams[item] = {...team};
-      newTeams[item].rooms = {};
-      Object.keys(team.rooms).map(room_id =>  {
-        newTeams[item].rooms[room_id] = {...team.rooms[room_id]}
-      });
-    });
-    const keys = Object.keys(newTeams);
-    const roomName = {};
-    const roomAdded = {};
-    keys.map(item => {
-      roomName[item] = "";
-      roomAdded[item] = false;
-      return item;
-    });
-    this.setState({
-      accountsPending: {},
-      selectedProfile: -1,
-      selectedRoom: -1,
-      selectedTeam: -1,
-      loadingSending: false,
-      roomAdded: roomAdded,
-      error: '',
-      roomName: roomName,
-      location: '',
-      profiles: Object.assign({}, this.props.profiles),
-      teamsInState: newTeams
-    });
-    if (this.state.importedAccounts.length < 1)
-      this.setState({view: 1, separator: ',', specialError: false})
+      this.setState({view: 1, separator: ','})
   };
   render() {
     return (
@@ -860,19 +729,13 @@ class Importations extends React.Component {
           {...this.props}
           getLogo={this.getLogo}
           error={this.state.error}
-          toPending={this.toPending}
-          selectRoom={this.selectRoom}
           location={this.state.location}
-          selectProfile={this.selectProfile}
           handleAppInfo={this.handleAppInfo}
-          cancelPending={this.cancelPending}
           importAccounts={this.importAccounts}
           loadingLogo={this.state.loadingLogo}
           profilesInState={this.state.profiles}
           teamsInState={this.state.teamsInState}
           loadingSending={this.state.loadingSending}
-          accountsPending={this.state.accountsPending}
-          selectedProfile={this.state.selectedProfile}
           importedAccounts={this.state.importedAccounts}/>}
       </div>
     )
