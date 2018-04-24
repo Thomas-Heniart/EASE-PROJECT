@@ -1,4 +1,4 @@
-package com.Ease.API.V1.Admin;
+package com.Ease.API.V1.Admin.Statistics;
 
 import com.Ease.Metrics.TeamMetrics;
 import com.Ease.Team.Team;
@@ -21,8 +21,8 @@ import java.util.List;
 @WebServlet("/api/v1/admin/GetTeamsInformation")
 public class ServletGetTeamsInformation extends HttpServlet {
 
-    private final static int EASE_FIRST_WEEK = 40;
-    private final static int EASE_FIRST_YEAR = 2017;
+    private static final int EASE_FIRST_WEEK = 40;
+    private static final int EASE_FIRST_YEAR = 2017;
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         GetServletManager sm = new GetServletManager(this.getClass().getName(), request, response, true);
@@ -34,7 +34,7 @@ public class ServletGetTeamsInformation extends HttpServlet {
             Calendar calendar = Calendar.getInstance();
             calendar.add(Calendar.WEEK_OF_YEAR, -1);
             int year = calendar.get(Calendar.YEAR);
-            int week_of_year = calendar.get(Calendar.WEEK_OF_YEAR);
+            int weekOfYear = calendar.get(Calendar.WEEK_OF_YEAR);
             for (Team team : teamList) {
                 sm.initializeTeamWithContext(team);
                 JSONObject tmp = new JSONObject();
@@ -52,31 +52,32 @@ public class ServletGetTeamsInformation extends HttpServlet {
                 tmp.put("phone_number", phoneNumber);
                 tmp.put("credit", team.isActive() ? (float) -team.getCustomer().getAccountBalance() / 100 : 0);
                 calendar.setTime(team.getSubscription_date());
-                int week_of_subscription = 0;
+                int weekOfSubscription = 0;
                 if (calendar.get(Calendar.YEAR) > EASE_FIRST_YEAR) {
                     do {
-                        week_of_subscription += calendar.get(Calendar.WEEK_OF_YEAR);
+                        weekOfSubscription += calendar.get(Calendar.WEEK_OF_YEAR);
                         calendar.add(Calendar.WEEK_OF_YEAR, -calendar.get(Calendar.WEEK_OF_YEAR));
                     } while (calendar.get(Calendar.YEAR) > EASE_FIRST_YEAR);
                 }
-                week_of_subscription += calendar.get(Calendar.WEEK_OF_YEAR) - EASE_FIRST_WEEK;
+                weekOfSubscription += calendar.get(Calendar.WEEK_OF_YEAR) - EASE_FIRST_WEEK;
                 calendar = Calendar.getInstance();
-                int week_now = 0;
+                int weekNow = 0;
                 if (calendar.get(Calendar.YEAR) > EASE_FIRST_YEAR) {
                     do {
-                        week_now += calendar.get(Calendar.WEEK_OF_YEAR);
+                        weekNow += calendar.get(Calendar.WEEK_OF_YEAR);
                         calendar.add(Calendar.WEEK_OF_YEAR, -calendar.get(Calendar.WEEK_OF_YEAR));
                     } while (calendar.get(Calendar.YEAR) > EASE_FIRST_YEAR);
                 }
-                week_now += calendar.get(Calendar.WEEK_OF_YEAR) - EASE_FIRST_WEEK;
-                tmp.put("week_of_subscription", week_of_subscription);
-                tmp.put("week_now", week_now);
-                TeamMetrics teamMetrics = TeamMetrics.getMetrics(team.getDb_id(), year, week_of_year, sm.getHibernateQuery());
+                weekNow += calendar.get(Calendar.WEEK_OF_YEAR) - EASE_FIRST_WEEK;
+                tmp.put("week_of_subscription", weekOfSubscription);
+                tmp.put("week_now", weekNow);
+                TeamMetrics teamMetrics = TeamMetrics.getMetrics(team.getDb_id(), year, weekOfYear, sm.getHibernateQuery());
                 tmp.put("people_joined", teamMetrics.getPeople_joined());
                 tmp.put("people_joined_with_cards", teamMetrics.getPeople_with_cards());
                 tmp.put("cards_with_tags", teamMetrics.getCards_with_receiver());
                 tmp.put("people_click_on_app_once", teamMetrics.getPeople_click_on_app_once());
                 tmp.put("people_click_on_app_three_times", teamMetrics.getPeople_click_on_app_three_times());
+                tmp.put("password_killed", teamMetrics.getPasswordKilled());
                 res.put(tmp);
             }
             sm.setSuccess(res);

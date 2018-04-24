@@ -34,7 +34,7 @@ public class ServletRetrieveTeamsClickChartData extends HttpServlet {
             JSONArray labels = new JSONArray();
             JSONArray datasets = new JSONArray();
             JSONObject click_average = new JSONObject();
-            click_average.put("label", "Average of clicks");
+            click_average.put("label", "Number of clicks");
             click_average.put("borderColor", "rgba(55, 59, 96, 0.75)"); /*373B60*/
             click_average.put("backgroundColor", "rgba(55, 59, 96, 0.75)");
             click_average.put("data", new JSONArray());
@@ -73,7 +73,7 @@ public class ServletRetrieveTeamsClickChartData extends HttpServlet {
                     labels.put(++days);
                     calendar.add(Calendar.DAY_OF_YEAR, 1);
                 }
-                ((JSONArray) click_average.get("data")).put(count.doubleValue() / userIds.size());
+                ((JSONArray) click_average.get("data")).put(count);
                 labels.put(++days);
             }
             /* while (calendar.get(Calendar.YEAR) < current.get(Calendar.YEAR)) {

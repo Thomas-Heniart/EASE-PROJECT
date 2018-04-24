@@ -239,10 +239,10 @@ SELECT
   COUNT(*) AS clicks
 FROM ease_tracking.EASE_EVENT
 WHERE (name LIKE 'PasswordUsed' OR name LIKE 'PasswordUser' AND user_id IN (SELECT user_id
-                                                                           FROM ease.teamUsers
-                                                                           WHERE team_id = 312 AND user_id IS NOT NULL)
-GROUP BY year, day_of_year
-ORDER BY year, day_of_year;
+                                                                            FROM ease.teamUsers
+                                                                            WHERE team_id = 312 AND user_id IS NOT NULL)
+       GROUP BY YEAR, day_of_year
+       ORDER BY YEAR, day_of_year;
 
 SELECT *
 FROM ease_tracking.EASE_EVENT
@@ -263,3 +263,55 @@ FROM (
        WHERE name LIKE ('PasswordUsed' OR name LIKE 'PasswordUser') AND user_id = 3411) AS t
 GROUP BY year, day_of_year
 ORDER BY year, day_of_year;
+
+SELECT COUNT(*)
+FROM (SELECT
+        year,
+        day_of_year,
+        COUNT(*) AS clicks
+      FROM (
+             SELECT
+               year,
+               day_of_year,
+               week_of_year,
+               id
+             FROM ease_tracking.EASE_EVENT
+             WHERE (name LIKE 'PasswordUsed' OR name LIKE 'PasswordUser') AND user_id = 17) AS t
+      WHERE year = 2018 AND week_of_year = 16
+      GROUP BY year, day_of_year, week_of_year
+      ORDER BY year, day_of_year) AS t;
+SELECT *
+FROM (SELECT
+        team_id,
+        COUNT(*) AS apps
+      FROM teamCards
+      GROUP BY team_id) AS t
+WHERE t.apps BETWEEN 0 AND 10;
+
+SELECT
+  invitation_sent,
+  COUNT(team_id) AS sum
+FROM (
+       SELECT
+         invitation_sent,
+         team_id,
+         COUNT(*) AS people
+       FROM teamUsers
+         JOIN teamUserStatus ON teamUsers.status_id = teamUserStatus.id
+       GROUP BY invitation_sent, team_id) AS t
+WHERE people BETWEEN 10 AND 20
+GROUP BY invitation_sent;
+
+SELECT
+  teamUsers.team_id,
+  COUNT(*) AS passwordUsed
+FROM ease_tracking.EASE_EVENT
+  JOIN teamUsers ON ease_tracking.EASE_EVENT.user_id = teamUsers.user_id
+WHERE name LIKE 'PasswordUsed' AND
+      DATE(ease_tracking.EASE_EVENT.creation_date) BETWEEN DATE_SUB(CURDATE(), INTERVAL 1 WEEK) AND CURDATE()
+GROUP BY team_id;
+
+SELECT *
+FROM teams
+  JOIN TEAM_ONBOARDING_STATUS ON teams.onboarding_status_id = TEAM_ONBOARDING_STATUS.id
+WHERE step = 5;

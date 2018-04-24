@@ -6,16 +6,17 @@ import {showSoftwareAppSettingsModal} from "../../actions/modalActions";
 import {validateApp, clickOnAppMetric, passwordCopied} from '../../actions/dashboardActions';
 import api from "../../utils/api";
 import {connect} from "react-redux";
+import ReactCSSTransitionGroup from "react-addons-css-transition-group";
 
 @connect(store => ({
-  active: store.modals.softwareAppSettings.active
+  active: store.modals.softwareAppSettings.active,
+  dnd: store.dashboard_dnd.dragging_app_id !== -1
 }))
 class SoftwareApp extends Component {
   constructor(props) {
     super(props);
     this.state = {
       loading: false,
-      isOpen: false,
       copiedPassword: null,
       copiedOther: null,
       menuActive: false,
@@ -35,25 +36,10 @@ class SoftwareApp extends Component {
     if (this.state.hover)
       this.setState({ menuActive: true });
   };
-  handleOpenClose = () => {
-    if (!this.props.active) {
-      if (this.state.isOpen === false) {
-        if (this.props.app.new)
-          this.props.dispatch(validateApp({app_id: this.props.app.id}));
-        this.props.dispatch(clickOnAppMetric({app: this.props.app}));
-        api.dashboard.getAppPassword({
-          app_id: this.props.app.id
-        }).then(response => {
-          this.password = response.password;
-        });
-      }
-      this.setState({isOpen: !this.state.isOpen});
-    }
-  };
   activateMenu = (e) => {
     e.preventDefault();
     const {app} = this.props;
-    if (!app.empty) {
+    if (!app.empty && !this.props.dnd) {
       this.setState({hover: true, position: getPosition(app.id)});
       if (this.password === '')
         api.dashboard.getAppPassword({
@@ -68,7 +54,6 @@ class SoftwareApp extends Component {
   };
   clickOnSettings = (e) => {
     e.stopPropagation();
-    this.setState({isOpen: false});
     this.props.dispatch(showSoftwareAppSettingsModal({active: true, app: this.props.app}));
   };
   copyPassword = (item) => {
@@ -102,46 +87,52 @@ class SoftwareApp extends Component {
       if (this.state.copiedPassword !== item.priority && this.state.copiedOther !== item.priority) {
         if (item.name === 'password')
           return (
-              <button
-                  className="settings_button"
-                  onClick={e => this.copyPassword(item)}
-                  key={idx}>
+            <div className='container_button' key={idx}>
+              <button className="settings_button" onClick={e => this.copyPassword(item)}>
                 <Icon name='copy'/> • • • • • • • •
               </button>
+            </div>
           );
         return (
-            <button
-                key={idx}
-                className="settings_button"
-                onClick={e => this.copy(item)}>
+          <div className='container_button' key={idx}>
+            <button className="settings_button" onClick={e => this.copy(item)}>
               <Icon name='copy'/> {item.value}
             </button>
+          </div>
         )
       }
       return (
-          <button
-              key={idx}
-              className="settings_button">
+        <div className='container_button' key={idx}>
+          <button className="settings_button">
             Copied!
           </button>
+        </div>
       )
     });
     return (
         <div className='app'>
           <div className={app.empty ? 'logo_area' : this.state.menuActive ? 'logo_area active' : 'logo_area not_active'}
-               onMouseEnter={this.activateMenu} onMouseLeave={this.deactivateMenu}>
+               onMouseEnter={!this.props.dnd ? this.activateMenu : null} onMouseLeave={!this.props.dnd ? this.deactivateMenu : null}>
             {this.state.loading &&
             <LoadingAppIndicator/>}
             {app.empty &&
             <EmptyAppIndicator onClick={this.clickOnSettings}/>}
             {app.new &&
             <NewAppLabel/>}
+            <ReactCSSTransitionGroup
+              transitionName="settingsAnim"
+              transitionEnter={true}
+              transitionLeave={true}
+              transitionEnterTimeout={1300}
+              transitionLeaveTimeout={1}>
+              {this.state.hover && !this.props.dnd &&
             <SettingsMenu
                 app={app}
                 buttons={buttons}
                 remove={this.remove}
                 position={this.state.position}
-                clickOnSettings={this.clickOnSettings}/>
+                clickOnSettings={this.clickOnSettings}/>}
+            </ReactCSSTransitionGroup>
             <div className="logo_handler">
               <img className="logo" src={app.logo}/>
             </div>

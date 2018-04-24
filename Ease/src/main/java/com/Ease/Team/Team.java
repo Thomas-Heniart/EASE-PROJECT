@@ -607,6 +607,8 @@ public class Team {
             if (!this.isFreemium() || this.getSubscription_id() == null || this.getCustomer_id() == null)
                 return;
             String link = Variables.URL_PATH + "#/teams/" + this.getDb_id() + "/" + this.getDefaultChannel().getDb_id() + "/settings/payment";
+            if (this.getSubscription() == null || this.getSubscription().getTrialEnd() == null)
+                return;
             Long trialEnd = this.getSubscription().getTrialEnd() * 1000;
             if (DateUtils.isInDays(new Date(trialEnd), 5)) {
                 System.out.println(this.getName() + " trial will end in 5 days.");
