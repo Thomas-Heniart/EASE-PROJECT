@@ -32,13 +32,13 @@ public class CalculatePasswordScore extends HttpServlet {
             TeamUser teamUserConnected = sm.getTeamUser(team);
             Integer teamCardId = sm.getIntParam("team_card_id", true, false);
             TeamCard teamCard = team.getTeamCard(teamCardId);
-            if (!teamUserConnected.equals(teamCard.getTeamUser_sender()) && !teamUserConnected.isTeamAdmin())
-                throw new HttpServletException(HttpStatus.BadRequest, "Not allowed");
             if (teamCard.isTeamLinkCard())
                 throw new HttpServletException(HttpStatus.BadRequest, "Not allowed");
             String teamKey = sm.getTeamKey(team);
             HibernateQuery hibernateQuery = sm.getHibernateQuery();
             if (teamCard.isTeamSingleCard()) {
+                if (!teamUserConnected.equals(teamCard.getTeamUser_sender()) && !teamUserConnected.isTeamAdmin())
+                    throw new HttpServletException(HttpStatus.BadRequest, "Not allowed");
                 teamCard.decipher(teamKey);
                 teamCard.calculatePasswordScore();
                 hibernateQuery.saveOrUpdateObject(teamCard);
@@ -47,6 +47,8 @@ public class CalculatePasswordScore extends HttpServlet {
             } else {
                 Integer teamCardReceiverId = sm.getIntParam("team_card_receiver_id", true, true);
                 if (teamCardReceiverId == null) {
+                    if (!teamUserConnected.equals(teamCard.getTeamUser_sender()) && !teamUserConnected.isTeamAdmin())
+                        throw new HttpServletException(HttpStatus.BadRequest, "Not allowed");
                     teamCard.decipher(teamKey);
                     for (TeamCardReceiver teamCardReceiver : teamCard.getTeamCardReceiverMap().values()) {
                         ((TeamEnterpriseCardReceiver) teamCardReceiver).calculatePasswordScore();
@@ -56,6 +58,8 @@ public class CalculatePasswordScore extends HttpServlet {
                     sm.addWebSocketMessage(WebSocketMessageFactory.createWebSocketMessage(WebSocketMessageType.TEAM_CARD, WebSocketMessageAction.CHANGED, teamCard.getWebSocketJson()));
                 } else {
                     TeamEnterpriseCardReceiver teamEnterpriseCardReceiver = (TeamEnterpriseCardReceiver) teamCard.getTeamCardReceiver(teamCardReceiverId);
+                    if (!teamUserConnected.equals(teamCard.getTeamUser_sender()) && !teamUserConnected.isTeamAdmin() && !teamUserConnected.equals(teamEnterpriseCardReceiver.getTeamUser()))
+                        throw new HttpServletException(HttpStatus.BadRequest, "Not allowed");
                     teamEnterpriseCardReceiver.decipher(teamKey);
                     teamEnterpriseCardReceiver.calculatePasswordScore();
                     hibernateQuery.saveOrUpdateObject(teamEnterpriseCardReceiver);

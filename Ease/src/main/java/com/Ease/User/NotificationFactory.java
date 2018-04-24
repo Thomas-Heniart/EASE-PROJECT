@@ -2,6 +2,7 @@ package com.Ease.User;
 
 import com.Ease.Context.Variables;
 import com.Ease.Hibernate.HibernateQuery;
+import com.Ease.NewDashboard.App;
 import com.Ease.Team.Channel;
 import com.Ease.Team.Team;
 import com.Ease.Team.TeamCard.TeamCard;
@@ -245,7 +246,11 @@ public class NotificationFactory {
     public void createPasswordScoreTooWeakNotification(TeamUser teamUserSender, TeamUser teamUserReceiver, TeamCard teamCard, WebSocketManager userWebSocketManager, HibernateQuery hibernateQuery) {
         if (!teamUserReceiver.isRegistered())
             return;
-        String url = "#/teams/" + teamCard.getTeam().getDb_id() + "/" + teamCard.getChannel().getDb_id() + "?app_id=" + teamCard.getDb_id();
+        TeamCardReceiver teamCardReceiver = teamCard.getTeamCardReceiver(teamUserReceiver);
+        if (teamCardReceiver == null)
+            return;
+        App app = teamCardReceiver.getApp();
+        String url = "#/main/dashboard?app_id=" + app.getDb_id();
         Notification notification = this.createNotification(teamUserReceiver.getUser(), teamUserSender.getUsername() + " asked you to change the password of " + teamCard.getName() + " to make it stronger.", teamCard.getLogo(), url);
         hibernateQuery.saveOrUpdateObject(notification);
         userWebSocketManager.sendObject(WebSocketMessageFactory.createNotificationMessage(notification));
