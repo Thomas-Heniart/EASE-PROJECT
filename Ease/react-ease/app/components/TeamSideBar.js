@@ -282,6 +282,12 @@ class TeamPasswordsStrengthProgress extends Component {
             </span>}
           </span>
       );
+    else
+      return (
+          <span>
+            Awesome you did it!!<i className="em-svg em-clap"/> 👏Out of {password_count} passwords in your team, 100% of them are strong enough, well done! Make sure you keep it like this!<i className="em-svg em-wink"/>
+          </span>
+      )
   };
   render(){
     const {passwordStrengthDescription} = this.props;
