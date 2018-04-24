@@ -66,6 +66,7 @@ public class CreateTeamSoftwareSingleCard extends HttpServlet {
                 password_reminder_interval = 0;
             TeamSingleSoftwareCard teamSingleSoftwareCard = new TeamSingleSoftwareCard(name, team, channel, description, software);
             teamSingleSoftwareCard.setTeamUser_sender(teamUser_connected);
+            teamSingleSoftwareCard.setPassword_reminder_interval(password_reminder_interval);
             Account account = null;
             String teamKey = sm.getTeamKey(team);
             TeamUser teamUser_filler = null;
