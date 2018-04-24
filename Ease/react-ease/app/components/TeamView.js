@@ -194,7 +194,7 @@ class TeamView extends React.Component {
           <div className="team_view" id="team_view">
             {!this.state.loadingInfo && team.payment_required &&
             <FreeTrialEndModal team_id={team.id}/>}
-            {!this.state.loadingInfo && meAdmin && !team.password_score_initialized &&
+            {!this.state.loadingInfo && !team.payment_required && meAdmin && !team.password_score_initialized &&
             <InitializePasswordScoreFeatureModal team_id={team.id}/>}
             {this.state.loadingInfo && <LoadingScreen/>}
             <TeamSideBar team={team} me={me} openMenu={this.setTeamMenu.bind(null, true)}/>
