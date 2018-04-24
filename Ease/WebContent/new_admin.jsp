@@ -39,7 +39,7 @@
     <link rel="manifest" href="manifest.json">
     <script src="jsMinified/jquery-3.1.0.js?jsv=2"></script>
     <script src="js/ajaxHandler.js"></script>
-    <script src="js/backOffice/admin.js?9"></script>
+    <script src="js/backOffice/admin.js?v=10"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/semantic-ui/2.2.10/semantic.min.css">
     <script src="https://cdn.jsdelivr.net/semantic-ui/2.2.10/semantic.min.js"></script>
     <script src="https://semantic-ui.com/javascript/library/tablesort.js"></script>
@@ -73,7 +73,7 @@
 </head>
 <body role="document" class="mainBody">
 <div class="ui grid">
-    <div class="four wide column">
+    <div class="three wide column">
         <div id="admin_menu" class="ui vertical fluid tabular menu">
             <a class="item" data-target="#team-segment">Teams</a>
             <a class="item" data-target="#website-segment">Websites</a>
@@ -84,9 +84,10 @@
             <a class="item" data-target="#onboarding-rooms-segment">Onboarding rooms</a>
             <a class="item" data-target="#teams-deleted-segment">Teams deleted</a>
             <a class="item" data-target="#statistics">Statistics</a>
+            <a class="item" data-target="#onboarding">Onboarding</a>
         </div>
     </div>
-    <div class="twelve wide stretched column tabs">
+    <div class="thirteen wide stretched column tabs">
         <div id="team-segment" class="ui segment loading backOffice_part" style="display: none">
             <%@ include file="templates/backofficeAdmin/TeamManager.jsp" %>
         </div>
@@ -113,6 +114,9 @@
         </div>
         <div id="statistics" class="ui segment loading backOffice_part" style="display: none">
             <%@include file="templates/backofficeAdmin/Statistics.jsp" %>
+        </div>
+        <div id="onboarding" class="ui segment loading backOffice_part" style="display: none">
+            <%@include file="templates/backofficeAdmin/Onboarding.jsp" %>
         </div>
     </div>
 </div>

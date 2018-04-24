@@ -35,6 +35,7 @@ import {passwordChangeOptions, passwordChangeValues, copyTextToClipboard} from "
 import React, {Component, Fragment} from "react";
 import post_api from "../../utils/post_api";
 import {isAdmin} from "../../utils/helperFunctions";
+import extension from "../../utils/extension_api";
 import {connect} from "react-redux";
 import {renewMagicLink} from "../../actions/magicLinkActions";
 import {passwordCopied} from "../../actions/dashboardActions";
@@ -187,7 +188,13 @@ export class EnterpriseTeamCardPasswordInputStrengthIndicator extends Component 
     }
   }
   goToUrl = () => {
+    const {appName, login} = this.props;
+
     window.open(this.props.websiteUrl);
+    extension.showPasswordUpdateAskHelperModal({
+      appName: appName,
+      login: login
+    });
   };
   sendAlert = () => {
     this.setState({alertSent: true});
@@ -236,7 +243,7 @@ export class EnterpriseTeamCardPasswordInputStrengthIndicator extends Component 
   }
 };
 
-export const StaticEnterpriseTeamCardPasswordInput = ({item, passwordScore, myPassword, lastPasswordChangeAlert, websiteUrl, passwordChangeAlert}) => {
+export const StaticEnterpriseTeamCardPasswordInput = ({item, passwordScore, myPassword, lastPasswordChangeAlert, websiteUrl, passwordChangeAlert, appName, login}) => {
   return (
       <Input size="mini"
              class="team-app-input"
@@ -251,6 +258,8 @@ export const StaticEnterpriseTeamCardPasswordInput = ({item, passwordScore, myPa
         {!!passwordScore && passwordScore < 4 &&
         <EnterpriseTeamCardPasswordInputStrengthIndicator score={passwordScore}
                                                           lastPasswordChangeAlert={lastPasswordChangeAlert}
+                                                          appName={appName}
+                                                          login={login}
                                                           passwordChangeAlert={passwordChangeAlert}
                                                           websiteUrl={websiteUrl}
                                                           myPassword={myPassword}/>}
@@ -276,6 +285,10 @@ export class TeamSimpleCardPasswordStrengthIndicator extends Component {
     const {teamCard} = this.props;
 
     window.open(teamCard.website.login_url);
+    extension.showPasswordUpdateAskHelperModal({
+      appName: teamCard.name,
+      login: teamCard.account_information.login
+    });
   };
   getText = () => {
     const {score} = this.props;
@@ -306,19 +319,7 @@ export class TeamSimpleCardPasswordStrengthIndicator extends Component {
           <Fragment>
             <span>{passwordStrengthDescription[score]}</span>
             <br/>
-            {meReceiver ?
-                <span><a class="simple_link" onClick={this.goToUrl}>Change it to a strong one</a>&nbsp;💪<i class="em-svg em-muscle"/></span>
-                :
-                this.state.alertSent ?
-                    <span>Request sent!</span>
-                    :
-                    <span><a class="simple_link" onClick={this.sendAlert}>Require to change it to a strong one</a> <i class="em-svg em-muscle"/></span>
-            }
-            {!!lastPasswordScoreAlertDate && !meReceiver &&
-            <Fragment>
-              <br/>
-              (Last request sent {basicDateFormat(lastPasswordScoreAlertDate)})
-            </Fragment>}
+            <span><a class="simple_link" onClick={this.goToUrl}>Change it to a strong one</a>&nbsp;💪<i class="em-svg em-muscle"/></span>
           </Fragment>
       );
   };
@@ -335,19 +336,7 @@ export class TeamSimpleCardPasswordStrengthIndicator extends Component {
           <Fragment>
             <span>{passwordStrengthDescription[score]}</span>
             <br/>
-            {meReceiver ?
-                <span>Change it to a strong one 💪<i class="em-svg em-muscle"/></span>
-                :
-                this.state.alertSent ?
-                    <span>Request sent!</span>
-                    :
-                    <span><a class="simple_link" onClick={this.sendAlert}>Require to change it to a strong one</a> <i class="em-svg em-muscle"/></span>
-            }
-            {!!lastPasswordScoreAlertDate && !meReceiver &&
-            <Fragment>
-              <br/>
-              (Last request sent {basicDateFormat(lastPasswordScoreAlertDate)})
-            </Fragment>}
+            <span>Change it to a strong one 💪<i class="em-svg em-muscle"/></span>
           </Fragment>
       );
   };
@@ -529,6 +518,16 @@ export class EmptyCredentialsSimpleAppIndicator extends Component {
           {(team_card.team_user_filler_id === -1 && !isAdmin(me.role)) &&
           <span>Waiting for login and password.</span>}
           {(team_card.team_user_filler_id !== -1 && team_card.team_user_filler_id === me.id) &&
+          <span>Waiting for <strong>{me.username}</strong> to<u onClick={this.fillCredentials}>fill info</u>
+            {this.props.actions_enabled &&
+            <React.Fragment>
+              {isAdmin(me.role) &&
+              <React.Fragment>
+                &nbsp;or
+                <u onClick={this.chooseMember}>choose another person</u>
+              </React.Fragment>}
+            </React.Fragment>}
+          </span>}
           <span>Waiting for <strong>{me.username}</strong> to<u onClick={this.fillCredentials}>fill info</u></span>}
           {(team_card.team_user_filler_id !== -1 && team_card.team_user_filler_id !== me.id) &&
           <span>

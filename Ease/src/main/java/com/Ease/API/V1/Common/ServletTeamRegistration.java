@@ -4,6 +4,7 @@ import com.Ease.Context.Variables;
 import com.Ease.Hibernate.HibernateQuery;
 import com.Ease.Mail.MailJetBuilder;
 import com.Ease.Mail.MailjetContactWrapper;
+import com.Ease.Team.Team;
 import com.Ease.Team.TeamUser;
 import com.Ease.User.JsonWebTokenFactory;
 import com.Ease.User.User;
@@ -75,10 +76,13 @@ public class ServletTeamRegistration extends HttpServlet {
                 throw new HttpServletException(HttpStatus.BadRequest, "This is not the moment of your registration");
             newUser = teamUser.getUser();
             if (newUser != null) {
+                for (Team team : newUser.getTeams())
+                    sm.initializeTeamWithContext(team);
                 if (!newUser.getUserKeys().isGoodAccessCode(access_code))
                     throw new HttpServletException(HttpStatus.BadRequest, "This link is no longer valid");
                 newUser.finalizeRegistration(password, access_code, first_name, last_name, phone_number);
-                teamUser.setState(1);
+                teamUser.setState(2);
+                sm.saveOrUpdate(teamUser);
             } else {
                 String username = sm.getStringParam("username", true, false);
                 username = username.toLowerCase();

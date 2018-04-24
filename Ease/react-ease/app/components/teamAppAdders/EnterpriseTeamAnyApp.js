@@ -172,7 +172,7 @@ class CopyPasswordButton extends Component {
   }
 };
 
-const StaticReceivers = ({receivers, me, expanded, password_reminder_interval, dispatch, proPlan, websiteUrl, passwordChangeAlert}) => {
+const StaticReceivers = ({receivers, me, expanded, password_reminder_interval, dispatch, proPlan, websiteUrl, passwordChangeAlert, appName}) => {
   const meAdmin = isAdmin(me.role);
   return (
       <div class="receivers">
@@ -195,6 +195,8 @@ const StaticReceivers = ({receivers, me, expanded, password_reminder_interval, d
                       if (item.type === 'password')
                         return <StaticEnterpriseTeamCardPasswordInput
                             item={item}
+                            appName={appName}
+                            login={receiver.receiver.account_information.login}
                             lastPasswordChangeAlert={receiver.receiver.last_password_score_alert_date}
                             passwordChangeAlert={passwordChangeAlert.bind(null, receiver.receiver.id)}
                             websiteUrl={websiteUrl}
@@ -605,6 +607,7 @@ class EnterpriseTeamAnyApp extends Component {
                 </div>
                 {!this.state.edit &&
                 <StaticReceivers receivers={users}
+                                 appName={app.name}
                                  passwordChangeAlert={this.passwordChangeReceiverAlert}
                                  websiteUrl={app.website.login_url}
                                  dispatch={this.props.dispatch}

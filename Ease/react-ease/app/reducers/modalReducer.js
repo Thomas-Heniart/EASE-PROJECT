@@ -108,6 +108,15 @@ export const modals = createReducer({
   passwordScoreUpgradeTeamPlan: {
     active: false,
     team_id: -1
+  },
+  appPasswordChangeAsk: {
+    active: false,
+    app: null,
+    reason: ''
+  },
+  initializePasswordScoreFeature: {
+    active: false,
+    team_id: -1
   }
 }, {
   ['SHOW_CLASSIC_APP_SETTINGS_MODAL'](state, action){
@@ -276,6 +285,18 @@ export const modals = createReducer({
     return {
         ...state,
       passwordScoreUpgradeTeamPlan: action.payload
+    }
+  },
+  ['SHOW_APP_PASSWORD_CHANGE_ASK_MODAL'](state, action){
+    return {
+        ...state,
+      appPasswordChangeAsk: action.payload
+    }
+  },
+  ['SHOW_INITIALIZE_PASSWORD_SCORE_FEATURE_MODAL'](state, action){
+    return {
+        ...state,
+      initializePasswordScoreFeature: action.payload
     }
   }
 });

@@ -1,7 +1,5 @@
 package com.Ease.NewDashboard;
 
-import com.Ease.Hibernate.HibernateQuery;
-import com.Ease.Metrics.ClickOnApp;
 import com.Ease.Team.TeamCardReceiver.TeamCardReceiver;
 import com.Ease.Utils.HttpServletException;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
@@ -9,7 +7,6 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import javax.persistence.*;
-import java.util.Calendar;
 import java.util.Date;
 
 @Entity
@@ -196,18 +193,6 @@ abstract public class App {
 
     public JSONArray getConnectionJson(String public_key) throws HttpServletException {
         return new JSONArray();
-    }
-
-    public boolean hasBeenClickedForDays(int number_of_days, HibernateQuery hibernateQuery) {
-        return this.getClickMetric(hibernateQuery).hasBeenClickedForDays(number_of_days);
-    }
-
-    private ClickOnApp getClickMetric(HibernateQuery hibernateQuery) {
-        Calendar calendar = Calendar.getInstance();
-        Integer user_id = null;
-        if (this.getProfile() != null && this.getProfile().getUser() != null)
-            user_id = this.getProfile().getUser().getDb_id();
-        return ClickOnApp.getMetricForApp(this.getDb_id(), user_id, calendar.get(Calendar.YEAR), calendar.get(Calendar.WEEK_OF_YEAR), hibernateQuery);
     }
 
     public boolean isEmpty() {

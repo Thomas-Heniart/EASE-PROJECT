@@ -132,6 +132,18 @@ const extension_api = {
           type: 'easeLogout'
         }
     )
+  },
+  showPasswordUpdateAskHelperModal: ({appName, login}) => {
+    !!browser && browser.runtime.sendMessage(
+        extensionId,
+        {
+          type: 'showPasswordUpdateHelperModal',
+          data: {
+            appName: appName,
+            login: login
+          }
+        }
+    )
   }
 };
 

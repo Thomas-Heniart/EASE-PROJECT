@@ -1,8 +1,13 @@
 import React, {Component} from "react";
+import {connect} from "react-redux";
 import {getPosition, NewAppLabel, SettingsMenu} from "./utils";
 import {showLinkAppSettingsModal} from "../../actions/modalActions";
 import {validateApp, clickOnAppMetric} from "../../actions/dashboardActions";
+import ReactCSSTransitionGroup from "react-addons-css-transition-group";
 
+@connect(store => ({
+  dnd: store.dashboard_dnd.dragging_app_id !== -1
+}))
 class LinkApp extends Component {
   constructor(props){
     super(props);
@@ -24,7 +29,8 @@ class LinkApp extends Component {
       this.setState({ menuActive: true });
   };
   activateMenu = () => {
-    this.setState({hover: true, position: getPosition(this.props.app.id)});
+    if (!this.props.dnd)
+      this.setState({hover: true, position: getPosition(this.props.app.id)});
   };
   deactivateMenu = () => {
     this.setState({menuActive: false, hover: false});
@@ -44,14 +50,22 @@ class LinkApp extends Component {
     return (
         <div class='app'>
           <div className={this.state.menuActive ? 'logo_area active' : 'logo_area not_active'}
-               onMouseEnter={this.activateMenu} onMouseLeave={this.deactivateMenu}>
+               onMouseEnter={!this.props.dnd ? this.activateMenu : null} onMouseLeave={!this.props.dnd ? this.deactivateMenu : null}>
             {app.new &&
             <NewAppLabel/>}
-            <SettingsMenu
-              app={app}
-              remove={this.remove}
-              position={this.state.position}
-              clickOnSettings={e => dispatch(showLinkAppSettingsModal({active: true, app: this.props.app}))}/>
+            <ReactCSSTransitionGroup
+              transitionName="settingsAnim"
+              transitionEnter={true}
+              transitionLeave={true}
+              transitionEnterTimeout={1300}
+              transitionLeaveTimeout={1}>
+              {this.state.hover && !this.props.dnd &&
+                <SettingsMenu
+                  app={app}
+                  remove={this.remove}
+                  position={this.state.position}
+                  clickOnSettings={e => dispatch(showLinkAppSettingsModal({active: true, app: this.props.app}))}/>}
+            </ReactCSSTransitionGroup>
             <div class="logo_handler">
               <img class="logo" src={app.logo} onClick={this.process}/>
             </div>

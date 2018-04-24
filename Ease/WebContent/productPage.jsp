@@ -36,13 +36,13 @@
 
     <link rel="icon" type="image/png" href="resources/icons/APPEASE.png" />
     <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Raleway:500,700" />
-    <link rel="stylesheet" type="text/css" href="/css/lib/fonts/museo-font.css?cssv=7"/>
-    <link rel="stylesheet" href="/css/default_style.css?cssv=7"/>
-    <link rel="stylesheet" href="/css/bootstrap.css?cssv=7"/>
-    <link rel="stylesheet" href="/css/lib/fonts/font-awesome-4.2.0/css/font-awesome.min.css?cssv=7"/>
-    <link rel="stylesheet" href="/css/landingPage.css?cssv=7"/>
-    <link rel="stylesheet" href="/css/securityPage.css?cssv=7"/>
-    <link rel="stylesheet" href="/css/productPage.css?cssv=7"/>
+    <link rel="stylesheet" type="text/css" href="/css/lib/fonts/museo-font.css?cssv=8"/>
+    <link rel="stylesheet" href="/css/default_style.css?cssv=8"/>
+    <link rel="stylesheet" href="/css/bootstrap.css?cssv=8"/>
+    <link rel="stylesheet" href="/css/lib/fonts/font-awesome-4.2.0/css/font-awesome.min.css?cssv=8"/>
+    <link rel="stylesheet" href="/css/landingPage.css?cssv=8"/>
+    <link rel="stylesheet" href="/css/securityPage.css?cssv=8"/>
+    <link rel="stylesheet" href="/css/productPage.css?cssv=8"/>
     <link rel="stylesheet" href="semantic/dist/semantic.min.css">
     <link rel="manifest" href="manifest.json">
     <script async src="https://www.googletagmanager.com/gtag/js?id=UA-75916041-5"></script>

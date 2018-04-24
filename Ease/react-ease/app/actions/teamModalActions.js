@@ -339,10 +339,11 @@ export function showPasswordScoreUpgradeTeamPlanModal({active, team_id}){
   }
 }
 
-export function cardAdded({card}) {
+export function cardAdded({card, from}) {
   return (dispatch, getState) => {
     return event_api.track.cardAdded({
-      card: card
+      card: card,
+      from: from
     }).catch(err => {
       throw err;
     });
