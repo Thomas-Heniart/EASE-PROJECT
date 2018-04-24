@@ -95,7 +95,7 @@ export class EnterpriseCardPasswordStrengthIndicator extends Component {
                 <span>Request sent!</span>
                 :
                 <span><a className="simple_link"
-                         onClick={this.sendAlert}>Require people to make their password stronger</a>&nbsp;💪<i
+                         onClick={this.sendAlert}>Require people to make their password stronger</a>&nbsp;<i
                     className="em-svg em-muscle"/></span>
             }
             {!!lastPasswordChangeAlertDate &&
@@ -222,13 +222,13 @@ export class EnterpriseTeamCardPasswordInputStrengthIndicator extends Component 
                 <span>{passwordStrengthDescription[score]}</span>
                 <br/>
                 {myPassword ?
-                    <span>{!!websiteUrl ? <a class="simple_link" onClick={this.goToUrl}>Change it to a strong one</a> : 'Change it to a strong one'}&nbsp;💪<i
+                    <span>{!!websiteUrl ? <a class="simple_link" onClick={this.goToUrl}>Change it to a strong one</a> : 'Change it to a strong one'}&nbsp;<i
                         class="em-svg em-muscle"/></span>
                     :
                     this.state.alertSent ?
                         <span>Request sent!</span>
                         :
-                        <span><a class="simple_link" onClick={this.sendAlert}>Require people to make their password stronger</a>&nbsp;💪<i
+                        <span><a class="simple_link" onClick={this.sendAlert}>Require people to make their password stronger</a>&nbsp;<i
                             class="em-svg em-muscle"/></span>
                 }
                 {!myPassword && !!lastPasswordChangeAlert &&
@@ -319,7 +319,7 @@ export class TeamSimpleCardPasswordStrengthIndicator extends Component {
           <Fragment>
             <span>{passwordStrengthDescription[score]}</span>
             <br/>
-            <span><a class="simple_link" onClick={this.goToUrl}>Change it to a strong one</a>&nbsp;💪<i class="em-svg em-muscle"/></span>
+            <span><a class="simple_link" onClick={this.goToUrl}>Change it to a strong one</a>&nbsp;<i class="em-svg em-muscle"/></span>
           </Fragment>
       );
   };
@@ -336,7 +336,7 @@ export class TeamSimpleCardPasswordStrengthIndicator extends Component {
           <Fragment>
             <span>{passwordStrengthDescription[score]}</span>
             <br/>
-            <span>Change it to a strong one 💪<i class="em-svg em-muscle"/></span>
+            <span>Change it to a strong one <i class="em-svg em-muscle"/></span>
           </Fragment>
       );
   };
@@ -398,7 +398,7 @@ class SimpleTeamCardPasswordInputStrengthIndicator extends Component {
                 <span>{passwordStrengthDescription[score]}</span>
                 <br/>
                 {canChangePassword ?
-                    <span><a class="simple_link" onClick={this.goToUrl}>Change it to a strong one</a>&nbsp;💪<i class="em-svg em-muscle"/></span>
+                    <span><a class="simple_link" onClick={this.goToUrl}>Change it to a strong one</a>&nbsp;<i class="em-svg em-muscle"/></span>
                     :
                     this.state.sent ?
                         <span>Request sent!</span>

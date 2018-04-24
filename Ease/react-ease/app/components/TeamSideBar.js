@@ -222,13 +222,13 @@ class TeamPasswordsStrengthProgress extends Component {
     else if (percentage < 70)
       return (
           <span>
-            Out of {password_count} passwords in your team, only {percentage}% of them are strong enough. You’re not on top 🙄<i class="em-svg em-face_with_rolling_eyes"/>… yet!<br/>
+            Out of {password_count} passwords in your team, only {percentage}% of them are strong enough. You’re not on top <i class="em-svg em-face_with_rolling_eyes"/>… yet!<br/>
             {proPlan &&
             <Fragment>
               {alertSent ?
                   <Fragment>Request sent!</Fragment>
                   :
-                  <Fragment>You can <a class="simple_link" onClick={this.sendAlert}>Require people to make them stronger</a>💪<i class="em-svg em-muscle"/>.</Fragment>}
+                  <Fragment>You can <a class="simple_link" onClick={this.sendAlert}>Require people to make them stronger</a><i class="em-svg em-muscle"/>.</Fragment>}
             </Fragment>}
             {proPlan && !!last_alert_date &&
             <Fragment><br/>(Last request sent {basicDateFormat(last_alert_date)})</Fragment>}
@@ -243,7 +243,7 @@ class TeamPasswordsStrengthProgress extends Component {
     else if (percentage < 90)
       return (
           <span>
-            <i class="em-svg em---1"/> Out of {password_count} passwords in your team, only {percentage}% of them are strong enough. You’re not on top 🙄… yet!<br/>
+            <i class="em-svg em---1"/> Out of {password_count} passwords in your team, only {percentage}% of them are strong enough. You’re not on top… yet!<br/>
             {proPlan &&
             <Fragment>
               {alertSent ?
@@ -264,7 +264,7 @@ class TeamPasswordsStrengthProgress extends Component {
     else if (percentage < 100)
       return (
           <span>
-            Pretty good! Out of {password_count} passwords in your team, {percentage}% of them are strong enough.<i class="em-svg em-clap"/> 👏You’re quite close to the top level!<br/>
+            Pretty good! Out of {password_count} passwords in your team, {percentage}% of them are strong enough.<i class="em-svg em-clap"/> You’re quite close to the top level!<br/>
             {proPlan &&
             <Fragment>
               {alertSent ?
