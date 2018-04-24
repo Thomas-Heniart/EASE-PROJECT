@@ -80,7 +80,7 @@ class TeamSingleApp extends Component {
     const team = teams[team_app.team_id];
     const me = team.team_users[team.my_team_user_id];
     if (!me.disabled && !team_app.empty && team_app.team_user_filler_id !== me.id
-      && !teamUserDepartureDatePassed(me.departure_date) && !this.props.dnd) {
+        && !teamUserDepartureDatePassed(me.departure_date) && !this.props.dnd) {
       this.setState({hover: true, position: getPosition(app.id)});
       if (this.password === '')
         api.dashboard.getAppPassword({
@@ -161,26 +161,26 @@ class TeamSingleApp extends Component {
       if (this.state.copiedPassword !== item.priority && this.state.copiedOther !== item.priority) {
         if (item.name === 'password')
           return (
-            <div className='container_button' key={idx}>
-              <button className="settings_button" onClick={e => this.copyPassword(item)}>
-                <Icon name='copy'/> • • • • • • • •
-              </button>
-            </div>
+              <div className='container_button' key={idx}>
+                <button className="settings_button" onClick={e => this.copyPassword(item)}>
+                  <Icon name='copy'/> • • • • • • • •
+                </button>
+              </div>
           );
         return (
-          <div className='container_button' key={idx}>
-            <button className="settings_button" onClick={e => this.copy(item)}>
-              <Icon name='copy'/> {item.value}
-            </button>
-          </div>
+            <div className='container_button' key={idx}>
+              <button className="settings_button" onClick={e => this.copy(item)}>
+                <Icon name='copy'/> {item.value}
+              </button>
+            </div>
         )
       }
       return (
-        <div className='container_button' key={idx}>
-          <button className="settings_button">
-            Copied!
-          </button>
-        </div>
+          <div className='container_button' key={idx}>
+            <button className="settings_button">
+              Copied!
+            </button>
+          </div>
       )
     });
     return (
@@ -203,18 +203,18 @@ class TeamSingleApp extends Component {
             {!me.disabled && team_app.empty && team_app.team_user_filler_id !== me.id && !teamUserDepartureDatePassed(me.departure_date) &&
             <DisabledAppIndicator filler_name={!!filler ? filler.username : 'Someone'} team_card_id={team_app.id} magic_link={!team_app.magic_link || team_app.magic_link === ''}/>}
             <ReactCSSTransitionGroup
-              transitionName="settingsAnim"
-              transitionEnter={true}
-              transitionLeave={true}
-              transitionEnterTimeout={1300}
-              transitionLeaveTimeout={1}>
+                transitionName="settingsAnim"
+                transitionEnter={true}
+                transitionLeave={true}
+                transitionEnterTimeout={1300}
+                transitionLeaveTimeout={1}>
               {this.state.hover && !this.props.dnd &&
-            <SettingsMenu app={app}
-                          buttons={buttons}
-                          teams={this.props.teams}
-                          remove={this.remove}
-                          position={this.state.position}
-                          clickOnSettings={this.clickOnSettings}/>}
+              <SettingsMenu app={app}
+                            buttons={buttons}
+                            teams={this.props.teams}
+                            remove={this.remove}
+                            position={this.state.position}
+                            clickOnSettings={this.clickOnSettings}/>}
             </ReactCSSTransitionGroup>
             <div class="logo_handler">
               <img class="logo" src={team_app.logo} onClick={this.connect}/>
