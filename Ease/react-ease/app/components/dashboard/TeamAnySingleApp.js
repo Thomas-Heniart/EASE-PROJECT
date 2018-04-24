@@ -52,14 +52,24 @@ class TeamAnySingleApp extends Component {
       this.setState({ menuActive: true });
   };
   connect = () => {
-    const {app} = this.props;
+    const {app, teams, dispatch} = this.props;
     const team_app = this.props.team_apps[app.team_card_id];
+    const team = teams[team_app.team_id];
+    const me = team.team_users[team.my_team_user_id];
+    const room = team.rooms[team_app.channel_id];
+    const roomManager = team.team_users[room.room_manager_id];
+    const password_update = !!roomManager && roomManager.id === me.id && !team_app.empty && !!team_app.password_reminder_interval && needPasswordUpdate(team_app.last_update_date, team_app.password_reminder_interval);
 
     if (app.new)
       this.props.dispatch(validateApp({app_id: app.id}));
     this.props.dispatch(clickOnAppMetric({app: app}));
     window.open(team_app.website.login_url);
     extension.fillActiveTab({app_id: app.id});
+    if (password_update)
+      extension.showPasswordUpdateAskHelperModal({
+        appName: team_app.name,
+        login: team_app.account_information.login
+      });
   };
   handleOpenClose = () => {
     if (!this.props.active && !this.props.team_apps[this.props.app.team_card_id].empty) {
@@ -151,7 +161,9 @@ class TeamAnySingleApp extends Component {
     const team = teams[team_app.team_id];
     const me = team.team_users[team.my_team_user_id];
     const filler = team.team_users[team_app.team_user_filler_id];
-    const password_update = !!filler && filler.id === me.id && !team_app.empty && !!team_app.password_reminder_interval && needPasswordUpdate(team_app.last_update_date, team_app.password_reminder_interval);
+    const room = team.rooms[team_app.channel_id];
+    const roomManager = team.team_users[room.room_manager_id];
+    const password_update = !!roomManager && roomManager.id === me.id && !team_app.empty && !!team_app.password_reminder_interval && needPasswordUpdate(team_app.last_update_date, team_app.password_reminder_interval);
     const credentials = transformWebsiteInfoIntoListAndSetValues(team_app.website.information, team_app.account_information);
     const buttons = credentials.map((item,idx) => {
       if (this.state.copiedPassword !== item.priority && this.state.copiedOther !== item.priority) {

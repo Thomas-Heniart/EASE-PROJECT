@@ -49,10 +49,21 @@ class TeamSingleApp extends Component {
       this.setState({ menuActive: true });
   };
   connect = (e) => {
+    const {app, teams, dispatch} = this.props;
+    const team_app = this.props.team_apps[app.team_card_id];
+    const team = teams[team_app.team_id];
+    const me = team.team_users[team.my_team_user_id];
+    const room = team.rooms[team_app.channel_id];
+    const roomManager = team.team_users[room.room_manager_id];
+    const password_update = !!roomManager && roomManager.id === me.id && !team_app.empty && !!team_app.password_reminder_interval && needPasswordUpdate(team_app.last_update_date, team_app.password_reminder_interval);
+
     this.setState({loading: true});
     this.props.dispatch(AppConnection({
       app_id: this.props.app.id,
-      keep_focus: e.ctrlKey || e.metaKey
+      keep_focus: e.ctrlKey || e.metaKey,
+      passwordChangeReminder: password_update,
+      appName: team_app.name,
+      login: team_app.account_information.login
     })).then(response => {
       this.setState({loading: false});
     }).catch(err => {
@@ -183,7 +194,7 @@ class TeamSingleApp extends Component {
             {app.new &&
             <NewAppLabel/>}
             {password_update &&
-            <UpdatePasswordIndicator onClick={this.connectWithPasswordUpdate}/>}
+            <UpdatePasswordIndicator onClick={this.connect}/>}
             {!me.disabled && teamUserDepartureDatePassed(me.departure_date) &&
             <DepartureDatePassedIndicator team_name={team.name} departure_date={me.departure_date}/>}
             {me.disabled &&

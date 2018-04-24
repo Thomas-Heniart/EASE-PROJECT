@@ -49,10 +49,21 @@ class TeamEnterpriseApp extends Component {
       this.setState({ menuActive: true });
   };
   connect = (e) => {
+    const {app, teams, dispatch} = this.props;
+    const team_app = this.props.team_apps[app.team_card_id];
+    const team = teams[team_app.team_id];
+    const me = team.team_users[team.my_team_user_id];
+    const meReceiver = team_app.receivers.find(item => (item.team_user_id === me.id));
+    const password_update = !meReceiver.empty && !!team_app.password_reminder_interval && needPasswordUpdate(meReceiver.last_update_date, team_app.password_reminder_interval);
+    const strongPasswordAsked = meReceiver.stronger_password_asked;
+
     this.setState({loading: true});
     this.props.dispatch(AppConnection({
       app_id: this.props.app.id,
-      keep_focus: e.ctrlKey || e.metaKey
+      keep_focus: e.ctrlKey || e.metaKey,
+      passwordChangeReminder: password_update || strongPasswordAsked,
+      appName: team_app.name,
+      login: meReceiver.account_information.login
     })).then(response => {
       this.setState({loading: false});
     }).catch(err => {
@@ -125,7 +136,6 @@ class TeamEnterpriseApp extends Component {
     const team = teams[team_app.team_id];
     const me = team.team_users[team.my_team_user_id];
     const meReceiver = team_app.receivers.find(item => (item.team_user_id === me.id));
-    const password_update = !meReceiver.empty && !!team_app.password_reminder_interval && needPasswordUpdate(meReceiver.last_update_date, team_app.password_reminder_interval);
 
     if (this.state.loading || teamUserDepartureDatePassed(me.departure_date))
       return;
@@ -134,7 +144,7 @@ class TeamEnterpriseApp extends Component {
     else if (!me.disabled && meReceiver.empty && !teamUserDepartureDatePassed(me.departure_date))
       dispatch(showTeamEnterpriseAppSettingsModal({active: true, app: app}));
     else
-      password_update ? this.connectWithPasswordUpdate() : this.connect(e);
+      this.connect(e);
   };
   render(){
     const {app, teams, dispatch} = this.props;
@@ -143,6 +153,7 @@ class TeamEnterpriseApp extends Component {
     const me = team.team_users[team.my_team_user_id];
     const meReceiver = team_app.receivers.find(item => (item.team_user_id === me.id));
     const password_update = !meReceiver.empty && !!team_app.password_reminder_interval && needPasswordUpdate(meReceiver.last_update_date, team_app.password_reminder_interval);
+    const strongPasswordAsked = meReceiver.stronger_password_asked;
     const credentials = transformWebsiteInfoIntoListAndSetValues(team_app.website.information, meReceiver.account_information);
     const buttons = credentials.map((item,idx) => {
       if (this.state.copiedPassword !== item.priority && this.state.copiedOther !== item.priority) {
@@ -181,8 +192,8 @@ class TeamEnterpriseApp extends Component {
             <LoadingAppIndicator/>}
             {app.new &&
             <NewAppLabel/>}
-            {password_update &&
-            <UpdatePasswordIndicator onClick={this.connectWithPasswordUpdate}/>}
+            {(password_update || strongPasswordAsked) &&
+            <UpdatePasswordIndicator onClick={this.connect}/>}
             {teamUserDepartureDatePassed(me.departure_date) &&
             <DepartureDatePassedIndicator team_name={team.name} departure_date={me.departure_date}/>}
             {me.disabled && !teamUserDepartureDatePassed(me.departure_date) &&

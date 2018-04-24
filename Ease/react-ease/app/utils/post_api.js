@@ -1392,6 +1392,11 @@ module.exports = {
         team_id: team_id,
         email: email
       });
+    },
+    initializeTeamPasswordScoreFeature: ({team_id}) => {
+      return basic_post('/api/v1/teams/initialize-team-score', {
+        team_id: team_id
+      });
     }
   },
   common : {

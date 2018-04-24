@@ -1,9 +1,9 @@
 import React, {Component} from "react";
 import {
   DepartureDatePassedIndicator, UpdatePasswordLabel, EmptyTeamAppIndicator, NewAppLabel,
-  WaitingTeamApproveIndicator, LoadingAppIndicator, SettingsMenu, getPosition
+  WaitingTeamApproveIndicator, LoadingAppIndicator, SettingsMenu, getPosition, UpdatePasswordIndicator
 } from "./utils";
-import {showLockedTeamAppModal, showTeamSoftwareEnterpriseAppSettingsModal} from "../../actions/modalActions";
+import {showLockedTeamAppModal, showTeamSoftwareEnterpriseAppSettingsModal, showAppPasswordChangeAskModal} from "../../actions/modalActions";
 import {Icon} from 'semantic-ui-react';
 import {teamUserDepartureDatePassed, needPasswordUpdate, copyTextToClipboard, transformWebsiteInfoIntoListAndSetValues} from "../../utils/utils";
 import {validateApp, clickOnAppMetric, passwordCopied} from '../../actions/dashboardActions';
@@ -110,6 +110,29 @@ class TeamSoftwareEnterpriseApp extends Component {
   remove = () => {
     this.props.dispatch(showTeamSoftwareEnterpriseAppSettingsModal({active: true, app: this.props.app, remove: true}));
   };
+  openAskUpdatePasswordModal = () => {
+    const {app, teams, dispatch} = this.props;
+    const team_app = this.props.team_apps[app.team_card_id];
+    const team = teams[team_app.team_id];
+    const me = team.team_users[team.my_team_user_id];
+    const meReceiver = team_app.receivers.find(item => (item.team_user_id === me.id));
+    const password_update = !meReceiver.empty && !!team_app.password_reminder_interval && needPasswordUpdate(meReceiver.last_update_date, team_app.password_reminder_interval);
+    const strongPasswordAsked = meReceiver.stronger_password_asked;
+
+    if (!!password_update){
+      dispatch(showAppPasswordChangeAskModal({
+        active: true,
+        app: app,
+        reason: 'passwordChangeInterval'
+      }));
+    } else if (!!strongPasswordAsked){
+      dispatch(showAppPasswordChangeAskModal({
+        active: true,
+        app: app,
+        reason: 'weakPassword'
+      }));
+    }
+  };
   render() {
     const {app, teams, dispatch} = this.props;
     const team_app = this.props.team_apps[app.team_card_id];
@@ -117,6 +140,7 @@ class TeamSoftwareEnterpriseApp extends Component {
     const me = team.team_users[team.my_team_user_id];
     const meReceiver = team_app.receivers.find(item => (item.team_user_id === me.id));
     const password_update = !meReceiver.empty && !!team_app.password_reminder_interval && needPasswordUpdate(meReceiver.last_update_date, team_app.password_reminder_interval);
+    const strongPasswordAsked = meReceiver.stronger_password_asked;
     const credentials = transformWebsiteInfoIntoListAndSetValues(team_app.software.connection_information, meReceiver.account_information);
     const buttons = credentials.map((item,idx) => {
       if (this.state.copiedPassword !== item.priority && this.state.copiedOther !== item.priority) {
@@ -155,8 +179,8 @@ class TeamSoftwareEnterpriseApp extends Component {
           <LoadingAppIndicator/>}
           {app.new &&
           <NewAppLabel/>}
-          {password_update &&
-          <UpdatePasswordLabel/>}
+          {(password_update || strongPasswordAsked) &&
+          <UpdatePasswordIndicator onClick={this.openAskUpdatePasswordModal}/>}
           {teamUserDepartureDatePassed(me.departure_date) &&
           <DepartureDatePassedIndicator team_name={team.name} departure_date={me.departure_date}/>}
           {me.disabled && !teamUserDepartureDatePassed(me.departure_date) &&
