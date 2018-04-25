@@ -1,11 +1,12 @@
 package com.Ease.API.Rest;
 
-import com.Ease.User.User;
 import com.Ease.NewDashboard.App;
 import com.Ease.NewDashboard.ClassicApp;
+import com.Ease.User.User;
 import com.Ease.Utils.HttpServletException;
 import com.Ease.Utils.HttpStatus;
 import com.Ease.Utils.Servlets.GetServletManager;
+import io.swagger.annotations.*;
 import org.json.JSONObject;
 
 import javax.servlet.RequestDispatcher;
@@ -16,9 +17,25 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
+@SwaggerDefinition(
+        info = @Info(
+                description = "ease API doc",
+                version = "1.0.0",
+                title = "Swagger for ease API doc",
+                termsOfService = "https://ease.space/legalNotice",
+                contact = @Contact(name = "Ease.space", email = "contact@ease.space", url = "https://ease.space"),
+                license = @License(name = "Apache 2.0", url = "http://www.apache.org/licenses/LICENSE-2.0.html")
+        ),
+        consumes = {"application/json", "application/xml"},
+        produces = {"application/json", "application/xml"},
+        schemes = {SwaggerDefinition.Scheme.HTTP, SwaggerDefinition.Scheme.HTTPS},
+        tags = {@Tag(name = "App information", description = "Operations about app")}
+)
+
 @WebServlet("/GetAppInformation")
 public class GetAppInformation extends HttpServlet {
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+
+    public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         GetServletManager sm = new GetServletManager(this.getClass().getName(), request, response, true);
         try {
             User user = sm.getUserWithToken();

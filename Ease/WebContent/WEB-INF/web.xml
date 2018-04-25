@@ -3,10 +3,12 @@
          xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
          id="WebApp_ID" version="3.0">
     <display-name>Ease</display-name>
+    <!--
     <context-param>
         <param-name>resteasy.servlet.mapping.prefix</param-name>
         <param-value>/rest</param-value>
     </context-param>
+    -->
     <listener>
         <listener-class>com.Ease.Context.OnStart</listener-class>
     </listener>
@@ -189,15 +191,18 @@
         <servlet-name>rgpd</servlet-name>
         <url-pattern>/rgpd/*</url-pattern>
     </servlet-mapping>
+
     <!--
-    <security-constraint>
-        <web-resource-collection>
-            <web-resource-name>Viewpoint Secure URLs</web-resource-name>
-            <url-pattern>/*</url-pattern>
-        </web-resource-collection>
-        <user-data-constraint>
-            <transport-guarantee>CONFIDENTIAL</transport-guarantee>
-        </user-data-constraint>
-    </security-constraint>
-    -->
+
+        <security-constraint>
+            <web-resource-collection>
+                <web-resource-name>Viewpoint Secure URLs</web-resource-name>
+                <url-pattern>/*</url-pattern>
+            </web-resource-collection>
+            <user-data-constraint>
+                <transport-guarantee>CONFIDENTIAL</transport-guarantee>
+            </user-data-constraint>
+        </security-constraint>
+
+        -->
 </web-app>

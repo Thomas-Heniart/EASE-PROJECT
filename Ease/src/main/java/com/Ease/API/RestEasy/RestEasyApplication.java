@@ -1,8 +1,9 @@
 package com.Ease.API.RestEasy;
 
-import javax.ws.rs.ApplicationPath;
-import javax.ws.rs.core.Application;
+// Georges : commented, problem on tomcat launch
 
-@ApplicationPath("/rest")
-public class RestEasyApplication extends Application {
+
+//@ApplicationPath("/restEasy")
+public class RestEasyApplication /*extends Application*/ {
+
 }
