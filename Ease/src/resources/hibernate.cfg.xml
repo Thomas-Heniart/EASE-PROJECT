@@ -94,6 +94,7 @@
         <mapping class="com.Ease.User.UserPostRegistrationEmails"/>
         <mapping class="com.Ease.User.PersonalInformation"/>
         <mapping class="com.Ease.Metrics.ClickOnApp"/>
+        <mapping class="com.Ease.Metrics.MagicAppsSurvey"/>
         <mapping class="com.Ease.Metrics.TeamMetrics"/>
         <mapping class="com.Ease.Metrics.ConnectionMetric"/>
         <mapping class="com.Ease.Metrics.WeeklyStats"/>

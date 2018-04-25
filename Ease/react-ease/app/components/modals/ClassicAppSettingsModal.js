@@ -14,14 +14,15 @@ import {testCredentials} from "../../actions/catalogActions";
 import * as api from "../../utils/api";
 
 @connect(store => ({
-  app: store.modals.classicAppSettings.app
+  app: store.modals.classicAppSettings.app,
+  remove: store.modals.classicAppSettings.remove
 }))
 class ClassicAppSettingsModal extends Component {
   constructor(props){
     super(props);
     this.state = {
       appName: this.props.app.name,
-      view: 'Account',
+      view: this.props.remove ? 'Remove' : 'Account',
       credentials: [],
       isEmpty: this.props.app.empty,
       loading: false,

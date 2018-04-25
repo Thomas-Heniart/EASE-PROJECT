@@ -12,14 +12,14 @@ public class WebSocketManager {
     }
 
     public void sendMessage(String message) throws IOException {
-        removeClosedSesions();
+        removeClosedSessions();
         for (WebSocketSession ws : webSocketSessions) {
             ws.sendMessage(message);
         }
     }
 
     public void sendObject(Object o) {
-        removeClosedSesions();
+        removeClosedSessions();
         for (WebSocketSession ws : webSocketSessions) {
             System.out.println("Send object");
             ws.sendObject(o);
@@ -27,28 +27,35 @@ public class WebSocketManager {
     }
 
     public void sendObjects(List<WebSocketMessage> objects) {
-        removeClosedSesions();
+        removeClosedSessions();
         for (WebSocketSession ws : webSocketSessions) {
             for (Object object : objects)
                 ws.sendObject(object);
         }
     }
 
-    public void sendObjects(List<WebSocketMessage> objects, String ws_id) {
-        removeClosedSesions();
-        for (WebSocketSession ws : webSocketSessions) {
-            if (ws_id != null && ws.getSession().getId().equals(ws_id))
-                continue;
-            System.out.println("Start to send objects from: " + ws_id + " to: " + ws.getSession().getId() + " nb of objects: " + objects.size());
-            for (Object object : objects) {
-                ws.sendObject(object);
+    public void sendObjects(List<WebSocketMessage> objects, String wsId) {
+        try {
+            System.out.println("WSM size before closing sessions: " + this.webSocketSessions.size());
+            removeClosedSessions();
+            System.out.println("WSM after closing sessions: " + this.webSocketSessions.size());
+            System.out.println("Number of messages: " + objects.size());
+            for (WebSocketSession ws : webSocketSessions) {
+                if (wsId != null && ws.getSession().getId().equals(wsId))
+                    continue;
+                System.out.println("Start to send objects from: " + wsId + " to: " + ws.getSession().getId() + " nb of objects: " + objects.size());
+                for (Object object : objects) {
+                    ws.sendObject(object);
+                }
             }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
-    public void sendObjects(String ws_id) {
-        removeClosedSesions();
-        this.webSocketSessions.stream().filter(webSocketSession -> webSocketSession.getSession().getId().equals(ws_id)).forEach(webSocketSession -> this.webSocketMessageList.forEach(webSocketSession::sendObject));
+    public void sendObjects(String wsId) {
+        removeClosedSessions();
+        this.webSocketSessions.stream().filter(webSocketSession -> webSocketSession.getSession().getId().equals(wsId)).forEach(webSocketSession -> this.webSocketMessageList.forEach(webSocketSession::sendObject));
         this.webSocketMessageList.clear();
     }
 
@@ -57,7 +64,7 @@ public class WebSocketManager {
     }
 
     public void addWebSocketSession(WebSocketSession wss) {
-        removeClosedSesions();//to delete after start using sendMessage()
+        removeClosedSessions();//to delete after start using sendMessage()
         this.webSocketSessions.add(wss);
     }
 
@@ -75,17 +82,17 @@ public class WebSocketManager {
         }
     }
 
-    public void removeWebSocketSession(WebSocketSession wss) {
+    private void removeWebSocketSession(WebSocketSession wss) {
         this.webSocketSessions.remove(wss);
     }
 
-    private void removeClosedSesions() {
-        List<WebSocketSession> webSocketSessions_to_remove = new LinkedList<>();
+    private void removeClosedSessions() {
+        List<WebSocketSession> webSocketSessionsToRemove = new LinkedList<>();
         for (WebSocketSession ws : this.webSocketSessions) {
             if (!ws.getSession().isOpen())
-                webSocketSessions_to_remove.add(ws);
+                webSocketSessionsToRemove.add(ws);
         }
-        for (WebSocketSession ws : webSocketSessions_to_remove)
+        for (WebSocketSession ws : webSocketSessionsToRemove)
             this.removeWebSocketSession(ws);
     }
 }

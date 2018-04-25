@@ -71,6 +71,9 @@ public class UserStatus {
     @Column(name = "popup_choose_connection_lifetime_seen")
     private boolean popupChooseConnectionLifetimeSeen = false;
 
+    @Column(name = "popup_choose_magic_apps_seen")
+    private boolean popupChooseMagicAppsSeen = true;
+
     public UserStatus() {
 
     }
@@ -235,6 +238,14 @@ public class UserStatus {
         this.popupChooseConnectionLifetimeSeen = popupChooseConnectionLifetimeSeen;
     }
 
+    public boolean isPopupChooseMagicAppsSeen() {
+        return popupChooseMagicAppsSeen;
+    }
+
+    public void setPopupChooseMagicAppsSeen(boolean popupChooseMagicAppsSeen) {
+        this.popupChooseMagicAppsSeen = popupChooseMagicAppsSeen;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -260,6 +271,7 @@ public class UserStatus {
         res.put("tip_team_channel_settings_seen", this.isTipTeamChannelSettingsSeen());
         res.put("tip_importation_seen", this.isTipImportationSeen());
         res.put("popup_choose_connection_lifetime_seen", this.isPopupChooseConnectionLifetimeSeen());
+        res.put("popup_choose_magic_apps_seen", this.isPopupChooseMagicAppsSeen());
         return res;
     }
 

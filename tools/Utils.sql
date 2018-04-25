@@ -231,4 +231,133 @@ FROM (SELECT
       FROM METRIC_CONNECTION
       WHERE connected = 1
       ORDER BY user_id ASC, date DESC) AS t
-GROUP BY user_id
+GROUP BY user_id;
+
+SELECT
+  year,
+  day_of_year,
+  COUNT(*) AS clicks
+FROM ease_tracking.EASE_EVENT
+WHERE (name LIKE 'PasswordUsed' OR name LIKE 'PasswordUser' AND user_id IN (SELECT user_id
+                                                                            FROM ease.teamUsers
+                                                                            WHERE team_id = 312 AND user_id IS NOT NULL)
+       GROUP BY YEAR, day_of_year
+       ORDER BY YEAR, day_of_year;
+
+SELECT *
+FROM ease_tracking.EASE_EVENT
+WHERE name LIKE 'PasswordUsed' OR name LIKE 'PasswordUser' AND user_id IN (SELECT user_id
+                                                                           FROM ease.teamUsers
+                                                                           WHERE team_id = 312 AND user_id IS NOT NULL);
+
+SELECT
+  year,
+  day_of_year,
+  COUNT(*) AS clicks
+FROM (
+       SELECT
+         year,
+         day_of_year,
+         id
+       FROM ease_tracking.EASE_EVENT
+       WHERE name LIKE ('PasswordUsed' OR name LIKE 'PasswordUser') AND user_id = 3411) AS t
+GROUP BY year, day_of_year
+ORDER BY year, day_of_year;
+
+SELECT COUNT(*)
+FROM (SELECT
+        year,
+        day_of_year,
+        COUNT(*) AS clicks
+      FROM (
+             SELECT
+               year,
+               day_of_year,
+               week_of_year,
+               id
+             FROM ease_tracking.EASE_EVENT
+             WHERE (name LIKE 'PasswordUsed' OR name LIKE 'PasswordUser') AND user_id = 17) AS t
+      WHERE year = 2018 AND week_of_year = 16
+      GROUP BY year, day_of_year, week_of_year
+      ORDER BY year, day_of_year) AS t;
+SELECT *
+FROM (SELECT
+        team_id,
+        COUNT(*) AS apps
+      FROM teamCards
+      GROUP BY team_id) AS t
+WHERE t.apps BETWEEN 0 AND 10;
+
+SELECT
+  invitation_sent,
+  COUNT(team_id) AS sum
+FROM (
+       SELECT
+         invitation_sent,
+         team_id,
+         COUNT(*) AS people
+       FROM teamUsers
+         JOIN teamUserStatus ON teamUsers.status_id = teamUserStatus.id
+       GROUP BY invitation_sent, team_id) AS t
+WHERE people BETWEEN 10 AND 20
+GROUP BY invitation_sent;
+
+SELECT
+  teamUsers.team_id,
+  COUNT(*) AS passwordUsed
+FROM ease_tracking.EASE_EVENT
+  JOIN teamUsers ON ease_tracking.EASE_EVENT.user_id = teamUsers.user_id
+WHERE name LIKE 'PasswordUsed' AND
+      DATE(ease_tracking.EASE_EVENT.creation_date) BETWEEN DATE_SUB(CURDATE(), INTERVAL 1 WEEK) AND CURDATE()
+GROUP BY team_id;
+
+SELECT *
+FROM teams
+  JOIN TEAM_ONBOARDING_STATUS ON teams.onboarding_status_id = TEAM_ONBOARDING_STATUS.id
+WHERE step = 5;
+
+SELECT
+  users.id,
+  email,
+  registration_date,
+  t.n,
+  MAX(year),
+  MAX(day_of_year),
+  COUNT(EASE_UPDATE.id) AS updates
+FROM EASE_UPDATE
+  JOIN users ON users.id = EASE_UPDATE.user_id
+  JOIN (SELECT
+          user_id,
+          COUNT(*) AS n
+        FROM METRIC_CONNECTION
+        GROUP BY user_id) AS t ON t.user_id = users.id
+  JOIN METRIC_CONNECTION ON METRIC_CONNECTION.user_id = users.id AND connected = 1
+GROUP BY EASE_UPDATE.user_id
+ORDER BY updates
+INTO OUTFILE '/tmp/updates.csv'
+FIELDS TERMINATED BY ','
+  ENCLOSED BY '"'
+LINES TERMINATED BY '\n';
+
+SELECT
+  email,
+  registration_date,
+  t.n AS nb_of_co,
+  DATE_ADD(DATE(concat(t.year, '-01-01')), INTERVAL (t.day_of_year - 1) DAY) AS last_connection,
+  COUNT(*) AS updates
+FROM EASE_UPDATE
+  JOIN users ON EASE_UPDATE.user_id = users.id
+  JOIN (SELECT
+          user_id,
+          MAX(year)        AS year,
+          MAX(day_of_year) AS day_of_year,
+          COUNT(*)         AS n
+        FROM METRIC_CONNECTION
+        WHERE connected = 1
+        GROUP BY user_id) AS t ON t.user_id = users.id
+GROUP BY EASE_UPDATE.user_id
+ORDER BY updates
+INTO OUTFILE '/tmp/updates.csv'
+FIELDS TERMINATED BY ','
+  ENCLOSED BY '"'
+LINES TERMINATED BY '\n';

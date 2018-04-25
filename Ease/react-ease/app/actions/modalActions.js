@@ -1,129 +1,142 @@
-export function showClassicAppSettingsModal({active, app}){
+export function showClassicAppSettingsModal({active, app, remove}){
   return {
     type: 'SHOW_CLASSIC_APP_SETTINGS_MODAL',
     payload: {
       active: active,
-      app: app
+      app:app,
+      remove: remove
     }
   }
 }
 
-export function showLogWithAppSettingsModal({active, app}){
+export function showLogWithAppSettingsModal({active, app, remove}){
   return {
     type:'SHOW_LOG_WITH_APP_SETTINGS_MODAL',
     payload: {
       active:active,
-      app: app
+      app:app,
+      remove: remove
     }
   }
 }
 
-export function showLinkAppSettingsModal({active, app}){
+export function showLinkAppSettingsModal({active, app, remove}){
   return {
     type: 'SHOW_LINK_APP_SETTINGS_MODAL',
     payload: {
       active: active,
-      app: app
+      app:app,
+      remove: remove
     }
   }
 }
 
-export function showTeamLinkAppSettingsModal({active, app}){
+export function showTeamLinkAppSettingsModal({active, app, remove}){
   return {
     type: 'SHOW_TEAM_LINK_APP_SETTINGS_MODAL',
     payload: {
       active: active,
-      app:app
+      app:app,
+      remove: remove
     }
   }
 }
 
-export function showTeamSingleAppSettingsModal({active, app}){
+export function showTeamSingleAppSettingsModal({active, app, remove}){
   return {
     type: 'SHOW_TEAM_SINGLE_APP_SETTINGS_MODAL',
     payload: {
       active: active,
-      app:app
+      app:app,
+      remove: remove
     }
   }
 }
 
-export function showTeamAnySingleAppSettingsModal({active, app}){
+export function showTeamAnySingleAppSettingsModal({active, app, remove}){
   return {
     type: 'SHOW_TEAM_ANY_SINGLE_APP_SETTINGS_MODAL',
     payload: {
       active: active,
-      app:app
+      app:app,
+      remove: remove
     }
   }
 }
 
-export function showTeamSoftwareSingleAppSettingsModal({active, app}){
+export function showTeamSoftwareSingleAppSettingsModal({active, app, remove}){
   return {
     type: 'SHOW_TEAM_SOFTWARE_SINGLE_APP_SETTINGS_MODAL',
     payload: {
       active: active,
-      app:app
+      app:app,
+      remove: remove
     }
   }
 }
 
-export function showTeamEnterpriseAppSettingsModal({active, app}){
+export function showTeamEnterpriseAppSettingsModal({active, app, remove}){
   return {
     type: 'SHOW_TEAM_ENTERPRISE_APP_SETTINGS_MODAL',
     payload: {
       active: active,
-      app:app
+      app:app,
+      remove: remove
     }
   }
 }
 
-export function showTeamAnyEnterpriseAppSettingsModal({active, app}){
+export function showTeamAnyEnterpriseAppSettingsModal({active, app, remove}){
   return {
     type: 'SHOW_TEAM_ANY_ENTERPRISE_APP_SETTINGS_MODAL',
     payload: {
       active: active,
-      app:app
+      app:app,
+      remove: remove
     }
   }
 }
 
-export function showTeamSoftwareEnterpriseAppSettingsModal({active, app}){
+export function showTeamSoftwareEnterpriseAppSettingsModal({active, app, remove}){
   return {
     type: 'SHOW_TEAM_SOFTWARE_ENTERPRISE_APP_SETTINGS_MODAL',
     payload: {
       active: active,
-      app:app
+      app:app,
+      remove: remove
     }
   }
 }
 
-export function showSsoAppSettingsModal({active, app}) {
+export function showSsoAppSettingsModal({active, app, remove}) {
   return {
     type: 'SHOW_SSO_APP_SETTINGS_MODAL',
     payload: {
       active: active,
-      app:app
+      app:app,
+      remove: remove
     }
   }
 }
 
-export function showAnyAppSettingsModal({active, app}) {
+export function showAnyAppSettingsModal({active, app, remove}) {
   return {
     type: 'SHOW_ANY_APP_SETTINGS_MODAL',
     payload: {
       active: active,
-      app:app
+      app:app,
+      remove: remove
     }
   }
 }
 
-export function showSoftwareAppSettingsModal({active, app}) {
+export function showSoftwareAppSettingsModal({active, app, remove}) {
   return {
     type: 'SHOW_SOFTWARE_APP_SETTINGS_MODAL',
     payload: {
       active: active,
-      app:app
+      app:app,
+      remove: remove
     }
   }
 }
@@ -225,6 +238,15 @@ export function showNewFeatureModal({active}) {
 export function showConnectionDurationChooserModal({active}){
   return {
     type: 'SHOW_CONNECTION_DURATION_CHOOSER_MODAL',
+    payload: {
+      active: active
+    }
+  }
+}
+
+export function showMagicLinkChooserModal({active}) {
+  return {
+    type: 'SHOW_MAGIC_LINK_CHOOSER_MODAL',
     payload: {
       active: active
     }

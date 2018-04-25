@@ -14,6 +14,9 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 public class SlackScheduledTask extends TimerTask {
+
+    private static final String DBBOT_CHANNEL = "C9P9UL1MM";
+
     @Override
     public void run() {
         if (!Variables.ENVIRONNEMENT.equals("Prod"))
@@ -29,6 +32,7 @@ public class SlackScheduledTask extends TimerTask {
             this.notificationTeamsAfterOneWeekAndLessThanEightApps(hibernateQuery);
             this.notificationsTeamsInvitationsNotSentAfterOneWeek(hibernateQuery);
             this.notificationUsersLostPasswordsThreeDaysAgo(hibernateQuery);
+            this.notificationUsersBackAfterTenDays(hibernateQuery);
             hibernateQuery.commit();
         } catch (Exception e) {
             e.printStackTrace();
@@ -97,7 +101,7 @@ public class SlackScheduledTask extends TimerTask {
         List<Integer> userIds = hibernateQuery.list();
         if (userIds.isEmpty())
             return new LinkedList<>();
-        hibernateQuery.queryString("SELECT DISTINCT t.team FROM TeamUser t WHERE t.user IS NOT NULL AND t.user.db_id IN (:userIds)");
+        hibernateQuery.queryString("SELECT DISTINCT t.team FROM TeamUser t WHERE t.user IS NOT NULL AND t.user.db_id IN (:userIds) AND t.team.active IS true");
         hibernateQuery.setParameter("userIds", userIds);
         return hibernateQuery.list();
     }
@@ -181,10 +185,10 @@ public class SlackScheduledTask extends TimerTask {
         int eYear = calendar.get(Calendar.YEAR);
         int eDay = calendar.get(Calendar.DAY_OF_YEAR);
         if (eDay < sDay) {
-            while (calendar.get(Calendar.YEAR) > sYear)
+            while (calendar.get(Calendar.YEAR) < eYear)
                 calendar.add(Calendar.DAY_OF_YEAR, 1);
             calendar.add(Calendar.DAY_OF_YEAR, -1);
-            hibernateQuery.queryString("SELECT c.user_id FROM ConnectionMetric c WHERE c.connected IS true AND ((c.year = :sYear AND c.day_of_year BETWEEN :sDay AND :iDay) OR (c.year = :eYear AND c.day_of_year BETWWEN :jDay AND :eDay))");
+            hibernateQuery.queryString("SELECT c.user_id FROM ConnectionMetric c WHERE c.connected IS true AND ((c.year = :sYear AND c.day_of_year BETWEEN :sDay AND :iDay) OR (c.year = :eYear AND c.day_of_year BETWEEN :jDay AND :eDay))");
             hibernateQuery.setParameter("sYear", sYear);
             hibernateQuery.setParameter("sDay", sDay);
             hibernateQuery.setParameter("iDay", calendar.get(Calendar.DAY_OF_YEAR));
@@ -210,9 +214,56 @@ public class SlackScheduledTask extends TimerTask {
     private List<User> getUsersWhoLostPasswordsThreeDaysAgo(HibernateQuery hibernateQuery) throws Exception {
         Calendar calendar = Calendar.getInstance();
         calendar.add(Calendar.DAY_OF_YEAR, 3);
-        hibernateQuery.queryString("SELECT u FROM User u WHERE u.db_id IN (SELECT p.user_id FROM PasswordLost p WHERE DATE(p.dateOfRequest) = (:date))");
+        hibernateQuery.queryString("SELECT u FROM User u WHERE u.db_id IN (SELECT p.user_id FROM PasswordLost p WHERE DATE(p.request_date) = (:date))");
         hibernateQuery.setDate("date", calendar);
         return hibernateQuery.list();
+    }
+
+    private List<User> getUsersBackAfterTenDays(HibernateQuery hibernateQuery) throws Exception {
+        Calendar calendar = Calendar.getInstance();
+        calendar.add(Calendar.DAY_OF_YEAR, -10);
+        hibernateQuery.queryString("SELECT c.user_id FROM ConnectionMetric c WHERE c.year = :year AND c.day_of_year = :day_of_year AND c.connected IS true");
+        hibernateQuery.setParameter("year", calendar.get(Calendar.YEAR));
+        hibernateQuery.setParameter("day_of_year", calendar.get(Calendar.DAY_OF_YEAR));
+        List<Integer> tenDaysAgoIds = hibernateQuery.list();
+        calendar.add(Calendar.DAY_OF_YEAR, 10);
+        hibernateQuery.queryString("SELECT c.user_id FROM ConnectionMetric c WHERE c.year = :year AND c.day_of_year = :day_of_year AND c.connected IS true");
+        hibernateQuery.setParameter("year", calendar.get(Calendar.YEAR));
+        hibernateQuery.setParameter("day_of_year", calendar.get(Calendar.DAY_OF_YEAR));
+        List<Integer> todayIds = hibernateQuery.list();
+        tenDaysAgoIds.retainAll(todayIds);
+        hibernateQuery.queryString("SELECT c.user_id FROM ConnectionMetric c WHERE c.connected IS true AND ((c.year = :sYear AND c.day_of_year BETWEEN :sDay AND :iDay) OR (c.year = :eYear AND c.day_of_year BETWEEN :jDay AND :eDay))");
+        calendar.add(Calendar.DAY_OF_YEAR, -9);
+        int sYear = calendar.get(Calendar.YEAR);
+        int sDay = calendar.get(Calendar.DAY_OF_YEAR);
+        calendar.add(Calendar.DAY_OF_YEAR, 8);
+        int eYear = calendar.get(Calendar.YEAR);
+        int eDay = calendar.get(Calendar.DAY_OF_YEAR);
+        if (sDay > eDay) {
+            while (calendar.get(Calendar.YEAR) < eYear)
+                calendar.add(Calendar.DAY_OF_YEAR, 1);
+            calendar.add(Calendar.DAY_OF_YEAR, -1);
+            hibernateQuery.queryString("SELECT c.user_id FROM ConnectionMetric c WHERE c.connected IS true AND ((c.year = :sYear AND c.day_of_year BETWEEN :sDay AND :iDay) OR (c.year = :eYear AND c.day_of_year BETWEEN :jDay AND :eDay))");
+            hibernateQuery.setParameter("sYear", sYear);
+            hibernateQuery.setParameter("sDay", sDay);
+            hibernateQuery.setParameter("iDay", calendar.get(Calendar.DAY_OF_YEAR));
+            calendar.add(Calendar.DAY_OF_YEAR, 1);
+            hibernateQuery.setParameter("jDay", calendar.get(Calendar.DAY_OF_YEAR));
+            hibernateQuery.setParameter("eYear", eYear);
+            hibernateQuery.setParameter("eDay", eDay);
+        } else {
+            hibernateQuery.queryString("SELECT c.user_id FROM ConnectionMetric c WHERE c.year = :year AND c.connected IS true AND c.day_of_year BETWEEN :sDay AND :eDay");
+            hibernateQuery.setParameter("year", sYear);
+            hibernateQuery.setParameter("sDay", sDay);
+            hibernateQuery.setParameter("eDay", eDay);
+        }
+        tenDaysAgoIds.removeAll(hibernateQuery.list());
+        if (!tenDaysAgoIds.isEmpty()) {
+            hibernateQuery.queryString("SELECT u FROM User u WHERE u.db_id IN (:ids)");
+            hibernateQuery.setParameter("ids", tenDaysAgoIds);
+            return hibernateQuery.list();
+        }
+        return new LinkedList<>();
     }
 
     private void notificationForTeamsConnectedToday(HibernateQuery hibernateQuery) throws Exception {
@@ -224,7 +275,7 @@ public class SlackScheduledTask extends TimerTask {
                 .append(")*\n");
         teams.forEach(team -> stringBuilder.append("- ").append(team.getName()).append("\n"));
         stringBuilder.append("\n=======\n=======\n=======");
-        SlackAPIWrapper.getInstance().postMessage("C9P9UL1MM", stringBuilder.toString());
+        SlackAPIWrapper.getInstance().postMessage(DBBOT_CHANNEL, stringBuilder.toString());
     }
 
     private void notificationForTeamsActivityOfLastWeek(HibernateQuery hibernateQuery) throws Exception {
@@ -234,7 +285,7 @@ public class SlackScheduledTask extends TimerTask {
         List<Team> activeTeams = this.getActiveTeamsOfLastWeek(hibernateQuery);
         StringBuilder stringBuilder;
         if (!activeTeams.isEmpty()) {
-             stringBuilder = new StringBuilder("*✅Active companies this week (")
+            stringBuilder = new StringBuilder("*✅Active companies this week (")
                     .append(activeTeams.size())
                     .append(")*\nCompanies connected this week:\n");
             for (Team team : activeTeams) {
@@ -246,7 +297,7 @@ public class SlackScheduledTask extends TimerTask {
                         .append(")\n");
             }
             stringBuilder.append("\n=======\n=======\n=======");
-            SlackAPIWrapper.getInstance().postMessage("C9P9UL1MM", stringBuilder.toString());
+            SlackAPIWrapper.getInstance().postMessage(DBBOT_CHANNEL, stringBuilder.toString());
         }
         if (!activeTeams.isEmpty()) {
             hibernateQuery.queryString("SELECT t FROM Team t WHERE t.active IS true AND t NOT IN (:teams)");
@@ -268,7 +319,7 @@ public class SlackScheduledTask extends TimerTask {
                     .append(")\n");
         }
         stringBuilder.append("\n=======\n=======\n=======");
-        SlackAPIWrapper.getInstance().postMessage("C9P9UL1MM", stringBuilder.toString());
+        SlackAPIWrapper.getInstance().postMessage(DBBOT_CHANNEL, stringBuilder.toString());
     }
 
     private void notificationTeamsAfterOneWeekAndLessThanEightApps(HibernateQuery hibernateQuery) throws Exception {
@@ -280,7 +331,7 @@ public class SlackScheduledTask extends TimerTask {
                 .append(")*\nThese teams have less less than 8 apps since their registrations one week ago:\n");
         printTeams(stringBuilder, teams);
         stringBuilder.append("\n=======\n=======\n=======");
-        SlackAPIWrapper.getInstance().postMessage("C9P9UL1MM", stringBuilder.toString());
+        SlackAPIWrapper.getInstance().postMessage(DBBOT_CHANNEL, stringBuilder.toString());
     }
 
     private void notificationsTeamsInvitationsNotSentAfterOneWeek(HibernateQuery hibernateQuery) throws Exception {
@@ -292,7 +343,7 @@ public class SlackScheduledTask extends TimerTask {
                 .append(")*\nThese teams have not invite their members:\n");
         printTeams(stringBuilder, teams);
         stringBuilder.append("\n=======\n=======\n=======");
-        SlackAPIWrapper.getInstance().postMessage("C9P9UL1MM", stringBuilder.toString());
+        SlackAPIWrapper.getInstance().postMessage(DBBOT_CHANNEL, stringBuilder.toString());
     }
 
     private void notificationClickOnEightAppsInADay(HibernateQuery hibernateQuery) throws Exception {
@@ -309,7 +360,7 @@ public class SlackScheduledTask extends TimerTask {
             printUser(stringBuilder, user);
         });
         stringBuilder.append("\n=======\n=======\n=======");
-        SlackAPIWrapper.getInstance().postMessage("C9P9UL1MM", stringBuilder.toString());
+        SlackAPIWrapper.getInstance().postMessage(DBBOT_CHANNEL, stringBuilder.toString());
     }
 
     private void notificationClickOnThirtyAppsInAWeek(HibernateQuery hibernateQuery) throws Exception {
@@ -330,7 +381,7 @@ public class SlackScheduledTask extends TimerTask {
             printUser(stringBuilder, user);
         });
         stringBuilder.append("\n=======\n=======\n=======");
-        SlackAPIWrapper.getInstance().postMessage("C9P9UL1MM", stringBuilder.toString());
+        SlackAPIWrapper.getInstance().postMessage(DBBOT_CHANNEL, stringBuilder.toString());
     }
 
     private void notificationInactiveUsersOfLast5Days(HibernateQuery hibernateQuery) throws Exception {
@@ -340,7 +391,7 @@ public class SlackScheduledTask extends TimerTask {
         StringBuilder stringBuilder = new StringBuilder("*✅ALERT, some users are leaving us !*\nThese people don't use Ease since last 5 days\n");
         users.forEach(user -> printUser(stringBuilder, user));
         stringBuilder.append("\n=======\n=======\n=======");
-        SlackAPIWrapper.getInstance().postMessage("C9P9UL1MM", stringBuilder.toString());
+        SlackAPIWrapper.getInstance().postMessage(DBBOT_CHANNEL, stringBuilder.toString());
     }
 
     private void notificationUsersLostPasswordsThreeDaysAgo(HibernateQuery hibernateQuery) throws Exception {
@@ -350,7 +401,17 @@ public class SlackScheduledTask extends TimerTask {
         StringBuilder stringBuilder = new StringBuilder("*✅Passwords lost 3 days ago*\nThese people lost their passwords 3 days ago and never came back:\n");
         users.forEach(user -> printUser(stringBuilder, user));
         stringBuilder.append("\n=======\n=======\n=======");
-        SlackAPIWrapper.getInstance().postMessage("C9P9UL1MM", stringBuilder.toString());
+        SlackAPIWrapper.getInstance().postMessage(DBBOT_CHANNEL, stringBuilder.toString());
+    }
+
+    private void notificationUsersBackAfterTenDays(HibernateQuery hibernateQuery) throws Exception {
+        List<User> users = this.getUsersBackAfterTenDays(hibernateQuery);
+        if (users.isEmpty())
+            return;
+        StringBuilder stringBuilder = new StringBuilder("*✅Users back after ten days*\nThese people are back after ten days without any connection:\n");
+        users.forEach(user -> printUser(stringBuilder, user));
+        stringBuilder.append("\n=======\n=======\n=======");
+        SlackAPIWrapper.getInstance().postMessage(DBBOT_CHANNEL, stringBuilder.toString());
     }
 
     private String convertDayToString(int day) throws HttpServletException {

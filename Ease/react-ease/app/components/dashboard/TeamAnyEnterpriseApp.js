@@ -1,32 +1,52 @@
 import React, {Component} from "react";
+import {connect} from "react-redux";
+import * as api from "../../utils/api";
+import {Icon} from 'semantic-ui-react';
+import {withRouter} from "react-router-dom";
+import extension from "../../utils/extension_api";
+import {moveTeamCard} from "../../actions/teamCardActions";
+import {validateApp, clickOnAppMetric, passwordCopied} from '../../actions/dashboardActions';
+import {showLockedTeamAppModal, showTeamAnyEnterpriseAppSettingsModal} from "../../actions/modalActions";
 import {
   DepartureDatePassedIndicator, UpdatePasswordLabel, EmptyTeamAppIndicator, NewAppLabel,
-  WaitingTeamApproveIndicator, LoadingAppIndicator
+  WaitingTeamApproveIndicator, LoadingAppIndicator, SettingsMenu, getPosition
 } from "./utils";
-import {showLockedTeamAppModal, showTeamAnyEnterpriseAppSettingsModal} from "../../actions/modalActions";
-import {Input, Label, Icon, Segment, Popup} from 'semantic-ui-react';
-import {teamUserDepartureDatePassed, needPasswordUpdate, copyTextToClipboard, transformWebsiteInfoIntoListAndSetValues} from "../../utils/utils";
-import {validateApp, clickOnAppMetric, passwordCopied} from '../../actions/dashboardActions';
-import extension from "../../utils/extension_api";
-import api from "../../utils/api";
-import {connect} from "react-redux";
+import {
+  teamUserDepartureDatePassed, needPasswordUpdate,
+  copyTextToClipboard, transformWebsiteInfoIntoListAndSetValues
+} from "../../utils/utils";
+import ReactCSSTransitionGroup from "react-addons-css-transition-group";
 
 @connect(store => ({
   teams: store.teams,
   team_apps: store.team_apps,
-  active: store.modals.teamAnyEnterpriseAppSettings.active
+  active: store.modals.teamAnyEnterpriseAppSettings.active,
+  dnd: store.dashboard_dnd.dragging_app_id !== -1
 }))
 class TeamAnyEnterpriseApp extends Component {
-  constructor(props){
+  constructor(props) {
     super(props);
     this.state = {
       loading: false,
-      isOpen: false,
       copiedPassword: null,
-      copiedOther: null
+      copiedOther: null,
+      menuActive: false,
+      hover: false,
+      position: 'left'
     };
     this.password = '';
   }
+  componentDidMount() {
+    document.addEventListener('contextmenu', this._handleContextMenu);
+  };
+  componentWillUnmount() {
+    document.removeEventListener('contextmenu', this._handleContextMenu);
+  }
+  _handleContextMenu = (event) => {
+    event.preventDefault();
+    if (this.state.hover)
+      this.setState({ menuActive: true });
+  };
   connect = () => {
     const {app} = this.props;
     const team_app = this.props.team_apps[app.team_card_id];
@@ -37,25 +57,33 @@ class TeamAnyEnterpriseApp extends Component {
     window.open(team_app.website.login_url);
     extension.fillActiveTab({app_id: app.id});
   };
-  handleOpenClose = () => {
-    if (!this.props.active && !this.props.team_apps[this.props.app.team_card_id].empty) {
-      if (this.state.isOpen === false) {
-        if (this.props.app.new)
-          this.props.dispatch(validateApp({app_id: this.props.app.id}));
-        this.props.dispatch(clickOnAppMetric({app: this.props.app}));
+  activateMenu = (e) => {
+    e.preventDefault();
+    const {app, teams} = this.props;
+    const team_app = this.props.team_apps[app.team_card_id];
+    const team = teams[team_app.team_id];
+    const me = team.team_users[team.my_team_user_id];
+    const meReceiver = team_app.receivers.find(item => (item.team_user_id === me.id));
+    if (!teamUserDepartureDatePassed(me.departure_date) && !me.disabled && !meReceiver.empty && !this.props.dnd) {
+      this.setState({hover: true, position: getPosition(app.id)});
+      if (this.password === '')
         api.dashboard.getAppPassword({
           app_id: this.props.app.id
         }).then(response => {
           this.password = response.password;
         });
-      }
-      this.setState({isOpen: !this.state.isOpen});
     }
+  };
+  deactivateMenu = () => {
+    this.setState({menuActive: false, hover: false});
   };
   clickOnSettings = (e) => {
     e.stopPropagation();
-    this.setState({isOpen: false});
-    this.props.dispatch(showTeamAnyEnterpriseAppSettingsModal({active: true, app: this.props.app}));
+    const {app} = this.props;
+    const team_app = this.props.team_apps[app.team_card_id];
+    this.props.dispatch(moveTeamCard({card_id: Number(team_app.id)}));
+    this.props.history.push(`/teams/${app.team_id}/${team_app.channel_id}?app_id=${team_app.id}`);
+
   };
   copyPassword = (item) => {
     copyTextToClipboard(this.password);
@@ -78,7 +106,26 @@ class TeamAnyEnterpriseApp extends Component {
       this.setState({copiedOther: null});
     }, 1000);
   };
-  render(){
+  remove = () => {
+    this.props.dispatch(showTeamAnyEnterpriseAppSettingsModal({active: true, app: this.props.app, remove: true}));
+  };
+  checkAndConnect = () => {
+    const {app, teams, dispatch} = this.props;
+    const team_app = this.props.team_apps[app.team_card_id];
+    const team = teams[team_app.team_id];
+    const me = team.team_users[team.my_team_user_id];
+    const meReceiver = team_app.receivers.find(item => (item.team_user_id === me.id));
+
+    if (teamUserDepartureDatePassed(me.departure_date))
+      return;
+    if (me.disabled && !teamUserDepartureDatePassed(me.departure_date))
+      dispatch(showLockedTeamAppModal({active: true, team_user_id: me.id}));
+    else if (!me.disabled && meReceiver.empty && !teamUserDepartureDatePassed(me.departure_date))
+      this.clickOnSettings();
+    else
+      this.connect();
+  };
+  render() {
     const {app, teams, dispatch} = this.props;
     const team_app = this.props.team_apps[app.team_card_id];
     const team = teams[team_app.team_id];
@@ -86,101 +133,74 @@ class TeamAnyEnterpriseApp extends Component {
     const meReceiver = team_app.receivers.find(item => (item.team_user_id === me.id));
     const password_update = !meReceiver.empty && !!team_app.password_reminder_interval && needPasswordUpdate(meReceiver.last_update_date, team_app.password_reminder_interval);
     const credentials = transformWebsiteInfoIntoListAndSetValues(team_app.website.information, meReceiver.account_information);
-/*    const inputs = credentials.map((item,idx) => {
+    const buttons = credentials.map((item,idx) => {
       if (this.state.copiedPassword !== item.priority && this.state.copiedOther !== item.priority) {
         if (item.name === 'password')
           return (
-            <Input
-              key={idx}
-              disabled
-              size='mini'
-              type='password'
-              name={item.name}
-              placeholder='Password'
-              value={'********'}
-              label={
-                <Label style={{backgroundColor: '#373b60', color: 'white', fontWeight: '300'}}
-                       onClick={e => this.copyPassword(item)}>
-                  Copy <Icon name='copy'/>
-                </Label>}/>
+            <div className='container_button' key={idx}>
+              <button className="settings_button" onClick={e => this.copyPassword(item)}>
+                <Icon name='copy'/> • • • • • • • •
+              </button>
+            </div>
           );
         return (
-          <Input
-            key={idx}
-            disabled
-            size='mini'
-            type={item.type}
-            name={item.name}
-            placeholder={item.placeholder}
-            value={item.value}
-            label={
-              <Label style={{backgroundColor: '#373b60', color: 'white', fontWeight: '300'}}
-                     onClick={e => this.copy(item)}>
-                Copy <Icon name='copy'/>
-              </Label>}/>
+          <div className='container_button' key={idx}>
+            <button className="settings_button" onClick={e => this.copy(item)}>
+              <Icon name='copy'/> {item.value}
+            </button>
+          </div>
         )
       }
       return (
-        <Segment
-          key={idx}
-          size='mini'
-          content={'Copied!'}/>
+        <div className='container_button' key={idx}>
+          <button className="settings_button">
+            Copied!
+          </button>
+        </div>
       )
-    });*/
+    });
     return (
-/*      <Popup
-        size="tiny"
-        className='dashboard_popup_soft_and_any'
-        position="top center"
-        on='click'
-        open={this.props.active || teamUserDepartureDatePassed(me.departure_date) ? false : this.state.isOpen}
-        onClose={this.handleOpenClose}
-        onOpen={!teamUserDepartureDatePassed(me.departure_date) ? this.handleOpenClose : null}
-        hideOnScroll
-        trigger={*/
-          <div className='app'>
-            <div className="logo_area">
-              {this.state.loading &&
-              <LoadingAppIndicator/>}
-              {app.new &&
-              <NewAppLabel/>}
-              {password_update &&
-              <UpdatePasswordLabel/>}
-              {teamUserDepartureDatePassed(me.departure_date) &&
-              <DepartureDatePassedIndicator team_name={team.name} departure_date={me.departure_date}/>}
-              {me.disabled && !teamUserDepartureDatePassed(me.departure_date) &&
-              <WaitingTeamApproveIndicator onClick={e => {
-                dispatch(showLockedTeamAppModal({active: true, team_user_id: me.id}))
-              }}/>}
-              {!me.disabled && meReceiver.empty && !teamUserDepartureDatePassed(me.departure_date) &&
-              <EmptyTeamAppIndicator onClick={this.clickOnSettings}/>}
-              <div className="logo_handler">
-                <img className="logo" src={team_app.logo} onClick={this.connect}/>
-                <button className="settings_button" onClick={this.clickOnSettings}>
-                  Settings
-                </button>
-              </div>
+        <div className='app'>
+          <div className={(teamUserDepartureDatePassed(me.departure_date) || me.disabled || meReceiver.empty) ? 'logo_area'
+              : this.state.menuActive ? 'logo_area active' : 'logo_area not_active'}
+               onMouseEnter={!this.props.dnd ? this.activateMenu : null} onMouseLeave={!this.props.dnd ? this.deactivateMenu : null}>
+            {this.state.loading &&
+            <LoadingAppIndicator/>}
+            {app.new &&
+            <NewAppLabel/>}
+            {password_update &&
+            <UpdatePasswordLabel/>}
+            {teamUserDepartureDatePassed(me.departure_date) &&
+            <DepartureDatePassedIndicator team_name={team.name} departure_date={me.departure_date}/>}
+            {me.disabled && !teamUserDepartureDatePassed(me.departure_date) &&
+            <WaitingTeamApproveIndicator onClick={e => {
+              dispatch(showLockedTeamAppModal({active: true, team_user_id: me.id}))
+            }}/>}
+            {!me.disabled && meReceiver.empty && !teamUserDepartureDatePassed(me.departure_date) &&
+            <EmptyTeamAppIndicator onClick={e => {dispatch(showTeamAnyEnterpriseAppSettingsModal({active: true, app: this.props.app}))}}/>}
+            <ReactCSSTransitionGroup
+              transitionName="settingsAnim"
+              transitionEnter={true}
+              transitionLeave={true}
+              transitionEnterTimeout={1300}
+              transitionLeaveTimeout={1}>
+              {this.state.hover && !this.props.dnd &&
+            <SettingsMenu app={app}
+                          buttons={buttons}
+                          remove={this.remove}
+                          teams={this.props.teams}
+                          position={this.state.position}
+                          clickOnSettings={this.clickOnSettings}/>}
+            </ReactCSSTransitionGroup>
+            <div className="logo_handler">
+              <img className="logo" src={team_app.logo} onClick={this.connect}/>
             </div>
-            <span className="app_name overflow-ellipsis">{app.name}</span>
           </div>
-        /*}
-        content={
-          <div>
-            {inputs}
-            <Input
-              size='mini'
-              placeholder='URL'
-              disabled
-              value={team_app.website.landing_url}
-              label={
-                <Label style={{backgroundColor:'#373b60',color:'white',fontWeight:'300'}}
-                       onClick={e => window.open(team_app.website.landing_url)}>
-                  Go to <Icon name='external'/>
-                </Label>}/>
-          </div>
-        }/>*/
+          <span className="app_name overflow-ellipsis"
+                onClick={this.checkAndConnect}>{app.name}</span>
+        </div>
     )
   }
 }
 
-export default TeamAnyEnterpriseApp;
+export default withRouter(TeamAnyEnterpriseApp);

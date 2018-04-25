@@ -26,6 +26,12 @@ const click_history_date_start = $("#click_history_date_start");
 const click_history_date_end = $("#click_history_date_end");
 let clickHistoryChart;
 
+const appProvenanceCanvas = $("#appProvenanceChart");
+const app_provenance_date_range = $("#app_provenance_date_range");
+const app_provenance_date_start = $("#app_provenance_date_start");
+const app_provenance_date_end = $("#app_provenance_date_end");
+let appProvenanceChart;
+
 users_cohort_date_range.submit((e) => {
   e.preventDefault();
   ajaxHandler.get("/api/v1/admin/GetUsersCohortData", {
@@ -97,6 +103,17 @@ click_history_date_range.submit((e) => {
   })
 });
 
+app_provenance_date_range.submit((e) => {
+  e.preventDefault();
+  ajaxHandler.get("/api/v1/admin/GetAppProvenanceStatistics", {
+    start_week_ms: app_provenance_date_start[0].valueAsDate.getTime(),
+    end_week_ms: app_provenance_date_end[0].valueAsDate.getTime(),
+  }, () => {
+  }, (data) => {
+    buildAppProvenanceChart(data)
+  })
+});
+
 $(document).ready(() => {
   ajaxHandler.get("/api/v1/admin/GetPasswordUsedStatistics", {}, () => {
   }, (data) => {
@@ -109,10 +126,14 @@ $(document).ready(() => {
   ajaxHandler.get("/api/v1/admin/GetClickHistoryStatistics", {}, () => {
   }, (data) => {
     buildClickHistoryChart(data)
+  });
+  ajaxHandler.get("/api/v1/admin/GetAppProvenanceStatistics", {}, () => {
+  }, (data) => {
+    buildAppProvenanceChart(data)
   })
 });
 
-buildClickChart = (data) => {
+const buildClickChart = (data) => {
   const options = {
     scales: {
       xAxes: [{
@@ -161,7 +182,7 @@ buildClickChart = (data) => {
   })
 };
 
-buildAppTypesChart = (data) => {
+const buildAppTypesChart = (data) => {
   const options = {
     scales: {
       xAxes: [{
@@ -200,7 +221,7 @@ buildAppTypesChart = (data) => {
   })
 };
 
-buildClickHistoryChart = (data) => {
+const buildClickHistoryChart = (data) => {
   const options = {
     scales: {
       yAxes: [{
@@ -221,6 +242,104 @@ buildClickHistoryChart = (data) => {
     clickHistoryChart.destroy();
   clickHistoryChart = new Chart(clickHistoryCanvas, {
     type: 'line',
+    data: {
+      labels: labels,
+      datasets: datasets
+    },
+    options: options
+  })
+};
+
+const buildAppProvenanceChart = (data) => {
+  const options = {
+    scales: {
+      xAxes: [{
+        stacked: true,
+        ticks: {
+          mirror: true
+        }
+      }],
+      yAxes: [{
+        stacked: true,
+        ticks: {
+          beginAtZero: true,
+          max: 100
+        }
+      }]
+    }
+  };
+  const labels = data.labels;
+  let datasets = [];
+  datasets.push({
+    backgroundColor: '#4B4E6D',
+    label: 'Single',
+    data: data.single,
+    stack: 1
+  });
+  datasets.push({
+    backgroundColor: '#80B192',
+    label: 'Enterprise',
+    data: data.enterprise,
+    stack: 1
+  });
+  datasets.push({
+    backgroundColor: '#77FF94',
+    label: 'Pro',
+    data: data.pro,
+    stack: 2
+  });
+  datasets.push({
+    backgroundColor: '#613A3A',
+    label: 'Perso',
+    data: data.perso,
+    stack: 2
+  });
+  datasets.push({
+    backgroundColor: '#D138BF',
+    label: 'Catalog',
+    data: data.catalog,
+    stack: 3
+  });
+  datasets.push({
+    backgroundColor: '#613DC1',
+    label: 'Update',
+    data: data.update,
+    stack: 3
+  });
+  datasets.push({
+    backgroundColor: '#2C0735',
+    label: 'Importation',
+    data: data.importation,
+    stack: 3
+  });
+  datasets.push({
+    backgroundColor: '#494947',
+    label: 'Classic',
+    data: data.classic,
+    stack: 4
+  });
+  datasets.push({
+    backgroundColor: '#35FF69',
+    label: 'Any',
+    data: data.any,
+    stack: 4
+  });
+  datasets.push({
+    backgroundColor: '#44CCFF',
+    label: 'Software',
+    data: data.software,
+    stack: 4
+  });
+  datasets.push({
+    backgroundColor: '#D138BF',
+    label: 'bookmark',
+    data: data.bookmark,
+    stack: 4
+  });
+  if (!!appProvenanceChart)
+    appProvenanceChart.destroy();
+  appProvenanceChart = new Chart(appProvenanceCanvas, {
+    type: 'bar',
     data: {
       labels: labels,
       datasets: datasets

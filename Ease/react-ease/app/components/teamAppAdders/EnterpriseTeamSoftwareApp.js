@@ -1,6 +1,6 @@
 import React, {Component} from "react";
 import classnames from "classnames";
-import {Button, Container, Dropdown, Header, Icon, Input, Label, Popup, Segment} from 'semantic-ui-react';
+import {Button, Container, Dropdown, Header, Icon, Input, Label, Popup, Segment, TextArea} from 'semantic-ui-react';
 import {
   EmptyCredentialsEnterpriseAppIndicator,
   PasswordChangeDropdownEnterprise,
@@ -208,9 +208,10 @@ const StaticReceivers = ({receivers, me, expanded, password_reminder_interval, d
                                     name={item.name}
                                     label={<Label><Icon name={credentialIconType[item.name] ? credentialIconType[item.name] : 'wait'}/></Label>}
                                     labelPosition="left"
-                                    placeholder={item.placeholder}
-                                    value={(item.name === 'password' && !receiver.receiver.empty) ? 'abcdabcd' : item.value}
-                                    type={item.information_type}/>;                })}
+                                    placeholder={item.name === 'password' ? '(Password encrypted)' : item.placeholder}
+                                    value={item.value}
+                                    type={item.information_type}/>;
+                    })}
                 {receiver.user.id === me.id && !receiver.receiver.empty &&
                 <CopyPasswordButton app_id={receiver.receiver.app_id}/>}
               </div>
@@ -225,7 +226,7 @@ const TeamAppCredentialInput = ({item, onChange, receiver, myId}) => {
   const label = <Label><Icon name={credentialIconType[item.name] ? credentialIconType[item.name] : 'wait'}/></Label>;
   let placeholder = item.placeholder;
   if (item.name === 'password' && !receiver.empty)
-    placeholder = '••••••••';
+    placeholder = '(Password encrypted)';
   if (receiver.user.id !== myId && receiver.empty)
     placeholder = `${placeholder} (Optional)`;
 
@@ -484,7 +485,7 @@ class EnterpriseTeamSoftwareApp extends Component {
     const app = this.props.app;
     const me = this.props.me;
     const team = this.props.teams[app.team_id];
-    const meReceiver = getReceiverInList(app.receivers, me.id);
+//    const meReceiver = getReceiverInList(app.receivers, me.id);
     const website = app.software;
     const users = this.getUsers();
     const room_manager = this.props.teams[this.props.team_id].team_users[selectItemFromListById(this.props.channels, app.channel_id).room_manager_id];
@@ -573,18 +574,20 @@ class EnterpriseTeamSoftwareApp extends Component {
                     noResultsMessage='No more results found'
                     placeholder="Tag your team members here..."/>}
                 {(this.state.description || app.description || this.state.edit) &&
-                <div>
-                  <Input size="mini"
-                         fluid
-                         class="team-app-input"
-                         onChange={this.handleInput}
-                         name="description"
-                         readOnly={!this.state.edit}
-                         value={this.state.edit ? this.state.description : app.description}
-                         placeholder="You can add a comment here"
-                         type="text"
-                         label={<Label><Icon name="sticky note"/></Label>}
-                         labelPosition="left"/>
+                <div class="ui form description display_flex">
+                  <div class="label">
+                    <Icon name="sticky note" fitted/>
+                  </div>
+                  <TextArea size="mini"
+                            fluid
+                            class="team-app-input"
+                            onChange={this.handleInput}
+                            name="description"
+                            rows={1}
+                            readOnly={!this.state.edit}
+                            value={this.state.edit ? this.state.description : app.description}
+                            placeholder="You can add a comment here"
+                            type="text"/>
                 </div>}
               </div>
             </div>

@@ -12,10 +12,11 @@
         <th>Plan</th>
         <th>CC</th>
         <th class="number_data">App w. tags</th>
-        <th class="number_data">P. joined</th>
+        <th class="number_data">P. invited</th>
         <th class="number_data">P. w. apps</th>
-        <th class="number_data">P. click 1</th>
-        <th class="number_data">P. click 3</th>
+        <th class="number_data">Pwd Killed</th>
+        <th class="number_data">Pwd Kill 1</th>
+        <th class="number_data">Pwd Kill 3</th>
     </tr>
     </thead>
     <tbody id="team-manager-body"></tbody>
@@ -31,7 +32,7 @@
                     <h2>People data</h2>
                     <p>People invited: <span id="people_invited"></span> <a href="#" id="people_invited_emails">(see
                         emails)</a></p>
-                    <p>People who joined: <span id="people_joined"></span> <a href="#" id="people_joined_emails">(see
+                    <p>People added: <span id="people_joined"></span> <a href="#" id="people_joined_emails">(see
                         emails)</a></p>
                     <p>People with company apps: <span id="people_with_cards"></span> <a href="#"
                                                                                          id="people_with_cards_emails">(see
@@ -40,23 +41,27 @@
                     <p>People with personal apps: <span id="people_with_personnal_apps"></span> <a href="#"
                                                                                                    id="people_with_personnal_apps_emails">(see
                         emails)</a></p>
-                    <p>People who click on app 1 day: <span id="people_click_on_app_once"></span> <a href="#"
+                    <p>People who killed passwords 1 day: <span id="people_click_on_app_once"></span> <a href="#"
                                                                                                      id="people_click_on_app_once_emails">(see
                         emails)</a></p>
-                    <p>People who click on app 3 days: <span id="people_click_on_app_three_times"></span> <a href="#"
+                    <p>People who killed passwords 3 days: <span id="people_click_on_app_three_times"></span> <a href="#"
                                                                                                              id="people_click_on_app_three_times_emails">(see
                         emails)</a></p>
-                    <p>People who click on app 5 days: <span id="people_click_on_app_five_times"></span> <a href="#"
+                    <p>People who killed passwords 5 days: <span id="people_click_on_app_five_times"></span> <a href="#"
                                                                                                             id="people_click_on_app_five_times_emails">(see
                         emails)</a></p>
                     <button class="ui blue button">Show history</button>
                 </div>
                 <div id="click_average_graphic" style="display: none; max-width: 1050px; max-height: 400px">
-                    <canvas id="click_average_canvas" width="1000" height="400"></canvas>
+                    <div style="max-width: 800px">
+                        <canvas id="click_average_canvas" width="800" height="400"></canvas>
+                    </div>
                     <button class="ui blue button">back</button>
                 </div>
                 <div id="account_data_history" style="display: none; max-width: 600px; max-height: 600px">
-                    <canvas id="account_data_chart"></canvas>
+                    <div style="max-width: 800px">
+                        <canvas id="account_data_chart" width="800" height="400"></canvas>
+                    </div>
                     <button class="ui blue button">back</button>
                 </div>
                 <div id="account_data_names" style="display: none">
@@ -69,10 +74,14 @@
                     <h2>Account data</h2>
                     <p>Rooms: <span id="rooms"></span> <span id="room_names"></span></p>
                     <p>Total apps: <span id="cards"></span> <a href="#" id="cards_names">(names)</a></p>
-                    <p>Total apps with tags: <span id="cards_with_receiver"></span> <a href="#" id="cards_with_receiver_names">(names)</a></p>
-                    <p>Total apps with tags + PWP: <span id="cards_with_receiver_and_password_policy"></span> <a href="#" id="cards_with_receiver_and_password_policy_names">(names)</a></p>
+                    <p>Total apps with tags: <span id="cards_with_receiver"></span> <a href="#"
+                                                                                       id="cards_with_receiver_names">(names)</a>
+                    </p>
+                    <p>Total apps with tags + PWP: <span id="cards_with_receiver_and_password_policy"></span> <a
+                            href="#" id="cards_with_receiver_and_password_policy_names">(names)</a></p>
                     <p>Single apps: <span id="single_cards"></span> <a href="#" id="single_cards_names">(names)</a></p>
-                    <p>Enterprise apps: <span id="enterprise_cards"></span> <a href="#" id="enterprise_cards_names">(names)</a></p>
+                    <p>Enterprise apps: <span id="enterprise_cards"></span> <a href="#" id="enterprise_cards_names">(names)</a>
+                    </p>
                     <p>Link apps: <span id="link_cards"></span> <a href="#" id="link_cards_names">(names)</a></p>
                     <button class="ui blue button">Show history</button>
                 </div>
@@ -82,7 +91,9 @@
                 </div>
                 <div id="people_data_history" class="view_part"
                      style="display: none; max-width: 600px; max-height: 600px">
-                    <canvas id="people_data_chart"></canvas>
+                    <div style="max-width: 800px">
+                        <canvas id="people_data_chart" width="800" height="400"></canvas>
+                    </div>
                     <button class="ui blue button">back</button>
                 </div>
             </div>

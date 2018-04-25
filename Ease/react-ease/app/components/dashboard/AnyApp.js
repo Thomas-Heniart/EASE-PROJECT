@@ -1,27 +1,58 @@
 import React, {Component} from "react";
-import {copyTextToClipboard, transformWebsiteInfoIntoListAndSetValues} from "../../utils/utils";
-import {LoadingAppIndicator, EmptyAppIndicator, NewAppLabel} from "./utils";
-import {clickOnAppMetric, passwordCopied, validateApp} from '../../actions/dashboardActions';
-import {showAnyAppSettingsModal} from "../../actions/modalActions";
-import {Popup, Input, Icon, Label, Segment} from "semantic-ui-react"
-import api from "../../utils/api";
-import extension from "../../utils/extension_api";
 import {connect} from "react-redux";
+import {Icon} from "semantic-ui-react";
+import * as api from "../../utils/api";
+import extension from "../../utils/extension_api";
+import {showAnyAppSettingsModal} from "../../actions/modalActions";
+import {LoadingAppIndicator, EmptyAppIndicator, NewAppLabel, SettingsMenu, getPosition} from "./utils";
+import {clickOnAppMetric, passwordCopied, validateApp} from '../../actions/dashboardActions';
+import {copyTextToClipboard, transformWebsiteInfoIntoListAndSetValues} from "../../utils/utils";
+import ReactCSSTransitionGroup from "react-addons-css-transition-group";
 
 @connect(store => ({
-  active: store.modals.anyAppSettings.active
+  active: store.modals.anyAppSettings.active,
+  dnd: store.dashboard_dnd.dragging_app_id !== -1
 }))
 class AnyApp extends Component {
   constructor(props){
     super(props);
     this.state = {
       loading: false,
-      isOpen: false,
       copiedPassword: null,
-      copiedOther: null
+      copiedOther: null,
+      menuActive: false,
+      hover: false,
+      position: 'left'
     };
     this.password = '';
   }
+  componentDidMount() {
+    document.addEventListener('contextmenu', this._handleContextMenu);
+  };
+  componentWillUnmount() {
+    document.removeEventListener('contextmenu', this._handleContextMenu);
+  }
+  _handleContextMenu = (event) => {
+    event.preventDefault();
+    if (this.state.hover)
+      this.setState({ menuActive: true });
+  };
+  activateMenu = (e) => {
+    e.preventDefault();
+    const {app} = this.props;
+    if (!app.empty && !this.props.dnd) {
+      this.setState({hover: true, position: getPosition(app.id)});
+      if (this.password === '')
+        api.dashboard.getAppPassword({
+          app_id: this.props.app.id
+        }).then(response => {
+          this.password = response.password;
+        });
+    }
+  };
+  deactivateMenu = () => {
+    this.setState({menuActive: false, hover: false});
+  };
   connect = () => {
     const {app} = this.props;
 
@@ -31,28 +62,8 @@ class AnyApp extends Component {
     window.open(app.website.login_url);
     extension.fillActiveTab({app_id: app.id});
   };
-  handleOpenClose = () => {
-    const {app} = this.props;
-
-    window.open(app.website.login_url);
-    extension.fillActiveTab({app_id: app.id});
-/*    if (!this.props.active) {
-      if (this.state.isOpen === false) {
-        if (this.props.app.new)
-          this.props.dispatch(validateApp({app_id: this.props.app.id}));
-        this.props.dispatch(clickOnAppMetric({app: this.props.app}));
-        api.dashboard.getAppPassword({
-          app_id: this.props.app.id
-        }).then(response => {
-          this.password = response.password;
-        });
-      }
-      this.setState({isOpen: !this.state.isOpen});
-    }*/
-  };
   clickOnSettings = (e) => {
     e.stopPropagation();
-    this.setState({isOpen: false});
     this.props.dispatch(showAnyAppSettingsModal({active: true, app: this.props.app}));
   };
   copyPassword = (item) => {
@@ -76,93 +87,68 @@ class AnyApp extends Component {
       this.setState({copiedOther: null});
     }, 1000);
   };
+  remove = () => {
+    this.props.dispatch(showAnyAppSettingsModal({active: true, app: this.props.app, remove: true}));
+  };
   render(){
     const {app} = this.props;
     const credentials = transformWebsiteInfoIntoListAndSetValues(app.website.information, app.account_information);
-    const inputs = credentials.map((item,idx) => {
+    const buttons = credentials.map((item,idx) => {
       if (this.state.copiedPassword !== item.priority && this.state.copiedOther !== item.priority) {
         if (item.name === 'password')
           return (
-            <Input
-              key={idx}
-              disabled
-              size='mini'
-              type='password'
-              name={item.name}
-              placeholder='Password'
-              value={'********'}
-              label={
-                <Label style={{backgroundColor: '#373b60', color: 'white', fontWeight: '300'}}
-                       onClick={e => this.copyPassword(item)}>
-                  Copy <Icon name='copy'/>
-                </Label>}/>
+            <div className='container_button' key={idx}>
+              <button className="settings_button" onClick={e => this.copyPassword(item)}>
+                <Icon name='copy'/> • • • • • • • •
+              </button>
+            </div>
           );
         return (
-          <Input
-            key={idx}
-            disabled
-            size='mini'
-            type={item.type}
-            name={item.name}
-            placeholder={item.placeholder}
-            value={item.value}
-            label={
-              <Label style={{backgroundColor: '#373b60', color: 'white', fontWeight: '300'}}
-                     onClick={e => this.copy(item)}>
-                Copy <Icon name='copy'/>
-              </Label>}/>
+          <div className='container_button' key={idx}>
+            <button className="settings_button" onClick={e => this.copy(item)}>
+              <Icon name='copy'/> {item.value}
+            </button>
+          </div>
         )
       }
       return (
-        <Segment
-          key={idx}
-          size='mini'
-          content={'Copied!'}/>
+        <div className='container_button' key={idx}>
+          <button className="settings_button">
+            Copied!
+          </button>
+        </div>
       )
     });
     return (
-/*      <Popup
-        size="tiny"
-        className='dashboard_popup_soft_and_any'
-        position="top center"
-        on='click'
-        open={(this.props.active || app.empty) ? false : this.state.isOpen}
-//        onClose={this.handleOpenClose}
-        onOpen={this.handleOpenClose}
-        hideOnScroll
-        trigger={*/
-          <div className='app'>
-            <div className="logo_area">
-              {this.state.loading &&
-              <LoadingAppIndicator/>}
-              {app.empty &&
-              <EmptyAppIndicator onClick={this.clickOnSettings}/>}
-              {app.new &&
-              <NewAppLabel/>}
-              <div className="logo_handler">
-                <img className="logo" src={app.logo} onClick={this.connect}/>
-                <button className="settings_button" onClick={this.clickOnSettings}>
-                  Settings
-                </button>
-              </div>
-            </div>
-            <span className="app_name overflow-ellipsis">{app.name}</span>
-          </div>/*}
-        content={
-          <div>
-            {inputs}
-            <Input
-              size='mini'
-              placeholder='URL'
-              disabled
-              value={app.website.landing_url}
-              label={
-                <Label style={{backgroundColor:'#373b60',color:'white',fontWeight:'300'}}
-                       onClick={e => window.open(app.website.landing_url)}>
-                  Go to <Icon name='external'/>
-                </Label>}/>
+      <div className='app'>
+        <div className={app.empty ? 'logo_area' : this.state.menuActive ? 'logo_area active' : 'logo_area not_active'}
+             onMouseEnter={!this.props.dnd ? this.activateMenu : null} onMouseLeave={!this.props.dnd ? this.deactivateMenu : null}>
+          {this.state.loading &&
+          <LoadingAppIndicator/>}
+          {app.empty &&
+          <EmptyAppIndicator onClick={this.clickOnSettings}/>}
+          {app.new &&
+          <NewAppLabel/>}
+          <ReactCSSTransitionGroup
+            transitionName="settingsAnim"
+            transitionEnter={true}
+            transitionLeave={true}
+            transitionEnterTimeout={1300}
+            transitionLeaveTimeout={1}>
+            {this.state.hover && !this.props.dnd &&
+            <SettingsMenu
+              app={app}
+              buttons={buttons}
+              remove={this.remove}
+              position={this.state.position}
+              clickOnSettings={this.clickOnSettings}/>}
+          </ReactCSSTransitionGroup>
+          <div className="logo_handler">
+            <img className="logo" src={app.logo} onClick={this.connect}/>
           </div>
-        }/>*/
+        </div>
+        <span className="app_name overflow-ellipsis">{app.name}</span>
+      </div>
     )
   }
 }

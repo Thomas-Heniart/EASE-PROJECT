@@ -69,7 +69,7 @@ class AppWrapper extends Component {
     const {connectDragSource, connectDropTarget, isDragging, app} = this.props;
 
     return connectDragSource(connectDropTarget(
-        <div class="app_wrapper" id={`app_${this.props.app.id}`} class={classnames('app_wrapper',!!app.empty ? 'empty':null, isDragging ? 'dragging': null)}>
+        <div id={`app_${this.props.app.id}`} class={classnames('app_wrapper',!!app.empty ? 'empty':null, isDragging ? 'dragging': null)}>
           {this.renderApp()}
         </div>
     ))
@@ -100,9 +100,16 @@ const appSource = {
 const appTarget = {
   hover(props, monitor, component) {
     const draggedAppProps = monitor.getItem();
+    const draggedApp = draggedAppProps.app;
+    const app = props.app;
 
     if (draggedAppProps.app.id === props.app.id)
       return;
+    if (draggedApp.team_id !== app.team_id)
+      return;
+    if (!!draggedApp.team_id && draggedApp.profile_id !== app.profile_id)
+      return;
+
     props.dispatch(moveApp({
       app_id: draggedAppProps.app.id,
       targetApp_id: props.app.id

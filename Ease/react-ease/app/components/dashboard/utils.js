@@ -112,6 +112,48 @@ export const UpdatePasswordLabel = (props)=> {
   )
 };
 
+export const getPosition = (app_id) => {
+  const el = document.getElementById(`app_${app_id}`);
+  const window = document.getElementById('dashboard');
+  let position = 'left';
+  if (el)
+    position = el.getBoundingClientRect().x + 245 > window.offsetWidth ? 'right' : 'left';
+  return position;
+};
+
+export const SettingsMenu = ({app, clickOnSettings, remove, buttons, teams, position}) => {
+  const team = app.team_id ? teams[app.team_id] : null;
+  const role = team ? team.team_users[team.my_team_user_id].role : null;
+  return (
+    <div id={`app_${app.id}_menu`} className={`settings_buttons ${position ? position : 'left'}`}>
+      {app.type === 'logWithApp' &&
+      <div className='container_button'>
+        <button className="settings_button" onClick={clickOnSettings}>
+          <Icon name={`${app.logWith_website.name.toLowerCase()} square`}/> {app.login}
+        </button>
+      </div>}
+      {(app.type === 'anyApp' || app.sub_type === 'any') &&
+      <div className='container_button'>
+        <button className="settings_button" onClick={e => window.open(app.website.landing_url)}>
+          <Icon name='external'/> {app.website.landing_url}
+        </button>
+      </div>}
+      {buttons}
+      <div className='container_button'>
+        <button className={(role < 2 && (app.type === 'teamSingleApp' || app.type === 'teamLinkApp')) ? 'settings_button not_allowed' : 'settings_button'}
+              onClick={(role < 2 && (app.type === 'teamSingleApp' || app.type === 'teamLinkApp')) ? null : clickOnSettings}>
+          <Icon name='setting'/> Settings {(app.type === 'teamSingleApp' || app.type === 'teamLinkApp') ? '(Admins only)' : null}
+        </button>
+      </div>
+      <div className='container_button'>
+        <button className='settings_button' onClick={remove}>
+          <Icon name='trash'/> Remove
+        </button>
+      </div>
+    </div>
+  )
+};
+
 @connect(store => ({
   apps: store.dashboard.apps
 }))

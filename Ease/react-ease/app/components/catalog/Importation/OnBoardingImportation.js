@@ -84,6 +84,7 @@ class OnBoardingImportation extends React.Component {
       view: 2,
       loadingLogo: {},
       passwordManager: 0,
+      chromeLoginId: -1,
       chromeLogin: '',
       chromePassword: '',
       separator: ',',
@@ -244,13 +245,14 @@ class OnBoardingImportation extends React.Component {
       app_id: account.sso_app_ids[0]
     }).then(response => {
       this.setState({
+        chromeLoginId: account.id,
         chromeLogin: account.account_information.login,
         chromePassword: response.password
       });
     });
   };
   resetChromeCredentials = () => {
-    this.setState({chromeLogin: '', chromePassword: ''});
+    this.setState({chromeLogin: '', chromePassword: '', chromeLoginId: -1});
   };
   createRoom = (id) => {
     if (this.state.roomName[id].length === 0)
@@ -1048,6 +1050,7 @@ class OnBoardingImportation extends React.Component {
           <ChromeFirstStep
             resetChromeCredentials={this.resetChromeCredentials}
             selectAccount={this.selectAccount}
+            loginId={this.state.chromeLoginId}
             login={this.state.chromeLogin}
             password={this.state.chromePassword}
             onChange={this.handleInput}

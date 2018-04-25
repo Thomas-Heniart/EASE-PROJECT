@@ -18,14 +18,15 @@ import {testCredentials} from "../../actions/catalogActions";
 @connect(store => ({
   teams: store.teams,
   team_apps: store.team_apps,
-  app: store.modals.teamSingleAppSettings.app
+  app: store.modals.teamSingleAppSettings.app,
+  remove: store.modals.teamSingleAppSettings.remove
 }))
 class TeamSingleAppSettingsModal extends Component{
   constructor(props){
     super(props);
     this.state = {
       appName: this.props.app.name,
-      view: 'Account',
+      view: this.props.remove ? 'Remove' : 'Account',
       credentials: [],
       isEmpty: false,
       app: this.props.app,

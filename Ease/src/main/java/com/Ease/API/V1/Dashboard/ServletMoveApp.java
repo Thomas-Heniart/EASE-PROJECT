@@ -35,6 +35,8 @@ public class ServletMoveApp extends HttpServlet {
             App app = user.getApp(app_id, sm.getHibernateQuery());
             Profile old_profile = app.getProfile();
             Profile new_profile = user.getProfile(profile_id);
+            if ((old_profile.getTeamUser() != null || new_profile.getTeamUser() != null) && !old_profile.equals(new_profile))
+                throw new HttpServletException(HttpStatus.BadRequest, "You cannot move this app in this profile");
             if (position < 0 || position > new_profile.getSize())
                 throw new HttpServletException(HttpStatus.BadRequest, "Invalid parameter position");
             HibernateQuery hibernateQuery = sm.getHibernateQuery();

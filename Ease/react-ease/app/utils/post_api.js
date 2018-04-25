@@ -1540,6 +1540,11 @@ module.exports = {
     connectionLifetimeModalSeen: () => {
       return basic_post('/api/v1/common/PopupConnectionLifetimeSeen');
     },
+    magicLinkModalSeen: ({agree}) => {
+      return basic_post('/api/v1/common/PopupMagicLinkSeen', {
+        response: agree
+      })
+    },
     tipDone: ({name}) => {
       return basic_post('/api/v1/common/TipDone', {
         name: name

@@ -37,25 +37,25 @@ pageEncoding="UTF-8"%>
 	<meta name="twitter:image" content="https://ease.space/resources/images/metadescription.png"/>
 	<link rel="icon" type="image/png" href="resources/icons/APPEASE.png" />
 	<link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Raleway:500,700" />
-    <link rel="stylesheet" type="text/css" href="/css/lib/fonts/museo-font.css?cssv=3"/>
+    <link rel="stylesheet" type="text/css" href="/css/lib/fonts/museo-font.css?cssv=8"/>
 
 
 
 	<link rel="manifest" href="manifest.json">
 
-    <script src="/jsMinified/jquery1.12.4.js?jsv=1"></script>
-    <script src="/jsMinified/bootstrap.js?jsv=1"></script>
-    <script src="/jsMinified/basic-utils.js?jsv=1"></script>
-    <script src="/jsMinified/tracker.js?jsv=1"></script>
-    <script src="/jsMinified/postHandler.js?jsv=1"></script>
-    <script src="/jsMinified/languageChooser.js?jsv=1"></script>
+    <script src="/jsMinified/jquery1.12.4.js?jsv=2"></script>
+    <script src="/jsMinified/bootstrap.js?jsv=2"></script>
+    <script src="/jsMinified/basic-utils.js?jsv=2"></script>
+    <script src="/jsMinified/tracker.js?jsv=2"></script>
+    <script src="/jsMinified/postHandler.js?jsv=2"></script>
+    <script src="/jsMinified/languageChooser.js?jsv=2"></script>
 
 	<link rel="stylesheet" href="semantic/dist/semantic.min.css">
-    <link rel="stylesheet" href="/css/default_style.css?cssv=3"/>
-    <link rel="stylesheet" href="/css/bootstrap.css?cssv=3"/>
-    <link rel="stylesheet" href="/css/landingPage.css?cssv=3"/>
-    <link rel="stylesheet" href="/css/teamBody.css?cssv=3"/>
-    <link rel="stylesheet" href="/css/lib/fonts/font-awesome-4.2.0/css/font-awesome.min.css?cssv=3"/>
+    <link rel="stylesheet" href="/css/default_style.css?cssv=8"/>
+    <link rel="stylesheet" href="/css/bootstrap.css?cssv=8"/>
+    <link rel="stylesheet" href="/css/landingPage.css?cssv=8"/>
+    <link rel="stylesheet" href="/css/teamBody.css?cssv=8"/>
+    <link rel="stylesheet" href="/css/lib/fonts/font-awesome-4.2.0/css/font-awesome.min.css?cssv=8"/>
     <script type="text/javascript">$crisp = [];
     CRISP_WEBSITE_ID = "6e9fe14b-66f7-487c-8ac9-5912461be78a";
     (function () {

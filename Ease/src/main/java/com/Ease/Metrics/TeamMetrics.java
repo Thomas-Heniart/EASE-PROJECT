@@ -125,6 +125,9 @@ public class TeamMetrics {
     @Column(name = "link_cards_names")
     private String link_cards_names = "";
 
+    @Column(name = "password_killed")
+    private int passwordKilled = 0;
+
     public TeamMetrics() {
 
     }
@@ -383,6 +386,14 @@ public class TeamMetrics {
         this.enterprise_cards_names = enterprise_cards_names;
     }
 
+    public int getPasswordKilled() {
+        return passwordKilled;
+    }
+
+    public void setPasswordKilled(int passwordKilled) {
+        this.passwordKilled = passwordKilled;
+    }
+
     public String getLink_cards_names() {
         return link_cards_names;
     }
@@ -421,6 +432,7 @@ public class TeamMetrics {
         res.put("enterprise_cards_names", this.getEnterprise_cards_names());
         res.put("link_cards", this.getLink_cards());
         res.put("link_cards_names", this.getLink_cards_names());
+        res.put("password_killed", this.getPasswordKilled());
         return res;
     }
 }

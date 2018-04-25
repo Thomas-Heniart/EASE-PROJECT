@@ -24,13 +24,14 @@ class ChromeFirstStep extends React.Component {
       back,
       next,
       login,
+      loginId,
       onChange,
       password,
       selectAccount
     } = this.props;
     const mailList = !this.state.addGoogleAccount && Object.keys(this.props.ssoGroups).length > 0 ?
       Object.keys(this.props.ssoGroups).map(key => {
-        const loginChose = login === this.props.ssoGroups[key].account_information.login;
+        const loginChose = loginId === this.props.ssoGroups[key].id;
         return (
           <List.Item key={this.props.ssoGroups[key].id} as="p" className="overflow-ellipsis">
             <a onClick={e => selectAccount(this.props.ssoGroups[key])}>
