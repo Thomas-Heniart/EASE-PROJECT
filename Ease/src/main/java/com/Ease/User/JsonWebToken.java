@@ -1,5 +1,6 @@
 package com.Ease.User;
 
+import com.Ease.Team.TeamUser;
 import com.Ease.Utils.Crypto.AES;
 import com.Ease.Utils.Crypto.Hashing;
 import com.Ease.Utils.HttpServletException;
@@ -104,13 +105,12 @@ public class JsonWebToken {
         return Hashing.compare(connection_token, this.getConnection_token_hash());
     }
 
-    public String getKeyUser(String jwt, Key secret) throws HttpServletException {
-        Claims claims = Jwts.parser().setSigningKey(secret).parseClaimsJws(jwt).getBody();
-        String connection_token = (String) claims.get("tok");
-        return AES.decryptUserKey(this.getKeyUser_ciphered(), connection_token, this.getSalt());
+    public String getKeyUser(Claims claims) throws HttpServletException {
+        String connectionToken = (String) claims.get("tok");
+        return AES.decryptUserKey(this.getKeyUser_ciphered(), connectionToken, this.getSalt());
     }
 
-    public void renew(String keyUser, Integer user_id, Key secret, Integer lifetime) throws HttpServletException {
+    public void renew(String keyUser, User user, Key secret, Integer lifetime) throws HttpServletException {
         this.setSalt(AES.generateSalt());
         Map<String, Object> claims = new HashMap<>();
         Calendar calendar = Calendar.getInstance();
@@ -125,7 +125,11 @@ public class JsonWebToken {
         String connection_token = UUID.randomUUID().toString();
         claims.put("exp", this.getExpiration_date());
         claims.put("tok", connection_token);
-        claims.put("id", user_id);
+        claims.put("id", user.getDb_id());
+        Map<String, Integer> teamIdAndRoleMap = new HashMap<>();
+        for (TeamUser teamUser : user.getTeamUsers())
+            teamIdAndRoleMap.put(String.valueOf(teamUser.getTeam().getDb_id()), teamUser.getTeamUserRole().getRoleValue());
+        claims.put("teams", teamIdAndRoleMap);
         String jwt = Jwts.builder().setClaims(claims).signWith(SignatureAlgorithm.HS512, secret).compact();
         this.setJwt_ciphered(AES.encrypt(jwt, keyUser));
         this.setKeyUser_ciphered(AES.cipherKey(keyUser, connection_token, this.getSalt()));

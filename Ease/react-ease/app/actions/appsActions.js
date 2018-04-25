@@ -3,7 +3,7 @@ import {showMoveAppModal} from "./teamModalActions";
 var api = require('../utils/api');
 var post_api = require('../utils/post_api');
 import {dashboardAppRemovedAction, deleteAppAction, fetchApp} from "./dashboardActions";
-import {fetchTeamApp} from "../actions/teamActions";
+import {fetchTeamApp, updateTeamPasswordsAmount, updateTeamStrongPasswordsAmount} from "../actions/teamActions";
 import {addNotification} from "./notificationBoxActions";
 
 export function fetchAllTeamCards({team_id}) {
@@ -43,6 +43,10 @@ export function teamCreateEnterpriseCard({team_id, channel_id, website_id, name,
       dispatch(teamCardCreatedAction({
         team_card: team_card
       }));
+      dispatch(calculateTeamEnterpriseCardPasswordScore({
+        team_id: team_card.team_id,
+        team_card_id: team_card.id
+      }));
       const room = getState().teams[team_id].rooms[channel_id];
       dispatch(addNotification({
         text: `${team_card.name} successfully sent to ${room.name}`
@@ -71,6 +75,10 @@ export function teamCreateAnyEnterpriseCard({team_id, channel_id, name, descript
       dispatch(teamCardCreatedAction({
         team_card: team_card
       }));
+      dispatch(calculateTeamEnterpriseCardPasswordScore({
+        team_id: team_card.team_id,
+        team_card_id: team_card.id
+      }));
       const room = getState().teams[team_id].rooms[channel_id];
       dispatch(addNotification({
         text: `${team_card.name} successfully sent to ${room.name}`
@@ -97,6 +105,10 @@ export function teamCreateSoftwareEnterpriseCard({team_id, channel_id, name, des
     }).then(team_card => {
       dispatch(teamCardCreatedAction({
         team_card: team_card
+      }));
+      dispatch(calculateTeamEnterpriseCardPasswordScore({
+        team_id: team_card.team_id,
+        team_card_id: team_card.id
       }));
       const room = getState().teams[team_id].rooms[channel_id];
       dispatch(addNotification({
@@ -204,6 +216,11 @@ export function teamShareEnterpriseCard({team_id, team_card_id, team_user_id, ac
       dispatch(teamCardReceiverCreatedAction({
         receiver: receiver
       }));
+      dispatch(calculateTeamEnterpriseCardReceiverPasswordScore({
+        team_id: team_id,
+        team_card_id: team_card_id,
+        team_card_receiver_id: receiver.id
+      }));
       return receiver;
     }).catch(err => {
       throw err;
@@ -220,6 +237,12 @@ export function teamEditEnterpriseCardReceiver({team_id, team_card_id, team_card
       account_information: account_information,
       ws_id: getState().common.ws_id
     }).then(receiver => {
+      if (!!account_information.password && !!account_information.password.length)
+        dispatch(calculateTeamEnterpriseCardReceiverPasswordScore({
+          team_id: team_id,
+          team_card_id: team_card_id,
+          team_card_receiver_id: team_card_receiver_id
+        }));
       dispatch(teamCardReceiverChangedAction({
         receiver: receiver
       }));
@@ -246,6 +269,11 @@ export function teamCreateSingleApp({team_id, channel_id, website_id, name, desc
       ws_id: getState().common.ws_id
     }).then(team_card => {
       dispatch(teamCardCreatedAction({team_card: team_card}));
+      if (team_card.password_score === null)
+        dispatch(calculateTeamSimpleCardPasswordScore({
+          team_id: team_card.team_id,
+          team_card_id: team_card.id
+        }));
       const room = getState().teams[team_id].rooms[channel_id];
       dispatch(addNotification({
         text: `${team_card.name} successfully sent to ${room.name}`
@@ -276,6 +304,11 @@ export function teamCreateAnySingleCard({team_id, channel_id, name, description,
       ws_id: getState().common.ws_id
     }).then(team_card => {
       dispatch(teamCardCreatedAction({team_card: team_card}));
+      if (team_card.password_score === null)
+        dispatch(calculateTeamSimpleCardPasswordScore({
+          team_id: team_card.team_id,
+          team_card_id: team_card.id
+        }));
       const room = getState().teams[team_id].rooms[channel_id];
       dispatch(addNotification({
         text: `${team_card.name} successfully sent to ${room.name}`
@@ -304,6 +337,11 @@ export function teamCreateSoftwareSingleCard({team_id, channel_id, name, descrip
       ws_id: getState().common.ws_id
     }).then(team_card => {
       dispatch(teamCardCreatedAction({team_card: team_card}));
+      if (team_card.password_score === null)
+        dispatch(calculateTeamSimpleCardPasswordScore({
+          team_id: team_card.team_id,
+          team_card_id: team_card.id
+        }));
       const room = getState().teams[team_id].rooms[channel_id];
       dispatch(addNotification({
         text: `${team_card.name} successfully sent to ${room.name}`
@@ -361,6 +399,11 @@ export function teamEditSingleApp({team_id, team_card_id, description, account_i
       dispatch(teamCardChangedAction({
         team_card: team_card
       }));
+      if (!!account_information && !!account_information.password && !!account_information.password.length)
+        dispatch(calculateTeamSimpleCardPasswordScore({
+          team_id:team_card.team_id,
+          team_card_id: team_card.id
+        }));
       return team_card;
     }).catch(err => {
       throw err;
@@ -384,6 +427,11 @@ export function teamEditAnySingleApp({team_card_id, description, url, img_url, c
       dispatch(teamCardChangedAction({
         team_card: team_card
       }));
+      if (!!account_information && !!account_information.password && !!account_information.password.length)
+        dispatch(calculateTeamSimpleCardPasswordScore({
+          team_id:team_card.team_id,
+          team_card_id: team_card.id
+        }));
       return team_card;
     }).catch(err => {
       throw err;
@@ -405,6 +453,11 @@ export function teamEditSoftwareSingleApp({team_card_id, description, account_in
       dispatch(teamCardChangedAction({
         team_card: team_card
       }));
+      if (!!account_information && !!account_information.password && !!account_information.password.length)
+        dispatch(calculateTeamSimpleCardPasswordScore({
+          team_id:team_card.team_id,
+          team_card_id: team_card.id
+        }));
       return team_card;
     }).catch(err => {
       throw err;
@@ -691,11 +744,32 @@ export function teamCardCreatedAction({team_card}){
 }
 
 export function teamCardChangedAction({team_card}) {
-  return {
-    type: 'TEAM_CARD_CHANGED',
-    payload: {
-      team_card: team_card
+  return (dispatch, getState) => {
+    const teamCard = getState().team_apps[team_card.id];
+
+    if (!!teamCard && teamCard.type.includes('Single') && teamCard.password_score !== team_card.password_score){
+      if (teamCard.password_score === null && team_card.password_score !== null)
+        dispatch(updateTeamPasswordsAmount({
+          team_id: team_card.team_id,
+          diff: 1
+        }));
+      if (team_card.password_score === 4)
+        dispatch(updateTeamStrongPasswordsAmount({
+          team_id: team_card.team_id,
+          diff: 1
+        }));
+      else if (teamCard.password_score === 4)
+        dispatch(updateTeamStrongPasswordsAmount({
+          team_id: team_card.team_id,
+          diff: -1
+        }))
     }
+    dispatch({
+      type: 'TEAM_CARD_CHANGED',
+      payload: {
+        team_card: team_card
+      }
+    });
   }
 }
 
@@ -710,6 +784,43 @@ export function teamCardRemovedAction({team_id, team_card_id}){
           app_id: app.id
         }));
     });
+    const teamCard = store.team_apps[team_card_id];
+    if (!!teamCard){
+      if (teamCard.type.includes('Single')){
+        if (teamCard.password_score !== null) {
+          dispatch(updateTeamPasswordsAmount({
+            team_id: team_id,
+            diff: -1
+          }));
+          if (teamCard.password_score === 4)
+            dispatch(updateTeamStrongPasswordsAmount({
+              team_id: team_id,
+              diff: -1
+            }));
+        }
+      } else if (teamCard.type.includes('Enterprise')){
+        let strongPasswords = 0;
+        let totalPasswords = 0;
+        teamCard.receivers.forEach(receiver => {
+          if (receiver.password_score !== null){
+            totalPasswords--;
+            if (receiver.password_score === 4)
+              strongPasswords--;
+          }
+        });
+        if (!!totalPasswords) {
+          dispatch(updateTeamPasswordsAmount({
+            team_id: team_id,
+            diff: totalPasswords
+          }));
+          if (!!strongPasswords)
+            dispatch(updateTeamStrongPasswordsAmount({
+              team_id: team_id,
+              diff: strongPasswords
+            }));
+        }
+      }
+    }
     dispatch({
       type: 'TEAM_CARD_REMOVED',
       payload: {
@@ -753,11 +864,38 @@ export function teamCardReceiverCreatedAction({receiver}) {
 }
 
 export function teamCardReceiverChangedAction({receiver}) {
-  return {
-    type: 'TEAM_CARD_RECEIVER_CHANGED',
-    payload: {
-      receiver: receiver
+  return (dispatch, getState) => {
+    if (!!receiver.account_information){
+      const store = getState();
+      const teamCard = store.team_apps[receiver.team_card_id];
+      if (!!teamCard){
+        const oldReceiver = teamCard.receivers.find((item) => (item.id === receiver.id));
+        if (!!oldReceiver && oldReceiver.password_score !== receiver.password_score){
+          if (oldReceiver.password_score === null && receiver.password_score !== null){
+            dispatch(updateTeamPasswordsAmount({
+              team_id: teamCard.team_id,
+              diff: 1
+            }));
+          }
+          if (oldReceiver.password_score === 4)
+            dispatch(updateTeamStrongPasswordsAmount({
+              team_id: teamCard.team_id,
+              diff: -1
+            }));
+          else if (receiver.password_score === 4)
+            dispatch(updateTeamStrongPasswordsAmount({
+              team_id: teamCard.team_id,
+              diff: 1
+            }));
+        }
+      }
     }
+    dispatch({
+      type: 'TEAM_CARD_RECEIVER_CHANGED',
+      payload: {
+        receiver: receiver
+      }
+    });
   }
 }
 
@@ -765,14 +903,34 @@ export function teamCardReceiverRemovedAction({team_id, team_card_id, team_user_
   return (dispatch, getState) => {
     const store = getState();
     const team = store.teams[team_id];
+    const teamCard = store.team_apps[team_card_id];
 
-    if (team.my_team_user_id === team_user_id){
-      const team_card = store.team_apps[team_card_id];
-      const receiver = team_card.receivers.find(receiver => (receiver.team_user_id === team_user_id));
-      dispatch(deleteAppAction({
-        app_id: receiver.app_id
-      }));
+    if (!!teamCard) {
+      const receiver = teamCard.receivers.find(receiver => (receiver.team_user_id === team_user_id));
+      if (team.my_team_user_id === team_user_id)
+        dispatch(deleteAppAction({
+          app_id: receiver.app_id
+        }));
+      if (teamCard.type.includes('Enterprise')){
+        if (receiver.password_score !== null) {
+          dispatch(updateTeamPasswordsAmount({
+            team_id: team_id,
+            diff: -1
+          }));
+          if (receiver.password_score === 4)
+            dispatch(updateTeamStrongPasswordsAmount({
+              team_id: team_id,
+              diff: -1
+            }))
+        }
+      }
     }
+    /*    if (team.my_team_user_id === team_user_id){
+          const receiver = teamCard.receivers.find(receiver => (receiver.team_user_id === team_user_id));
+          dispatch(deleteAppAction({
+            app_id: receiver.app_id
+          }));
+        }*/
     dispatch({
       type: 'TEAM_CARD_RECEIVER_REMOVED',
       payload: {
@@ -815,6 +973,134 @@ export function teamCardRequestRemovedAction({team_card_id, request_id}){
     payload: {
       team_card_id: team_card_id,
       request_id: request_id
+    }
+  }
+}
+
+export function teamSimpleCardPasswordScoreAlert({team_id, team_card_id}) {
+  return (dispatch, getState) => {
+    return post_api.teamApps.passwordScoreAlert({
+      team_id: team_id,
+      team_card_id: team_card_id
+    }).then(team_card => {
+      dispatch(teamCardChangedAction({
+        team_card: team_card
+      }));
+      return team_card;
+    }).catch(err => {
+      throw err;
+    });
+  }
+}
+
+export function teamEnterpriseCardPasswordScoreAlert({team_id, team_card_id}) {
+  return (dispatch, getState) => {
+    return post_api.teamApps.passwordScoreAlert({
+      team_id: team_id,
+      team_card_id: team_card_id
+    }).then(team_card => {
+      dispatch(teamCardChangedAction({
+        team_card: team_card
+      }));
+      return team_card;
+    }).catch(err => {
+      throw err;
+    });
+  }
+}
+
+export function teamEnterpriseCardReceiverPasswordScoreAlert({team_id, team_card_id, team_card_receiver_id}) {
+  return (dispatch, getState) => {
+    return post_api.teamApps.passwordScoreAlert({
+      team_id: team_id,
+      team_card_id: team_card_id,
+      team_card_receiver_id: team_card_receiver_id
+    }).then(receiver => {
+      dispatch(teamCardReceiverChangedAction({
+        receiver: receiver
+      }));
+      return receiver;
+    }).catch(err => {
+      throw err;
+    });
+  }
+}
+
+export function calculateTeamEnterpriseCardReceiverPasswordScore({team_id, team_card_id, team_card_receiver_id}){
+  return (dispatch, getState) => {
+    return post_api.teamApps.calculatePasswordScore({
+      team_id: team_id,
+      team_card_id: team_card_id,
+      team_card_receiver_id: team_card_receiver_id
+    }).then(receiver => {
+      dispatch(teamCardReceiverChangedAction({
+        receiver: receiver
+      }));
+      return receiver;
+    }).catch(err => {
+      throw err;
+    });
+  }
+}
+
+export function calculateTeamEnterpriseCardPasswordScore({team_id, team_card_id}){
+  return (dispatch, getState) => {
+    dispatch(teamCardPasswordScoreCalculationStarted({
+      team_card_id: team_card_id
+    }));
+    return post_api.teamApps.calculatePasswordScore({
+      team_id: team_id,
+      team_card_id: team_card_id
+    }).then(team_card => {
+      dispatch(teamCardPasswordScoreCalculationEnded({
+        team_card_id: team_card_id
+      }));
+      dispatch(teamCardChangedAction({
+        team_card: team_card
+      }));
+      return team_card;
+    }).catch(err => {
+      throw err;
+    });
+  }
+}
+
+export function calculateTeamSimpleCardPasswordScore({team_id, team_card_id}) {
+  return (dispatch, getState) => {
+    dispatch(teamCardPasswordScoreCalculationStarted({
+      team_card_id: team_card_id
+    }));
+    return post_api.teamApps.calculatePasswordScore({
+      team_id: team_id,
+      team_card_id: team_card_id
+    }).then(team_card => {
+      dispatch(teamCardPasswordScoreCalculationEnded({
+        team_card_id: team_card_id
+      }));
+      dispatch(teamCardChangedAction({
+        team_card: team_card
+      }));
+      return team_card;
+    }).catch(err => {
+      throw err;
+    });
+  }
+}
+
+export function teamCardPasswordScoreCalculationStarted({team_card_id}){
+  return {
+    type: 'TEAM_CARD_PASSWORD_STRENGTH_CHECK_BEGIN',
+    payload: {
+      team_card_id: team_card_id
+    }
+  }
+}
+
+export function teamCardPasswordScoreCalculationEnded({team_card_id}){
+  return {
+    type: 'TEAM_CARD_PASSWORD_STRENGTH_CHECK_END',
+    payload: {
+      team_card_id: team_card_id
     }
   }
 }

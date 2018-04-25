@@ -72,10 +72,14 @@ public class CreateTeamEnterpriseCard extends HttpServlet {
                         account_information = website.getAllCredentialsFromJson(account_information);
                     else
                         account_information = website.getPresentCredentialsFromJson(account_information);
-                    account = AccountFactory.getInstance().createAccountFromJson(account_information, teamKey, password_reminder_interval, sm.getHibernateQuery());
+                    if (account_information.length() != 0)
+                        account = AccountFactory.getInstance().createAccountFromJson(account_information, teamKey, password_reminder_interval, sm.getHibernateQuery());
                 }
-                AppInformation appInformation = new AppInformation(website.getName());
-                App app = new ClassicApp(appInformation, website, account);
+                App app;
+                if (account == null)
+                    app = AppFactory.getInstance().createClassicApp(name, website);
+                else
+                    app = AppFactory.getInstance().createClassicApp(name, website, account);
                 TeamCardReceiver teamCardReceiver = new TeamEnterpriseCardReceiver(app, teamCard, teamUser);
                 if (teamUser.isVerified()) {
                     Profile profile = teamUser.getOrCreateProfile(teamCard.getChannel(), sm.getHibernateQuery());

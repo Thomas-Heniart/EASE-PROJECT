@@ -1199,6 +1199,20 @@ module.exports = {
         team_card_id: team_card_id,
         channel_id: channel_id
       });
+    },
+    passwordScoreAlert: ({team_id, team_card_id, team_card_receiver_id}) => {
+      return basic_post('/api/v1/teams/password-score-alert', {
+        team_id: team_id,
+        team_card_id: team_card_id,
+        team_card_receiver_id: team_card_receiver_id
+      });
+    },
+    calculatePasswordScore : ({team_id, team_card_id, team_card_receiver_id}) => {
+      return basic_post('/api/v1/teams/calculate-password-score', {
+        team_id: team_id,
+        team_card_id: team_card_id,
+        team_card_receiver_id: team_card_receiver_id
+      })
     }
   },
   teams: {
@@ -1377,6 +1391,11 @@ module.exports = {
         ws_id: ws_id,
         team_id: team_id,
         email: email
+      });
+    },
+    initializeTeamPasswordScoreFeature: ({team_id}) => {
+      return basic_post('/api/v1/teams/initialize-team-score', {
+        team_id: team_id
       });
     }
   },

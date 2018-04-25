@@ -12,6 +12,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import javax.persistence.*;
+import java.security.NoSuchAlgorithmException;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.Date;
@@ -286,4 +287,16 @@ public abstract class TeamCard {
     public Collection<TeamUser> getTeamUsers() {
         return this.getTeamCardReceiverMap().values().stream().map(TeamCardReceiver::getTeamUser).collect(Collectors.toList());
     }
+
+    public void calculatePasswordScore() throws NoSuchAlgorithmException {
+        if (this.getAccount() == null)
+            return;
+        this.setPasswordScore(this.getAccount().calculatePasswordScore());
+    }
+
+    public abstract Integer getPasswordScore();
+
+    protected abstract void setPasswordScore(Integer score);
+
+    public abstract void setLastPasswordScoreAlertDate(Date date);
 }

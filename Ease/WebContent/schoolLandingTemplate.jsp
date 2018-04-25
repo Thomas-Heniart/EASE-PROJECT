@@ -36,12 +36,12 @@
     <link rel="icon" type="image/png" href="resources/icons/APPEASE.png"/>
     <link rel="manifest" href="manifest.json">
     <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Raleway:500,700"/>
-    <link rel="stylesheet" type="text/css" href="/css/lib/fonts/museo-font.css?cssv=8"/>
-    <link rel="stylesheet" href="/css/default_style.css?cssv=8"/>
-    <link rel="stylesheet" href="/css/bootstrap.css?cssv=8"/>
-    <link rel="stylesheet" href="/css/landingPage.css?cssv=8"/>
+    <link rel="stylesheet" type="text/css" href="/css/lib/fonts/museo-font.css?cssv=9"/>
+    <link rel="stylesheet" href="/css/default_style.css?cssv=9"/>
+    <link rel="stylesheet" href="/css/bootstrap.css?cssv=9"/>
+    <link rel="stylesheet" href="/css/landingPage.css?cssv=9"/>
     <link rel="stylesheet" type="text/css"
-          href="/css/lib/fonts/font-awesome-4.2.0/css/font-awesome.min.css?cssv=8"/>
+          href="/css/lib/fonts/font-awesome-4.2.0/css/font-awesome.min.css?cssv=9"/>
 </head>
 
 <body id="landingBody" class="school">

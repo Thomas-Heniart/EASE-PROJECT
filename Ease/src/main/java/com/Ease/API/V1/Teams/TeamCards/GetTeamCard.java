@@ -14,6 +14,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Date;
 
 @WebServlet("/api/v1/teams/GetTeamCard")
 public class GetTeamCard extends HttpServlet {
@@ -28,7 +29,7 @@ public class GetTeamCard extends HttpServlet {
             TeamUser teamUser = sm.getTeamUser(team);
             if (teamUser == null)
                 throw new HttpServletException(HttpStatus.Forbidden);
-            if (!teamUser.isDisabled()) {
+            if (!teamUser.isDisabled() && !teamUser.departureExpired()) {
                 String teamKey = (String) sm.getTeamProperties(team.getDb_id()).get("teamKey");
                 teamCard.decipher(teamKey);
             }

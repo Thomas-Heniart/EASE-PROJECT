@@ -41,6 +41,12 @@ public class TeamSingleSoftwareCard extends TeamSoftwareCard {
     @Temporal(TemporalType.TIMESTAMP)
     private Date magicLinkExpirationDate;
 
+    @Column(name = "password_score")
+    private Integer passwordScore;
+
+    @Column(name = "lastPasswordScoreAlertDate")
+    private Date lastPasswordScoreAlertDate;
+
     public TeamSingleSoftwareCard() {
 
     }
@@ -102,6 +108,23 @@ public class TeamSingleSoftwareCard extends TeamSoftwareCard {
         this.magicLinkExpirationDate = magicLinkExpirationDate;
     }
 
+    public Integer getPasswordScore() {
+        return passwordScore;
+    }
+
+    @Override
+    public void setPasswordScore(Integer passwordScore) {
+        this.passwordScore = passwordScore;
+    }
+
+    public Date getLastPasswordScoreAlertDate() {
+        return lastPasswordScoreAlertDate;
+    }
+
+    public void setLastPasswordScoreAlertDate(Date lastPasswordScoreAlertDate) {
+        this.lastPasswordScoreAlertDate = lastPasswordScoreAlertDate;
+    }
+
     @Override
     public String getType() {
         return "teamSingleCard";
@@ -118,12 +141,15 @@ public class TeamSingleSoftwareCard extends TeamSoftwareCard {
         res.put("empty", this.getAccount() == null || !this.getAccount().satisfySoftware((this.getSoftware())));
         res.put("account_information", new JSONObject());
         res.put("team_user_filler_id", this.getTeamUser_filler_test() == null ? -1 : this.getTeamUser_filler_test().getDb_id());
+        res.put("stronger_password_asked", this.getAccount() != null && this.getAccount().isStrongerPasswordAsked());
         if (this.getAccount() == null)
             return res;
         res.put("last_update_date", this.getAccount().getLast_update().getTime());
         res.put("account_information", this.getAccount().getJsonWithoutPassword());
         res.put("magic_link", this.getMagicLink() == null ? "" : this.getMagicLink());
         res.put("magic_link_expiration_date", this.getMagicLinkExpirationDate() == null ? JSONObject.NULL : this.getMagicLinkExpirationDate().getTime());
+        res.put("password_score", this.getPasswordScore() == null ? JSONObject.NULL : this.getPasswordScore());
+        res.put("last_password_score_alert_date", this.getLastPasswordScoreAlertDate() == null ? JSONObject.NULL : this.getLastPasswordScoreAlertDate().getTime());
         return res;
     }
 

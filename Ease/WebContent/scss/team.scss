@@ -766,6 +766,24 @@ i.icon.pin_button {
       @include placeholder-color(rgba(41,41,41,.95));
     }
   }
+  .password_strength_loader {
+    margin-left: 10px !important;
+  }
+  .password_strength_indicator {
+    font-weight: normal;
+    font-size: .8rem;
+    color: $themeRedColor;
+    margin-left: 10px;
+    &.medium {
+      color: #f2711c;
+    }
+    &.strong {
+      color: $themeGreenColor;
+    }
+    .icon {
+      margin: 0 !important;
+    }
+  }
   .description {
     font-size: .8em;
     .label {
@@ -1206,6 +1224,14 @@ i.icon.pin_button {
       font-weight: bold;
       font-size: .7rem;
     }
+  }
+}
+
+.team-app-input {
+  .password_input_strength_indicator {
+    position: absolute;
+    right: 10px;
+    top:25%;
   }
 }
 
@@ -2348,20 +2374,58 @@ button.action_text_button {
       @include flex-shrink(0);
       background-color: $themeColor;
       color: #E8E8E8;
+      width: 220px;
       #team_menu {
+        @include flex-shrink(0);
+        @include display-flex();
         position: relative;
         height: 60px;
-        @include flex-shrink(0);
-        padding: 0 1em;
+        padding: .5625em 1em;
+        .circular-progress {
+          @include flex-shrink(0);
+          position: relative;
+          opacity: .7;
+          &:hover {
+            opacity: 1;
+          }
+          & > i {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+          }
+        }
+        .CircularProgressbar {
+          @include flex-shrink(0);
+          width: auto;
+          height: 100%;
+          &.green {
+            .CircularProgressbar-text {
+              fill: $themeGreenColor;
+            }
+            .CircularProgressbar-path {
+              stroke: $themeGreenColor;
+            }
+          }
+          .CircularProgressbar-trail {
+            stroke: white;
+          }
+          .CircularProgressbar-text {
+            font-size: 25px;
+            fill: rgb(255, 154, 0);
+          }
+          .CircularProgressbar-path {
+            stroke: rgb(255, 154, 0);
+          }
+        }
         &:hover {
           cursor: pointer;
           background-color: rgba(255, 255, 255, 0.2);
         }
         .team_name_container {
-          @include display-flex();
+          display: block;
           font-size: 1em;
           font-weight:700;
-          margin-top: .5625em;
           line-height: 1.075em;
           color: white;
         }

@@ -50,11 +50,11 @@
     <script src="/jsMinified/tracker.js?jsv=2"></script>
 
     <link rel="stylesheet" href="semantic/dist/semantic.min.css">
-    <link rel="stylesheet" href="/css/default_style.css?cssv=8"/>
-    <link rel="stylesheet" href="/css/bootstrap.css?cssv=8"/>
-    <link rel="stylesheet" href="/css/landingPage.css?cssv=8"/>
-    <link rel="stylesheet" href="/css/teamBody.css?cssv=8"/>
-    <link rel="stylesheet" href="/css/lib/fonts/font-awesome-4.2.0/css/font-awesome.min.css?cssv=8"/>
+    <link rel="stylesheet" href="/css/default_style.css?cssv=9"/>
+    <link rel="stylesheet" href="/css/bootstrap.css?cssv=9"/>
+    <link rel="stylesheet" href="/css/landingPage.css?cssv=9"/>
+    <link rel="stylesheet" href="/css/teamBody.css?cssv=9"/>
+    <link rel="stylesheet" href="/css/lib/fonts/font-awesome-4.2.0/css/font-awesome.min.css?cssv=9"/>
     <script type="text/javascript">$crisp = [];
     CRISP_WEBSITE_ID = "6e9fe14b-66f7-487c-8ac9-5912461be78a";
     (function () {

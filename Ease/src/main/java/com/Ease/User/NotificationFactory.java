@@ -2,6 +2,7 @@ package com.Ease.User;
 
 import com.Ease.Context.Variables;
 import com.Ease.Hibernate.HibernateQuery;
+import com.Ease.NewDashboard.App;
 import com.Ease.Team.Channel;
 import com.Ease.Team.Team;
 import com.Ease.Team.TeamCard.TeamCard;
@@ -231,6 +232,26 @@ public class NotificationFactory {
         Channel channel = teamCard.getChannel();
         String url = "#/teams/" + team.getDb_id() + "/" + channel.getDb_id() + "?app_id=" + teamCard.getDb_id();
         Notification notification = this.createNotification(channel.getRoom_manager().getUser(), "The password of " + teamCardReceiver.getTeamUser().getUsername() + " for " + teamCard.getName() + " is not up to date for the last 7 days", teamCard.getLogo(), url);
+        hibernateQuery.saveOrUpdateObject(notification);
+        userWebSocketManager.sendObject(WebSocketMessageFactory.createNotificationMessage(notification));
+    }
+
+    public void createPasswordNotUpToDateReminder(TeamUser teamUserSender, TeamUser teamUserReceiver, TeamCard teamCard, WebSocketManager userWebSocketManager, HibernateQuery hibernateQuery) {
+        String url = "#/teams/" + teamCard.getTeam().getDb_id() + "/" + teamCard.getChannel().getDb_id() + "?app_id=" + teamCard.getDb_id();
+        Notification notification = this.createNotification(teamUserReceiver.getUser(), teamUserSender.getUsername() + " reminds you to change your password for " + teamCard.getName(), teamCard.getLogo(), url);
+        hibernateQuery.saveOrUpdateObject(notification);
+        userWebSocketManager.sendObject(WebSocketMessageFactory.createNotificationMessage(notification));
+    }
+
+    public void createPasswordScoreTooWeakNotification(TeamUser teamUserSender, TeamUser teamUserReceiver, TeamCard teamCard, WebSocketManager userWebSocketManager, HibernateQuery hibernateQuery) {
+        if (!teamUserReceiver.isRegistered())
+            return;
+        TeamCardReceiver teamCardReceiver = teamCard.getTeamCardReceiver(teamUserReceiver);
+        if (teamCardReceiver == null)
+            return;
+        App app = teamCardReceiver.getApp();
+        String url = "#/main/dashboard?app_id=" + app.getDb_id();
+        Notification notification = this.createNotification(teamUserReceiver.getUser(), teamUserSender.getUsername() + " asked you to change the password of " + teamCard.getName() + " to make it stronger.", teamCard.getLogo(), url);
         hibernateQuery.saveOrUpdateObject(notification);
         userWebSocketManager.sendObject(WebSocketMessageFactory.createNotificationMessage(notification));
     }

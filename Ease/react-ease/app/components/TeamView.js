@@ -34,6 +34,7 @@ var EaseHeader = require('./common/EaseHeader');
 var api = require('../utils/api');
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 import NotificationBoxContainer from "./common/NotificationBoxContainer";
+import InitializePasswordScoreFeatureModal from "./modals/InitializePasswordScoreFeatureModal";
 
 @connect((store)=>({
   teams: store.teams,
@@ -105,6 +106,7 @@ class TeamView extends React.Component {
         active: true,
         team_id: team.id
       }));
+
     if (!this.isValidTeamItemId()){
       this.autoSelectItem();
     }
@@ -185,12 +187,15 @@ class TeamView extends React.Component {
     const user = this.props.common.user;
     const selectedItem = this.getSelectedItem();
     const me = !!team ? team.team_users[team.my_team_user_id] : null;
+    const meAdmin = isAdmin(me.role);
     return (
         <div id="teamsHandler">
           {!!team &&
           <div className="team_view" id="team_view">
             {!this.state.loadingInfo && team.payment_required &&
             <FreeTrialEndModal team_id={team.id}/>}
+            {!this.state.loadingInfo && !team.payment_required && meAdmin && !team.password_score_initialized &&
+            <InitializePasswordScoreFeatureModal team_id={team.id}/>}
             {this.state.loadingInfo && <LoadingScreen/>}
             <TeamSideBar team={team} me={me} openMenu={this.setTeamMenu.bind(null, true)}/>
             {!user.status.team_tuto_done &&

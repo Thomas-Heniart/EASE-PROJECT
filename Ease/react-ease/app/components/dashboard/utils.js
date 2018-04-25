@@ -10,7 +10,7 @@ import {connect} from "react-redux";
 export const EmptyAppIndicator = (props) => {
   return (
       <div class="app_overlay_indicator" {...props}>
-        <Icon name="exclamation triangle" fitted size="large"/>
+        <Icon name="exclamation triangle" fitted/>
       </div>
   )
 };
@@ -24,7 +24,17 @@ export const LoadingAppIndicator = (props) => {
 
 export const WaitingTeamApproveIndicator = (props) => {
   return (
-      <div class="app_overlay_indicator grey" {...props}/>
+      <div class="app_overlay_indicator" {...props}>
+        <Icon name="hourglass half" fitted/>
+      </div>
+  )
+};
+
+export const UpdatePasswordIndicator = (props) => {
+  return (
+      <div class="app_overlay_indicator red" {...props}>
+        <Icon name="unlock alternate" fitted/>
+      </div>
   )
 };
 
@@ -44,7 +54,6 @@ export const DepartureDatePassedIndicator = ({team_name, departure_date}) => {
 export const EmptyTeamAppIndicator = (props) => {
   return (
       <div class="app_overlay_indicator red" {...props}>
-        <Icon name="wrench" fitted size="large"/>
       </div>
   )
 };
@@ -80,7 +89,7 @@ export class DisabledAppIndicator extends Component {
                hoverable
                trigger={
                  <div class="app_overlay_indicator">
-                   <Icon name="hourglass half" fitted size="large"/>
+                   <Icon name="hourglass half" fitted/>
                  </div>
                }
                content={

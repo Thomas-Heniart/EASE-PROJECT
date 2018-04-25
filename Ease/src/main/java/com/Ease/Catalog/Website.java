@@ -343,9 +343,7 @@ public class Website {
 
     public Map<String, String> getInformationNeeded(JSONObject information) throws HttpServletException {
         Map<String, String> res = new ConcurrentHashMap<>();
-        System.out.println("Get information needed");
         for (WebsiteInformation websiteInformation : this.getWebsiteInformationList()) {
-            System.out.println("Get information needed loop");
             String value = information.optString(websiteInformation.getInformation_name());
             if (value == null || value.equals(""))
                 throw new HttpServletException(HttpStatus.BadRequest, "Missing parameter " + websiteInformation.getInformation_name());

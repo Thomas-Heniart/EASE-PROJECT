@@ -83,6 +83,16 @@ function TeamBasicPlan(props) {
             <span>Up to 1 Team <TeamPlanPopup text={'Admins can activate, deactivate members, give them access to tools…'}
                                               trigger={<span class="text-underlined">Admin</span>}/></span>
           </div>
+          <div className="feature">
+            <i className="fa fa-check tic"/>
+            <span>Up to 1 Team <TeamPlanPopup
+                text={'Admins can activate, deactivate members, give them access to tools…'}
+                trigger={<span className="text-underlined">Admin</span>}/></span>
+          </div>
+          <div className="feature">
+            <i className="fa fa-check tic"/>
+            <span>Security score</span>
+          </div>
         </div>
       </div>
   )
@@ -131,6 +141,10 @@ function TeamProPlan(props){
           <div class="feature">
             <i class="fa fa-check tic"/>
             <span>Securely receive external passwords</span>
+          </div>
+          <div className="feature">
+            <i className="fa fa-check tic"/>
+            <span>Password vulnerability checking</span>
           </div>
         </div>
       </div>

@@ -265,7 +265,8 @@ public class User {
             if (!team.isActive())
                 continue;
             JSONObject teamObject = team.getSimpleJson();
-            teamObject.put("disabled", teamUser.isDisabled() || teamUser.getState() == 1 || (teamUser.getDepartureDate() != null && teamUser.getDepartureDate().getTime() <= new Date().getTime()));
+            teamObject.put("disabled", teamUser.isDisabled() || teamUser.getState() == 1);
+            teamObject.put("departure_date", teamUser.getDepartureDate() == null ? JSONObject.NULL : teamUser.getDepartureDate().getTime());
             teamObject.put("state", teamUser.getState());
             teams.put(teamObject);
         }
@@ -274,6 +275,7 @@ public class User {
         res.put("connection_lifetime", this.getOptions().getConnection_lifetime());
         res.put("background_picture", this.getOptions().isBackground_picked());
         res.put("new_feature_seen", this.getUserStatus().isNewFeatureSeen());
+        res.put("registration_date", this.getRegistration_date() == null ? JSONObject.NULL : this.getRegistration_date().getTime());
         return res;
     }
 

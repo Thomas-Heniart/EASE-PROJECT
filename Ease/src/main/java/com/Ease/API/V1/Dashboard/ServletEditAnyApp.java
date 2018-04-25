@@ -61,7 +61,7 @@ public class ServletEditAnyApp extends HttpServlet {
                 website = catalog.getWebsiteWithStrictUrl(url, connection_information, hibernateQuery);
                 if (website != null) {
                     if (website.getWebsiteAttributes().isIntegrated()) {
-                        App tmp_app = AppFactory.getInstance().createClassicApp(name, website, keyUser, account, sm.getHibernateQuery());
+                        App tmp_app = AppFactory.getInstance().createClassicApp(name, website, account, sm.getHibernateQuery());
                         tmp_app.setProfile(anyApp.getProfile());
                         tmp_app.setPosition(anyApp.getPosition());
                         sm.deleteObject(anyApp);
