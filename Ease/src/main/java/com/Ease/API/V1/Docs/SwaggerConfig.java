@@ -32,18 +32,10 @@ public class SwaggerConfig extends HttpServlet {
         beanConfig.setResourcePackage("com.Ease");
         beanConfig.setScan(true);
 
-        JSONObject res = new JSONObject();
-
         // return swagger json on demand
-        //Gson gson = new Gson();
-        //String swaggerJson = gson.toJson(beanConfig.getSwagger());
         response.setContentType("application/json");
-
         ObjectMapper mapper = new ObjectMapper();
         String jsonInString = mapper.writeValueAsString(beanConfig.getSwagger());
-
-
-
 
         response.getWriter().write(jsonInString);
     }
