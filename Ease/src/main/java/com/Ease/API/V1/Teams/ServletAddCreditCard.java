@@ -8,7 +8,6 @@ import com.Ease.Utils.Servlets.PostServletManager;
 import com.stripe.exception.StripeException;
 import com.stripe.model.Card;
 import com.stripe.model.Customer;
-import com.stripe.model.Subscription;
 import org.json.JSONObject;
 
 import javax.servlet.RequestDispatcher;
@@ -47,7 +46,7 @@ public class ServletAddCreditCard extends HttpServlet {
             JSONObject res = new JSONObject(card.toJson());
             team.setCard_entered(true);
             team.setActive(true);
-            if (!team.isFreemium()) {
+            /* if (!team.isFreemium()) {
                 int qte = team.getActiveTeamUserNumber();
                 team.getSubscription().cancel(new HashMap<>());
                 Map<String, Object> item = new HashMap<>();
@@ -64,7 +63,7 @@ public class ServletAddCreditCard extends HttpServlet {
                 team.setSubscription_id(subscription.getId());
                 team.setSubscription(subscription);
                 sm.getTeamProperties(team_id).put("subscription", subscription);
-            }
+            } */
             sm.saveOrUpdate(team);
             sm.setSuccess(res);
         } catch (StripeException e) {
