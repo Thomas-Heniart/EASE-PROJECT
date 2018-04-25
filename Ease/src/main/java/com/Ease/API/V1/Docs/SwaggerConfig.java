@@ -1,6 +1,7 @@
 package com.Ease.API.V1.Docs;
 
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import io.swagger.jaxrs.config.BeanConfig;
 import org.json.JSONObject;
@@ -24,21 +25,27 @@ public class SwaggerConfig extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
         BeanConfig beanConfig = new BeanConfig();
-        beanConfig.setVersion("1.0.2");
+        beanConfig.setVersion("v1");
         beanConfig.setSchemes(new String[]{"http"});
-        beanConfig.setHost(HOST);
-        beanConfig.setBasePath(PATH_BASE);
-        beanConfig.setResourcePackage(PACKAGE_TO_SCAN);
+        beanConfig.setHost("localhost:8080");
+        beanConfig.setBasePath("/rest");
+        beanConfig.setResourcePackage("com.Ease");
         beanConfig.setScan(true);
-        beanConfig.setPrettyPrint(true);
 
         JSONObject res = new JSONObject();
 
         // return swagger json on demand
-        Gson gson = new Gson();
-        String swaggerJson = gson.toJson(beanConfig.getSwagger());
+        //Gson gson = new Gson();
+        //String swaggerJson = gson.toJson(beanConfig.getSwagger());
         response.setContentType("application/json");
-        response.getWriter().write(swaggerJson);
+
+        ObjectMapper mapper = new ObjectMapper();
+        String jsonInString = mapper.writeValueAsString(beanConfig.getSwagger());
+
+
+
+
+        response.getWriter().write(jsonInString);
     }
 
 }
