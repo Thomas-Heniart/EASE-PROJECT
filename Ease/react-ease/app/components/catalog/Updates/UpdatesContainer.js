@@ -123,6 +123,13 @@ class UpdatesContainer extends React.Component {
         account_information
       ).then(response => {
       });
+    else if (this.state.type[item.id] === 'password')
+      passwordUpdateModal(
+        this.props.dispatch,
+        website,
+        item
+      ).then(response => {
+      });
     else
       passwordUpdateModal(
         this.props.dispatch,
@@ -145,6 +152,11 @@ class UpdatesContainer extends React.Component {
     if (!appExist || (item.team_card_id !== -1 && !isEnterprise && noFillerId)) {
       this.state.type[item.id] = 'new';
       return <span>New Account</span>;
+    }
+    else if ((!appExist || (item.team_card_id !== -1 && !isEnterprise && noFillerId))
+      && item.account_information.login === '' && item.account_information.password !== '') {
+      this.state.type[item.id] = 'password2';
+      return <span>Password update</span>;
     }
     else if (item.team_user_id !== -1 || (item.app_id !== -1 &&
       ((!app.sso_group_id && (appAccountInfo || cardAccountInfo || accountInfoEnterprise)) || ssoAccountInfo))) {

@@ -290,7 +290,8 @@ class NewAccountUpdateModal extends React.Component {
               className="modal-button"
               content="NEXT"
               loading={this.state.loading}
-              disabled={this.state.loading || this.state.check === ''}/>
+              disabled={this.state.loading || this.state.check === ''
+              || this.state.account_information.login === '' || this.state.account_information.password === ''}/>
           </Form>
         </Container>
       </SimpleModalTemplate>
