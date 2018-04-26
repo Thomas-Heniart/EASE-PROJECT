@@ -5,6 +5,8 @@
 
     <display-name>Ease</display-name>
 
+    <!-- JAX RS Config -->
+
     <context-param>
         <param-name>resteasy.servlet.mapping.prefix</param-name>
         <param-value>/rest</param-value>
@@ -26,12 +28,7 @@
         <url-pattern>/rest/*</url-pattern>
     </servlet-mapping>
 
-    <!--
-    <context-param>
-        <param-name>resteasy.servlet.mapping.prefix</param-name>
-        <param-value>/rest</param-value>
-    </context-param>
-    -->
+
     <listener>
         <listener-class>com.Ease.Context.OnStart</listener-class>
     </listener>

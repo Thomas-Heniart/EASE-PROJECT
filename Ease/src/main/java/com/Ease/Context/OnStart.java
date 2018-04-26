@@ -6,6 +6,7 @@ import com.Ease.Metrics.MetricsSchedulerTask;
 import com.Ease.Team.TeamManager;
 import com.Ease.User.User;
 import com.Ease.Utils.*;
+import com.Ease.backend.EaseBackendConfiguration;
 import com.stripe.Stripe;
 import io.jsonwebtoken.SignatureAlgorithm;
 
@@ -24,13 +25,19 @@ public class OnStart implements ServletContextListener {
 
     @Override
     public void contextDestroyed(ServletContextEvent evt) {
+
         System.out.println("ServletContextListener destroyed");
         HibernateDatabase.getSessionFactory().close();
+
     }
 
     // Run this before web application is started
     @Override
     public void contextInitialized(ServletContextEvent evt) {
+
+        // check env and get external properties file
+        Properties propertiesFile = new EaseBackendConfiguration().get();
+
         ServletContext context = evt.getServletContext();
         DataBaseConnection db;
         try {

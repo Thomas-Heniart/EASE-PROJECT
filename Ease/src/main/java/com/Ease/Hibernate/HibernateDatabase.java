@@ -1,10 +1,8 @@
 package com.Ease.Hibernate;
 
+import com.Ease.backend.EaseBackendConfiguration;
+import com.Ease.backend.HibernateConfiguration;
 import org.hibernate.SessionFactory;
-import org.hibernate.boot.Metadata;
-import org.hibernate.boot.MetadataSources;
-import org.hibernate.boot.registry.StandardServiceRegistry;
-import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 
 /**
  * Created by thomas on 20/04/2017.
@@ -13,17 +11,17 @@ public class HibernateDatabase {
     private static final SessionFactory sessionFactory;
     private static final SessionFactory sessionFactory1;
 
+    private static final String TYPE_DB = "TYPE_DB";
+    private static final String TYPE_METRICS = "TYPE_METRICS";
+
     static {
         try {
-            StandardServiceRegistry standardRegistry =
-                    new StandardServiceRegistryBuilder().configure().build();
-            Metadata metaData =
-                    new MetadataSources(standardRegistry).getMetadataBuilder().build();
-            sessionFactory = metaData.getSessionFactoryBuilder().build();
 
-            StandardServiceRegistry standardServiceRegistry = new StandardServiceRegistryBuilder().configure("hibernate-tracking.cfg.xml").build();
-            Metadata metadata = new MetadataSources(standardServiceRegistry).getMetadataBuilder().build();
-            sessionFactory1 = metadata.getSessionFactoryBuilder().build();
+            // standard hibernate config
+            sessionFactory = new HibernateConfiguration().buildSessionFactory( new EaseBackendConfiguration().get(), TYPE_DB);
+            // metrics hibernate config
+            sessionFactory1 = new HibernateConfiguration().buildSessionFactory( new EaseBackendConfiguration().get(), TYPE_METRICS);
+
         } catch (Throwable th) {
             System.err.println("Initial SessionFactory creation failed" + th);
             throw new ExceptionInInitializerError(th);
