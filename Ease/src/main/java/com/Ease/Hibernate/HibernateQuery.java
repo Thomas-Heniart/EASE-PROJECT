@@ -2,6 +2,8 @@ package com.Ease.Hibernate;
 
 import com.Ease.Utils.HttpServletException;
 import com.Ease.Utils.HttpStatus;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.hibernate.LockMode;
 import org.hibernate.LockOptions;
 import org.hibernate.Session;
@@ -20,6 +22,8 @@ import java.util.List;
  */
 public class HibernateQuery {
 
+    static final Logger LOGGER = LogManager.getLogger(HibernateQuery.class.getName());
+
     protected Session session;
     protected Transaction transaction;
     protected Query query;
@@ -27,7 +31,7 @@ public class HibernateQuery {
     public HibernateQuery() {
         this.session = HibernateDatabase.getSessionFactory().getCurrentSession();
         this.transaction = this.session.beginTransaction();
-        System.out.println("Hibernate transaction begin");
+        LOGGER.debug("Hibernate transaction begin");
     }
 
     public HibernateQuery(String type) {
@@ -40,7 +44,7 @@ public class HibernateQuery {
                 break;
         }
         this.transaction = this.session.beginTransaction();
-        System.out.println("Hibernate transaction begin");
+        LOGGER.debug("Hibernate transaction begin");
     }
 
     public void queryString(String query) {
@@ -84,9 +88,9 @@ public class HibernateQuery {
             if (!this.transaction.isActive())
                 return;
             this.transaction.commit();
-            System.out.println("Hibernate transaction commit");
+            LOGGER.debug("Hibernate transaction commit");
         } catch (RuntimeException e) {
-            System.out.println("Hibernate transaction rollback");
+            LOGGER.debug("Hibernate transaction rollback");
             this.transaction.rollback();
             throw new HttpServletException(HttpStatus.InternError, e);
         }
