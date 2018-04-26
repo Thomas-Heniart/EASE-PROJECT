@@ -14,7 +14,7 @@ public class StripeScheduledTask extends TimerTask {
     private final Map<Integer, Map<String, Object>> teamIdMap;
     private TeamManager teamManager;
 
-    StripeScheduledTask(TeamManager teamManager, Map<Integer, Map<String, Object>> teamIdMap) {
+    public StripeScheduledTask(TeamManager teamManager, Map<Integer, Map<String, Object>> teamIdMap) {
         super();
         this.teamManager = teamManager;
         this.teamIdMap = teamIdMap;

@@ -18,7 +18,7 @@ public class RemindersScheduledTask extends TimerTask {
     private ReminderEmailManager reminderEmailManager = new ReminderEmailManager();
     private ServletContext servletContext;
 
-    RemindersScheduledTask(TeamManager teamManager, ServletContext servletContext) {
+    public RemindersScheduledTask(TeamManager teamManager, ServletContext servletContext) {
         super();
         this.teamManager = teamManager;
         this.servletContext = servletContext;

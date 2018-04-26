@@ -1,7 +1,7 @@
 package com.Ease.Hibernate;
 
-import com.Ease.backend.EaseBackendConfiguration;
-import com.Ease.backend.HibernateConfiguration;
+import com.Ease.backend.common.configuration.ApplicationConfiguration;
+import com.Ease.backend.common.configuration.HibernateConfiguration;
 import org.hibernate.SessionFactory;
 
 /**
@@ -18,9 +18,9 @@ public class HibernateDatabase {
         try {
 
             // standard hibernate config
-            sessionFactory = new HibernateConfiguration().buildSessionFactory( new EaseBackendConfiguration().get(), TYPE_DB);
+            sessionFactory = new HibernateConfiguration().buildSessionFactory( new ApplicationConfiguration().get(), TYPE_DB);
             // metrics hibernate config
-            sessionFactory1 = new HibernateConfiguration().buildSessionFactory( new EaseBackendConfiguration().get(), TYPE_METRICS);
+            sessionFactory1 = new HibernateConfiguration().buildSessionFactory( new ApplicationConfiguration().get(), TYPE_METRICS);
 
         } catch (Throwable th) {
             System.err.println("Initial SessionFactory creation failed" + th);

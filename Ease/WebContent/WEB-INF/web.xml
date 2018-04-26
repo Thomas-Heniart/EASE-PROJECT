@@ -30,7 +30,7 @@
 
 
     <listener>
-        <listener-class>com.Ease.Context.OnStart</listener-class>
+        <listener-class>com.Ease.backend.ApplicationEntryPoint</listener-class>
     </listener>
     <listener>
         <listener-class>com.Ease.Context.SessionListener</listener-class>

@@ -1,4 +1,4 @@
-package com.Ease.backend;
+package com.Ease.backend.common.configuration;
 
 import com.sun.beans.finder.ClassFinder;
 import org.hibernate.SessionFactory;

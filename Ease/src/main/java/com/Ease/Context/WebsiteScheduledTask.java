@@ -12,7 +12,7 @@ public class WebsiteScheduledTask extends TimerTask {
 
     private Catalog catalog;
 
-    WebsiteScheduledTask(Catalog catalog) {
+    public WebsiteScheduledTask(Catalog catalog) {
         super();
         this.catalog = catalog;
     }

@@ -1,4 +1,4 @@
-package com.Ease.backend;
+package com.Ease.backend.common.configuration;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -7,9 +7,9 @@ import java.util.Properties;
 
 
 /*
-    EaseBackendConfiguration class : will check and load external properties file
+    ApplicationConfiguration class : will check and load external properties file
  */
-public class EaseBackendConfiguration {
+public class ApplicationConfiguration {
 
     private static final String CONF_ENV_VAR = "JAVA_CONF_PATH_EASE";
     private static final String ERROR_VAR = CONF_ENV_VAR+" is not configured.";

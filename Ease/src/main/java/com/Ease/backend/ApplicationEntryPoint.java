@@ -1,12 +1,13 @@
-package com.Ease.Context;
+package com.Ease.backend;
 
 import com.Ease.Catalog.Catalog;
+import com.Ease.Context.*;
 import com.Ease.Hibernate.HibernateDatabase;
 import com.Ease.Metrics.MetricsSchedulerTask;
 import com.Ease.Team.TeamManager;
 import com.Ease.User.User;
 import com.Ease.Utils.*;
-import com.Ease.backend.EaseBackendConfiguration;
+import com.Ease.backend.common.configuration.ApplicationConfiguration;
 import com.stripe.Stripe;
 import io.jsonwebtoken.SignatureAlgorithm;
 
@@ -21,7 +22,7 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
-public class OnStart implements ServletContextListener {
+public class ApplicationEntryPoint implements ServletContextListener {
 
     @Override
     public void contextDestroyed(ServletContextEvent evt) {
@@ -36,7 +37,7 @@ public class OnStart implements ServletContextListener {
     public void contextInitialized(ServletContextEvent evt) {
 
         // check env and get external properties file
-        Properties propertiesFile = new EaseBackendConfiguration().get();
+        Properties propertiesFile = new ApplicationConfiguration().get();
 
         ServletContext context = evt.getServletContext();
         DataBaseConnection db;
