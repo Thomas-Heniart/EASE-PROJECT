@@ -1,4 +1,4 @@
-package com.Ease.API.RestEasy;
+package com.Ease.backend.common.configuration;
 
 import com.Ease.API.Rest.GetAppInformationRE;
 
@@ -6,10 +6,10 @@ import javax.ws.rs.core.Application;
 import java.util.HashSet;
 import java.util.Set;
 
-public class RestEasyApplication extends Application {
+public class RestEasyCoreConfiguration extends Application {
     private Set<Object> singletons = new HashSet<Object>();
 
-    public RestEasyApplication() {
+    public RestEasyCoreConfiguration() {
         singletons.add(new GetAppInformationRE());
     }
 

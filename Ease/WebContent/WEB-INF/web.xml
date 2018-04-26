@@ -19,7 +19,7 @@
         </servlet-class>
         <init-param>
             <param-name>javax.ws.rs.Application</param-name>
-            <param-value>com.Ease.API.RestEasy.RestEasyApplication</param-value>
+            <param-value>com.Ease.backend.common.configuration.RestEasyCoreConfiguration</param-value>
         </init-param>
     </servlet>
 
