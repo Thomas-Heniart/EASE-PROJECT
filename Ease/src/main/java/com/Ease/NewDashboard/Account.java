@@ -317,4 +317,14 @@ public class Account {
         this.getAccountInformationSet().forEach(accountInformation -> res.put(accountInformation.getInformation_name(), accountInformation.getDeciphered_information_value()));
         return res;
     }
+
+    public StringBuilder passwordExportCsvString() {
+        StringBuilder passwordExportCsv = new StringBuilder();
+        for (AccountInformation accountInformation : this.getAccountInformationSet()) {
+            passwordExportCsv
+                    .append(accountInformation.getDeciphered_information_value())
+                    .append(",");
+        }
+        return passwordExportCsv.deleteCharAt(passwordExportCsv.length() - 1);
+    }
 }

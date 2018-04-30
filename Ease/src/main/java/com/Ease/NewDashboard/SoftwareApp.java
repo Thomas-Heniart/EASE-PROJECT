@@ -103,4 +103,20 @@ public class SoftwareApp extends App {
         res.put("account_information", this.getAccount().getJson());
         return res;
     }
+
+    @Override
+    public StringBuilder passwordExportCsvString() {
+        StringBuilder passwordExportCsvString = super.passwordExportCsvString();
+        if (this.getAccount() == null)
+            return passwordExportCsvString;
+        passwordExportCsvString
+                .append(",");
+        if (this.getAccount() != null) {
+            passwordExportCsvString
+                    .append(",")
+                    .append(this.getAccount().passwordExportCsvString());
+        }
+        return passwordExportCsvString;
+
+    }
 }

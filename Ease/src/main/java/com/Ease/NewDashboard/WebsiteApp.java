@@ -77,4 +77,21 @@ public abstract class WebsiteApp extends App {
         res.put(website);
         return res;
     }
+
+    @Override
+    public StringBuilder passwordExportCsvString() {
+        StringBuilder passwordExportCsvString = super.passwordExportCsvString();
+        if (this.getAccount() == null)
+            return passwordExportCsvString;
+        passwordExportCsvString
+                .append(",")
+                .append(this.getWebsite().getLogin_url());
+        if (this.getAccount() != null) {
+            passwordExportCsvString
+                    .append(",")
+                    .append(this.getAccount().passwordExportCsvString());
+        }
+        return passwordExportCsvString;
+
+    }
 }

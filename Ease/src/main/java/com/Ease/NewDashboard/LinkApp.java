@@ -63,4 +63,9 @@ public class LinkApp extends App {
     public JSONArray getConnectionJson(String public_key) throws HttpServletException {
         return super.getConnectionJson(public_key);
     }
+
+    @Override
+    public StringBuilder passwordExportCsvString() {
+        return new StringBuilder();
+    }
 }

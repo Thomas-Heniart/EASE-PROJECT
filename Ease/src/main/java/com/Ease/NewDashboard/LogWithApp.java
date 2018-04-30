@@ -99,4 +99,9 @@ public class LogWithApp extends WebsiteApp {
     public boolean isEmpty() {
         return this.getLoginWith_app() == null;
     }
+
+    @Override
+    public StringBuilder passwordExportCsvString() {
+        return new StringBuilder();
+    }
 }

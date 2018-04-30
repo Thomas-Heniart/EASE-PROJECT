@@ -142,4 +142,15 @@ public class TeamSingleSoftwareCard extends TeamSoftwareCard {
         this.magicLinkExpirationDate = now.getTime();
     }
 
+    @Override
+    public StringBuilder passwordExportCsvString() {
+        StringBuilder passwordExportCsvString = super.passwordExportCsvString();
+        if (this.getAccount() == null)
+            return passwordExportCsvString;
+        return passwordExportCsvString
+                .append(",")
+                .append(",")
+                .append(this.getAccount().passwordExportCsvString());
+    }
+
 }

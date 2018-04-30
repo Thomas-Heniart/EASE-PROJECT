@@ -129,4 +129,16 @@ public class TeamSingleCard extends TeamWebsiteCard {
         now.add(Calendar.DAY_OF_YEAR, 1);
         this.magicLinkExpirationDate = now.getTime();
     }
+
+    @Override
+    public StringBuilder passwordExportCsvString() {
+        StringBuilder passwordExportCsvString = super.passwordExportCsvString();
+        if (this.getAccount() == null)
+            return passwordExportCsvString;
+        return passwordExportCsvString
+                .append(",")
+                .append(this.getWebsite().getLogin_url())
+                .append(",")
+                .append(this.getAccount().passwordExportCsvString());
+    }
 }

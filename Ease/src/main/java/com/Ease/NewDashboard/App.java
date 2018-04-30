@@ -200,4 +200,7 @@ abstract public class App {
     }
 
 
+    public StringBuilder passwordExportCsvString() {
+        return this.getAccount() == null ? new StringBuilder() : new StringBuilder(this.getAppInformation().getName());
+    }
 }

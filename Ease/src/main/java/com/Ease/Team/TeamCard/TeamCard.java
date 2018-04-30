@@ -286,4 +286,11 @@ public abstract class TeamCard {
     public Collection<TeamUser> getTeamUsers() {
         return this.getTeamCardReceiverMap().values().stream().map(TeamCardReceiver::getTeamUser).collect(Collectors.toList());
     }
+
+    public StringBuilder passwordExportCsvString() {
+        StringBuilder stringBuilder = new StringBuilder();
+        if (this.getAccount() == null)
+            return stringBuilder;
+        return stringBuilder.append(this.getName());
+    }
 }
