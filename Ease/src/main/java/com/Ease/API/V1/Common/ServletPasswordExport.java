@@ -24,8 +24,10 @@ public class ServletPasswordExport extends HttpServlet {
                 if (app.getAccount() == null)
                     continue;
                 Team team = app.getTeamCardReceiver() != null ? app.getTeamCardReceiver().getTeamCard().getTeam() : null;
-                if (team != null)
-                    sm.needToBeTeamUserOfTeam(team);
+                if (team != null) {
+                    team = sm.getTeam(team.getDb_id());
+                    sm.getUser().getTeamUser(team);
+                }
                 String teamKey = team != null ? sm.getTeamKey(team) : null;
                 app.decipher(keyUser, teamKey);
                 stringBuilder.append(app.passwordExportCsvString());
