@@ -38,7 +38,7 @@ class DownloadOwnPasswordsDiv extends Component {
         <Fragment>
           {this.state.loading ?
               <Loader active size='mini' inline/> :
-              <a class='simple_link' onClick={this.download}>here</a>
+              <a class='simple_link' target="_blank" href={`/api/v1/common/export-passwords`}>here</a>
           }
         </Fragment>
     )

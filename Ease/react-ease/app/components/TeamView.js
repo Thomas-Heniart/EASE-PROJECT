@@ -56,7 +56,7 @@ class DownloadTeamPasswords extends Component {
         <Fragment>
           {this.state.loading ?
               <Loader active size='mini' inline/> :
-              <a class='simple_link' onClick={this.download}>here</a>
+              <a class='simple_link' href={`/api/v1/teams/export-passwords?team_id=${this.props.team_id}`} target="_blank">here</a>
           }
         </Fragment>
     )
@@ -228,7 +228,7 @@ class TeamView extends React.Component {
           {!!team &&
           <Fragment>
             {isOwner(me.role) &&
-            <DownloadTeamPasswords/>}
+            <DownloadTeamPasswords team_id={team.id}/>}
             <div className="team_view" id="team_view">
               {!this.state.loadingInfo && team.payment_required &&
               <FreeTrialEndModal team_id={team.id}/>}
