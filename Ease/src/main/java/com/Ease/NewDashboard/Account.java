@@ -8,10 +8,13 @@ import com.Ease.Hibernate.HibernateQuery;
 import com.Ease.Utils.Crypto.AES;
 import com.Ease.Utils.Crypto.RSA;
 import com.Ease.Utils.HttpServletException;
+import com.nulabinc.zxcvbn.Zxcvbn;
+import haveibeenpwned.api.RangeAPI;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.json.JSONObject;
 
 import javax.persistence.*;
+import java.security.NoSuchAlgorithmException;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Set;
