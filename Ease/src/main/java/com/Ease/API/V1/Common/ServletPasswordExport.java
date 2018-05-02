@@ -33,6 +33,7 @@ public class ServletPasswordExport extends HttpServlet {
                 stringBuilder.append(app.passwordExportCsvString());
                 stringBuilder.append("\n");
             }
+            sm.getHibernateQuery().commit();
             stringBuilder.deleteCharAt(stringBuilder.length() - 1);
             response.setContentType("text/csv");
             response.setHeader("Content-Disposition", "attachment; filename=\"ease_passwords.csv\"");

@@ -29,6 +29,7 @@ public class ServletPasswordExport extends HttpServlet {
                 stringBuilder.append(teamCard.passwordExportCsvString());
                 stringBuilder.append("\n");
             }
+            sm.getHibernateQuery().commit();
             stringBuilder.deleteCharAt(stringBuilder.length() - 1);
             response.setContentType("text/csv");
             response.setHeader("Content-Disposition", "attachment; filename=\"ease_team_passwords.csv\"");
@@ -38,7 +39,6 @@ public class ServletPasswordExport extends HttpServlet {
         } catch (Exception e) {
             sm.setError(e);
         }
-        sm.sendResponse();
     }
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
