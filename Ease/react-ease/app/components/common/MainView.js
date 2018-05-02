@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, {Component, Fragment} from 'react';
 import EaseHeader from './EaseHeader';
 import TeamsPreview from '../teams/TeamsPreview';
 import Catalog from '../catalog/Catalog';
@@ -10,10 +10,48 @@ import { DragDropContext } from 'react-dnd';
 import CustomDragLayer from "../dashboard/CustomDragLayer";
 import NotificationBoxContainer from "../common/NotificationBoxContainer";
 var NewSimpleTeamCreationView = require('../onBoarding/NewSimpleTeamCreationView');
+import api from "../../utils/api";
 import {connect} from "react-redux";
+import {Icon, Loader} from 'semantic-ui-react';
 import {showExtensionDownloadModal,
   showMagicLinkChooserModal,
   showConnectionDurationChooserModal} from "../../actions/modalActions";
+
+class DownloadOwnPasswordsDiv extends Component {
+  constructor(props){
+    super(props);
+    this.state = {
+      loading: false,
+      errorMessage: ''
+    }
+  }
+  download = () => {
+    this.setState({loading: true});
+    api.common.exportOwnPasswords().then(response => {
+      this.setState({loading: false});
+    }).catch(err => {
+      this.setState({loading: false, errorMessage: err});
+    });
+  };
+  renderLink = () => {
+    return (
+        <Fragment>
+          {this.state.loading ?
+              <Loader active size='mini' inline/> :
+              <a class='simple_link' onClick={this.download}>here</a>
+          }
+        </Fragment>
+    )
+  };
+  render(){
+    const link = this.renderLink();
+    return (
+        <div id="download_passwords">
+          <i className="em-svg em-warning"/> Ease.space will shutdown definitely on 2018, June 1st. Click {link} to download all your passwords.
+        </div>
+    )
+  }
+}
 
 @connect(store => ({
   common: store.common
@@ -54,6 +92,7 @@ class MainView extends Component {
           </Switch>
           {this.props.location.pathname.split("/")[2] !== "simpleTeamCreation" &&
           <EaseHeader history={this.props.history}/>}
+          <DownloadOwnPasswordsDiv/>
           <CustomDragLayer/>
           <NotificationBoxContainer/>
         </div>

@@ -1,8 +1,6 @@
 import {goToOnBoarding} from "../actions/onBoardingActions";
 import ReactGA from "react-ga";
 import BannerTeams from "./teams/BannerTeams";
-
-var React = require('react');
 var classnames = require('classnames');
 var ReactRouter = require('react-router-dom');
 var LoadingScreen = require('./common/LoadingScreen');
@@ -23,7 +21,7 @@ import * as teamActions from "../actions/teamActions"
 import * as modalActions from "../actions/teamModalActions"
 import {OpacityTransition} from "../utils/transitions";
 import {teamUserState} from "../utils/utils";
-import {isAdmin} from "../utils/helperFunctions";
+import {isAdmin, isOwner} from "../utils/helperFunctions";
 import {showInviteTeamUsersModal, showVerifyTeamUserModal, showReactivateTeamUserModal, showDepartureDateEndModal} from "../actions/teamModalActions";
 import {Route, Switch, withRouter} from "react-router-dom";
 import TeamsTutorial from "./teams/TeamsTutorial";
@@ -35,6 +33,43 @@ var api = require('../utils/api');
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 import NotificationBoxContainer from "./common/NotificationBoxContainer";
 import InitializePasswordScoreFeatureModal from "./modals/InitializePasswordScoreFeatureModal";
+import React, {Component, Fragment} from "react";
+
+class DownloadTeamPasswords extends Component {
+  constructor(props){
+    super(props);
+    this.state = {
+      loading: false,
+      errorMessage: ''
+    }
+  }
+  download = () => {
+    this.setState({loading: true});
+    api.common.exportTeamPasswords().then(response => {
+      this.setState({loading: false});
+    }).catch(err => {
+      this.setState({loading: false, errorMessage: err});
+    });
+  };
+  renderLink = () => {
+    return (
+        <Fragment>
+          {this.state.loading ?
+              <Loader active size='mini' inline/> :
+              <a class='simple_link' onClick={this.download}>here</a>
+          }
+        </Fragment>
+    )
+  };
+  render(){
+    const link = this.renderLink();
+    return (
+        <div id="download_passwords">
+          <i className="em-svg em-warning"/> As a Team Owner, click {link} to download your Team passwords. Ease.space will shut down definitely on June 1st.
+        </div>
+    )
+  }
+}
 
 @connect((store)=>({
   teams: store.teams,
@@ -191,66 +226,70 @@ class TeamView extends React.Component {
     return (
         <div id="teamsHandler">
           {!!team &&
-          <div className="team_view" id="team_view">
-            {!this.state.loadingInfo && team.payment_required &&
-            <FreeTrialEndModal team_id={team.id}/>}
-            {!this.state.loadingInfo && !team.payment_required && meAdmin && !team.password_score_initialized &&
-            <InitializePasswordScoreFeatureModal team_id={team.id}/>}
-            {this.state.loadingInfo && <LoadingScreen/>}
-            <TeamSideBar team={team} me={me} openMenu={this.setTeamMenu.bind(null, true)}/>
-            {!user.status.team_tuto_done &&
-            <TeamsTutorial/>}
-            {this.state.teamMenuActive &&
-            <TeamMenu
-                closeMenu={this.setTeamMenu.bind(null, false)}
-                me={me}
-                team={team}
-                dispatch={this.props.dispatch}/>}
-            {!this.state.loadingInfo && selectedItem !== null &&
-            <div className="client_main_container">
-              <TeamHeader
-                  item={selectedItem}
-                  user={user}
+          <Fragment>
+            {isOwner(me.role) &&
+            <DownloadTeamPasswords/>}
+            <div className="team_view" id="team_view">
+              {!this.state.loadingInfo && team.payment_required &&
+              <FreeTrialEndModal team_id={team.id}/>}
+              {!this.state.loadingInfo && !team.payment_required && meAdmin && !team.password_score_initialized &&
+              <InitializePasswordScoreFeatureModal team_id={team.id}/>}
+              {this.state.loadingInfo && <LoadingScreen/>}
+              <TeamSideBar team={team} me={me} openMenu={this.setTeamMenu.bind(null, true)}/>
+              {!user.status.team_tuto_done &&
+              <TeamsTutorial/>}
+              {this.state.teamMenuActive &&
+              <TeamMenu
+                  closeMenu={this.setTeamMenu.bind(null, false)}
                   me={me}
                   team={team}
-                  setAddAppView={this.setAddAppView}
-                  match={this.props.match}
-                  dispatch={this.props.dispatch}/>
-              <div className="team_client_body bordered_scrollbar">
-                <div id="col_main">
-                  {isAdmin(me.role) && selectedItem.join_requests &&
-                  <BannerTeams room={team.rooms[selectedItem.id]}
-                               team={team}
-                               me={me}
-                               dispatch={this.props.dispatch}/>}
-                  {(this.props.card.type && this.props.card.edit === -1 && this.props.card.channel_id === selectedItem.id) &&
-                  <TeamAppAddingUi
-                      addAppView={this.props.card.type}
-                      item={selectedItem}
-                      website={this.props.card.app} />}
-                  <TeamAppsContainer team={team} item={selectedItem}/>
+                  dispatch={this.props.dispatch}/>}
+              {!this.state.loadingInfo && selectedItem !== null &&
+              <div className="client_main_container">
+                <TeamHeader
+                    item={selectedItem}
+                    user={user}
+                    me={me}
+                    team={team}
+                    setAddAppView={this.setAddAppView}
+                    match={this.props.match}
+                    dispatch={this.props.dispatch}/>
+                <div className="team_client_body bordered_scrollbar">
+                  <div id="col_main">
+                    {isAdmin(me.role) && selectedItem.join_requests &&
+                    <BannerTeams room={team.rooms[selectedItem.id]}
+                                 team={team}
+                                 me={me}
+                                 dispatch={this.props.dispatch}/>}
+                    {(this.props.card.type && this.props.card.edit === -1 && this.props.card.channel_id === selectedItem.id) &&
+                    <TeamAppAddingUi
+                        addAppView={this.props.card.type}
+                        item={selectedItem}
+                        website={this.props.card.app} />}
+                    <TeamAppsContainer team={team} item={selectedItem}/>
+                  </div>
+                  <div id="col_flex">
+                    <Route path={`${this.props.match.url}/flexPanel`} render={(props) => <FlexPanels item={selectedItem}
+                                                                                                     me={me}
+                                                                                                     team={team}
+                                                                                                     backLink={this.props.match.url}
+                                                                                                     {...props}/>} />
+                  </div>
                 </div>
-                <div id="col_flex">
-                  <Route path={`${this.props.match.url}/flexPanel`} render={(props) => <FlexPanels item={selectedItem}
-                                                                                                   me={me}
-                                                                                                   team={team}
-                                                                                                   backLink={this.props.match.url}
-                                                                                                   {...props}/>} />
-                </div>
-              </div>
-            </div>}
-            {!this.state.loadingInfo &&
-            <Switch>
-              <Route path={`${this.props.match.path}/settings`}
-                     component={TeamSettings}/>
-              <Route path={`${this.props.match.path}/members`}
-                     component={TeamBrowsePeopleModal}/>
-              <Route path={`${this.props.match.path}/rooms`}
-                     component={TeamBrowseRoomsModal}/>
-              <Route path={`${this.props.match.path}/upgrade`}
-                     component={StaticUpgradeTeamPlanModal}/>
-            </Switch>}
-          </div>}
+              </div>}
+              {!this.state.loadingInfo &&
+              <Switch>
+                <Route path={`${this.props.match.path}/settings`}
+                       component={TeamSettings}/>
+                <Route path={`${this.props.match.path}/members`}
+                       component={TeamBrowsePeopleModal}/>
+                <Route path={`${this.props.match.path}/rooms`}
+                       component={TeamBrowseRoomsModal}/>
+                <Route path={`${this.props.match.path}/upgrade`}
+                       component={StaticUpgradeTeamPlanModal}/>
+              </Switch>}
+            </div>
+          </Fragment>           }
           <NotificationBoxContainer/>
         </div>
     )

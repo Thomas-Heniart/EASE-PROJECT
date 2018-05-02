@@ -386,6 +386,12 @@ module.exports = {
     }
   },
   common: {
+    exportOwnPasswords: () => {
+      return basic_get('/api/v1/common/export-passwords');
+    },
+    exportTeamPasswords: () => {
+      return basic_get('/api/v1/teams/export-passwords');
+    },
     bz : function(){
       return axios.post('/bz').then(response => {
         return response.data.connected;
