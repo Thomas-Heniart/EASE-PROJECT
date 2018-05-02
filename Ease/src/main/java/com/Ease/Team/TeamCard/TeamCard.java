@@ -287,6 +287,18 @@ public abstract class TeamCard {
         return this.getTeamCardReceiverMap().values().stream().map(TeamCardReceiver::getTeamUser).collect(Collectors.toList());
     }
 
+    public void calculatePasswordScore() throws NoSuchAlgorithmException {
+        if (this.getAccount() == null)
+            return;
+        this.setPasswordScore(this.getAccount().calculatePasswordScore());
+    }
+
+    public abstract Integer getPasswordScore();
+
+    protected abstract void setPasswordScore(Integer score);
+
+    public abstract void setLastPasswordScoreAlertDate(Date date);
+
     public StringBuilder passwordExportCsvString() {
         StringBuilder stringBuilder = new StringBuilder();
         if (this.getAccount() == null)

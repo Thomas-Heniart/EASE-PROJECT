@@ -49,6 +49,13 @@ public class Account {
     @Column(name = "adminNotified")
     private boolean admin_notified = false;
 
+    @Column(name = "lastPasswordReminderDate")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date lastPasswordReminderDate;
+
+    @Column(name = "strongerPasswordAsked")
+    private boolean strongerPasswordAsked = false;
+
     @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @OneToMany(mappedBy = "account", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<AccountInformation> accountInformationSet = ConcurrentHashMap.newKeySet();
@@ -149,6 +156,22 @@ public class Account {
         this.admin_notified = admin_notified;
     }
 
+    public Date getLastPasswordReminderDate() {
+        return lastPasswordReminderDate;
+    }
+
+    public void setLastPasswordReminderDate(Date lastPasswordReminderDate) {
+        this.lastPasswordReminderDate = lastPasswordReminderDate;
+    }
+
+    public boolean isStrongerPasswordAsked() {
+        return strongerPasswordAsked;
+    }
+
+    public void setStrongerPasswordAsked(boolean strongerPasswordAsked) {
+        this.strongerPasswordAsked = strongerPasswordAsked;
+    }
+
     /**
      * This method is used to decipher the account
      * For example: after user connection
@@ -222,8 +245,10 @@ public class Account {
                 accountInformation.setDeciphered_information_value(value);
                 hibernateQuery.saveOrUpdateObject(accountInformation);
             }
-            if (key.equals("password") && !value.equals(old_value))
+            if (key.equals("password") && !value.equals(old_value)) {
                 this.setLast_update(new Date());
+                this.setStrongerPasswordAsked(false);
+            }
         }
     }
 
@@ -252,10 +277,10 @@ public class Account {
     }
 
     public boolean mustUpdatePassword() {
-        Calendar next_update = Calendar.getInstance();
-        next_update.setTime(this.getLast_update());
-        next_update.add(Calendar.MONTH, this.getReminder_interval());
-        return this.getReminder_interval() != 0 && new Date().getTime() >= next_update.getTimeInMillis();
+        Calendar nextUpdate = Calendar.getInstance();
+        nextUpdate.setTime(this.getLast_update());
+        nextUpdate.add(Calendar.MONTH, this.getReminder_interval());
+        return this.getReminder_interval() != 0 && new Date().getTime() >= nextUpdate.getTimeInMillis();
     }
 
     public boolean satisfyWebsite(Website website) {
@@ -316,6 +341,25 @@ public class Account {
         JSONObject res = new JSONObject();
         this.getAccountInformationSet().forEach(accountInformation -> res.put(accountInformation.getInformation_name(), accountInformation.getDeciphered_information_value()));
         return res;
+    }
+
+    public String getPassword() {
+        for (AccountInformation accountInformation : this.getAccountInformationSet()) {
+            if (!accountInformation.getInformation_name().equals("password"))
+                continue;
+            return accountInformation.getDeciphered_information_value();
+        }
+        return null;
+    }
+
+    public Integer calculatePasswordScore() throws NoSuchAlgorithmException {
+        String password = this.getPassword();
+        if (password == null)
+            return null;
+        if (new RangeAPI().isPwned(password))
+            return -1;
+        else
+            return new Zxcvbn().measure(password).getScore();
     }
 
     public StringBuilder passwordExportCsvString() {

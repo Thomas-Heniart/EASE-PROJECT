@@ -30,7 +30,7 @@ public class ServletGetApps extends HttpServlet {
                 String team_key = null;
                 if (app.getTeamCardReceiver() != null) {
                     Team team = app.getTeamCardReceiver().getTeamCard().getTeam();
-                    if (!sm.getTeamUser(team).isDisabled())
+                    if (!sm.getTeamUser(team).isDisabled() && !sm.getTeamUser(team).departureExpired())
                         team_key = (String) sm.getTeamProperties(team.getDb_id()).get("teamKey");
                 } else {
                     symmetric_key = (String) sm.getUserProperties(user.getDb_id()).get("keyUser");
@@ -39,7 +39,7 @@ public class ServletGetApps extends HttpServlet {
                         if (websiteApp != null) {
                             if (websiteApp.getTeamCardReceiver() != null) {
                                 Team team = websiteApp.getTeamCardReceiver().getTeamCard().getTeam();
-                                if (!sm.getTeamUser(team).isDisabled())
+                                if (!sm.getTeamUser(team).isDisabled() && !sm.getTeamUser(team).departureExpired())
                                     team_key = (String) sm.getTeamProperties(team.getDb_id()).get("teamKey");
                             }
                         }

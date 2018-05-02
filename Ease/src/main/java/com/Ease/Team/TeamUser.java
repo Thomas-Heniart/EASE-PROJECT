@@ -244,7 +244,7 @@ public class TeamUser {
     }
 
     public boolean isDisabled() {
-        return disabled || (this.getDepartureDate() != null && this.getDepartureDate().getTime() <= new Date().getTime());
+        return disabled;
     }
 
     public void setDisabled(boolean disabled) {
@@ -450,7 +450,7 @@ public class TeamUser {
     }
 
     public String getDecipheredTeamKey(String userKey) throws HttpServletException {
-        if (this.isVerified() && !this.isDisabled())
+        if (this.isVerified() && !this.isDisabled() && !this.departureExpired())
             return AES.decrypt(this.getTeamKey(), userKey);
         throw new HttpServletException(HttpStatus.Forbidden, "You are not allowed to decipher the team key");
     }
@@ -494,45 +494,6 @@ public class TeamUser {
         res.put("team_id", this.getTeam().getDb_id());
         return res;
     }
-
-    public void cipheringStep(String userKey, String userPrivateKey, HibernateQuery hibernateQuery) throws HttpServletException {
-        if (this.getState() == 1) {
-            this.finalizeRegistration(userKey, userPrivateKey, hibernateQuery);
-            hibernateQuery.saveOrUpdateObject(this);
-        } else if (this.getState() == 2 && this.isDisabled()) {
-            String deciphered_teamKey = RSA.Decrypt(this.getTeamKey(), userPrivateKey);
-            this.setTeamKey(AES.encrypt(deciphered_teamKey, userKey));
-            this.setDisabled(false);
-            hibernateQuery.saveOrUpdateObject(this);
-        }
-    }
-
-    /**
-     * if you have a team profile, it returns it
-     * if you don't and you didn't already had one, create it
-     * if you don't have any profile, create it
-     * if you don't and you already had one, returns any profile of you team space
-     *
-     * @param hibernateQuery
-     * @return Profile profile
-     * @throws HttpServletException
-     */
-    /* public Profile getOrCreateProfile(HibernateQuery hibernateQuery) throws HttpServletException {
-        if (this.getUser() == null || !this.getUser().getUserStatus().isRegistered())
-            throw new HttpServletException(HttpStatus.InternError);
-        Profile profile;
-        if (this.getProfile() == null) {
-            int column_size = Math.toIntExact(this.getUser().getProfileSet().stream().filter(profile1 -> profile1.getColumn_index().equals(2)).count());
-            profile = new Profile(this.getUser(), 2, column_size, new ProfileInformation(this.getTeam().getName()));
-            hibernateQuery.saveOrUpdateObject(profile);
-            this.getUser().addProfile(profile);
-            this.getUser().moveProfile(profile.getDb_id(), 2, 0, hibernateQuery);
-            this.setProfile(profile);
-            this.getTeamUserStatus().setProfile_created(true);
-            hibernateQuery.saveOrUpdateObject(this);
-        }
-        return this.getProfile();
-    } */
 
     /**
      * if you have a team profile, it returns it
@@ -612,5 +573,9 @@ public class TeamUser {
         if (this.getAdmin_id() == null)
             throw new HttpServletException(HttpStatus.BadRequest, "This user does not have admin");
         return this.getTeam().getTeamUserWithId(this.getAdmin_id());
+    }
+
+    public boolean departureExpired() {
+        return this.getDepartureDate() != null && this.getDepartureDate().getTime() <= new Date().getTime();
     }
 }

@@ -40,7 +40,7 @@ public class ServletTransferOwnership extends HttpServlet {
             TeamUser teamUser = sm.getTeamUser(team);
             Integer teamUser_id = sm.getIntParam("team_user_id", true, false);
             TeamUser new_teamUser_owner = team.getTeamUserWithId(teamUser_id);
-            if (!new_teamUser_owner.isVerified() || new_teamUser_owner.isDisabled())
+            if (!new_teamUser_owner.isVerified() || new_teamUser_owner.isDisabled() || new_teamUser_owner.departureExpired())
                 throw new HttpServletException(HttpStatus.Forbidden, "You cannot transfer your ownership to this user.");
             teamUser.transferOwnershipTo(new_teamUser_owner);
             if (!team.isValidFreemium()) {

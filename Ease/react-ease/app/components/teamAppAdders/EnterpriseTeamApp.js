@@ -1,13 +1,14 @@
-import React, {Component} from "react";
+import React, {Component, Fragment} from "react";
 import classnames from "classnames";
 import {Button, Container, Dropdown, Header, Icon, Input, Label, Popup, Segment, TextArea} from 'semantic-ui-react';
 import {
   EmptyCredentialsEnterpriseAppIndicator,
   PasswordChangeDropdownEnterprise,
-  PasswordChangeHolderEnterprise,
+  PasswordChangeHolderEnterprise, scanEnterpriseCardForWeakPasswords,
   setUserDropdownText,
-  SharingRequestButton,
-  TeamAppActionButton
+  SharingRequestButton, StaticEnterpriseTeamCardPasswordInput,
+  TeamAppActionButton,
+  EnterpriseCardPasswordStrengthIndicator, PasswordStrengthLoading
 } from "./common";
 import * as modalActions from "../../actions/teamModalActions";
 import {showUpgradeTeamPlanModal} from "../../actions/teamModalActions";
@@ -15,7 +16,7 @@ import {
   teamEditEnterpriseCard,
   teamEditEnterpriseCardReceiver,
   teamShareEnterpriseCard,
-  removeTeamCardReceiver
+  removeTeamCardReceiver, teamEnterpriseCardPasswordScoreAlert, teamEnterpriseCardReceiverPasswordScoreAlert
 } from "../../actions/appsActions";
 import {
   copyTextToClipboard,
@@ -35,6 +36,14 @@ import * as api from "../../utils/api";
 import {testCredentials} from "../../actions/catalogActions";
 import {passwordCopied} from "../../actions/dashboardActions";
 import {resetTeamCard} from "../../actions/teamCardActions";
+
+const passwordStrengthDescription = {
+  '-1': "This password has previously appeared in a data breach and should never be used.",
+  0: "This password is really weak and shouldn’t be used.",
+  1: "This password is really weak and shouldn’t be used.",
+  2: "This password is really weak and shouldn’t be used.",
+  3: "This password is quite weak and shouldn’t be used."
+};
 
 const TeamEnterpriseAppButtonSet = ({app, me, dispatch, editMode, selfJoin, requestApp}) => {
   const meReceiver = app.receivers.find(receiver => (receiver.team_user_id === me.id));
@@ -182,7 +191,7 @@ class CopyPasswordButton extends Component {
   }
 };
 
-const StaticReceivers = ({receivers, me, expanded, password_reminder_interval, dispatch}) => {
+const StaticReceivers = ({receivers, me, expanded, password_reminder_interval, dispatch, proPlan, websiteUrl, passwordChangeAlert, appName}) => {
   const meAdmin = isAdmin(me.role);
   return (
       <div class="receivers">
@@ -202,6 +211,17 @@ const StaticReceivers = ({receivers, me, expanded, password_reminder_interval, d
                         me={me}
                         meAdmin={meAdmin}/> :
                     receiver.credentials.map(item => {
+                      if (item.type === 'password')
+                        return <StaticEnterpriseTeamCardPasswordInput
+                            item={item}
+                            appName={appName}
+                            login={receiver.receiver.account_information.login}
+                            myPassword={me.id === receiver.user.id}
+                            lastPasswordChangeAlert={receiver.receiver.last_password_score_alert_date}
+                            passwordChangeAlert={passwordChangeAlert.bind(null, receiver.receiver.id)}
+                            websiteUrl={websiteUrl}
+                            passwordScore={(proPlan && (meAdmin || me.id === receiver.user.id)) ? receiver.receiver.password_score : null}
+                            key={item.name}/>;
                       return <Input size="mini"
                                     key={item.name}
                                     class="team-app-input"
@@ -209,7 +229,7 @@ const StaticReceivers = ({receivers, me, expanded, password_reminder_interval, d
                                     name={item.name}
                                     label={<Label><Icon name={credentialIconType[item.name]}/></Label>}
                                     labelPosition="left"
-                                    placeholder={item.name === 'password' ? '(Password encrypted)' : item.placeholder}
+                                    placeholder={item.placeholder}
                                     value={item.value}
                                     type={item.type}/>;
                     })}
@@ -232,28 +252,28 @@ const TeamAppCredentialInput = ({item, onChange, receiver, myId, testConnection}
     placeholder = `${placeholder} (Optional)`;
 
   return (
-    <div>
-      <Input size="mini"
-             class="team-app-input"
-             name={item.name}
-             required={isRequired}
-             onChange={(e, data) => {onChange(receiver.user.id, data)}}
-             label={label}
-             labelPosition="left"
-             placeholder={placeholder}
-             value={item.value}
-             type={item.type}/>
-      {(receiver.user.id === myId && item.name === 'password') &&
-      <Popup
-        inverted
-        trigger={
-          <p
-            className='underline_hover test_connection'
-            onClick={e => testConnection(receiver.user.id)}>
-            <Icon name='magic'/>Test this password
-          </p>}
-        content='We will open a new tab to test if the password works or not.'/>}
-    </div>);
+      <div>
+        <Input size="mini"
+               class="team-app-input"
+               name={item.name}
+               required={isRequired}
+               onChange={(e, data) => {onChange(receiver.user.id, data)}}
+               label={label}
+               labelPosition="left"
+               placeholder={placeholder}
+               value={item.value}
+               type={item.type}/>
+        {(receiver.user.id === myId && item.name === 'password') &&
+        <Popup
+            inverted
+            trigger={
+              <p
+                  className='underline_hover test_connection'
+                  onClick={e => testConnection(receiver.user.id)}>
+                <Icon name='magic'/>Test this password
+              </p>}
+            content='We will open a new tab to test if the password works or not.'/>}
+      </div>);
 };
 
 const ExtendedReceiverCredentialsInput = ({receiver, onChange, onDelete, myId, password_reminder_interval, testConnection}) => {
@@ -266,13 +286,13 @@ const ExtendedReceiverCredentialsInput = ({receiver, onChange, onDelete, myId, p
         {
           receiver.credentials.map(item => {
             return <TeamAppCredentialInput
-              testConnection={testConnection}
-              empty={receiver.empty}
-              myId={myId}
-              receiver={receiver}
-              key={item.priority}
-              onChange={onChange}
-              item={item}/>
+                testConnection={testConnection}
+                empty={receiver.empty}
+                myId={myId}
+                receiver={receiver}
+                key={item.priority}
+                onChange={onChange}
+                item={item}/>
           })
         }
       </div>
@@ -321,9 +341,10 @@ const isDifferentCredentials = (first, second) => {
   return different;
 };
 
-@connect(store => ({
+@connect((store, ownProps) => ({
   teams: store.teams,
-  teamCard: store.teamCard
+  teamCard: store.teamCard,
+  pwdChecking: store.team_cards_password_strength_checking[ownProps.app.id]
 }), reduxActionBinder)
 class EnterpriseTeamApp extends Component {
   constructor(props){
@@ -529,14 +550,38 @@ class EnterpriseTeamApp extends Component {
       return a.user.username.localeCompare(b.user.username);
     });
   };
+  passwordChangeReceiverAlert = (team_card_receiver_id) => {
+    const {app} = this.props;
+
+    this.props.dispatch(teamEnterpriseCardReceiverPasswordScoreAlert({
+      team_id: app.team_id,
+      team_card_id: app.id,
+      team_card_receiver_id: team_card_receiver_id
+    }));
+  };
+  passwordChangeAlert = () => {
+    const {app} = this.props;
+
+    this.props.dispatch(teamEnterpriseCardPasswordScoreAlert({
+      team_id: app.team_id,
+      team_card_id: app.id
+    }));
+  };
   render(){
     const app = this.props.app;
     const me = this.props.me;
     const team = this.props.teams[app.team_id];
+    const pwdChecking = this.props.pwdChecking;
     const meReceiver = getReceiverInList(app.receivers, me.id);
+    let passwordWeakness = null;
     const website = app.website;
     const users = this.getUsers();
+    const meAdmin = isAdmin(me.role);
+    const proPlan = team.plan_id !== 0;
     const room_manager = this.props.teams[this.props.team_id].team_users[selectItemFromListById(this.props.channels, app.channel_id).room_manager_id];
+    if (proPlan && meAdmin)
+      passwordWeakness = scanEnterpriseCardForWeakPasswords(app);
+
     return (
         <Container fluid
                    id={`app_${app.id}`}
@@ -555,10 +600,18 @@ class EnterpriseTeamApp extends Component {
                          placeholder="Card name..."
                          type="text"
                          required/>}
-              {app.requests.length > 0 && isAdmin(me.role) &&
+              {app.requests.length > 0 && meAdmin &&
               <SharingRequestButton
-                requestNumber={app.requests.length}
-                onClick={e => {this.props.dispatch(modalActions.showTeamManageAppRequestModal({active: true, team_card_id: app.id}))}}/>}
+                  requestNumber={app.requests.length}
+                  onClick={e => {this.props.dispatch(modalActions.showTeamManageAppRequestModal({active: true, team_card_id: app.id}))}}/>}
+              {!this.state.edit && !!passwordWeakness && !passwordWeakness.notChecked &&
+              <EnterpriseCardPasswordStrengthIndicator
+                  passwordChangeAlert={this.passwordChangeAlert}
+                  lastPasswordChangeAlertDate={app.last_password_score_alert_date}
+                  weaknessStatus={passwordWeakness.weaknessStatus}
+                  weakPasswordsCount={passwordWeakness.weakPasswordsCount}/>}
+              {!!pwdChecking && !this.state.edit &&
+              <PasswordStrengthLoading/>}
             </Header>
             {!this.state.edit &&
             <TeamEnterpriseAppButtonSet app={app}
@@ -591,9 +644,13 @@ class EnterpriseTeamApp extends Component {
                 </div>
                 {!this.state.edit &&
                 <StaticReceivers receivers={users}
+                                 appName={app.name}
+                                 passwordChangeAlert={this.passwordChangeReceiverAlert}
+                                 websiteUrl={app.website.login_url}
                                  dispatch={this.props.dispatch}
                                  password_reminder_interval={app.password_reminder_interval}
                                  expanded={this.state.show_more}
+                                 proPlan={proPlan}
                                  me={me}/>}
                 <div>
                   {!this.state.edit && users.length > 3 &&

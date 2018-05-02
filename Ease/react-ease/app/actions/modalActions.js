@@ -252,3 +252,24 @@ export function showMagicLinkChooserModal({active}) {
     }
   }
 }
+
+export function showAppPasswordChangeAskModal({active, app, reason}){
+  return {
+    type: 'SHOW_APP_PASSWORD_CHANGE_ASK_MODAL',
+    payload: {
+      active: active,
+      app: app,
+      reason: reason
+    }
+  }
+}
+
+export function showInitializePasswordScoreFeatureModal({active, team_id}){
+  return {
+    type: 'SHOW_INITIALIZE_PASSWORD_SCORE_FEATURE_MODAL',
+    payload: {
+      active: active,
+      team_id: team_id
+    }
+  }
+}

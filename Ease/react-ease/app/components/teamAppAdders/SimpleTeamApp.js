@@ -1,6 +1,18 @@
-import React, {Component} from "react";
+import React, {Component, Fragment} from "react";
 import classnames from "classnames";
-import {Button,TextArea, Container, Dropdown, Header, Icon, Input, Label, Popup, Segment} from 'semantic-ui-react';
+import {
+  Button,
+  TextArea,
+  Container,
+  Dropdown,
+  Header,
+  Icon,
+  Input,
+  Label,
+  Popup,
+  Segment,
+  Loader
+} from 'semantic-ui-react';
 import * as modalActions from "../../actions/teamModalActions";
 import {
   EmptyCredentialsSimpleAppIndicator,
@@ -10,15 +22,21 @@ import {
   renderSimpleAppEditUserLabel,
   setUserDropdownText,
   SharingRequestButton,
-  TeamAppActionButton
+  TeamAppActionButton,
+  StaticSimpleTeamCardPasswordInput,
+  passwordStrengthDescription,
+  TeamSimpleCardPasswordStrengthIndicator,
+  PasswordStrengthLoading
 } from "./common";
 import {
   removeTeamCardReceiver, requestTeamSingleCard,
   teamEditSingleApp,
   teamEditSingleCardReceiver,
-  teamShareSingleCard
+  teamShareSingleCard,
+  teamSimpleCardPasswordScoreAlert
 } from "../../actions/appsActions";
 import {
+  basicDateFormat,
   credentialIconType,
   handleSemanticInput,
   reflect,
@@ -37,14 +55,13 @@ import {testCredentials} from "../../actions/catalogActions";
 import * as api from "../../utils/api";
 import {resetTeamCard} from "../../actions/teamCardActions";
 
-const TeamAppCredentialInput = ({item, onChange, disabled, readOnly, testConnection}) => {
+const TeamAppCredentialInput = ({item, onChange, readOnly, testConnection}) => {
   return (
-      <div className='credentials_single_card'>
+      <div class='credentials_single_card'>
         <Input size="mini"
                class="team-app-input"
                required={item.name !== 'password'}
                readOnly={readOnly}
-               disabled={disabled}
                name={item.name}
                onChange={onChange}
                labelPosition="left"
@@ -179,9 +196,10 @@ const AcceptRefuseAppHeader = ({pinneable, onAccept, onRefuse}) => {
     )
 };
 
-@connect(store => ({
+@connect((store,ownProps) => ({
   teams: store.teams,
-  teamCard: store.teamCard
+  teamCard: store.teamCard,
+  pwdChecking: store.team_cards_password_strength_checking[ownProps.app.id]
 }))
 class SimpleTeamApp extends Component {
   constructor(props){
@@ -349,15 +367,27 @@ class SimpleTeamApp extends Component {
       team_card_id: team_card.id
     }));
   };
+  passwordChangeAlert = () => {
+    const {app} = this.props;
+
+    this.props.dispatch(teamSimpleCardPasswordScoreAlert({
+      team_id: app.team_id,
+      team_card_id: app.id
+    }));
+  };
   render(){
     const app = this.props.app;
     const me = this.props.me;
     const team = this.props.teams[app.team_id];
+    const pwdChecking = this.props.pwdChecking;
     const room_manager = selectItemFromListById(this.props.users, selectItemFromListById(this.props.channels, app.channel_id).room_manager_id);
     const meReceiver = getReceiverInList(app.receivers, me.id);
     const userReceiversMap = sortReceiversAndMap(app.receivers, this.props.users, me.id);
     const website = app.website;
+    const meAdmin = isAdmin(me.role);
+    const showPasswordStrength = team.plan_id !== 0 && app.password_score !== null && (me.id === app.team_user_sender_id || meAdmin);
     let credentials;
+
     if (app.empty){
       credentials = <EmptyCredentialsSimpleAppIndicator
           actions_enabled={!this.state.edit}
@@ -392,10 +422,18 @@ class SimpleTeamApp extends Component {
                          placeholder="Card name..."
                          type="text"
                          required/>}
-              {app.requests.length > 0 && isAdmin(me.role) &&
+              {app.requests.length > 0 && meAdmin &&
               <SharingRequestButton
                   requestNumber={app.requests.length}
                   onClick={e => {this.props.dispatch(modalActions.showTeamManageAppRequestModal({active: true, team_card_id: app.id}))}}/>}
+              {showPasswordStrength && !this.state.edit &&
+              <TeamSimpleCardPasswordStrengthIndicator
+                  meReceiver={!!meReceiver}
+                  teamCard={app}
+                  passwordChangeAlert={this.passwordChangeAlert}
+                  score={app.password_score}/>}
+              {!!pwdChecking && !this.state.edit &&
+              <PasswordStrengthLoading/>}
             </Header>
             {!this.state.edit &&
             <TeamSimpleAppButtonSet app={app}
@@ -432,7 +470,7 @@ class SimpleTeamApp extends Component {
                 <div>
                   {!this.state.edit ?
                       <ReceiversLabelGroup
-                          meAdmin={isAdmin(me.role)}
+                          meAdmin={meAdmin}
                           receivers={userReceiversMap}/> :
                       <Dropdown
                           class="mini"

@@ -45,7 +45,7 @@ public class GetProfilesAndApps extends HttpServlet {
                             if (teamCardReceiver.getTeamCard().isTeamSingleCard() && !teamCardReceiver.getTeamUser().isTeamAdmin() && !((TeamSingleCardReceiver) teamCardReceiver).isAllowed_to_see_password())
                                 continue;
                             Team team = app.getTeamCardReceiver().getTeamCard().getTeam();
-                            if (!sm.getTeamUser(team).isDisabled())
+                            if (!sm.getTeamUser(team).isDisabled() && !sm.getTeamUser(team).departureExpired())
                                 team_key = (String) sm.getTeamProperties(team.getDb_id()).get("teamKey");
                         } else
                             symmetric_key = (String) sm.getUserProperties(user.getDb_id()).get("keyUser");

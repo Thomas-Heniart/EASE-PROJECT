@@ -37,13 +37,13 @@
     <link rel="icon" type="image/png" href="resources/icons/APPEASE.png" />
     <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Raleway:500,700" />
     <link rel="stylesheet" href="semantic/dist/semantic.min.css">
-    <link rel="stylesheet" type="text/css" href="/css/lib/fonts/museo-font.css?cssv=8"/>
-    <link rel="stylesheet" href="/css/default_style.css?cssv=8"/>
-    <link rel="stylesheet" href="/css/bootstrap.css?cssv=8"/>
-    <link rel="stylesheet" href="/css/landingPage.css?cssv=8"/>
-    <link rel="stylesheet" href="/css/lib/fonts/font-awesome-4.2.0/css/font-awesome.min.css?cssv=8"/>
-    <link rel="stylesheet" href="/css/team.css?cssv=8"/>
-    <link rel="stylesheet" href="/css/pricingPage.css?cssv=8"/>
+    <link rel="stylesheet" type="text/css" href="/css/lib/fonts/museo-font.css?cssv=9"/>
+    <link rel="stylesheet" href="/css/default_style.css?cssv=9"/>
+    <link rel="stylesheet" href="/css/bootstrap.css?cssv=9"/>
+    <link rel="stylesheet" href="/css/landingPage.css?cssv=9"/>
+    <link rel="stylesheet" href="/css/lib/fonts/font-awesome-4.2.0/css/font-awesome.min.css?cssv=9"/>
+    <link rel="stylesheet" href="/css/team.css?cssv=9"/>
+    <link rel="stylesheet" href="/css/pricingPage.css?cssv=9"/>
 
 
     <!-- Global site tag (gtag.js) - Google Analytics -->
@@ -106,6 +106,10 @@
                             <i class="fa fa-check tic"></i>
                             <span><fmt:message key="pricing.feature.6"/></span>
                         </div>
+                        <div class="feature">
+                            <i class="fa fa-check tic"></i>
+                            <span><fmt:message key="pricing.feature.7"/></span>
+                        </div>
                     </div>
                 </div>
                 <div class="team_plan_wrapper">
@@ -149,6 +153,10 @@
                         <div class="feature">
                             <i class="fa fa-check tic"></i>
                             <span><fmt:message key="pricing.feature.19"/></span>
+                        </div>
+                        <div class="feature">
+                            <i class="fa fa-check tic"></i>
+                            <span><fmt:message key="pricing.feature.20"/></span>
                         </div>
                     </div>
                 </div>

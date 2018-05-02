@@ -10,13 +10,15 @@ import {
   renderSimpleAppEditUserLabel,
   setUserDropdownText,
   SharingRequestButton,
-  TeamAppActionButton
+  TeamAppActionButton,
+  TeamSimpleCardPasswordStrengthIndicator,
+  PasswordStrengthLoading
 } from "./common";
 import {
   removeTeamCardReceiver, requestTeamSingleCard,
   teamEditAnySingleApp,
   teamEditSingleCardReceiver,
-  teamShareSingleCard
+  teamShareSingleCard, teamSimpleCardPasswordScoreAlert
 } from "../../actions/appsActions";
 import {
   credentialIconType,
@@ -145,9 +147,10 @@ class ReceiversLabelGroup extends Component {
   }
 };
 
-@connect(store => ({
+@connect((store, ownProps) => ({
   teams: store.teams,
-  teamCard: store.teamCard
+  teamCard: store.teamCard,
+  pwdChecking: store.team_cards_password_strength_checking[ownProps.app.id]
 }))
 class SimpleTeamAnyApp extends Component {
   constructor(props){
@@ -318,15 +321,27 @@ class SimpleTeamAnyApp extends Component {
       team_card_id: team_card.id
     }));
   };
+  passwordChangeAlert = () => {
+    const {app} = this.props;
+
+    this.props.dispatch(teamSimpleCardPasswordScoreAlert({
+      team_id: app.team_id,
+      team_card_id: app.id
+    }));
+  };
   render(){
     const app = this.props.app;
     const me = this.props.me;
     const team = this.props.teams[app.team_id];
+    const pwdChecking = this.props.pwdChecking;
     const room_manager = selectItemFromListById(this.props.users, selectItemFromListById(this.props.channels, app.channel_id).room_manager_id);
     const meReceiver = getReceiverInList(app.receivers, me.id);
     const userReceiversMap = sortReceiversAndMap(app.receivers, this.props.users, me.id);
     const website = app.website;
+    const meAdmin = isAdmin(me.role);
+    const showPasswordStrength = team.plan_id !== 0 && app.password_score !== null && (me.id === app.team_user_sender_id || meAdmin);
     let credentials;
+
     if (app.empty){
       credentials = <EmptyCredentialsSimpleAppIndicator
           actions_enabled={!this.state.edit}
@@ -360,10 +375,18 @@ class SimpleTeamAnyApp extends Component {
                      placeholder="Card name..."
                      type="text"
                      required/>}
-            {app.requests.length > 0 && isAdmin(me.role) &&
+            {app.requests.length > 0 && meAdmin &&
             <SharingRequestButton
               requestNumber={app.requests.length}
               onClick={e => {this.props.dispatch(modalActions.showTeamManageAppRequestModal({active: true, team_card_id: app.id}))}}/>}
+            {showPasswordStrength && !this.state.edit &&
+            <TeamSimpleCardPasswordStrengthIndicator
+                meReceiver={!!meReceiver}
+                teamCard={app}
+                passwordChangeAlert={this.passwordChangeAlert}
+                score={app.password_score}/>}
+            {!!pwdChecking && !this.state.edit &&
+            <PasswordStrengthLoading/>}
           </Header>
           {!this.state.edit &&
           <TeamSimpleAppButtonSet app={app}
@@ -414,7 +437,7 @@ class SimpleTeamAnyApp extends Component {
               </div>
               <div>
                 {!this.state.edit ?
-                  <ReceiversLabelGroup meAdmin={isAdmin(me.role)} receivers={userReceiversMap}/> :
+                  <ReceiversLabelGroup meAdmin={meAdmin} receivers={userReceiversMap}/> :
                   <Dropdown
                     class="mini"
                     search={true}

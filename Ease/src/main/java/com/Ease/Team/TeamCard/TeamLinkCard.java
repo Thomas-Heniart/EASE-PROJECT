@@ -8,6 +8,7 @@ import org.hibernate.annotations.OnDeleteAction;
 import org.json.JSONObject;
 
 import javax.persistence.*;
+import java.util.Date;
 
 @Entity
 @Cacheable
@@ -47,6 +48,21 @@ public class TeamLinkCard extends TeamCard {
 
     public void setImg_url(String img_url) {
         this.img_url = img_url;
+    }
+
+    @Override
+    public Integer getPasswordScore() {
+        throw new RuntimeException("You shouldn't be there");
+    }
+
+    @Override
+    public void setPasswordScore(Integer passwordScore) {
+        throw new RuntimeException("You shouldn't be there");
+    }
+
+    @Override
+    public void setLastPasswordScoreAlertDate(Date date) {
+        throw new RuntimeException("You shouldn't be there");
     }
 
     @Override

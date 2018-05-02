@@ -46,7 +46,7 @@ public class ServletBookDemo extends HttpServlet {
                     "\nCompany: " +
                     enterprise +
                     "\n=======\n=======\n=======";
-            SlackAPIWrapper.getInstance().postMessage("C9U41M52Q", s);
+            SlackAPIWrapper.getInstance().postMessage("CA8FXLZHV", s);
             sm.setSuccess("Send");
         } catch (Exception e) {
             sm.setError(e);

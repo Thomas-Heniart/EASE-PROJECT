@@ -2,7 +2,7 @@ const extensionId = 'hnacegpfmpknpdjmhdmpkmedplfcmdmp';
 const browser = window.msBrowser || window.chrome || window.browser;
 
 const extension_api = {
-  app_connection: ({app_id, active_tab, website}) => {
+  app_connection: ({app_id, active_tab, website, appName, login, passwordChangeReminder}) => {
     return new Promise((resolve, reject) => {
       browser.runtime.sendMessage(
           extensionId,
@@ -11,7 +11,10 @@ const extension_api = {
             data: {
               app_id: app_id,
               active_tab: active_tab,
-              website: website
+              website: website,
+              appName: appName,
+              login: login,
+              passwordChangeReminder:passwordChangeReminder
             }
           },
           {},
@@ -130,6 +133,18 @@ const extension_api = {
         extensionId,
         {
           type: 'easeLogout'
+        }
+    )
+  },
+  showPasswordUpdateAskHelperModal: ({appName, login}) => {
+    !!browser && browser.runtime.sendMessage(
+        extensionId,
+        {
+          type: 'showPasswordUpdateHelperModal',
+          data: {
+            appName: appName,
+            login: login
+          }
         }
     )
   }

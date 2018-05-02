@@ -8,6 +8,15 @@ export const teams = createReducer({
       ...action.payload.teams
     }
   },
+  ['TEAM_PASSWORD_SCORE_ALERT'](state, action){
+    const {team_id, last_alert_date} = action.payload;
+
+    return update(state, {
+      [team_id]: {
+        last_password_score_alert_date: {$set: last_alert_date}
+      }
+    })
+  },
   ['DISABLE_INVITE_TEAM_USERS_MODAL'](state, action){
     const {team_id} = action.payload;
 
@@ -546,3 +555,53 @@ export const team_payments = createReducer({
   }
 });
 
+export const team_cards_password_strength = createReducer({
+
+}, {
+  ['FETCH_TEAM_CARDS_PASSWORD_STRENGTH_DESCRIPTION'](state, action){
+    const {description, team_id} = action.payload;
+
+    return update(state, {
+      [team_id]: {$set: description}
+    });
+  },
+  ['TEAM_CARDS_PASSWORDS_TOTAL_CHANGED'](state, action){
+    const {team_id, diff} = action.payload;
+
+    if (!!state[team_id])
+      return update(state, {
+        [team_id]: {
+          password_count: {$set: state[team_id].password_count + diff}
+        }
+      });
+    return state;
+  },
+  ['TEAM_CARDS_STRONG_PASSWORDS_TOTAL_CHANGED'](state, action){
+    const {team_id, diff} = action.payload;
+
+    if (!!state[team_id])
+      return update(state, {
+        [team_id]: {
+          strong_password_count: {$set: state[team_id].strong_password_count + diff}
+        }
+      });
+    return state;
+  }
+});
+
+export const team_cards_password_strength_checking = createReducer({
+
+}, {
+  ['TEAM_CARD_PASSWORD_STRENGTH_CHECK_BEGIN'](state, action){
+    const {team_card_id} = action.payload;
+
+    return update(state, {
+      [team_card_id]: {$set: true}
+    });
+  },
+  ['TEAM_CARD_PASSWORD_STRENGTH_CHECK_END'](state, action){
+    const {team_card_id} = action.payload;
+
+    return update(state, {$unset: [team_card_id]});
+  }
+});

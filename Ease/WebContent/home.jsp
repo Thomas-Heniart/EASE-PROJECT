@@ -51,20 +51,20 @@
 
     <link rel="chrome-webstore-item" href="https://chrome.google.com/webstore/detail/hnacegpfmpknpdjmhdmpkmedplfcmdmp"/>
     <link rel="icon" type="image/png" href="resources/icons/APPEASE.png"/>
-    <link rel="stylesheet" type="text/css" href="/css/lib/fonts/museo-font.css?cssv=8"/>
+    <link rel="stylesheet" type="text/css" href="/css/lib/fonts/museo-font.css?cssv=9"/>
     <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Raleway:500,700"/>
-    <link rel="stylesheet" href="/css/team.css?cssv=8"/>
-    <link rel="stylesheet" href="/css/bootstrap.css?cssv=8"/>
+    <link rel="stylesheet" href="/css/team.css?cssv=9"/>
+    <link rel="stylesheet" href="/css/bootstrap.css?cssv=9"/>
 
-    <link rel="stylesheet" href="/css/team.css?cssv=8"/>
-    <link rel="stylesheet" href="/css/bootstrap.css?cssv=8"/>
+    <link rel="stylesheet" href="/css/team.css?cssv=9"/>
+    <link rel="stylesheet" href="/css/bootstrap.css?cssv=9"/>
     <link rel="stylesheet" href="/semantic/dist/semantic.min.css"/>
-    <link rel="stylesheet" href="/css/default_style.css?cssv=8"/>
-    <link rel="stylesheet" href="/css/lib/fonts/font-awesome-4.2.0/css/font-awesome.min.css?cssv=8"/>
+    <link rel="stylesheet" href="/css/default_style.css?cssv=9"/>
+    <link rel="stylesheet" href="/css/lib/fonts/font-awesome-4.2.0/css/font-awesome.min.css?cssv=9"/>
     <link rel="manifest" href="manifest.json">
 
-    <link rel="stylesheet" href="/css/default_style.css?cssv=8"/>
-    <link rel="stylesheet" href="/css/lib/fonts/font-awesome-4.2.0/css/font-awesome.min.css?cssv=8"/>
+    <link rel="stylesheet" href="/css/default_style.css?cssv=9"/>
+    <link rel="stylesheet" href="/css/lib/fonts/font-awesome-4.2.0/css/font-awesome.min.css?cssv=9"/>
     <script src="https://js.stripe.com/v3/"></script>
     <script src="/jsMinified/moment.js?jsv=2"></script>
 </head>
@@ -80,7 +80,7 @@
     <div class="ease-header" id="app">
         <%--@ include file="/templates/Header.jsp"--%>
     </div>
-    <script src="teams_bundle.js?00000014"></script>
+    <script src="teams_bundle.js?00000015"></script>
     <div id="loggedBody">
         <div class="col-left <c:if test='${settingsOpen eq null}'>show</c:if>" style="width: 100%; float:left">
             <%@ include file="/templates/ProfileView.jsp" %>
@@ -104,7 +104,7 @@
     <%@ include file="templates/new_extension.html" %>
 </div>
 <noscript id="deferred-styles">
-    <link rel="stylesheet" href="/css/lib/niftyPopupWindow/component.css?cssv=8">
+    <link rel="stylesheet" href="/css/lib/niftyPopupWindow/component.css?cssv=9">
 </noscript>
 <script src="/jsMinified/jquery1.12.4.js?jsv=2"></script>
 <script src="/jsMinified/jquery-ui-1.12.0.js?jsv=2" defer></script>

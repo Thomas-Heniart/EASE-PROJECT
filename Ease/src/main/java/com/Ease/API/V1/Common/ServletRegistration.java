@@ -86,7 +86,7 @@ public class ServletRegistration extends HttpServlet {
             userProperties.put("keyUser", keyUser);
             userProperties.put("privateKey", privateKey);
             Key secret = (Key) sm.getContextAttr("secret");
-            newUser.setJsonWebToken(JsonWebTokenFactory.getInstance().createJsonWebToken(newUser.getDb_id(), newUser.getOptions().getConnection_lifetime(), keyUser, secret));
+            newUser.setJsonWebToken(JsonWebTokenFactory.getInstance().createJsonWebToken(newUser, keyUser, secret));
             sm.saveOrUpdate(newUser.getJsonWebToken());
             hibernateQuery.querySQLString("DELETE FROM userPendingRegistrations WHERE email LIKE :email");
             hibernateQuery.setParameter("email", email);

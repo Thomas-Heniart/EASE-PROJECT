@@ -83,6 +83,12 @@ public class Team {
     @Column(name = "invitations_sent")
     private boolean invitations_sent = false;
 
+    @Column(name = "passwordScoreInitialize")
+    private boolean passwordScoreInitialize = true;
+
+    @Column(name = "lastPasswordScoreAlertDate")
+    private Date lastPasswordScoreAlertDate;
+
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "onboarding_status_id")
     private OnboardingStatus onboardingStatus = new OnboardingStatus();
@@ -205,6 +211,22 @@ public class Team {
 
     public void setInvitations_sent(boolean invitations_sent) {
         this.invitations_sent = invitations_sent;
+    }
+
+    public boolean isPasswordScoreInitialize() {
+        return passwordScoreInitialize;
+    }
+
+    public void setPasswordScoreInitialize(boolean passwordScoreInitialize) {
+        this.passwordScoreInitialize = passwordScoreInitialize;
+    }
+
+    public Date getLastPasswordScoreAlertDate() {
+        return lastPasswordScoreAlertDate;
+    }
+
+    public void setLastPasswordScoreAlertDate(Date lastPasswordScoreAlertDate) {
+        this.lastPasswordScoreAlertDate = lastPasswordScoreAlertDate;
     }
 
     public synchronized Set<TeamCard> getTeamCardSet() {
@@ -425,6 +447,7 @@ public class Team {
         res.put("onboarding_step", this.getOnboardingStatus().getStep());
         res.put("payment_required", this.isBlocked());
         res.put("show_invite_people_popup", !this.isInvitations_sent() && this.getTeamCardSet().size() >= 8 && DateUtils.isOutdated(this.getSubscription_date(), 0, 4));
+        res.put("password_score_initialized", this.isPasswordScoreInitialize());
         res.put("extra_members", this.getDb_id().equals(RAIZERS_ID) ? 20 : (this.getDb_id().equals(SMARTB_ID) ? (5 + this.getInvitedFriendMap().size()) : this.getInvitedFriendMap().size()));
         return res;
     }
@@ -445,6 +468,7 @@ public class Team {
             teamUsers.put(teamUser.getJson());
         res.put("rooms", rooms);
         res.put("team_users", teamUsers);
+        res.put("last_password_score_alert_date", this.getLastPasswordScoreAlertDate() == null ? JSONObject.NULL : this.getLastPasswordScoreAlertDate().getTime());
         return res;
     }
 

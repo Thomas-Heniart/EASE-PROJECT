@@ -5,10 +5,22 @@ import {Icon} from 'semantic-ui-react';
 import {withRouter} from "react-router-dom";
 import {moveTeamCard} from "../../actions/teamCardActions";
 import {validateApp, clickOnAppMetric, passwordCopied} from '../../actions/dashboardActions';
-import {showTeamSoftwareSingleAppSettingsModal, showLockedTeamAppModal} from "../../actions/modalActions";
 import {
-  DepartureDatePassedIndicator, UpdatePasswordLabel, EmptyTeamAppIndicator, NewAppLabel,
-  DisabledAppIndicator, WaitingTeamApproveIndicator, LoadingAppIndicator, SettingsMenu, getPosition
+  showTeamSoftwareSingleAppSettingsModal,
+  showLockedTeamAppModal,
+  showAppPasswordChangeAskModal
+} from "../../actions/modalActions";
+import {
+  DepartureDatePassedIndicator,
+  UpdatePasswordLabel,
+  EmptyTeamAppIndicator,
+  NewAppLabel,
+  DisabledAppIndicator,
+  WaitingTeamApproveIndicator,
+  LoadingAppIndicator,
+  SettingsMenu,
+  getPosition,
+  UpdatePasswordIndicator
 } from "./utils";
 import {
   teamUserDepartureDatePassed, needPasswordUpdate,
@@ -97,13 +109,32 @@ class TeamSoftwareSingleApp extends Component {
   remove = () => {
     this.props.dispatch(showTeamSoftwareSingleAppSettingsModal({active: true, app: this.props.app, remove: true}));
   };
+  openAskUpdatePasswordModal = () => {
+    const {app, teams, dispatch} = this.props;
+    const team_app = this.props.team_apps[app.team_card_id];
+    const team = teams[team_app.team_id];
+    const me = team.team_users[team.my_team_user_id];
+    const room = team.rooms[team_app.channel_id];
+    const roomManager = team.team_users[room.room_manager_id];
+    const password_update = !!roomManager && roomManager.id === me.id && !team_app.empty && !!team_app.password_reminder_interval && needPasswordUpdate(team_app.last_update_date, team_app.password_reminder_interval);
+
+    if (!!password_update){
+      dispatch(showAppPasswordChangeAskModal({
+        active: true,
+        app: app,
+        reason: 'passwordChangeInterval'
+      }));
+    }
+  };
   render() {
     const {app, teams, dispatch} = this.props;
     const team_app = this.props.team_apps[app.team_card_id];
     const team = teams[team_app.team_id];
     const me = team.team_users[team.my_team_user_id];
     const filler = team.team_users[team_app.team_user_filler_id];
-    const password_update = !!filler && filler.id === me.id && !team_app.empty && !!team_app.password_reminder_interval && needPasswordUpdate(team_app.last_update_date, team_app.password_reminder_interval);
+    const room = team.rooms[team_app.channel_id];
+    const roomManager = team.team_users[room.room_manager_id];
+    const password_update = !!roomManager && roomManager.id === me.id && !team_app.empty && !!team_app.password_reminder_interval && needPasswordUpdate(team_app.last_update_date, team_app.password_reminder_interval);
     const credentials = transformWebsiteInfoIntoListAndSetValues(team_app.software.connection_information, team_app.account_information);
     const buttons = credentials.map((item, idx) => {
       if (this.state.copiedPassword !== item.priority && this.state.copiedOther !== item.priority) {
@@ -141,7 +172,7 @@ class TeamSoftwareSingleApp extends Component {
           {app.new &&
           <NewAppLabel/>}
           {password_update &&
-          <UpdatePasswordLabel/>}
+          <UpdatePasswordIndicator onClick={this.openAskUpdatePasswordModal}/>}
           {!me.disabled && teamUserDepartureDatePassed(me.departure_date) &&
           <DepartureDatePassedIndicator team_name={team.name} departure_date={me.departure_date}/>}
           {me.disabled &&

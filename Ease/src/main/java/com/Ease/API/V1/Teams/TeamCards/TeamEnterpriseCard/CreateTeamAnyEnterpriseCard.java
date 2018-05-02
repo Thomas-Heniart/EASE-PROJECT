@@ -28,6 +28,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Map;
 
 @WebServlet("/api/v1/teams/CreateTeamAnyEnterpriseCard")
 public class CreateTeamAnyEnterpriseCard extends HttpServlet {
@@ -77,14 +78,22 @@ public class CreateTeamAnyEnterpriseCard extends HttpServlet {
                 if (account_information != null && account_information.length() != 0) {
                     sm.decipher(account_information);
                     String teamKey = (String) sm.getTeamProperties(team_id).get("teamKey");
-                    account = AccountFactory.getInstance().createAccountFromMap(website.getInformationFromJson(account_information), teamKey, password_reminder_interval, sm.getHibernateQuery());
+                    Map<String, String> accountInformationMap = website.getInformationFromJson(account_information);
+                    if (!accountInformationMap.isEmpty())
+                        account = AccountFactory.getInstance().createAccountFromMap(accountInformationMap, teamKey, password_reminder_interval, sm.getHibernateQuery());
                 }
-                AppInformation appInformation = new AppInformation(name);
                 App app;
-                if (website.getWebsiteAttributes().isIntegrated())
-                    app = new ClassicApp(appInformation, website, account);
-                else
-                    app = new AnyApp(appInformation, website, account);
+                if (website.getWebsiteAttributes().isIntegrated()) {
+                    if (account == null)
+                        app = AppFactory.getInstance().createClassicApp(name, website);
+                    else
+                        app = AppFactory.getInstance().createClassicApp(name, website, account);
+                } else {
+                    if (account == null)
+                        app = AppFactory.getInstance().createAnyApp(name, website);
+                    else
+                        app = AppFactory.getInstance().createAnyApp(name, website, account);
+                }
                 TeamCardReceiver teamCardReceiver = new TeamEnterpriseCardReceiver(app, teamCard, teamUser);
                 if (teamUser.isVerified()) {
                     Profile profile = teamUser.getOrCreateProfile(teamCard.getChannel(), sm.getHibernateQuery());

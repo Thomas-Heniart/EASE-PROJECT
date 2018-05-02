@@ -27,14 +27,14 @@
     <meta name="twitter:image" content="https://ease.space/resources/images/fbmeta-en.png"/>
 
     <link rel="icon" type="image/png" href="resources/icons/APPEASE.png"/>
-    <link rel="stylesheet" href="/css/bootstrap.css?cssv=8"/>
+    <link rel="stylesheet" href="/css/bootstrap.css?cssv=9"/>
     <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Raleway:500,700" />
-    <link rel="stylesheet" type="text/css" href="/css/lib/fonts/museo-font.css?cssv=8"/>
+    <link rel="stylesheet" type="text/css" href="/css/lib/fonts/museo-font.css?cssv=9"/>
     <link rel="stylesheet" href="/semantic/dist/semantic.min.css"/>
-    <link rel="stylesheet" href="/css/default_style.css?cssv=8"/>
-    <link rel="stylesheet" href="/css/lib/fonts/font-awesome-4.2.0/css/font-awesome.min.css?cssv=8"/>
-    <link rel="stylesheet" href="/css/lib/fonts/untitled-font-4/styles.css?cssv=8"/>
-    <link rel="stylesheet" href="/css/team.css?cssv=8"/>
+    <link rel="stylesheet" href="/css/default_style.css?cssv=9"/>
+    <link rel="stylesheet" href="/css/lib/fonts/font-awesome-4.2.0/css/font-awesome.min.css?cssv=9"/>
+    <link rel="stylesheet" href="/css/lib/fonts/untitled-font-4/styles.css?cssv=9"/>
+    <link rel="stylesheet" href="/css/team.css?cssv=9"/>
     <script src="https://js.stripe.com/v3/"></script>
     <script src="/jsMinified/jsencrypt.js?jsv=2"></script>
     <script src="/jsMinified/moment.js?jsv=2"></script>

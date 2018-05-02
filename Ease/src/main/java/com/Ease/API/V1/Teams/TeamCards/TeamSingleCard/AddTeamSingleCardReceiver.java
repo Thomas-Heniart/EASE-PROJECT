@@ -50,11 +50,11 @@ public class AddTeamSingleCardReceiver extends HttpServlet {
             App app;
             if (teamCard.isTeamWebsiteCard()) {
                 TeamSingleCard teamSingleCard = (TeamSingleCard) teamCard;
-                app = AppFactory.getInstance().createClassicApp(teamSingleCard.getName(), teamSingleCard.getWebsite(), teamKey, teamSingleCard.getAccount(), sm.getHibernateQuery());
+                app = AppFactory.getInstance().createClassicApp(teamSingleCard.getName(), teamSingleCard.getWebsite(), teamSingleCard.getAccount(), sm.getHibernateQuery());
             }
             else {
                 TeamSingleSoftwareCard teamSingleSoftwareCard = (TeamSingleSoftwareCard) teamCard;
-                app = AppFactory.getInstance().createSoftwareApp(teamCard.getName(), teamSingleSoftwareCard.getSoftware(), teamKey, teamCard.getAccount(), sm.getHibernateQuery());
+                app = AppFactory.getInstance().createSoftwareApp(teamCard.getName(), teamSingleSoftwareCard.getSoftware(), teamCard.getAccount(), sm.getHibernateQuery());
             }
             TeamCardReceiver teamCardReceiver = new TeamSingleCardReceiver(app, teamCard, teamUser_receiver, allowed_to_see_password);
             if (teamUser_receiver.isVerified()) {

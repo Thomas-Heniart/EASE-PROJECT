@@ -754,7 +754,7 @@ export function validateTutorial() {
   }
 }
 
-export function AppConnection({app_id, keep_focus}){
+export function AppConnection({app_id, keep_focus, passwordChangeReminder, appName, login}){
   return (dispatch, getState) => {
     if (!document.querySelector('#new_ease_extension')){
       dispatch(showExtensionDownloadModal({active: true}));
@@ -764,7 +764,10 @@ export function AppConnection({app_id, keep_focus}){
     extension.app_connection({
       app_id:app_id,
       active_tab: !keep_focus,
-      website: app.website
+      website: app.website,
+      passwordChangeReminder: passwordChangeReminder,
+      appName: appName,
+      login: login
     });
     return api.dashboard.getAppConnectionInformation({
       app_id: app_id
