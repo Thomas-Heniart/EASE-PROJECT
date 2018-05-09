@@ -30,14 +30,19 @@ public class ServletPasswordExport extends HttpServlet {
                 stringBuilder.append("\n");
             }
             sm.getHibernateQuery().commit();
-            stringBuilder.deleteCharAt(stringBuilder.length() - 1);
+            if (stringBuilder.length() > 0)
+                stringBuilder.deleteCharAt(stringBuilder.length() - 1);
             response.setContentType("text/csv");
             response.setHeader("Content-Disposition", "attachment; filename=\"ease_team_passwords.csv\"");
             response.getOutputStream().write(stringBuilder.toString().getBytes());
             response.getOutputStream().flush();
             response.getOutputStream().close();
         } catch (Exception e) {
-            sm.setError(e);
+            sm.getHibernateQuery().rollback();
+            e.printStackTrace();
+            response.setStatus(500);
+            response.getOutputStream().write("Internal server error".getBytes());
+            response.getOutputStream().close();
         }
     }
 
