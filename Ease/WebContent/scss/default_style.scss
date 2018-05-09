@@ -1947,7 +1947,7 @@ p {
 .containerLogin {
   display: flex;
   align-items: stretch;
-  min-height: 100%;
+  flex-grow: 1;
 }
 .loginAside {
   display: flex;

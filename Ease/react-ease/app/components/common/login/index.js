@@ -12,10 +12,10 @@ import ReactGA from 'react-ga';
 
 function Loader(props){
   return (
-    <div className="sk-fading-circle show" id="loading">
-      <div className="ui large active centered inline loader">
+      <div className="sk-fading-circle show" id="loading">
+        <div className="ui large active centered inline loader">
+        </div>
       </div>
-    </div>
   )
 }
 @connect((store)=>({
@@ -61,16 +61,21 @@ class Login extends React.Component {
     if (this.props.authenticated)
       return null;
     return (
-      <div className="containerLogin">
-        <div className="loginAside">
-          <Switch>
-            <Route exact path={`/login`} render={(props) => <KnownUserForm {...props} finishLogin={this.finishLoggingIn}/>}/>
-            <Route path={`/login/unknownUser`} render={(props) => <UnknownUserForm {...props} finishLogin={this.finishLoggingIn}/>}/>
-            <Route path={`/login/passwordLost`} component={PasswordLost}/>
-          </Switch>
+        <div class="display-flex flex_direction_column" style={{minHeight:'100vh'}}>
+          <div id="download_passwords">
+            <i className="em-svg em-warning"/> Ease.space will shutdown definitely on 2018, June 1st. Once logged in, you will be able to export your passwords.
+          </div>
+          <div className="containerLogin">
+            <div className="loginAside">
+              <Switch>
+                <Route exact path={`/login`} render={(props) => <KnownUserForm {...props} finishLogin={this.finishLoggingIn}/>}/>
+                <Route path={`/login/unknownUser`} render={(props) => <UnknownUserForm {...props} finishLogin={this.finishLoggingIn}/>}/>
+                <Route path={`/login/passwordLost`} component={PasswordLost}/>
+              </Switch>
+            </div>
+            <div className="loginContent"/>
+          </div>
         </div>
-        <div className="loginContent"/>
-      </div>
     )
   }
 }
