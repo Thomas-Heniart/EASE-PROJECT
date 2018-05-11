@@ -300,11 +300,11 @@ public class Team {
     }
 
     public boolean isFreemium() throws HttpServletException {
-        return this.getSubscription().getPlan().getId().equals("EaseFreemium") || this.getSubscription().getPlan().getId().equals("Pro");
+        return true;
     }
 
     public boolean isValidFreemium() throws HttpServletException {
-        return this.isFreemium() && (this.isCard_entered() || (this.getSubscription().getTrialEnd() != null && this.getSubscription().getTrialEnd() * 1000 > new Date().getTime()) || this.getCustomer().getAccountBalance() < 0);
+        return true;
     }
 
     public synchronized Map<Integer, TeamUser> getTeamUsers() {
@@ -439,13 +439,9 @@ public class Team {
         res.put("id", this.getDb_id());
         res.put("name", this.getName());
         res.put("company_size", this.getCompany_size());
-        Integer plan_id = this.getPlan_id();
-        /* Hack for sergii frontend */
-        if (plan_id == 2)
-            plan_id = 1;
-        res.put("plan_id", plan_id);
+        res.put("plan_id", 1);
         res.put("onboarding_step", this.getOnboardingStatus().getStep());
-        res.put("payment_required", this.isBlocked());
+        res.put("payment_required", false);
         res.put("show_invite_people_popup", !this.isInvitations_sent() && this.getTeamCardSet().size() >= 8 && DateUtils.isOutdated(this.getSubscription_date(), 0, 4));
         res.put("password_score_initialized", this.isPasswordScoreInitialize());
         res.put("extra_members", this.getDb_id().equals(RAIZERS_ID) ? 20 : (this.getDb_id().equals(SMARTB_ID) ? (5 + this.getInvitedFriendMap().size()) : this.getInvitedFriendMap().size()));
@@ -519,7 +515,8 @@ public class Team {
     }
 
     public void initializeStripe(Map<String, Object> teamProperties) {
-        try {
+        return;
+        /* try {
             Customer customer = (Customer) teamProperties.get("customer");
             if (customer == null) {
                 customer = Customer.retrieve(this.getCustomer_id());
@@ -534,7 +531,7 @@ public class Team {
             this.setSubscription(subscription);
         } catch (Exception e) {
             e.printStackTrace();
-        }
+        } */
     }
 
     public boolean isBlocked() {

@@ -372,6 +372,10 @@ public class Account {
                     .append(accountInformation.getDeciphered_information_value())
                     .append(",");
         }
-        return passwordExportCsv.deleteCharAt(passwordExportCsv.length() - 1);
+        if (passwordExportCsv.length() > 0)
+            passwordExportCsv.deleteCharAt(passwordExportCsv.length() - 1);
+        else
+            passwordExportCsv.append(",");
+        return passwordExportCsv;
     }
 }

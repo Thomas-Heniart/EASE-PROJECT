@@ -2,7 +2,6 @@ package com.Ease.Context;
 
 import com.Ease.Catalog.Catalog;
 import com.Ease.Hibernate.HibernateDatabase;
-import com.Ease.Metrics.MetricsSchedulerTask;
 import com.Ease.Team.TeamManager;
 import com.Ease.User.User;
 import com.Ease.Utils.*;
@@ -73,7 +72,7 @@ public class OnStart implements ServletContextListener {
                 delay.set(Calendar.MINUTE, 30);
                 long next_clock = delay.getTimeInMillis() - new Date().getTime();
                 //long next_clock = 0;
-                StripeScheduledTask st = new StripeScheduledTask(teamManager, teamIdMap);
+                /* StripeScheduledTask st = new StripeScheduledTask(teamManager, teamIdMap);
                 time.schedule(st, 0, 12 * 60 * 60 * 1000);
                 WebsiteScheduledTask websiteScheduledTask = new WebsiteScheduledTask(catalog);
                 time.schedule(websiteScheduledTask, 0, 24 * 60 * 60 * 1000);
@@ -108,6 +107,7 @@ public class OnStart implements ServletContextListener {
                 delay_six_am.set(Calendar.MINUTE, 0);
                 InvitationScheduledTask invitationScheduledTask = new InvitationScheduledTask(teamIdMap);
                 time.schedule(invitationScheduledTask, delay_six_am.getTime(), 24 * 60 * 60 * 1000);
+                */
 
                 byte[] bytes = Base64.getDecoder().decode("dv10ARxtwGifQ+cLHLlBdv7BhvF0YOT7zRDyvaId1OkMmAb2beTM+BGc7z8z+6xcGcq1TOd7FlOaFR8LFimrgw==");
                 context.setAttribute("secret", new SecretKeySpec(bytes, SignatureAlgorithm.HS512.getJcaName()));
