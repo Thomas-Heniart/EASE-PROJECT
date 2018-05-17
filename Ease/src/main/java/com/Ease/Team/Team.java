@@ -535,12 +535,13 @@ public class Team {
     }
 
     public boolean isBlocked() {
-        try {
+        return false;
+        /* try {
             return this.isFreemium() && !card_entered && (this.getSubscription().getTrialEnd() == null || new Date().getTime() > this.getSubscription().getTrialEnd() * 1000) && this.getCustomer().getAccountBalance() >= 0;
         } catch (HttpServletException e) {
             e.printStackTrace();
             return true;
-        }
+        } */
     }
 
     public Integer increaseAccountBalance(Integer amount, HibernateQuery hibernateQuery) throws HttpServletException {

@@ -12,8 +12,6 @@ import com.Ease.Utils.Crypto.RSA;
 import com.Ease.Utils.*;
 import com.Ease.websocketV1.WebSocketManager;
 import com.stripe.exception.StripeException;
-import com.stripe.model.Customer;
-import com.stripe.model.Subscription;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import org.json.JSONArray;
@@ -570,7 +568,8 @@ public abstract class ServletManager {
     }
 
     public void initializeTeamWithContext(Team team) throws HttpServletException {
-        try {
+        return;
+        /* try {
             if (team.getCustomer_id() != null) {
                 Customer customer = (Customer) this.getTeamProperties(team.getDb_id()).get("customer");
                 if (customer == null) {
@@ -589,7 +588,7 @@ public abstract class ServletManager {
             }
         } catch (StripeException e) {
             throw new HttpServletException(HttpStatus.InternError, e);
-        }
+        } */
     }
 
     public String getKeyUser() {

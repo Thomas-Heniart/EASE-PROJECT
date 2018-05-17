@@ -5,7 +5,6 @@ import com.Ease.Hibernate.HibernateDatabase;
 import com.Ease.Team.TeamManager;
 import com.Ease.User.User;
 import com.Ease.Utils.*;
-import com.stripe.Stripe;
 import io.jsonwebtoken.SignatureAlgorithm;
 
 import javax.crypto.spec.SecretKeySpec;
@@ -48,8 +47,8 @@ public class OnStart implements ServletContextListener {
                 TeamManager teamManager = new TeamManager();
                 context.setAttribute("teamManager", teamManager);
 
-                Stripe.apiKey = Variables.STRIPE_API_KEY;
-                Stripe.apiVersion = "2017-08-15";
+                //Stripe.apiKey = Variables.STRIPE_API_KEY;
+                //Stripe.apiVersion = "2017-08-15";
 
                 //Map.Entry<String, String> publicAndPrivateKey = RSA.generateKeys();
                 context.setAttribute("publicKey", Variables.PUBLIC_KEY);

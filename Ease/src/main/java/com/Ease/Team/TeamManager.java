@@ -15,10 +15,7 @@ import com.Ease.websocketV1.WebSocketManager;
 
 import javax.servlet.ServletContext;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -27,6 +24,11 @@ import java.util.concurrent.ConcurrentHashMap;
 public class TeamManager {
 
     public TeamManager() {
+    }
+
+    public static void main (String[] args) {
+        final Collection<? extends Number> foo = new ArrayList<Number>();
+        foo.add(null);
     }
 
     public List<Team> getAllTeams(HibernateQuery hibernateQuery) {
