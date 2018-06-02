@@ -50,7 +50,7 @@ public class ServletGetTeamsInformation extends HttpServlet {
                 if (phoneNumber == null)
                     phoneNumber = "";
                 tmp.put("phone_number", phoneNumber);
-                tmp.put("credit", team.isActive() ? (float) -team.getCustomer().getAccountBalance() / 100 : 0);
+                tmp.put("credit", 0);
                 calendar.setTime(team.getSubscription_date());
                 int weekOfSubscription = 0;
                 if (calendar.get(Calendar.YEAR) > EASE_FIRST_YEAR) {
