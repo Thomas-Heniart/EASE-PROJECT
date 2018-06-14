@@ -10,7 +10,7 @@ import {teamEditEnterpriseCardReceiver, teamEditSingleCardCredentials} from "../
 
 @connect(store => ({
   apps: store.dashboard.apps,
-  modal: store.modals.passwordUpdate,
+  modal: store.modals.onlyPasswordUpdate,
   dashboard: store.dashboard,
   teams: store.teams,
   team_apps: store.team_apps
@@ -41,7 +41,7 @@ class PasswordUpdateModal extends React.Component {
         edit[item] = false
     });
     Object.keys(this.props.apps).filter(app_id => {
-      const app = this.props.app[app_id];
+      const app = this.props.apps[app_id];
       if ((app.website.id === this.props.item.website_id) || (app.website.login_url === this.props.item.url))
         options[app_id] = {
           app: app,

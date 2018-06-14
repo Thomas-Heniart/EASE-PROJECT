@@ -539,6 +539,36 @@ export function showPasswordUpdateModal({state, resolve, reject, website, item})
   }
 }
 
+export function onlyPasswordUpdateModal(dispatch, website, item){
+  return new Promise((resolve, reject) => {
+    dispatch(showOnlyPasswordUpdateModal({
+      state: true,
+      website: website,
+      item: item,
+      resolve: resolve,
+      reject: reject
+    }));
+  }).then(response => {
+    dispatch(showOnlyPasswordUpdateModal({state: false}));
+    return response;
+  }).catch(err => {
+    dispatch(showOnlyPasswordUpdateModal({state: false}));
+  });
+}
+
+export function showOnlyPasswordUpdateModal({state, resolve, reject, website, item}){
+  return {
+    type: 'SHOW_ONLY_PASSWORD_UPDATE_MODAL',
+    payload: {
+      active: state,
+      website: website,
+      item: item,
+      resolve: resolve,
+      reject: reject
+    }
+  }
+}
+
 export function newAccountUpdateModal(dispatch, website, account_information) {
   return new Promise((resolve, reject) => {
     dispatch(showNewAccountUpdateModal({

@@ -55,6 +55,7 @@ import FillSimpleCardCredentialsModal from "../teamModals/FillSimpleCardCredenti
 import AccountUpdateModal from "../catalog/Updates/AccountUpdateModal";
 import NewAccountUpdateModal from "../catalog/Updates/NewAccountUpdateModal";
 import PasswordUpdateModal from "../catalog/Updates/PasswordUpdateModal";
+import OnlyPasswordUpdateModal from "../catalog/Updates/OnlyPasswordUpdateModal";
 import NewAccountUpdateLocationModal from "../catalog/Updates/NewAccountUpdateLocationModal";
 import ManageMagicLinkModal from "../teamModals/ManageMagicLinkModal";
 import TagUserInAllAppsModal from "../teamModals/TagUserInAllAppsModal";
@@ -221,6 +222,8 @@ class ModalsContainer extends Component{
           <NewAccountUpdateLocationModal/>}
           {this.props.modals.passwordUpdate.active &&
           <PasswordUpdateModal/>}
+          {this.props.modals.onlyPasswordUpdate.active &&
+          <OnlyPasswordUpdateModal/>}
           {this.props.manageMagicLinkModal.active &&
           <ManageMagicLinkModal/>}
           {this.props.tagUserInAllAppsModal.active &&

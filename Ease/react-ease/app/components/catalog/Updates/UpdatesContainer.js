@@ -4,7 +4,13 @@ import {getLogo} from "../../../utils/api";
 import {NewAppLabel} from "../../dashboard/utils";
 import {fetchTeamApp} from "../../../actions/teamActions";
 import { Grid, Image, Icon, Container, Loader } from 'semantic-ui-react';
-import {accountUpdateModal, deleteUpdate, newAccountUpdateModal, passwordUpdateModal} from "../../../actions/catalogActions";
+import {
+  accountUpdateModal,
+  deleteUpdate,
+  newAccountUpdateModal,
+  onlyPasswordUpdateModal,
+  passwordUpdateModal
+} from "../../../actions/catalogActions";
 
 @connect(store => ({
   dashboard: store.dashboard,
@@ -131,7 +137,7 @@ class UpdatesContainer extends React.Component {
       ).then(response => {
       });
     else
-      passwordUpdateModal(
+      onlyPasswordUpdateModal(
         this.props.dispatch,
         website,
         item
@@ -149,14 +155,13 @@ class UpdatesContainer extends React.Component {
     const appAccountInfo = !isEnterprise && sso_group === -1 && (item.app_id !== -1 && Object.keys(app.account_information).length > 0 && app.account_information.login !== '');
     const cardAccountInfo = !isEnterprise && (item.team_card_id !== -1 && Object.keys(card.account_information).length > 0 && card.account_information.login !== '');
     const ssoAccountInfo = app.sso_group_id && Object.keys(sso_group.account_information).length > 0 && sso_group.account_information.login !== '';
-    if (!appExist || (item.team_card_id !== -1 && !isEnterprise && noFillerId)) {
-      this.state.type[item.id] = 'new';
-      return <span>New Account</span>;
-    }
-    else if ((!appExist || (item.team_card_id !== -1 && !isEnterprise && noFillerId))
-      && item.account_information.login === '' && item.account_information.password !== '') {
+    if ((!appExist || (item.team_card_id !== -1 && !isEnterprise && noFillerId)) && !item.account_information.login) {
       this.state.type[item.id] = 'password2';
       return <span>Password update</span>;
+    }
+    else if (!appExist || (item.team_card_id !== -1 && !isEnterprise && noFillerId)) {
+      this.state.type[item.id] = 'new';
+      return <span>New Account</span>;
     }
     else if (item.team_user_id !== -1 || (item.app_id !== -1 &&
       ((!app.sso_group_id && (appAccountInfo || cardAccountInfo || accountInfoEnterprise)) || ssoAccountInfo))) {
